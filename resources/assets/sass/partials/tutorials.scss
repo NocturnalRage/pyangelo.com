@@ -1,0 +1,23 @@
+.tutorial-info {
+  background: #EEEEEE;
+  color: #111111;
+}
+.info-span {
+  padding-left: 20px;
+}
+a.tutorials-link:hover {
+  text-decoration: none;
+}
+a.tutorials-link:hover h3 {
+  text-decoration: underline;
+}
+.label-beginner {
+    @include label-variant($label-beginner-bg);
+    text-decoration:none;
+}
+.label-intermediate {
+    @include label-variant($label-intermediate-bg);
+}
+.label-advanced {
+    @include label-variant($label-advanced-bg);
+}

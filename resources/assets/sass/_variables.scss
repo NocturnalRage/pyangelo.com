@@ -1,0 +1,26 @@
+// Body
+$body-bg: #f5f8fa;
+$navbar-height: 75px;
+$navbar-collapse-max-height: 365px;
+
+$navbar-default-color: #000000;
+$navbar-default-bg: #ffef96;
+$navbar-default-border: darken($navbar-default-bg, 6.5%);
+
+$navbar-default-link-color: #50394c;
+$navbar-default-link-hover-color: darken($navbar-default-link-color, 10%);
+$navbar-default-link-hover-bg: transparent;
+$navbar-default-link-active-color: darken($navbar-default-link-color, 10%);
+$navbar-default-link-active-bg: darken($navbar-default-bg, 6.5%);
+
+$fa-font-path: "../fonts/font-awsome";
+
+$label-beginner-bg: #16df20;
+$label-intermediate-bg: #162ddf;
+$label-advanced-bg: #b011ae;
+
+$label-table-tennis-advice-bg: #5cb85c;
+$label-table-tennis-thoughts-bg: #f0ad4e;
+$label-pingskills-news-bg: #337ab7;
+$label-fun-stuff-bg: #d9534f;
+$label-pingskills-show-bg: #5bc0de;

@@ -1,0 +1,14 @@
+/node_modules
+/vendor
+.env
+.env.test
+public/brython
+public/css
+public/fonts
+public/js
+public/mix-manifest.json
+public/sketches
+public/uploads
+logs
+tags
+TODO

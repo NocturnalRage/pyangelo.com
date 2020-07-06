@@ -1,0 +1,22 @@
+#socialicons {
+      text-align: center;
+    }
+#socialicons .icon{
+  color: #4da6ff;
+  border: 1px solid #CFCFCF;
+  display: inline-block;
+  font-size: 18px;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  vertical-align: middle;
+  margin: 0 1px 8px;
+  -webkit-border-radius: 17px; 
+  -moz-border-radius: 17px; 
+  border-radius: 17px; 
+}
+#socialicons .icon:hover{
+  color: #3399ff;
+  border: 1px solid #CFCFCF;
+}

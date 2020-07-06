@@ -1,0 +1,26 @@
+a.blog-link:hover {
+  text-decoration: none;
+}
+a.blog-link:hover h3 {
+  text-decoration: underline;
+}
+.label-table-tennis-advice {
+    @include label-variant($label-table-tennis-advice-bg);
+    text-decoration:none;
+}
+.label-table-tennis-thoughts {
+    @include label-variant($label-table-tennis-thoughts-bg);
+    text-decoration:none;
+}
+.label-pingskills-news {
+    @include label-variant($label-pingskills-news-bg);
+    text-decoration:none;
+}
+.label-fun-stuff {
+    @include label-variant($label-fun-stuff-bg);
+    text-decoration:none;
+}
+.label-pingskills-show {
+    @include label-variant($label-pingskills-show-bg);
+    text-decoration:none;
+}
