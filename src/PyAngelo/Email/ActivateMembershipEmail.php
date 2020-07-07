@@ -17,7 +17,7 @@ class ActivateMembershipEmail extends EmailMessage {
             "\n\n$activateLink" .
             "\n\nKind regards,\nJeff Plumb.";
 
-    $bodyTextHtml = "Hi " . htmlspecialchars($mailInfo['givenName'], ENT_QUOTES, 'UTF-8') . ",<br /><br />Please click on the following button to activate your free CubeSkills membership. As soon as you do you'll have access to all our videos, be able to track your progress through our tutorials, and be able to start coding.";
+    $bodyTextHtml = "Hi " . htmlspecialchars($mailInfo['givenName'], ENT_QUOTES, 'UTF-8') . ",<br /><br />Please click on the following button to activate your free PyAngelo membership. As soon as you do you'll have access to all our videos, be able to track your progress through our tutorials, and be able to start coding.";
 
     $bodyHtml = $this->emailTemplate->addEmailHeader('Activate Your Free PyAngelo Membership');
     $bodyHtml .= $this->emailTemplate->addEmailBodyStart();

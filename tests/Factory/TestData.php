@@ -143,7 +143,7 @@ class TestData {
   }
 
   public function createBlogCategory($blogCategoryId) {
-    $sql = "INSERT INTO blog_category values ($blogCategoryId, 'Speedcubing Advice')";
+    $sql = "INSERT INTO blog_category values ($blogCategoryId, 'Coding Advice')";
     $result = $this->dbh->query($sql);
   }
 
@@ -153,7 +153,7 @@ class TestData {
     $this->deleteAllBlogCategories();
     $personId = 1;
     $blogCategoryId = 1;
-    $this->createPerson($personId, 'feliks@cubeskills.com');
+    $this->createPerson($personId, 'admin@nocturnalrage.com');
     $this->createBlogCategory($blogCategoryId);
     $sql = "INSERT INTO blog values (
       NULL,
