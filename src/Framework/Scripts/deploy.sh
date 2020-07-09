@@ -12,6 +12,7 @@ composer install --no-dev
 
 echo "Running Webpack"
 cd $GITDIR
+npm install
 npm run production
 
 echo "Copying config directory"
