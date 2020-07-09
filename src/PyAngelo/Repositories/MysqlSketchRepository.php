@@ -10,7 +10,7 @@ class MysqlSketchRepository implements SketchRepository {
 
   public function getSketches($personId) {
     $sql = "SELECT *
-	        FROM   sketch
+            FROM   sketch
             WHERE  person_id = ?
             ORDER BY updated_at DESC";
     $stmt = $this->dbh->prepare($sql);
@@ -23,7 +23,7 @@ class MysqlSketchRepository implements SketchRepository {
 
   public function getAllSketches() {
     $sql = "SELECT *
-	        FROM   sketch
+            FROM   sketch
             ORDER BY updated_at DESC";
     $result = $this->dbh->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
@@ -31,7 +31,7 @@ class MysqlSketchRepository implements SketchRepository {
 
   public function getSketchById($sketchId) {
     $sql = "SELECT *
-	        FROM   sketch
+	          FROM   sketch
             WHERE  sketch_id = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('i', $sketchId);
@@ -41,9 +41,22 @@ class MysqlSketchRepository implements SketchRepository {
     return $result->fetch_assoc();
   }
 
+  public function getSketchByPersonAndLesson($personId, $lessonId) {
+    $sql = "SELECT *
+	          FROM   sketch
+            WHERE  person_id = ?
+            AND    lesson_id = ?";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->bind_param('ii', $personId, $lessonId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    return $result->fetch_assoc();
+  }
+
   public function getSketchFiles($sketchId) {
     $sql = "SELECT *
-	        FROM   sketch_files
+            FROM   sketch_files
             WHERE  sketch_id = ?
             ORDER by file_id";
     $stmt = $this->dbh->prepare($sql);
@@ -54,19 +67,21 @@ class MysqlSketchRepository implements SketchRepository {
     return $result->fetch_all(MYSQLI_ASSOC);
   }
 
-  public function createNewSketch($personId, $title) {
+  public function createNewSketch($personId, $title, $lessonId = NULL) {
     $sql = "INSERT INTO sketch (
               sketch_id,
               person_id,
+              lesson_id,
               title,
               created_at,
               updated_at
             )
-            VALUES (NULL, ?, ?, now(), now())";
+            VALUES (NULL, ?, ?, ?, now(), now())";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'is',
+      'iis',
       $personId,
+      $lessonId,
       $title
     );
     $stmt->execute();

@@ -68,6 +68,40 @@
       </div><!-- row -->
       <br />
     <?php endif; ?>
+
+    <?php if ($personInfo['loggedIn']) : ?>
+      <?php
+        include __DIR__ . '/../sketch/sketch-editor.html.php';
+        include __DIR__ . '/../sketch/sketch-console.html.php';
+        include __DIR__ . '/../sketch/sketch-buttons.html.php';
+        include __DIR__ . '/../sketch/sketch-output.html.php';
+        include __DIR__ . '/../sketch/sketch-upload.html.php';
+      ?>
+
+      <script src="<?= mix('js/editor.js'); ?>"></script>
+
+      <script>
+          function writeOutput(data, append) {
+              if (append) document.getElementById("console").innerHTML += data;
+              else document.getElementById("console").innerHTML = data;
+
+          // keep scrolled to the bottom
+          document.getElementById("console").scrollTop = document.getElementById("console").scrollHeight
+          }
+      </script>
+
+      <script type="text/python3" id="sketchEditor">
+          import pyangelo
+      </script>
+    <?php else : ?>
+      <div class="row">
+        <div class="col-md-12">
+          <h1 class="text-center">Write Code While Watching This Lesson</h1>
+          <p class="text-center"><a href="/Login">Login</a> or <a href="/register">create an account</a> and code along whilst you watch this lesson.</p>
+        </div>
+      </div>
+    <?php endif; ?>
+
     <div class="row">
       <div class="col-md-9">
         <div class="panel panel-default">
@@ -105,7 +139,7 @@
         <?php endif; ?>
       </div>
       <div class="col-md-3">
-        <img src="/uploads/images/tutorials/<?= $this->esc($lesson['tutorial_thumbnail']); ?>" 
+        <img src="/uploads/images/tutorials/<?= $this->esc($lesson['tutorial_thumbnail']); ?>"
              alt="<?= $this->esc($lesson['tutorial_title']); ?>" class="img-responsive featuredThumbnail" />
       </div>
     </div>

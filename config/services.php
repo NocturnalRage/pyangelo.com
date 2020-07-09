@@ -559,7 +559,9 @@ $di->set('LessonsShowController', function () use ($di) {
     $di->get('tutorialRepository'),
     $di->get('HtmlPurifierPurify'),
     $di->get('avatar'),
-    $_ENV['SHOW_COMMENT_COUNT']
+    $_ENV['SHOW_COMMENT_COUNT'],
+    $di->get('sketchRepository'),
+    $di->get('sketchFiles')
   );
 });
 

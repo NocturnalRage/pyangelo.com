@@ -9,9 +9,11 @@ interface SketchRepository {
  
   public function getSketchById($sketchId);
 
+  public function getSketchByPersonAndLesson($personId, $lessonId);
+
   public function getSketchFiles($sketchId);
 
-  public function createNewSketch($personId, $title);
+  public function createNewSketch($personId, $title, $lessonId = NULL);
 
   public function addSketchFile($sketchId, $filename);
 

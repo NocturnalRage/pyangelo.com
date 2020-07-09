@@ -8,12 +8,16 @@ use Framework\Contracts\AvatarContract;
 use PyAngelo\Auth\Auth;
 use PyAngelo\Controllers\Controller;
 use PyAngelo\Repositories\TutorialRepository;
+use PyAngelo\Repositories\SketchRepository;
+use PyAngelo\Utilities\SketchFiles;
 
 class LessonsShowController extends Controller {
   protected $tutorialRepository;
   protected $purifier;
   protected $avatar;
   protected $showCommentCount;
+  protected $sketchRepository;
+  protected $sketchFiles;
 
   public function __construct(
     Request $request,
@@ -22,13 +26,17 @@ class LessonsShowController extends Controller {
     TutorialRepository $tutorialRepository,
     PurifyContract $purifier,
     AvatarContract $avatar,
-    $showCommentCount
+    $showCommentCount,
+    SketchRepository $sketchRepository,
+    SketchFiles $sketchFiles
   ) {
     parent::__construct($request, $response, $auth);
     $this->tutorialRepository = $tutorialRepository;
     $this->purifier = $purifier;
     $this->avatar = $avatar;
     $this->showCommentCount = $showCommentCount;
+    $this->sketchRepository = $sketchRepository;
+    $this->sketchFiles = $sketchFiles;
   }
 
   public function exec() {
@@ -64,6 +72,8 @@ class LessonsShowController extends Controller {
       $comment['created_at'] = Carbon::createFromFormat('Y-m-d H:i:s', $comment['created_at'])->diffForHumans();
     }
 
+    $sketch = $this->getOrCreateLessonSketch($lesson);
+
     $this->response->setView('lessons/show.html.php');
     $this->response->setVars(array(
       'pageTitle' => $lesson['lesson_title'] . ' | ' . $lesson['tutorial_title'] . ' | PyAngelo',
@@ -78,7 +88,8 @@ class LessonsShowController extends Controller {
       'comments' => $comments,
       'purifier' => $this->purifier,
       'avatar' => $this->avatar,
-      'showCommentCount' => $this->showCommentCount
+      'showCommentCount' => $this->showCommentCount,
+      'sketch' => $sketch
     ));
     return $this->response;
   }
@@ -158,5 +169,26 @@ class LessonsShowController extends Controller {
       ) ? true : false;
     }
     return $alertUser;
+  }
+
+  private function getOrCreateLessonSketch($lesson) {
+    if (! $this->auth->loggedIn()) {
+      return NULL;
+    }
+    $sketch = $this->sketchRepository->getSketchByPersonAndLesson(
+      $this->auth->personId(),
+      $lesson['lesson_id']
+    );
+    if (!$sketch) {
+      $sketchId = $this->sketchRepository->createNewSketch(
+        $this->auth->personId(),
+        $lesson['lesson_slug'],
+        $lesson['lesson_id']
+      );
+
+      $this->sketchFiles->createNewMain($sketchId);
+      $sketch = $this->sketchRepository->getSketchById($sketchId);
+    }
+    return $sketch;
   }
 }
