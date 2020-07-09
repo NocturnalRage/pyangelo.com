@@ -10,8 +10,19 @@ chmod 640 $APPHOME/composer.lock
 cd $APPHOME
 composer install --no-dev
 
+echo "Running Webpack"
+cd $GITDIR
+npm run production
+
 echo "Copying config directory"
 cp -R $GITDIR/config $APPHOME/
+
+echo "Replacing public fonts directory"
+rm -r $APPHOME/public/fonts
+cp -r $GITDIR/public/fonts $APPHOME/public/
+
+echo "Replacing mix-manifest.json file"
+cp -r $GITDIR/public/mix-manifest.json $APPHOME/public/
 
 echo "Replacing public css directory"
 rm -r $APPHOME/public/css
