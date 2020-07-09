@@ -90,6 +90,12 @@ $di->set('tutorialFormService', function () use ($di) {
   );
 });
 
+$di->set('lessonFormService', function () use ($di) {
+  return new PyAngelo\FormServices\LessonFormService (
+    $di->get('tutorialRepository')
+  );
+});
+
 
 /* Email objects here */
 $di->set('emailTemplate', function () use ($di) {
@@ -129,6 +135,17 @@ $di->set('avatar', function () use ($di) {
   return new Framework\Presentation\Gravatar(75);
 });
 
+$di->set('cloudFront', function () use ($di) {
+  return new Framework\CloudFront\CloudFront(
+    $_ENV['AWS_CLOUDFRONT_KEY'],
+    $_ENV['AWS_CLOUDFRONT_SECRET'],
+    $_ENV['AWS_CLOUDFRONT_REGION'],
+    $_ENV['CLOUDFRONT_PRIVATE_KEY_FILE'],
+    $_ENV['CLOUDFRONT_ACCESS_KEY_ID'],
+    $_ENV['CLOUDFRONT_URL_HOST']
+  );
+});
+
 $di->set('countryDetector', function () use ($di) {
   return new PyAngelo\Utilities\CountryDetector(
     $di->get('request'),
@@ -138,6 +155,16 @@ $di->set('countryDetector', function () use ($di) {
 
 $di->set('geoReader', function () use ($di) {
   return new GeoIp2\Database\Reader($_ENV['GEOIP2_COUNTRY_DB']);
+});
+
+$di->set('HtmlPurifierPurify', function () use ($di) {
+  $config = \HTMLPurifier_Config::createDefault();
+  $config->set('HTML.Nofollow', true);
+  $config->set('URI.Host', 'www.pyangelo.com');
+  $config->set('HTML.SafeIframe', true);
+  $config->set('URI.SafeIframeRegexp','%^//(www.youtube.com/embed/)%');
+  $htmlPurifier = new \HTMLPurifier($config);
+  return new Framework\Presentation\HtmlPurifierPurify($htmlPurifier);
 });
 
 $di->set('numberFormatter', function () use ($di) {
@@ -503,5 +530,112 @@ $di->set('TutorialsUpdateController', function () use ($di) {
     $di->get('response'),
     $di->get('auth'),
     $di->get('tutorialFormService')
+  );
+});
+
+$di->set('LessonsNewController', function () use ($di) {
+  return new PyAngelo\Controllers\Lessons\LessonsNewController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository')
+  );
+});
+
+$di->set('LessonsCreateController', function () use ($di) {
+  return new PyAngelo\Controllers\Lessons\LessonsCreateController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('lessonFormService')
+  );
+});
+
+$di->set('LessonsShowController', function () use ($di) {
+  return new PyAngelo\Controllers\Lessons\LessonsShowController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository'),
+    $di->get('HtmlPurifierPurify'),
+    $di->get('avatar'),
+    $_ENV['SHOW_COMMENT_COUNT'],
+    $di->get('sketchRepository'),
+    $di->get('sketchFiles')
+  );
+});
+
+$di->set('LessonsGetSignedUrlController', function () use ($di) {
+  return new PyAngelo\Controllers\Lessons\LessonsGetSignedUrlController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository'),
+    $di->get('cloudFront')
+  );
+});
+
+$di->set('LessonsEditController', function () use ($di) {
+  return new PyAngelo\Controllers\Lessons\LessonsEditController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository')
+  );
+});
+
+$di->set('LessonsUpdateController', function () use ($di) {
+  return new PyAngelo\Controllers\Lessons\LessonsUpdateController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('lessonFormService')
+  );
+});
+
+$di->set('LessonsToggleCompletedController', function () use ($di) {
+  return new PyAngelo\Controllers\Lessons\LessonsToggleCompletedController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository')
+  );
+});
+
+$di->set('LessonsToggleFavouritedController', function () use ($di) {
+  return new PyAngelo\Controllers\Lessons\LessonsToggleFavouritedController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository')
+  );
+});
+
+$di->set('LessonsToggleAlertController', function () use ($di) {
+  return new PyAngelo\Controllers\Lessons\LessonsToggleAlertController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository')
+  );
+});
+
+$di->set('LessonsGetNextVideoController', function () use ($di) {
+  return new PyAngelo\Controllers\Lessons\LessonsGetNextVideoController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository')
+  );
+});
+
+$di->set('LessonsCommentController', function () use ($di) {
+  return new PyAngelo\Controllers\Lessons\LessonsCommentController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository'),
+    $di->get('HtmlPurifierPurify'),
+    $di->get('avatar')
   );
 });

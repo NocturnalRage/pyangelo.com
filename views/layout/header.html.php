@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
   <meta name="description" content="<?= $this->esc($metaDescription) ?>">
-  <meta name="author" content="PingSkills">
+  <meta name="author" content="Nocturnal Rage">
   <title><?= $this->esc($pageTitle); ?></title>
   <link rel="stylesheet" href="<?= mix('css/pyangelo.css'); ?>">
   <link href="//vjs.zencdn.net/5.8.8/video-js.css" rel="stylesheet">
@@ -15,8 +15,6 @@
   <!-- Set base URL for the sketch!
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <base href="/sketches/<?= $sketch['sketch_id'] ?>/" />
-  <?php endif; ?>
-  <script src="<?= mix('js/app.js'); ?>"></script>
   <!-- Brython
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.8/brython.min.js" integrity="sha256-o/getzwHeAq4xcWJ350CFg+70KNoYxxdK8ikIp76hIM=" crossorigin="anonymous"></script>
@@ -27,6 +25,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ace.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/mode-python.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ext-language_tools.min.js"></script>
+
+  <?php endif; ?>
+
+  <script src="<?= mix('js/app.js'); ?>"></script>
 
 </head>
 <?php if (!empty($sketch['sketch_id'])): ?>

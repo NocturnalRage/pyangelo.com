@@ -41,8 +41,8 @@ class EditHtmlTest extends BasicViewHtmlTest {
     $response = new Response('views');
     $response->setView('tutorials/edit.html.php');
     $response->setVars(array(
-      'pageTitle' => "CubeSkills Tutorials",
-      'metaDescription' => "Learn how to solve the Rubik's Cube and similar puzzles from the World Champion speedcuber Feliks Zemdegs.",
+      'pageTitle' => "PyAngelo Tutorials",
+      'metaDescription' => "Learn how to code.",
       'activeLink' => 'Tutorials',
       'personInfo' => $this->setPersonInfoAdmin(),
       'tutorial' => $tutorial,

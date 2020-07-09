@@ -41,7 +41,7 @@ class ForgotPasswordEmailTest extends TestCase {
     $toEmail = 'fast@hotmail.com';
     $mailInfo = [
       'requestScheme' => 'https',
-      'serverName' => 'www.cubeskills.com',
+      'serverName' => 'www.pyangelo.com',
       'token' => $resetToken,
       'givenName' => $firstName,
       'familyName' => $surname,

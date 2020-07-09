@@ -34,7 +34,7 @@ class SortHtmlTest extends BasicViewHtmlTest {
     $response->setView('categories/sort.html.php');
     $response->setVars(array(
       'pageTitle' => "Sort PyAngelo Tutorials",
-      'metaDescription' => "Learn how to solve the Rubik's Cube and similar puzzles from the World Champion speedcuber Feliks Zemdegs.",
+      'metaDescription' => "Learn how to code.",
       'activeLink' => 'Tutorials',
       'personInfo' => $this->setPersonInfoLoggedIn(),
       'tutorials' => $tutorials,

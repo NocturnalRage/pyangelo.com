@@ -1,3 +1,4 @@
+config/CloudFront
 /node_modules
 /vendor
 .env
