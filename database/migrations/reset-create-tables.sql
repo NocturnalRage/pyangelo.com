@@ -28,4 +28,4 @@ source 0027_create_autoresponder_table.sql;
 source 0028_add_blog_image.sql;
 source 0029_create_alert_tables.sql;
 source 0030_create_sketch_tables.sql;
-
+source 0031_add_lesson_id_to_sketch_table.sql;
