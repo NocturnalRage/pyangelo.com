@@ -117,7 +117,7 @@ class UploadAssetControllerTest extends TestCase {
       'person_id' => $personId
     ];
     $fileAsset = [
-      'size' => 1048577,
+      'size' => 8388609,
       'type' => 'image/jpeg'
     ];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);

@@ -116,7 +116,7 @@ class UploadAssetController extends Controller {
     if ($assetInfo["size"] == 0) {
       return false;
     }
-    if ($assetInfo['size'] > 1048576) {
+    if ($assetInfo['size'] > 8388608) {
       return false;
     }
     elseif ($assetInfo['type'] != 'image/jpeg' && $assetInfo['type'] != 'image/png' && $assetInfo['type'] != 'image/gif' && $assetInfo['type'] != 'audio/mpeg') {
