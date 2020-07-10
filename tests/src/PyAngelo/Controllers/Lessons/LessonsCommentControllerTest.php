@@ -147,7 +147,7 @@ class LessonsCommentControllerTest extends TestCase {
     $this->request->post['lessonId'] = $lessonId;
     $this->request->post['lessonComment'] = $lessonComment;
     $this->request->server['REQUEST_SCHEME'] = 'https';
-    $this->request->server['SERVER_NAME'] = 'www.cubeskills.com';
+    $this->request->server['SERVER_NAME'] = 'www.pyangelo.com';
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
