@@ -182,7 +182,7 @@ class LessonsShowController extends Controller {
     if (!$sketch) {
       $sketchId = $this->sketchRepository->createNewSketch(
         $this->auth->personId(),
-        $lesson['lesson_slug'],
+        $lesson['lesson_title'],
         $lesson['lesson_id']
       );
 
