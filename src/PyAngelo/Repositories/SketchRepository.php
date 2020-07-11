@@ -9,6 +9,8 @@ interface SketchRepository {
  
   public function getSketchById($sketchId);
 
+  public function getSketchByPersonAndTutorial($personId, $lessonId);
+
   public function getSketchByPersonAndLesson($personId, $lessonId);
 
   public function getSketchFiles($sketchId);

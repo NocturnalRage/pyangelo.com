@@ -35,6 +35,16 @@
               <div class="alert alert-danger"><?= $this->esc($errors['tutorial_level_id']); ?></div>
             <?php endif; ?>
           </div>
+          <div class="form-group<?= isset($errors['single_sketch']) ? ' has-error' : ''; ?>">
+            <label for="single_sketch" class="control-label">Single Sketch:</label>
+            <select id="single_sketch" name="single_sketch" class="form-control">
+              <option <?php if (0 == ($formVars['single_sketch'] ?? '')) echo 'selected'; ?> value="0">Sketch for each lesson</option>
+              <option <?php if (1 == ($formVars['single_sketch'] ?? '')) echo 'selected'; ?> value="1">Single sketch for the entire tutorial</option>
+            </select>
+            <?php if (isset($errors['tutorial_level_id'])) :?>
+              <div class="alert alert-danger"><?= $this->esc($errors['tutorial_level_id']); ?></div>
+            <?php endif; ?>
+          </div>
           <div class="form-group<?= isset($errors['display_order']) ? ' has-error' : ''; ?>">
             <label for="display_order" class="control-label">Display order: </label>
             <input type="number" min="1" max="999" name="display_order" id="display_order" class="form-control" placeholder="Display order" value="<?= $this->esc($formVars['display_order'] ?? ''); ?>" maxlength="3" required />

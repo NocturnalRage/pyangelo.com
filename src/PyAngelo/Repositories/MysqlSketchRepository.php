@@ -41,6 +41,19 @@ class MysqlSketchRepository implements SketchRepository {
     return $result->fetch_assoc();
   }
 
+  public function getSketchByPersonAndTutorial($personId, $tutorialId) {
+    $sql = "SELECT *
+	          FROM   sketch
+            WHERE  person_id = ?
+            AND    tutorial_id = ?";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->bind_param('ii', $personId, $tutorialId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    return $result->fetch_assoc();
+  }
+
   public function getSketchByPersonAndLesson($personId, $lessonId) {
     $sql = "SELECT *
 	          FROM   sketch
@@ -67,21 +80,23 @@ class MysqlSketchRepository implements SketchRepository {
     return $result->fetch_all(MYSQLI_ASSOC);
   }
 
-  public function createNewSketch($personId, $title, $lessonId = NULL) {
+  public function createNewSketch($personId, $title, $lessonId = NULL, $tutorialId = NULL) {
     $sql = "INSERT INTO sketch (
               sketch_id,
               person_id,
               lesson_id,
+              tutorial_id,
               title,
               created_at,
               updated_at
             )
-            VALUES (NULL, ?, ?, ?, now(), now())";
+            VALUES (NULL, ?, ?, ?, ?, now(), now())";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'iis',
+      'iiis',
       $personId,
       $lessonId,
+      $tutorialId,
       $title
     );
     $stmt->execute();

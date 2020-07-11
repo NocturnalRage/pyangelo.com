@@ -114,6 +114,7 @@ class TutorialFormService {
       $formData['description'],
       $formData['tutorial_category_id'],
       $formData['tutorial_level_id'],
+      $formData['single_sketch'],
       $formData['display_order']
     );
     return true;
@@ -134,6 +135,7 @@ class TutorialFormService {
       $formData['slug'],
       $formData['tutorial_category_id'],
       $formData['tutorial_level_id'],
+      $formData['single_sketch'],
       $formData['display_order'],
       $formData['thumbnail']
     );
@@ -201,6 +203,13 @@ class TutorialFormService {
     }
     else if (! $this->tutorialRepository->getTutorialLevelById($formData['tutorial_level_id'])) {
       $this->errors['tutorial_level_id'] = "The specified level for this tutorial does not exist.";
+    }
+
+    if (! isset($formData['single_sketch'])) {
+      $this->errors['single_sketch'] = "You must select if there will only be a single sketch for the entire tutorial.";
+    }
+    else if ($formData['single_sketch'] != 0 && $formData['single_sketch'] != 1) {
+      $this->errors['single_sketch'] = "You must select either true or false.";
     }
 
     if (empty($formData['display_order'])) {
