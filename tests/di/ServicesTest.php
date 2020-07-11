@@ -352,5 +352,13 @@ class ServicesTest extends TestCase {
     $controller = $this->di->newInstance('UnsubscribeThreadController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Profile\UnsubscribeThreadController');
   }
+  public function LessonsSortController() {
+    $controller = $this->di->newInstance('LessonsSortController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Lessons\LessonsSortController');
+  }
+  public function LessonsOrderController() {
+    $controller = $this->di->newInstance('LessonsOrderController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Lessons\LessonsOrderController');
+  }
 }
 ?>

@@ -55,4 +55,6 @@ return [
   [ 'POST','/notification-read', 'NotificationsReadController', 'notificationsRead' ],
   [ 'POST','/notification-all-read', 'NotificationsAllReadController', 'notificationsAllRead' ],
   [ 'POST','/unsubscribe-thread', 'UnsubscribeThreadController', 'unsubscribeThread' ],
+  [ 'GET','/tutorials/[:slug]/lessons/sort', 'LessonsSortController', 'lessonsSort' ],
+  [ 'POST','/tutorials/[:slug]/lessons/save-sort-order', 'LessonsOrderController', 'lessonsOrder' ],
 ];
