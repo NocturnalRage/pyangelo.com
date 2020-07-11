@@ -116,6 +116,7 @@ class MysqlTutorialRepository implements TutorialRepository {
     $slug,
     $tutorialCategoryId,
     $tutorialLevelId,
+    $singleSketch,
     $displayOrder,
     $thumbnail
   ) {
@@ -127,20 +128,22 @@ class MysqlTutorialRepository implements TutorialRepository {
               thumbnail,
               tutorial_category_id,
               tutorial_level_id,
+              single_sketch,
               display_order,
               created_at,
               updated_at
             )
-            VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+            VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'ssssiii',
+      'ssssiiii',
       $title,
       $description,
       $slug,
       $thumbnail,
       $tutorialCategoryId,
       $tutorialLevelId,
+      $singleSketch,
       $displayOrder
     );
     $stmt->execute();
@@ -155,6 +158,7 @@ class MysqlTutorialRepository implements TutorialRepository {
     $description,
     $tutorialCategoryId,
     $tutorialLevelId,
+    $singleSketch,
     $displayOrder
   ) {
     $sql = "UPDATE tutorial
@@ -162,16 +166,18 @@ class MysqlTutorialRepository implements TutorialRepository {
                    description = ?,
                    tutorial_category_id = ?,
                    tutorial_level_id = ?,
+                   single_sketch = ?,
                    display_order = ?,
                    updated_at = now()
             WHERE  slug = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'ssiiis',
+      'ssiiiis',
       $title,
       $description,
       $tutorialCategoryId,
       $tutorialLevelId,
+      $singleSketch,
       $displayOrder,
       $slug
     );
@@ -574,11 +580,12 @@ class MysqlTutorialRepository implements TutorialRepository {
                    CASE WHEN lc.completed_at IS NULL THEN 0 ELSE 1 END AS completed,
                    CASE WHEN lf.favourited_at IS NULL THEN 0 ELSE 1 END AS favourited,
                    t.tutorial_id,
+                   t.single_sketch,
                    t.title as tutorial_title,
                    t.slug as tutorial_slug,
                    t.thumbnail as tutorial_thumbnail,
                    t.pdf
-	        FROM   lesson l
+            FROM   lesson l
             LEFT JOIN lesson_completed lc on lc.lesson_id = l.lesson_id and lc.person_id = ?
             LEFT JOIN lesson_favourited lf on lf.lesson_id = l.lesson_id and lf.person_id = ?
             JOIN   tutorial t on l.tutorial_id = t.tutorial_id

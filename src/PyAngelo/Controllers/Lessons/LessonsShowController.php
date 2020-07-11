@@ -72,7 +72,7 @@ class LessonsShowController extends Controller {
       $comment['created_at'] = Carbon::createFromFormat('Y-m-d H:i:s', $comment['created_at'])->diffForHumans();
     }
 
-    $sketch = $this->getOrCreateLessonSketch($lesson);
+    $sketch = $this->getOrCreateSketch($lesson);
 
     $this->response->setView('lessons/show.html.php');
     $this->response->setVars(array(
@@ -171,10 +171,36 @@ class LessonsShowController extends Controller {
     return $alertUser;
   }
 
-  private function getOrCreateLessonSketch($lesson) {
-    if (! $this->auth->loggedIn()) {
+  private function getOrCreateSketch($lesson) {
+    if (! $this->auth->loggedIn())
       return NULL;
+
+    if ($lesson['single_sketch'])
+      return $this->getOrCreateTutorialSketch($lesson);
+    else
+      return $this->getOrCreateLessonSketch($lesson);
+  }
+
+  private function getOrCreateTutorialSketch($lesson) {
+    $sketch = $this->sketchRepository->getSketchByPersonAndTutorial(
+      $this->auth->personId(),
+      $lesson['tutorial_id']
+    );
+    if (!$sketch) {
+      $sketchId = $this->sketchRepository->createNewSketch(
+        $this->auth->personId(),
+        $lesson['tutorial_title'],
+        NULL,
+        $lesson['tutorial_id']
+      );
+
+      $this->sketchFiles->createNewMain($sketchId);
+      $sketch = $this->sketchRepository->getSketchById($sketchId);
     }
+    return $sketch;
+  }
+
+  private function getOrCreateLessonSketch($lesson) {
     $sketch = $this->sketchRepository->getSketchByPersonAndLesson(
       $this->auth->personId(),
       $lesson['lesson_id']

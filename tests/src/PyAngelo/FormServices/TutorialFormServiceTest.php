@@ -32,7 +32,47 @@ class TutorialFormServiceTest extends TestCase {
       'description' => 'The description field cannot be blank.',
       'tutorial_category_id' => 'You must select the category this tutorial belongs to.',
       'tutorial_level_id' => 'You must select the level of this tutorial.',
+      'single_sketch' => 'You must select if there will only be a single sketch for the entire tutorial.',
       'display_order' => 'You must select where this will be displayed relative to other tutorial series.'
+    ];
+    $this->assertFalse($success);
+    $this->assertEquals($expectedFlashMessage, $flashMessage);
+    $this->assertEquals($expectedErrors, $errors);
+  }
+
+  public function testCreateTutorialWithInvalidSingleSketch() {
+    $tutorialCategoryId = 1;
+    $tutorialLevelId = 2;
+    $singleSketch = 5;
+    $title = 'A normal title';
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->tutorialRepository->shouldReceive('getTutorialCategoryById')
+      ->once()
+      ->with($tutorialCategoryId)
+      ->andReturn(true);
+    $this->tutorialRepository->shouldReceive('getTutorialLevelById')
+      ->once()
+      ->with($tutorialLevelId)
+      ->andReturn(true);
+    $this->tutorialRepository->shouldReceive('getTutorialByTitle')
+      ->once()
+      ->with($title)
+      ->andReturn(NULL);
+    $formData = [
+      'title' => $title,
+      'description' => 'A normal description.',
+      'tutorial_category_id' => $tutorialCategoryId,
+      'tutorial_level_id' => $tutorialLevelId,
+      'single_sketch' => $singleSketch,
+      'display_order' => 1
+    ];
+
+    $success = $this->tutorialFormService->createTutorial($formData, NULL);
+    $flashMessage = $this->tutorialFormService->getFlashMessage();
+    $errors = $this->tutorialFormService->getErrors();
+    $expectedFlashMessage = 'There were some errors. Please fix these and then we will create the tutorial. You will also need to re-select the thumbnail for this tutorial series.';
+    $expectedErrors = [
+      'single_sketch' => 'You must select either true or false.'
     ];
     $this->assertFalse($success);
     $this->assertEquals($expectedFlashMessage, $flashMessage);
@@ -42,6 +82,7 @@ class TutorialFormServiceTest extends TestCase {
   public function testCreateTutorialWithDataTooLong() {
     $tutorialCategoryId = 1;
     $tutorialLevelId = 2;
+    $singleSketch = 0;
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->tutorialRepository->shouldReceive('getTutorialCategoryById')
       ->once()
@@ -56,6 +97,7 @@ class TutorialFormServiceTest extends TestCase {
       'description' => 'So short.',
       'tutorial_category_id' => $tutorialCategoryId,
       'tutorial_level_id' => $tutorialLevelId,
+      'single_sketch' => $singleSketch,
       'display_order' => 1
     ];
 
@@ -74,6 +116,7 @@ class TutorialFormServiceTest extends TestCase {
   public function testCreateTutorialWithInvalidCategory() {
     $tutorialCategoryId = 100;
     $tutorialLevelId = 1;
+    $singleSketch = 0;
     $title = 'A Great Tutorial';
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->tutorialRepository->shouldReceive('getTutorialCategoryById')
@@ -93,6 +136,7 @@ class TutorialFormServiceTest extends TestCase {
       'description' => 'So short.',
       'tutorial_category_id' => $tutorialCategoryId,
       'tutorial_level_id' => $tutorialLevelId,
+      'single_sketch' => $singleSketch,
       'display_order' => 1
     ];
 
@@ -111,6 +155,7 @@ class TutorialFormServiceTest extends TestCase {
   public function testCreateTutorialWithInvalidLevel() {
     $tutorialCategoryId = 1;
     $tutorialLevelId = 100;
+    $singleSketch = 0;
     $title = 'A Great Tutorial';
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->tutorialRepository->shouldReceive('getTutorialCategoryById')
@@ -130,6 +175,7 @@ class TutorialFormServiceTest extends TestCase {
       'description' => 'So short.',
       'tutorial_category_id' => $tutorialCategoryId,
       'tutorial_level_id' => $tutorialLevelId,
+      'single_sketch' => $singleSketch,
       'display_order' => 1
     ];
 
@@ -164,6 +210,7 @@ class TutorialFormServiceTest extends TestCase {
     $slug = 'a-new-tutorial';
     $tutorialCategoryId = 3;
     $tutorialLevelId = 3;
+    $singleSketch = 0;
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->tutorialRepository->shouldReceive('getTutorialCategoryById')
       ->once()
@@ -186,6 +233,7 @@ class TutorialFormServiceTest extends TestCase {
       'description' => 'Great information about speedcubing.',
       'tutorial_category_id' => $tutorialCategoryId,
       'tutorial_level_id' => $tutorialLevelId,
+      'single_sketch' => $singleSketch,
       'display_order' => 1
     ];
 
@@ -221,6 +269,7 @@ class TutorialFormServiceTest extends TestCase {
     $slug = 'a-new-tutorial';
     $tutorialCategoryId = 3;
     $tutorialLevelId = 3;
+    $singleSketch = 0;
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->tutorialRepository->shouldReceive('getTutorialCategoryById')
       ->once()
@@ -247,6 +296,7 @@ class TutorialFormServiceTest extends TestCase {
       'description' => 'Great information about speedcubing.',
       'tutorial_category_id' => $tutorialCategoryId,
       'tutorial_level_id' => $tutorialLevelId,
+      'single_sketch' => $singleSketch,
       'display_order' => 1
     ];
 
@@ -281,6 +331,7 @@ class TutorialFormServiceTest extends TestCase {
     $updatedTitle = 'Updated Tutorial';
     $tutorialCategoryId = 1;
     $tutorialLevelId = 2;
+    $singleSketch = 0;
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->tutorialRepository->shouldReceive('getTutorialCategoryById')
       ->once()
@@ -304,6 +355,7 @@ class TutorialFormServiceTest extends TestCase {
       'description' => 'updated',
       'tutorial_category_id' => $tutorialCategoryId,
       'tutorial_level_id' => $tutorialLevelId,
+      'single_sketch' => $singleSketch,
       'display_order' => 1
     ];
 
@@ -325,6 +377,7 @@ class TutorialFormServiceTest extends TestCase {
     $updatedDescription = 'updated';
     $updatedTutorialCategoryId = 5;
     $updatedTutorialLevelId = 3;
+    $updatedSingleSketch = 0;
     $updatedDisplayOrder = 1;
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->tutorialRepository->shouldReceive('getTutorialCategoryById')
@@ -345,7 +398,7 @@ class TutorialFormServiceTest extends TestCase {
       ->andReturn(NULL);
     $this->tutorialRepository->shouldReceive('updateTutorialBySlug')
       ->once()
-      ->with($slug, $updatedTitle, $updatedDescription, $updatedTutorialCategoryId, $updatedTutorialLevelId, $updatedDisplayOrder)
+      ->with($slug, $updatedTitle, $updatedDescription, $updatedTutorialCategoryId, $updatedTutorialLevelId, $updatedSingleSketch, $updatedDisplayOrder)
       ->andReturn(NULL);
     $formData = [
       'slug' => $slug,
@@ -353,6 +406,7 @@ class TutorialFormServiceTest extends TestCase {
       'description' => $updatedDescription,
       'tutorial_category_id' => $updatedTutorialCategoryId,
       'tutorial_level_id' => $updatedTutorialLevelId,
+      'single_sketch' => $updatedSingleSketch,
       'display_order' => $updatedDisplayOrder
     ];
 

@@ -67,15 +67,16 @@ class MysqlTutorialRepositoryTest extends TestCase {
     $title = 'Test Tutorial';
     $description = 'A test tutorial.';
     $slug = 'test-tutorial';
-    $tutorialLevelId = 1;
     $tutorialCategoryId = 1;
+    $tutorialLevelId = 1;
+    $singleSketch = 0;
     $displayOrder = 1;
     $thumbnail = 'test-tutorial.jpg';
     $expectedDeletedCount = 2;
 
     // Insert, retrieve, and delete data from the table
     $tutorialId1 = $this->tutorialRepository->insertTutorial(
-      $title, $description, $slug, $tutorialLevelId, $tutorialCategoryId, $displayOrder, $thumbnail
+      $title, $description, $slug, $tutorialCategoryId, $tutorialLevelId, $singleSketch, $displayOrder, $thumbnail
     );
     $tutorial = $this->tutorialRepository->getTutorialBySlug($slug);
     $this->assertSame($tutorial['title'], $title);
@@ -95,25 +96,28 @@ class MysqlTutorialRepositoryTest extends TestCase {
     $title = 'Test Tutorial 2';
     $description = 'A second tutorial.';
     $slug = 'test-tutorial-2';
-    $tutorialLevelId = 1;
     $tutorialCategoryId = 1;
+    $tutorialLevelId = 1;
+    $singleSketch = 1;
     $displayOrder = 2;
     $thumbnail = 'test-tutorial-2.jpg';
     $tutorialId2 = $this->tutorialRepository->insertTutorial(
-      $title, $description, $slug, $tutorialLevelId, $tutorialCategoryId, $displayOrder, $thumbnail
+      $title, $description, $slug, $tutorialCategoryId, $tutorialLevelId, $singleSketch, $displayOrder, $thumbnail
     );
 
     $description = 'A second tutorial twice removed.';
     $tutorialLevelId = 2;
     $tutorialCategoryId = 2;
+    $singleSketch = 0;
     $rowsUpdated = $this->tutorialRepository->updateTutorialBySlug(
-      $slug, $title, $description, $tutorialLevelId, $tutorialCategoryId, $displayOrder
+      $slug, $title, $description, $tutorialLevelId, $tutorialCategoryId, $singleSketch, $displayOrder
     );
     $this->assertSame(1, $rowsUpdated);
     $tutorial = $this->tutorialRepository->getTutorialBySlug($slug);
     $this->assertSame($tutorial['title'], $title);
     $this->assertSame($tutorial['tutorial_level_id'], $tutorialLevelId);
     $this->assertSame($tutorial['tutorial_category_id'], $tutorialCategoryId);
+    $this->assertSame($tutorial['single_sketch'], $singleSketch);
     $this->assertSame($tutorial['display_order'], $displayOrder);
     $this->assertSame($tutorial['description'], $description);
 
