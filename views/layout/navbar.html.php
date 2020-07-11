@@ -45,9 +45,24 @@
         <ul class="nav navbar-nav navbar-right">
           <!-- Authentication Links -->
           <?php if (! $personInfo['loggedIn']) : ?>
-          <li><a href="/login">Login</a></li>
-          <li><a href="/register">Register</a></li>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
           <?php else : ?>
+            <li>
+              <a href="/latest-comments">
+                <i class="fa fa-comment" aria-hidden="true"></i>
+              </a>
+            </li>
+            <li>
+              <a href="/notifications">
+                <i class="fa fa-bell" aria-hidden="true"></i>
+                  <?php if ($personInfo['unreadNotificationCount']) : ?>
+                    <span id="notification-badge" class="badge badge-nav">
+                      <?= $personInfo['unreadNotificationCount'] ?>
+                    </span>
+                  <?php endif; ?>
+              </a>
+            </li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                 <?= $this->esc($personInfo['details']['given_name']); ?> <span class="caret"></span>

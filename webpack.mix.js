@@ -20,6 +20,6 @@ let mix = require('laravel-mix');
 //   .copy('./resources/assets/js/questionComments.js', './public/js/')
 //   .copy('./resources/assets/js/questionAlert.js', './public/js/')
 //   .copy('./resources/assets/js/questionFavourite.js', './public/js/')
-//   .copy('./resources/assets/js/notifications.js', './public/js/')
+   .copy('./resources/assets/js/notifications.js', './public/js/')
 //   .copy('./resources/assets/js/userSearch.js', './public/js/')
    .version();

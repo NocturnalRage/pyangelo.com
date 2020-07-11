@@ -39,6 +39,10 @@ $di->set('dbh', function () use ($di) {
     $_ENV['DB_DATABASE']);
 });
 
+$di->set('blogRepository', function () use ($di) {
+  return new PyAngelo\Repositories\MysqlBlogRepository($di->get('dbh'));
+});
+
 $di->set('campaignRepository', function () use ($di) {
   return new PyAngelo\Repositories\MysqlCampaignRepository($di->get('dbh'));
 });
@@ -637,5 +641,42 @@ $di->set('LessonsCommentController', function () use ($di) {
     $di->get('tutorialRepository'),
     $di->get('HtmlPurifierPurify'),
     $di->get('avatar')
+  );
+});
+
+$di->set('NotificationsController', function () use ($di) {
+  return new PyAngelo\Controllers\Profile\NotificationsController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('personRepository')
+  );
+});
+
+$di->set('NotificationsReadController', function () use ($di) {
+  return new PyAngelo\Controllers\Profile\NotificationsReadController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('personRepository')
+  );
+});
+
+$di->set('NotificationsAllReadController', function () use ($di) {
+  return new PyAngelo\Controllers\Profile\NotificationsAllReadController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('personRepository')
+  );
+});
+
+$di->set('UnsubscribeThreadController', function () use ($di) {
+  return new PyAngelo\Controllers\Profile\UnsubscribeThreadController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('blogRepository'),
+    $di->get('tutorialRepository')
   );
 });
