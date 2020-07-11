@@ -40,6 +40,10 @@ class ServicesTest extends TestCase {
     $dbh = $this->di->get('dbh');
     $this->assertSame(get_class($dbh), 'mysqli');
   }
+  public function testBlogRepository() {
+    $repository = $this->di->get('blogRepository');
+    $this->assertSame(get_class($repository), 'PyAngelo\Repositories\MysqlBlogRepository');
+  }
   public function testCampaignRepository() {
     $repository = $this->di->get('campaignRepository');
     $this->assertSame(get_class($repository), 'PyAngelo\Repositories\MysqlCampaignRepository');
@@ -331,6 +335,22 @@ class ServicesTest extends TestCase {
   public function testLessonsCommentController() {
     $controller = $this->di->newInstance('LessonsCommentController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Lessons\LessonsCommentController');
+  }
+  public function testNotificationsController() {
+    $controller = $this->di->newInstance('NotificationsController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Profile\NotificationsController');
+  }
+  public function testNotificationsReadController() {
+    $controller = $this->di->newInstance('NotificationsReadController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Profile\NotificationsReadController');
+  }
+  public function testNotificationsAllReadController() {
+    $controller = $this->di->newInstance('NotificationsAllReadController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Profile\NotificationsAllReadController');
+  }
+  public function testUnsubscribeThreadController() {
+    $controller = $this->di->newInstance('UnsubscribeThreadController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Profile\UnsubscribeThreadController');
   }
 }
 ?>

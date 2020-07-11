@@ -51,4 +51,8 @@ return [
   [ 'POST','/toggle-lesson-alert', 'LessonsToggleAlertController', 'lessonsToggleAlert' ],
   [ 'GET','/get-next-video', 'LessonsGetNextVideoController', 'lessonsGetNextVideoUrl' ],
   [ 'POST','/lessons/comment', 'LessonsCommentController', 'lessonsComment' ],
+  [ 'GET','/notifications', 'NotificationsController', 'notifications' ],
+  [ 'POST','/notification-read', 'NotificationsReadController', 'notificationsRead' ],
+  [ 'POST','/notification-all-read', 'NotificationsAllReadController', 'notificationsAllRead' ],
+  [ 'POST','/unsubscribe-thread', 'UnsubscribeThreadController', 'unsubscribeThread' ],
 ];

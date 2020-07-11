@@ -322,7 +322,7 @@ class LessonsShowControllerTest extends TestCase {
     $this->sketchRepository
       ->shouldReceive('createNewSketch')
       ->once()
-      ->with($personId, $lessonSlug, $lessonId)
+      ->with($personId, $lessonTitle, $lessonId)
       ->andReturn($sketchId);
     $this->sketchRepository
       ->shouldReceive('getSketchById')

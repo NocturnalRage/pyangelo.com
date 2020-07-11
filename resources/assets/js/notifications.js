@@ -40,7 +40,7 @@ $( document ).ready(function() {
       });
     };
 
-    var markAllAsReadAjax = function(notification_id, crsf_token) {
+    var markAllAsReadAjax = function(crsf_token) {
       $.ajax({
         type: 'POST',
         url: '/notification-all-read',

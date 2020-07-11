@@ -12,7 +12,8 @@ abstract class BasicViewHtmlTest extends TestCase {
       'details' => NULL,
       'isAdmin' => false,
       'isImpersonating' => false,
-      'crsfToken' => 'dummy-crsf-token'
+      'crsfToken' => 'dummy-crsf-token',
+      'unreadNotificationCount' => 1
     ];
   }
 
@@ -25,7 +26,8 @@ abstract class BasicViewHtmlTest extends TestCase {
       ],
       'isAdmin' => false,
       'isImpersonating' => false,
-      'crsfToken' => 'dummy-crsf-token'
+      'crsfToken' => 'dummy-crsf-token',
+      'unreadNotificationCount' => 1
     ];
   }
 
@@ -38,7 +40,8 @@ abstract class BasicViewHtmlTest extends TestCase {
       ],
       'isAdmin' => true,
       'isImpersonating' => false,
-      'crsfToken' => 'dummy-crsf-token'
+      'crsfToken' => 'dummy-crsf-token',
+      'unreadNotificationCount' => 1
     ];
   }
 
@@ -51,7 +54,8 @@ abstract class BasicViewHtmlTest extends TestCase {
       ],
       'isAdmin' => true,
       'isImpersonating' => true,
-      'crsfToken' => 'dummy-crsf-token'
+      'crsfToken' => 'dummy-crsf-token',
+      'unreadNotificationCount' => 1
     ];
   }
 }
