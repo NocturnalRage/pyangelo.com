@@ -680,3 +680,21 @@ $di->set('UnsubscribeThreadController', function () use ($di) {
     $di->get('tutorialRepository')
   );
 });
+
+$di->set('LessonsSortController', function () use ($di) {
+  return new PyAngelo\Controllers\Lessons\LessonsSortController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository')
+  );
+});
+
+$di->set('LessonsOrderController', function () use ($di) {
+  return new PyAngelo\Controllers\Lessons\LessonsOrderController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository')
+  );
+});
