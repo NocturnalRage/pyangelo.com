@@ -3,7 +3,6 @@ window.addEventListener("dragover",function(e){ e.preventDefault(); });
 
 let assetUpload = document.getElementById('assetUpload');
 let dropzoneImage = document.getElementById('dropzoneImage');
-let dropzoneSound = document.getElementById('dropzoneSound');
 
 assetUpload.addEventListener('change', handleChangeFiles);
 dropzoneImage.addEventListener('dragenter', highlightDropzone);

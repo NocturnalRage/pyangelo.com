@@ -230,7 +230,7 @@ class TutorialFormServiceTest extends TestCase {
       ->andReturn(NULL);
     $formData = [
       'title' => $title,
-      'description' => 'Great information about speedcubing.',
+      'description' => 'Great information about coding.',
       'tutorial_category_id' => $tutorialCategoryId,
       'tutorial_level_id' => $tutorialLevelId,
       'single_sketch' => $singleSketch,
@@ -293,7 +293,7 @@ class TutorialFormServiceTest extends TestCase {
       ->andReturn(NULL);
     $formData = [
       'title' => $title,
-      'description' => 'Great information about speedcubing.',
+      'description' => 'Great information about coding.',
       'tutorial_category_id' => $tutorialCategoryId,
       'tutorial_level_id' => $tutorialLevelId,
       'single_sketch' => $singleSketch,
