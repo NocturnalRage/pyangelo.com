@@ -1,26 +1,26 @@
 <?php
-namespace PyAngelo\Controllers\Lessons;
+namespace PyAngelo\Controllers\Blog;
 
 use PyAngelo\Auth\Auth;
 use PyAngelo\Controllers\Controller;
-use PyAngelo\Repositories\TutorialRepository;
+use PyAngelo\Repositories\BlogRepository;
 use Framework\{Request, Response};
 
-class LessonsToggleAlertController extends Controller {
-  protected $tutorialRepository;
+class BlogToggleAlertController extends Controller {
+  protected $blogRepository;
 
   public function __construct(
     Request $request,
     Response $response,
     Auth $auth,
-    TutorialRepository $tutorialRepository
+    BlogRepository $blogRepository
   ) {
     parent::__construct($request, $response, $auth);
-    $this->tutorialRepository = $tutorialRepository;
+    $this->blogRepository = $blogRepository;
   }
 
   public function exec() {
-    $this->response->setView('lessons/toggle-alert.json.php');
+    $this->response->setView('blog/toggle-alert.json.php');
     $this->response->header('Content-Type: application/json');
 
     if (! $this->auth->loggedIn()) {
@@ -40,45 +40,45 @@ class LessonsToggleAlertController extends Controller {
       return $this->response;
     }
 
-    if (empty($this->request->post['lessonId'])) {
+    if (empty($this->request->post['blogId'])) {
       $this->response->setVars(array(
         'status' => 'error',
-        'message' => 'You must select a lesson to be notified about.'
+        'message' => 'You must select a blog to be notified about.'
       ));
       return $this->response;
     }
 
-    if (! $lesson = $this->tutorialRepository->getLessonById($this->request->post['lessonId'])) {
+    if (! $blog = $this->blogRepository->getBlogById($this->request->post['blogId'])) {
       $this->response->setVars(array(
         'status' => 'error',
-        'message' => 'You must select a valid lesson to be notified about.'
+        'message' => 'You must select a valid blog to be notified about.'
       ));
       return $this->response;
     }
 
-    $alertUser = $this->tutorialRepository->shouldUserReceiveAlert(
-      $this->request->post['lessonId'],
+    $alertUser = $this->blogRepository->shouldUserReceiveAlert(
+      $this->request->post['blogId'],
       $this->auth->personId()
     );
 
     if (! $alertUser) {
-      $this->tutorialRepository->addToLessonAlert(
-        $this->request->post['lessonId'],
+      $this->blogRepository->addToBlogAlert(
+        $this->request->post['blogId'],
         $this->auth->personId()
       );
       $this->response->setVars(array(
         'status' => 'success',
-        'message' => 'Notifications are on for this lesson'
+        'message' => 'Notifications are on for this blog'
       ));
     }
     else {
-      $this->tutorialRepository->removeFromLessonAlert(
-        $this->request->post['lessonId'],
+      $this->blogRepository->removeFromBlogAlert(
+        $this->request->post['blogId'],
         $this->auth->personId()
       );
       $this->response->setVars(array(
         'status' => 'info',
-        'message' => 'Notifications are off for this lesson'
+        'message' => 'Notifications are off for this blog'
       ));
     }
     return $this->response;

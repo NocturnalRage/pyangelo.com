@@ -100,6 +100,13 @@ $di->set('lessonFormService', function () use ($di) {
   );
 });
 
+$di->set('blogFormService', function () use ($di) {
+  return new PyAngelo\FormServices\BlogFormService (
+    $di->get('auth'),
+    $di->get('blogRepository')
+  );
+});
+
 
 /* Email objects here */
 $di->set('emailTemplate', function () use ($di) {
@@ -350,6 +357,15 @@ $di->set('NewsletterValidateController', function () use ($di) {
     $di->get('auth'),
     $di->get('personRepository'),
     $di->get('campaignRepository')
+  );
+});
+
+$di->set('FavouritesController', function () use ($di) {
+  return new PyAngelo\Controllers\Profile\FavouritesController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository')
   );
 });
 
@@ -644,6 +660,15 @@ $di->set('LessonsCommentController', function () use ($di) {
   );
 });
 
+$di->set('LessonsCommentUnpublishController', function () use ($di) {
+  return new PyAngelo\Controllers\Lessons\LessonsCommentUnpublishController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository')
+  );
+});
+
 $di->set('NotificationsController', function () use ($di) {
   return new PyAngelo\Controllers\Profile\NotificationsController (
     $di->get('request'),
@@ -696,5 +721,92 @@ $di->set('LessonsOrderController', function () use ($di) {
     $di->get('response'),
     $di->get('auth'),
     $di->get('tutorialRepository')
+  );
+});
+
+$di->set('BlogIndexController', function () use ($di) {
+  return new PyAngelo\Controllers\Blog\BlogIndexController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('blogRepository'),
+    $di->get('HtmlPurifierPurify')
+  );
+});
+
+$di->set('BlogNewController', function () use ($di) {
+  return new PyAngelo\Controllers\Blog\BlogNewController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('blogRepository')
+  );
+});
+
+$di->set('BlogCreateController', function () use ($di) {
+  return new PyAngelo\Controllers\Blog\BlogCreateController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('blogFormService')
+  );
+});
+
+$di->set('BlogShowController', function () use ($di) {
+  return new PyAngelo\Controllers\Blog\BlogShowController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('blogRepository'),
+    $di->get('HtmlPurifierPurify'),
+    $di->get('avatar'),
+    $_ENV['SHOW_COMMENT_COUNT'],
+  );
+});
+
+$di->set('BlogToggleAlertController', function () use ($di) {
+  return new PyAngelo\Controllers\Blog\BlogToggleAlertController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('blogRepository')
+  );
+});
+
+$di->set('BlogCommentController', function () use ($di) {
+  return new PyAngelo\Controllers\Blog\BlogCommentController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('blogRepository'),
+    $di->get('HtmlPurifierPurify'),
+    $di->get('avatar')
+  );
+});
+
+$di->set('BlogEditController', function () use ($di) {
+  return new PyAngelo\Controllers\Blog\BlogEditController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('blogRepository')
+  );
+});
+
+$di->set('BlogUpdateController', function () use ($di) {
+  return new PyAngelo\Controllers\Blog\BlogUpdateController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('blogFormService')
+  );
+});
+
+$di->set('BlogCommentUnpublishController', function () use ($di) {
+  return new PyAngelo\Controllers\Blog\BlogCommentUnpublishController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('blogRepository')
   );
 });

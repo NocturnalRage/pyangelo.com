@@ -79,12 +79,16 @@ class ServicesTest extends TestCase {
     $this->assertSame(get_class($forgotPasswordFormService), 'PyAngelo\FormServices\ForgotPasswordFormService');
   }
   public function testTutorialFormService() {
-    $numberFormatter = $this->di->get('tutorialFormService');
-    $this->assertSame(get_class($numberFormatter), 'PyAngelo\FormServices\TutorialFormService');
+    $tutorialFormService = $this->di->get('tutorialFormService');
+    $this->assertSame(get_class($tutorialFormService), 'PyAngelo\FormServices\TutorialFormService');
   }
   public function testLessonFormService() {
-    $numberFormatter = $this->di->get('lessonFormService');
-    $this->assertSame(get_class($numberFormatter), 'PyAngelo\FormServices\LessonFormService');
+    $lessonFormService = $this->di->get('lessonFormService');
+    $this->assertSame(get_class($lessonFormService), 'PyAngelo\FormServices\LessonFormService');
+  }
+  public function testBlogFormService() {
+    $blogFormService = $this->di->get('blogFormService');
+    $this->assertSame(get_class($blogFormService), 'PyAngelo\FormServices\BlogFormService');
   }
   public function testEmailTemplate() {
     $numberFormatter = $this->di->get('emailTemplate');
@@ -211,6 +215,10 @@ class ServicesTest extends TestCase {
   public function testNewsletterValidateController() {
     $controller = $this->di->newInstance('NewsletterValidateController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Profile\NewsletterValidateController');
+  }
+  public function testFavouritesController() {
+    $controller = $this->di->newInstance('FavouritesController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Profile\FavouritesController');
   }
   public function testSketchIndexController() {
     $controller = $this->di->newInstance('SketchIndexController');
@@ -359,6 +367,34 @@ class ServicesTest extends TestCase {
   public function LessonsOrderController() {
     $controller = $this->di->newInstance('LessonsOrderController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Lessons\LessonsOrderController');
+  }
+  public function BlogIndexController() {
+    $controller = $this->di->newInstance('BlogIndexController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogIndexController');
+  }
+  public function BlogNewController() {
+    $controller = $this->di->newInstance('BlogNewController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogNewController');
+  }
+  public function BlogCreateController() {
+    $controller = $this->di->newInstance('BlogCreateController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogCreateController');
+  }
+  public function BlogShowController() {
+    $controller = $this->di->newInstance('BlogShowController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogShowController');
+  }
+  public function BlogToggleAlertController() {
+    $controller = $this->di->newInstance('BlogToggleAlertController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogToggleAlertController');
+  }
+  public function BlogEditController() {
+    $controller = $this->di->newInstance('BlogEditController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogEditController');
+  }
+  public function BlogUpdateController() {
+    $controller = $this->di->newInstance('BlogUpdateController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogUpdateController');
   }
 }
 ?>

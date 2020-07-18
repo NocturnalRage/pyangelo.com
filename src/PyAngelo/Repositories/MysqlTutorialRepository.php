@@ -851,7 +851,7 @@ class MysqlTutorialRepository implements TutorialRepository {
 
   public function shouldUserReceiveAlert($lessonId, $personId) {
     $sql = "SELECT lesson_id
-	        FROM   lesson_alert
+            FROM   lesson_alert
             WHERE  lesson_id = ?
             AND    person_id = ?";
     $stmt = $this->dbh->prepare($sql);
