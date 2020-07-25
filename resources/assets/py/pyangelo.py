@@ -134,6 +134,13 @@ class PyAngelo():
         self.canvas = document["canvas"]
         self.ctx = self.canvas.getContext('2d')		
         self.setSize(self.DEFAULT_WIDTH, self.DEFAULT_HEIGHT);
+
+        self.mousePressed = False;
+        self.mouseX = 0
+        self.mouseY = 0
+        self.canvas.bind("mousedown", self._mousedown)
+        self.canvas.bind("mouseup", self._mouseup)
+        self.canvas.bind("mousemove", self._mousemove)
         
         self.timer_id = None
         self.main_loop = None
@@ -154,18 +161,6 @@ class PyAngelo():
         document.bind("keydown", self._keydown)
         document.bind("keyup", self._keyup)   
         
-        self.mouse_x = 0
-        self.mouse_y = 0
-        document.bind("mousedown", self._mousedown)
-        document.bind("mouseup", self._mouseup)
-        document.bind("mousemove", self._mousemove)
-        
-        self.touches = {}
-        
-        document.bind("touchstart", self._touchstart)
-        document.bind("touchend", self._touchend)
-        document.bind("touchmove", self._touchmove)        
-
         self.soundPlayers = {}        
         
         self.state = self.STATE_STOP
@@ -200,6 +195,9 @@ class PyAngelo():
 
     def isKeyPressed(self, key):
         return self.keys[key]             
+
+    def isMousePressed(self):
+        return self.mousePressed
         
     def refresh(self):
         self.execute_commands()
@@ -269,127 +267,22 @@ class PyAngelo():
     def _keyup(self, ev):
         self.keys[ev.which] = False  
 
+    def setMousePosition(self, ev):
+        self.boundingRect = self.canvas.getBoundingClientRect()
+        self.mouseX = int(ev.clientX - self.boundingRect.left)
+        self.mouseY = int(self.height - (ev.clientY - self.boundingRect.top))
 
-    def _updateTouchedKeys(self):
-        self.keys[KEY_V_LEFT] = False
-        self.keys[KEY_V_RIGHT] = False
-        self.keys[KEY_V_UP] = False
-        self.keys[KEY_V_DOWN] = False
-        self.keys[KEY_V_FIRE] = False      
-        
-        for touch in self.touches.values():
-            x = touch[0]
-            y = touch[1]
-            
-            if x < -self.width * 0.33 * 0.67 and y < self.height * 0.6 and y > self.height * 0.4:
-                self.keys[KEY_V_LEFT] = True
-            if x < 0 and x > -self.width * 0.33 * 0.33 and y < self.height * 0.6 and y > self.height * 0.4:
-                self.keys[KEY_V_RIGHT] = True
-
-            if y < self.height * 0.4 and y > 0 and x < -self.width * 0.33 * 0.33 and x > -self.width * 0.33 * 0.67:
-                self.keys[KEY_V_DOWN] = True
-            if y < self.height and y > self.height * 0.6 and x < -self.width * 0.33 * 0.33 and x > -self.width * 0.33 * 0.67:
-                self.keys[KEY_V_UP] = True
-
-            if x > self.width and y < self.height and y > 0:
-                self.keys[KEY_V_FIRE] = True            
-
-    def _touchstart(self, ev):
-        #ev.preventDefault()
-        for touch in ev.changedTouches:
-            self.mouse_x = touch.clientX             
-            self.mouse_y = touch.clientY
-            
-            boundingRect = self.canvas.getBoundingClientRect()    
-            
-            x = int(self.mouse_x - boundingRect.left)
-            y = int(self.height - (self.mouse_y - boundingRect.top))
-            
-            self.touches[touch.identifier] = [x, y]
-            
-        self._updateTouchedKeys()
-                        
-        return False
-
-    def _touchend(self, ev):   
-        #ev.preventDefault()
-
-        self.mouse_x = -1
-        self.mouse_y = -1
-        
-        for touch in ev.changedTouches:
-            del self.touches[touch.identifier]
-        
-        
-        self._updateTouchedKeys()
-
-        return False
-        
-    def _touchmove(self, ev):   
-        #ev.preventDefault()
-        for touch in ev.changedTouches:
-            self.mouse_x = touch.clientX             
-            self.mouse_y = touch.clientY
-            
-            boundingRect = self.canvas.getBoundingClientRect()    
-            
-            x = int(self.mouse_x - boundingRect.left)
-            y = int(self.height - (self.mouse_y - boundingRect.top))
-            
-            self.touches[touch.identifier] = [x, y]
-            
-        self._updateTouchedKeys()            
-                        
-        return False
-        
     def _mousemove(self, ev):
-        self.mouse_x = ev.clientX             
-        self.mouse_y = ev.clientY            
+        self.setMousePosition(ev)
         
     def _mousedown(self, ev):
-        self.mouse_x = ev.clientX             
-        self.mouse_y = ev.clientY
-        
-        boundingRect = self.canvas.getBoundingClientRect()    
-        
-        x = int(self.mouse_x - boundingRect.left)
-        y = int(self.height - (self.mouse_y - boundingRect.top))
-        
-        self.keys[KEY_V_LEFT] = False
-        self.keys[KEY_V_RIGHT] = False
-        self.keys[KEY_V_UP] = False
-        self.keys[KEY_V_DOWN] = False
-        self.keys[KEY_V_FIRE] = False
-        
-        if x < -self.width * 0.33 * 0.67 and y < self.height * 0.6 and y > self.height * 0.4:
-            self.keys[KEY_V_LEFT] = True
-        if x < 0 and x > -self.width * 0.33 * 0.33 and y < self.height * 0.6 and y > self.height * 0.4:
-            self.keys[KEY_V_RIGHT] = True
-
-        if y < self.height * 0.4 and y > 0 and x < -self.width * 0.33 * 0.33 and x > -self.width * 0.33 * 0.67:
-            self.keys[KEY_V_DOWN] = True
-        if y < self.height and y > self.height * 0.6 and x < -self.width * 0.33 * 0.33 and x > -self.width * 0.33 * 0.67:
-            self.keys[KEY_V_UP] = True
-
-        if x > self.width and y < self.height and y > 0:
-            self.keys[KEY_V_FIRE] = True         
+        self.setMousePosition(ev)
+        self.mousePressed = True
         
     def _mouseup(self, ev):
-        self.mouse_x = -1
-        self.mouse_y = -1
-        
-        self.keys[KEY_V_LEFT] = False
-        self.keys[KEY_V_RIGHT] = False
-        self.keys[KEY_V_UP] = False
-        self.keys[KEY_V_DOWN] = False
-        self.keys[KEY_V_FIRE] = False     
+        self.setMousePosition(ev)
+        self.mousePressed = False
     
-    def getMousePos(self):
-        boundingRect = self.canvas.getBoundingClientRect()    
-        
-        return Point(int(self.mouse_x - boundingRect.left), int(self.height - (self.mouse_y - boundingRect.top)))
-        
-                
     def resourceError(self, e):
         self.stop()
         do_print("Error loading of resource: " + e.target.src + "\n", "red")
@@ -721,7 +614,6 @@ def run_code(src, globals, locals, is_frame_code = True):
         do_print("Error in parsing: " + str(e) + "\n" + traceback.format_exc(), "red") 
         canvas.stop()
 
-            
 class ErrorOutput:
     def write(self, data):
         do_print(data, "red") 
