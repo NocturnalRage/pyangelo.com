@@ -3,8 +3,9 @@ import time
 import traceback
 import javascript
 import random
-import json
-import copy
+import math
+#import json
+#import copy
 from browser import document, window, alert, timer, bind, self, html, load
 
 load("/js/howler.js")
@@ -115,6 +116,20 @@ class CircleSprite(TextSprite):
 
     def draw(self, offsetX = 0, offsetY = 0):
         canvas.drawCircle(self.x + self.radius - offsetX, self.y + self.radius - offsetY, self.radius, self.r, self.g, self.b, self.a)
+
+class EllipseSprite(TextSprite):
+    def __init__(self, x, y, radiusX, radiusY, r = 255, b = 255, g = 255, a = 1.0):
+        # Set to enable standard collision detection in overlaps method
+        self.x = x - radiusX
+        self.y = y - radiusY
+        self.width = radiusX * 2
+        self.height = radiusY * 2
+        self.setColour(r, g, b, a)
+        # user defined
+        self.type = 0
+
+    def draw(self, offsetX = 0, offsetY = 0):
+        canvas.drawEllipse(self.x + self.width/2 - offsetX, self.y + self.height/2 - offsetY, self.width/2, self.height/2, self.r, self.g, self.b, self.a)
 
 class PyAngelo():
     STATE_STOP      =   1
@@ -273,13 +288,16 @@ class PyAngelo():
         self.mouseY = int(self.height - (ev.clientY - self.boundingRect.top))
 
     def _mousemove(self, ev):
+        ev.preventDefault()
         self.setMousePosition(ev)
         
     def _mousedown(self, ev):
+        ev.preventDefault()
         self.setMousePosition(ev)
         self.mousePressed = True
         
     def _mouseup(self, ev):
+        ev.preventDefault()
         self.setMousePosition(ev)
         self.mousePressed = False
     
@@ -393,7 +411,45 @@ class PyAngelo():
 
         self.ctx.fillStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
         self.ctx.beginPath();
-        self.ctx.arc(x, self._convY(y), radius, 0, 2 * 3.1415926535);
+        self.ctx.arc(x, self._convY(y), radius, 0, 2 * math.pi);
+        self.ctx.fill();
+
+    def drawEllipse(self, x, y, width, height, r=255, g=255, b=255, a=1.0):
+        r = min(r, 255)
+        g = min(g, 255)
+        b = min(b, 255)
+        a = min(a, 1.0)
+
+        self.ctx.fillStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
+        self.ctx.beginPath();
+        self.ctx.ellipse(x, self._convY(y), width, height, 0, 0, 2 * math.pi);
+        self.ctx.fill();
+
+    def drawTriangle(self, x1, y1, x2, y2, x3, y3, r=255, g=255, b=255, a=1.0):
+        r = min(r, 255)
+        g = min(g, 255)
+        b = min(b, 255)
+        a = min(a, 1.0)
+
+        self.ctx.fillStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
+        self.ctx.beginPath();
+        self.ctx.moveTo(x1, self._convY(y1))
+        self.ctx.lineTo(x2, self._convY(y2))
+        self.ctx.lineTo(x3, self._convY(y3))
+        self.ctx.fill();
+
+    def drawQuad(self, x1, y1, x2, y2, x3, y3, x4, y4, r=255, g=255, b=255, a=1.0):
+        r = min(r, 255)
+        g = min(g, 255)
+        b = min(b, 255)
+        a = min(a, 1.0)
+
+        self.ctx.fillStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
+        self.ctx.beginPath();
+        self.ctx.moveTo(x1, self._convY(y1))
+        self.ctx.lineTo(x2, self._convY(y2))
+        self.ctx.lineTo(x3, self._convY(y3))
+        self.ctx.lineTo(x4, self._convY(y4))
         self.ctx.fill();
         
     def drawPixel(self, x, y, r = 255, g = 255, b = 255, a = 255):
@@ -415,6 +471,10 @@ class PyAngelo():
         a = min(a, 1.0)
         self.ctx.fillStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
         self.ctx.fillRect(x, self._convY(y) - h, w, h);
+#        self.ctx.rect(x, self._convY(y) - h, w, h);
+#        self.ctx.fill()
+#        self.ctx.strokeStyle = "red"
+#        self.ctx.stroke()
         
     def _convY(self, y):
         return self.height - y
