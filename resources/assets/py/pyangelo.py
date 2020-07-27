@@ -135,17 +135,11 @@ class PyAngelo():
     STATE_STOP      =   1
     STATE_RUN       =   2
     STATE_HALT      =   3
-    STATE_LOAD      =   4
-    STATE_INPUT     =   5
-    STATE_LOADED    =   6
+    STATE_INPUT     =   4
     DEFAULT_WIDTH   = 500
     DEFAULT_HEIGHT  = 400
     
     def __init__(self):
-       
-        self.commands = []
-        
-        # get the canvas element
         self.canvas = document["canvas"]
         self.ctx = self.canvas.getContext('2d')		
         self.setSize(self.DEFAULT_WIDTH, self.DEFAULT_HEIGHT);
@@ -157,12 +151,8 @@ class PyAngelo():
         self.canvas.bind("mouseup", self._mouseup)
         self.canvas.bind("mousemove", self._mousemove)
         
-        self.timer_id = None
         self.main_loop = None
         
-        self.stopped = False
-        
-        self.resources =  {}
         self.loadingResources = 0
         
         self.keys = dict([(a, False) for a in range(255)] +
@@ -179,26 +169,14 @@ class PyAngelo():
         self.soundPlayers = {}        
         
         self.state = self.STATE_STOP
-        self.anim_timer = 0
-        self.anim_time = 200        
-        
-        self.starting_text = "Starting up"   
-        self.loading_text = "Loading resources"        
         
         # set background to cornflower blue (XNA!) by default
         self.background(100, 149, 237)
         
         self.pixel_id = self.ctx.createImageData(1, 1)
         
-        self.last_frame_commands = []
-        
-        self.just_halted = False
-        
         self.input_concluded = False
-        
         self.input_buffer_index = 0
-        
-        self.loading_filename = ""
         
         timer.request_animation_frame(self.update)     
 
@@ -213,10 +191,22 @@ class PyAngelo():
 
     def isMousePressed(self):
         return self.mousePressed
+
+    def saveState(self):
+        self.ctx.save()
+
+    def restoreState(self):
+        self.ctx.restore()
+
+    def translate(self, x, y):
+        self.ctx.translate(x, y)
+
+    def rotate(radians):
+        self.ctx.rotate(radians)
+
+    def rotateDegrees(self, degrees):
+        self.ctx.rotate(math.pi/180 * degrees)
         
-    def refresh(self):
-        self.execute_commands()
-    
     ########################################################################################
         
     def loadSound(self, filename, loop = False, streaming = False):
@@ -364,12 +354,12 @@ class PyAngelo():
         if rotation != 0.0:
             # TODO: Buggy!!!
             self.ctx.save()
-            self.ctx.translate(x, self._convY(y))
+            self.ctx.translate(x, y)
             self.ctx.rotate(- rotation)# - 3.1415926535)# + math.PI / 180)
             self.ctx.drawImage(image.img, -anchorX * width, -anchorY * height, width, height)
             self.ctx.restore()
         else:
-            self.ctx.drawImage(image.img, x, self._convY(y + height), width, height)
+            self.ctx.drawImage(image.img, x, y, width, height)
 
         self.ctx.restore()    
         
@@ -399,8 +389,8 @@ class PyAngelo():
         self.ctx.beginPath()
         self.ctx.lineWidth = width
         self.ctx.strokeStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
-        self.ctx.moveTo(x1, self._convY(y1))
-        self.ctx.lineTo(x2, self._convY(y2))
+        self.ctx.moveTo(x1, y1)
+        self.ctx.lineTo(x2, y2)
         self.ctx.stroke()
 
     def drawCircle(self, x, y, radius, r=255, g=255, b=255, a=1.0):
@@ -411,7 +401,7 @@ class PyAngelo():
 
         self.ctx.fillStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
         self.ctx.beginPath();
-        self.ctx.arc(x, self._convY(y), radius, 0, 2 * math.pi);
+        self.ctx.arc(x, y, radius, 0, 2 * math.pi);
         self.ctx.fill();
 
     def drawEllipse(self, x, y, width, height, r=255, g=255, b=255, a=1.0):
@@ -422,7 +412,7 @@ class PyAngelo():
 
         self.ctx.fillStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
         self.ctx.beginPath();
-        self.ctx.ellipse(x, self._convY(y), width, height, 0, 0, 2 * math.pi);
+        self.ctx.ellipse(x, y, width, height, 0, 0, 2 * math.pi);
         self.ctx.fill();
 
     def drawTriangle(self, x1, y1, x2, y2, x3, y3, r=255, g=255, b=255, a=1.0):
@@ -433,9 +423,9 @@ class PyAngelo():
 
         self.ctx.fillStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
         self.ctx.beginPath();
-        self.ctx.moveTo(x1, self._convY(y1))
-        self.ctx.lineTo(x2, self._convY(y2))
-        self.ctx.lineTo(x3, self._convY(y3))
+        self.ctx.moveTo(x1, y1)
+        self.ctx.lineTo(x2, y2)
+        self.ctx.lineTo(x3, y3)
         self.ctx.fill();
 
     def drawQuad(self, x1, y1, x2, y2, x3, y3, x4, y4, r=255, g=255, b=255, a=1.0):
@@ -446,10 +436,10 @@ class PyAngelo():
 
         self.ctx.fillStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
         self.ctx.beginPath();
-        self.ctx.moveTo(x1, self._convY(y1))
-        self.ctx.lineTo(x2, self._convY(y2))
-        self.ctx.lineTo(x3, self._convY(y3))
-        self.ctx.lineTo(x4, self._convY(y4))
+        self.ctx.moveTo(x1, y1)
+        self.ctx.lineTo(x2, y2)
+        self.ctx.lineTo(x3, y3)
+        self.ctx.lineTo(x4, y4)
         self.ctx.fill();
         
     def drawPixel(self, x, y, r = 255, g = 255, b = 255, a = 255):
@@ -462,7 +452,7 @@ class PyAngelo():
         self.pixel_id.data[1] = g
         self.pixel_id.data[2] = b
         self.pixel_id.data[3] = a
-        self.ctx.putImageData(self.pixel_id, x, self._convY(y))
+        self.ctx.putImageData(self.pixel_id, x, y)
         
     def drawRect(self, x, y, w, h, r = 255, g = 255, b = 255, a = 1.0):
         r = min(r, 255)
@@ -470,15 +460,8 @@ class PyAngelo():
         b = min(b, 255)
         a = min(a, 1.0)
         self.ctx.fillStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
-        self.ctx.fillRect(x, self._convY(y) - h, w, h);
-#        self.ctx.rect(x, self._convY(y) - h, w, h);
-#        self.ctx.fill()
-#        self.ctx.strokeStyle = "red"
-#        self.ctx.stroke()
+        self.ctx.fillRect(x, y, w, h);
         
-    def _convY(self, y):
-        return self.height - y
-
     def __input(self, msg):
         # input mode triggered
         self.state = self.STATE_INPUT
@@ -510,21 +493,6 @@ class PyAngelo():
                 # Pyangelo to keep looping in it's run state ===> FIX!
                 self.state = self.STATE_RUN
                 self.input_concluded = False
-        elif self.state == self.STATE_LOAD:
-            self.background(49, 98, 186)
-            loading = TextSprite("Loading: " + self.loading_filename, canvas.width/2, canvas.height/2, fontSize = 20)
-            loading.center()
-            loading.draw()
-        elif self.state == self.STATE_LOADED:
-            self.background(49, 98, 186)
-            
-            loaded = TextSprite("Successfully Loaded:", canvas.width/2, canvas.height/2 + 50, fontSize = 20)
-            loaded.center()
-            loaded.draw()
-            
-            loadedFilename = TextSprite(self.loading_filename, canvas.width/2, canvas.height/2 - 50, fontSize = 20)
-            loadedFilename.center()
-            loadedFilename.draw()
         
         timer.request_animation_frame(self.update)
         
@@ -536,16 +504,13 @@ class PyAngelo():
         if self.state != self.STATE_STOP:
             self.state = self.STATE_STOP            
 
-            # TODO: put all these into a Reset() method
-            self.resources =  {}
             self.loadingResources = 0
-
             self.stopAllSounds()     
 
     def getPixelColour(self, x, y):
         pixel = window.Int8Array.new(4)      
                    
-        imageData = self.ctx.getImageData(x, self._convY(y), 1, 1)
+        imageData = self.ctx.getImageData(x, y, 1, 1)
         
         return Colour(imageData.data[0], imageData.data[1], imageData.data[2], imageData.data[3])
               
@@ -563,19 +528,6 @@ def canvas_stop():
     canvas.stop()
 
 window.canvas_stop = canvas_stop
-
-def startLoading(filename):
-    window.console.log("starting load")
-    canvas.state = canvas.STATE_LOAD
-    canvas.loading_filename = filename
-    
-def doneLoading():
-    window.console.log("finish load")
-    canvas.state = canvas.STATE_LOADED
-    
-    canvas.resources =  {}
-    canvas.loadingResources = 0
-    canvas.stopAllSounds()
 
 def format_string_HTML(s):
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>").replace("\"", "&quot;").replace("'", "&apos;").replace(" ", "&nbsp;")
