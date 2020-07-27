@@ -300,7 +300,7 @@ class PyAngelo():
     def setMousePosition(self, ev):
         self.boundingRect = self.canvas.getBoundingClientRect()
         self.mouseX = int(ev.clientX - self.boundingRect.left)
-        self.mouseY = int(self.height - (ev.clientY - self.boundingRect.top))
+        self.mouseY = int(ev.clientY - self.boundingRect.top)
 
     def _mousemove(self, ev):
         ev.preventDefault()
