@@ -226,12 +226,11 @@ class PyAngelo():
     def translate(self, x, y):
         self.ctx.translate(x, y)
 
-    def rotate(radians):
-        self.ctx.rotate(radians)
+    def rotate(self, angle, mode = DEGREES):
+        if mode != RADIANS:
+            angle = math.pi/180 * angle
+        self.ctx.rotate(angle)
 
-    def rotateDegrees(self, degrees):
-        self.ctx.rotate(math.pi/180 * degrees)
-        
     ########################################################################################
         
     def loadSound(self, filename, loop = False, streaming = False):
