@@ -39,8 +39,6 @@ class Sprite:
         self.height = height
         self.opacity = a
         self.image = canvas.loadImage(image, self)
-        # user defined
-        self.type = 0
 
     def draw(self, offsetX = 0, offsetY = 0):
         canvas.drawImage(self.image, self.x - offsetX, self.y - offsetY, self.width, self.height, opacity=self.opacity)
@@ -85,8 +83,6 @@ class TextSprite(Sprite):
         textMetrics = canvas.ctx.measureText(self.text)
         self.width = abs(textMetrics.actualBoundingBoxLeft) + abs(textMetrics.actualBoundingBoxRight)
         self.height = abs(textMetrics.actualBoundingBoxAscent) + abs(textMetrics.actualBoundingBoxDescent)
-        # user defined
-        self.type = 0
 
     def center(self):
         self.x -= (self.width/2)
@@ -108,8 +104,6 @@ class RectangleSprite(TextSprite):
         self.width = width
         self.height = height
         self.setColour(r, g, b)
-        # user defined
-        self.type = 0
 
     def draw(self, offsetX = 0, offsetY = 0):
        canvas.drawRect(self.x - offsetX, self.y - offsetY, self.width, self.height, self.r, self.g, self.b, self.a)
@@ -122,8 +116,6 @@ class CircleSprite(TextSprite):
         self.radius = radius
         self.diameter = radius * 2
         self.setColour(r, g, b, a)
-        # user defined
-        self.type = 0
 
     def leftBoundary(self):
         return self.x - self.radius
@@ -148,8 +140,6 @@ class EllipseSprite(TextSprite):
         self.radiusX = radiusX
         self.radiusY = radiusY
         self.setColour(r, g, b, a)
-        # user defined
-        self.type = 0
 
     def leftBoundary(self):
         return self.x - self.radiusX
