@@ -53,12 +53,24 @@ class Sprite:
         self.x = x
         self.y = y
 
+    def leftBoundary(self):
+        return self.x
+
+    def rightBoundary(self):
+        return self.x + self.width
+
+    def topBoundary(self):
+        return self.y
+
+    def bottomBoundary(self):
+        return self.y + self.height
+
     def overlaps(self, other):
         # TODO: BUG! If the 'other' is an image that has a shared URL with a previously loaded image, collision doesn't work!!
-        return ((self.x < (other.x + other.width)) and ((self.x + self.width) > other.x) and (self.y < (other.y + other.height)) and ((self.y + self.height) > other.y))
+        return self.leftBoundary() < other.rightBoundary() and self.rightBoundary() > other.leftBoundary() and self.topBoundary() < other.bottomBoundary() and self.bottomBoundary() > other.topBoundary()
 
     def contains(self, point):
-        return point.x >= self.x and point.x <= self.x + self.width and point.y >= self.y and point.y <= self.y + self.height
+        return point.x >= self.leftBoundary() and point.x <= self.rightBoundary() and point.y >= self.topBoundary() and point.y <= self.bottomBoundary()
 
 class TextSprite(Sprite):
     def __init__(self, text, x = 0, y = 0, fontName = "Arial", fontSize = 20, r = 255, g = 255, b = 255, a = 1.0):
@@ -105,31 +117,54 @@ class RectangleSprite(TextSprite):
 class CircleSprite(TextSprite):
     def __init__(self, x, y, radius, r = 255, b = 255, g = 255, a = 1.0):
         # Set to enable standard collision detection in overlaps method
-        self.x = x - radius
-        self.y = y - radius
+        self.x = x
+        self.y = y
         self.radius = radius
-        self.width = radius * 2
-        self.height = radius * 2
+        self.diameter = radius * 2
         self.setColour(r, g, b, a)
         # user defined
         self.type = 0
 
+    def leftBoundary(self):
+        return self.x - self.radius
+
+    def rightBoundary(self):
+        return self.x + self.radius
+
+    def topBoundary(self):
+        return self.y - self.radius
+
+    def bottomBoundary(self):
+        return self.y + self.radius
+
     def draw(self, offsetX = 0, offsetY = 0):
-        canvas.drawCircle(self.x + self.radius - offsetX, self.y + self.radius - offsetY, self.radius, self.r, self.g, self.b, self.a)
+        canvas.drawCircle(self.x - offsetX, self.y - offsetY, self.radius, self.r, self.g, self.b, self.a)
 
 class EllipseSprite(TextSprite):
     def __init__(self, x, y, radiusX, radiusY, r = 255, b = 255, g = 255, a = 1.0):
         # Set to enable standard collision detection in overlaps method
-        self.x = x - radiusX
-        self.y = y - radiusY
-        self.width = radiusX * 2
-        self.height = radiusY * 2
+        self.x = x
+        self.y = y
+        self.radiusX = radiusX
+        self.radiusY = radiusY
         self.setColour(r, g, b, a)
         # user defined
         self.type = 0
 
+    def leftBoundary(self):
+        return self.x - self.radiusX
+
+    def rightBoundary(self):
+        return self.x + self.radiusX
+
+    def topBoundary(self):
+        return self.y - self.radiusY
+
+    def bottomBoundary(self):
+        return self.y + self.radiusY
+
     def draw(self, offsetX = 0, offsetY = 0):
-        canvas.drawEllipse(self.x + self.width/2 - offsetX, self.y + self.height/2 - offsetY, self.width/2, self.height/2, self.r, self.g, self.b, self.a)
+        canvas.drawEllipse(self.x - offsetX, self.y - offsetY, self.radiusX, self.radiusY, self.r, self.g, self.b, self.a)
 
 class PyAngelo():
     STATE_STOP      =   1
