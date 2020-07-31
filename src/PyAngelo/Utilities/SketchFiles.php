@@ -3,7 +3,12 @@ namespace PyAngelo\Utilities;
 
 class SketchFiles {
   const DEFAULT_MAIN_FILE = "main.py";
-  const DEFAULT_MAIN_CODE = "canvas.background(255, 255, 0)";
+  const DEFAULT_MAIN_CODE = <<<'ENDDEFAULTMAINCODE'
+setCanvasSize(500, 400)
+
+@loop_animation
+background(220, 220, 220)
+ENDDEFAULTMAINCODE;
 
   public function __construct(string $appDir) {
     $this->appDir = $appDir;
