@@ -22,17 +22,17 @@ KEY_V_UP          = "v_up"
 KEY_V_DOWN        = "v_down"
 KEY_V_FIRE        = "v_fire"
 
-CMD_DRAWLINE      = 1
-CMD_CLEAR         = 2
-CMD_DRAWIMAGE     = 3
-CMD_LOADSOUND     = 4
-CMD_PLAYSOUND     = 5
-CMD_PAUSESOUND    = 6
-CMD_DRAWTEXT      = 7
-CMD_DRAWPIXEL     = 8
-CMD_DRAWRECT      = 9
-CMD_DRAWCIRCLE    = 10
-CMD_REVEAL        = 11
-CMD_HALT          = 12
-CMD_PRINT         = 13
-CMD_INPUT         = 14
+RADIANS           = 1
+DEGREES           = 2
+
+HALF_PI           = 1.57079632679489661923
+PI                = 3.14159265358979323846
+QUARTER_PI        = 0.7853982
+TAU               = 6.28318530717958647693
+TWO_PI            = 6.28318530717958647693
+
+STATE_STOP        =   1
+STATE_RUN         =   2
+
+DEFAULT_WIDTH     = 500
+DEFAULT_HEIGHT    = 400

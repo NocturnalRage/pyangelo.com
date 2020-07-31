@@ -3,8 +3,6 @@ import time
 import traceback
 import javascript
 import random
-import json
-import copy
 from browser import document, window, alert, timer, bind, self, html, load
 
 load("/js/howler.js")
@@ -31,18 +29,16 @@ class Colour():
         self.a = a
 
 class Sprite:
-    def __init__(self, image, x = 0, y = 0, width = 0, height = 0, a = 1.0):
+    def __init__(self, image, x = 0, y = 0, width = 0, height = 0, opacity = 1.0):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-        self.opacity = a
-        self.image = canvas.loadImage(image, self)
-        # user defined
-        self.type = 0
+        self.opacity = opacity
+        self.image = loadImage(image, self)
 
     def draw(self, offsetX = 0, offsetY = 0):
-        canvas.drawImage(self.image, self.x - offsetX, self.y - offsetY, self.width, self.height, opacity=self.opacity)
+        image(self.image, self.x - offsetX, self.y - offsetY, self.width, self.height, opacity=self.opacity)
 
     def moveBy(self, x, y):
         self.x += x
@@ -52,35 +48,47 @@ class Sprite:
         self.x = x
         self.y = y
 
+    def leftBoundary(self):
+        return self.x
+
+    def rightBoundary(self):
+        return self.x + self.width
+
+    def topBoundary(self):
+        return self.y
+
+    def bottomBoundary(self):
+        return self.y + self.height
+
     def overlaps(self, other):
-        # TODO: BUG! If the 'other' is an image that has a shared URL with a previously loaded image, collision doesn't work!!
-        return ((self.x < (other.x + other.width)) and ((self.x + self.width) > other.x) and (self.y < (other.y + other.height)) and ((self.y + self.height) > other.y))
+        return self.leftBoundary() < other.rightBoundary() and self.rightBoundary() > other.leftBoundary() and self.topBoundary() < other.bottomBoundary() and self.bottomBoundary() > other.topBoundary()
 
     def contains(self, point):
-        return point.x >= self.x and point.x <= self.x + self.width and point.y >= self.y and point.y <= self.y + self.height
+        return point.x >= self.leftBoundary() and point.x <= self.rightBoundary() and point.y >= self.topBoundary() and point.y <= self.bottomBoundary()
 
 class TextSprite(Sprite):
-    def __init__(self, text, x = 0, y = 0, fontName = "Arial", fontSize = 20, r = 255, g = 255, b = 255, a = 1.0):
+    def __init__(self, text, x = 0, y = 0, fontSize = 20, fontName = "Arial", r = 255, g = 255, b = 255, a = 1.0):
         self.text = text
         self.x = x
         self.y = y
-        self.fontName = fontName
         self.fontSize = fontSize
+        self.fontName = fontName
         self.setColour(r, g, b)
         # Get Text Width
-        canvas.ctx.font = str(fontSize) + "pt " + self.fontName
-        textMetrics = canvas.ctx.measureText(self.text)
+        _ctx.font = str(fontSize) + "pt " + self.fontName
+        textMetrics = _ctx.measureText(self.text)
         self.width = abs(textMetrics.actualBoundingBoxLeft) + abs(textMetrics.actualBoundingBoxRight)
         self.height = abs(textMetrics.actualBoundingBoxAscent) + abs(textMetrics.actualBoundingBoxDescent)
-        # user defined
-        self.type = 0
 
     def center(self):
         self.x -= (self.width/2)
         self.y -= (self.height/2)
 
-    def draw(self, offsetX = 0, offsetY = 0):
-        canvas.drawText(self.text, self.x - offsetX, self.y - offsetY, self.fontName, self.fontSize, self.r, self.g, self.b, self.a)
+    def draw(self):
+        fs = _ctx.fillStyle
+        _ctx.fillStyle = "rgba(" + str(self.r) + "," + str(self.g) + "," + str(self.b) + "," + str(self.a)+ ")"
+        text(self.text, self.x, self.y, self.fontSize, self.fontName)
+        _ctx.fillStyle = fs
 
     def setColour(self, r, g, b, a = 1.0):
         self.r = r
@@ -95,534 +103,439 @@ class RectangleSprite(TextSprite):
         self.width = width
         self.height = height
         self.setColour(r, g, b)
-        # user defined
-        self.type = 0
+        self.strokeWeight(1)
+        self.stroke(0, 0, 0, 1)
+        self.noStroke()
 
-    def draw(self, offsetX = 0, offsetY = 0):
-       canvas.drawRect(self.x - offsetX, self.y - offsetY, self.width, self.height, self.r, self.g, self.b, self.a)
+    def noStroke(self):
+        self._doStroke = False
 
-class CircleSprite(TextSprite):
+    def stroke(self, r, g, b, a = 1):
+        self.stroke_r = r
+        self.stroke_g = g
+        self.stroke_b = b
+        self.stroke_a = a
+        self._doStroke = True
+
+    def strokeWeight(self, weight):
+        self._strokeWeight = weight
+
+    def draw(self):
+        global _doStroke
+        fs = _ctx.fillStyle
+        _ctx.fillStyle = "rgba(" + str(self.r) + "," + str(self.g) + "," + str(self.b) + "," + str(self.a)+ ")"
+        ss = _ctx.strokeStyle
+        lw = _ctx.lineWidth
+        _ctx.lineWidth = self._strokeWeight
+        _ctx.strokeStyle = "rgba(" + str(self.stroke_r) + "," + str(self.stroke_g) + "," + str(self.stroke_b) + "," + str(self.stroke_a)+ ")"
+        ds = _doStroke
+        _doStroke = self._doStroke
+
+        self.drawShape()
+
+        _ctx.fillStyle = fs
+        _ctx.strokeStyle = ss
+        _ctx.lineWidth = lw
+        _doStroke = ds
+
+    def drawShape(self):
+        rect(self.x, self.y, self.width, self.height)
+
+class CircleSprite(RectangleSprite):
     def __init__(self, x, y, radius, r = 255, b = 255, g = 255, a = 1.0):
         # Set to enable standard collision detection in overlaps method
-        self.x = x - radius
-        self.y = y - radius
+        self.x = x
+        self.y = y
         self.radius = radius
-        self.width = radius * 2
-        self.height = radius * 2
+        self.diameter = radius * 2
         self.setColour(r, g, b, a)
-        # user defined
-        self.type = 0
+        self.strokeWeight(1)
+        self.stroke(0, 0, 0, 1)
+        self.noStroke()
 
-    def draw(self, offsetX = 0, offsetY = 0):
-        canvas.drawCircle(self.x + self.radius - offsetX, self.y + self.radius - offsetY, self.radius, self.r, self.g, self.b, self.a)
+    def leftBoundary(self):
+        return self.x - self.radius
 
-class PyAngelo():
-    STATE_STOP      =   1
-    STATE_RUN       =   2
-    STATE_HALT      =   3
-    STATE_LOAD      =   4
-    STATE_INPUT     =   5
-    STATE_LOADED    =   6
-    DEFAULT_WIDTH   = 500
-    DEFAULT_HEIGHT  = 400
-    
-    def __init__(self):
-       
-        self.commands = []
-        
-        # get the canvas element
-        self.canvas = document["canvas"]
-        self.ctx = self.canvas.getContext('2d')		
-        self.setSize(self.DEFAULT_WIDTH, self.DEFAULT_HEIGHT);
-        
-        self.timer_id = None
-        self.main_loop = None
-        
-        self.stopped = False
-        
-        self.resources =  {}
-        self.loadingResources = 0
-        
-        self.keys = dict([(a, False) for a in range(255)] +
-                         [(a, False) for a in range(0xff00, 0xffff)]) 
-        self.keys[KEY_V_LEFT] = False
-        self.keys[KEY_V_RIGHT] = False
-        self.keys[KEY_V_UP] = False
-        self.keys[KEY_V_DOWN] = False
-        self.keys[KEY_V_FIRE] = False                               
+    def rightBoundary(self):
+        return self.x + self.radius
 
-        document.bind("keydown", self._keydown)
-        document.bind("keyup", self._keyup)   
-        
-        self.mouse_x = 0
-        self.mouse_y = 0
-        document.bind("mousedown", self._mousedown)
-        document.bind("mouseup", self._mouseup)
-        document.bind("mousemove", self._mousemove)
-        
-        self.touches = {}
-        
-        document.bind("touchstart", self._touchstart)
-        document.bind("touchend", self._touchend)
-        document.bind("touchmove", self._touchmove)        
+    def topBoundary(self):
+        return self.y - self.radius
 
-        self.soundPlayers = {}        
-        
-        self.state = self.STATE_STOP
-        self.anim_timer = 0
-        self.anim_time = 200        
-        
-        self.starting_text = "Starting up"   
-        self.loading_text = "Loading resources"        
-        
-        # set background to cornflower blue (XNA!) by default
-        self.background(100, 149, 237)
-        
-        self.pixel_id = self.ctx.createImageData(1, 1)
-        
-        self.last_frame_commands = []
-        
-        self.just_halted = False
-        
-        self.input_concluded = False
-        
-        self.input_buffer_index = 0
-        
-        self.loading_filename = ""
-        
-        timer.request_animation_frame(self.update)     
+    def bottomBoundary(self):
+        return self.y + self.radius
 
-    def setSize(self, width, height):
-        self.canvas["width"] = width;
-        self.canvas["height"] = height;
-        self.width = self.canvas.width
-        self.height = self.canvas.height
+    def drawShape(self):
+        circle(self.x, self.y, self.radius)
 
-    def isKeyPressed(self, key):
-        return self.keys[key]             
-        
-    def refresh(self):
-        self.execute_commands()
-    
-    ########################################################################################
-        
-    def loadSound(self, filename, loop = False, streaming = False):
-        howl = window.Howl
-        sound = howl.new({"src": [filename], "loop": loop, "onload": self._soundLoaded})
-        self.loadingResources += 1
+class EllipseSprite(RectangleSprite):
+    def __init__(self, x, y, radiusX, radiusY, r = 255, b = 255, g = 255, a = 1.0):
+        # Set to enable standard collision detection in overlaps method
+        self.x = x
+        self.y = y
+        self.radiusX = radiusX
+        self.radiusY = radiusY
+        self.setColour(r, g, b, a)
+        self.strokeWeight(1)
+        self.stroke(0, 0, 0, 1)
+        self.noStroke()
 
-        self.soundPlayers[filename] = sound
-        return filename
-        
-    def _soundLoaded(self, e, f):
-        self.loadingResources -= 1
+    def leftBoundary(self):
+        return self.x - self.radiusX
 
-    def playSound(self, sound, loop = False, volume = 1.0):
-        if sound not in self.soundPlayers:
-            sound = self.loadSound(sound)
-            
-        self.soundPlayers[sound].loop(loop)
-        self.soundPlayers[sound].volume(volume)        
-        self.soundPlayers[sound].play()
-            
-            
-    def stopAllSounds(self):
-        for sound in self.soundPlayers:
-            self.stopSound(sound)
+    def rightBoundary(self):
+        return self.x + self.radiusX
 
-    def pauseSound(self, sound):
-        if sound in self.soundPlayers:
-            self.soundPlayers[sound].pause()       
+    def topBoundary(self):
+        return self.y - self.radiusY
 
-    # alias for pauseSound
-    def stopSound(self, sound):
-        if sound in self.soundPlayers:
-            self.soundPlayers[sound].stop()   
-        
-    def _keydown(self, ev):
-       
-        self.keys[ev.which] = True
-               
-        # pressing escape when the program has halted
-        if ev.which == KEY_ESC and self.state == self.STATE_HALT:
-            self.stop()
-            
-        # TODO: support stopping during INPUT state
-            
-        if self.state == self.STATE_INPUT:
-            if ev.which != KEY_ENTER and (ev.which < 32 or ev.which > KEY_A + 26):
-                return
-            array[len(array) - 1 - self.input_buffer_index] = ev.which
-            if ev.which == KEY_ENTER:
-                self.input_concluded = True
-            else:
-                returned_string = ""
-                n = self.input_buffer_index
-                while n >= 0:
-                
-                    returned_string = chr(array[len(array) - 1 - n]) + returned_string
-                    n -= 1
-                
-                self.input_buffer_index += 1
-                self.drawText(returned_string + "_", 0, 0)
+    def bottomBoundary(self):
+        return self.y + self.radiusY
 
-    def _keyup(self, ev):
-        self.keys[ev.which] = False  
+    def drawShape(self):
+        ellipse(self.x, self.y, self.radiusX, self.radiusY)
 
+def _setMousePosition(ev):
+    global mouseX, mouseY
+    boundingRect = _canvas.getBoundingClientRect()
+    mouseX = int(ev.clientX - boundingRect.left)
+    mouseY = int(ev.clientY - boundingRect.top)
 
-    def _updateTouchedKeys(self):
-        self.keys[KEY_V_LEFT] = False
-        self.keys[KEY_V_RIGHT] = False
-        self.keys[KEY_V_UP] = False
-        self.keys[KEY_V_DOWN] = False
-        self.keys[KEY_V_FIRE] = False      
-        
-        for touch in self.touches.values():
-            x = touch[0]
-            y = touch[1]
-            
-            if x < -self.width * 0.33 * 0.67 and y < self.height * 0.6 and y > self.height * 0.4:
-                self.keys[KEY_V_LEFT] = True
-            if x < 0 and x > -self.width * 0.33 * 0.33 and y < self.height * 0.6 and y > self.height * 0.4:
-                self.keys[KEY_V_RIGHT] = True
+def _mousemove(ev):
+    ev.preventDefault()
+    _setMousePosition(ev)
 
-            if y < self.height * 0.4 and y > 0 and x < -self.width * 0.33 * 0.33 and x > -self.width * 0.33 * 0.67:
-                self.keys[KEY_V_DOWN] = True
-            if y < self.height and y > self.height * 0.6 and x < -self.width * 0.33 * 0.33 and x > -self.width * 0.33 * 0.67:
-                self.keys[KEY_V_UP] = True
+def _mousedown(ev):
+    global mousePressed
+    ev.preventDefault()
+    _setMousePosition(ev)
+    mousePressed = True
 
-            if x > self.width and y < self.height and y > 0:
-                self.keys[KEY_V_FIRE] = True            
+def _mouseup(ev):
+    global mousePressed
+    ev.preventDefault()
+    _setMousePosition(ev)
+    mousePressed = False
 
-    def _touchstart(self, ev):
-        #ev.preventDefault()
-        for touch in ev.changedTouches:
-            self.mouse_x = touch.clientX             
-            self.mouse_y = touch.clientY
-            
-            boundingRect = self.canvas.getBoundingClientRect()    
-            
-            x = int(self.mouse_x - boundingRect.left)
-            y = int(self.height - (self.mouse_y - boundingRect.top))
-            
-            self.touches[touch.identifier] = [x, y]
-            
-        self._updateTouchedKeys()
-                        
-        return False
+def loadSound(filename, loop = False, streaming = False):
+    global _loadingResources
+    howl = window.Howl
+    sound = howl.new({"src": [filename], "loop": loop, "onload": _soundLoaded})
+    _loadingResources += 1
 
-    def _touchend(self, ev):   
-        #ev.preventDefault()
+    _soundPlayers[filename] = sound
+    return filename
 
-        self.mouse_x = -1
-        self.mouse_y = -1
-        
-        for touch in ev.changedTouches:
-            del self.touches[touch.identifier]
-        
-        
-        self._updateTouchedKeys()
+def _soundLoaded(e, f):
+    global _loadingResources
+    _loadingResources -= 1
 
-        return False
-        
-    def _touchmove(self, ev):   
-        #ev.preventDefault()
-        for touch in ev.changedTouches:
-            self.mouse_x = touch.clientX             
-            self.mouse_y = touch.clientY
-            
-            boundingRect = self.canvas.getBoundingClientRect()    
-            
-            x = int(self.mouse_x - boundingRect.left)
-            y = int(self.height - (self.mouse_y - boundingRect.top))
-            
-            self.touches[touch.identifier] = [x, y]
-            
-        self._updateTouchedKeys()            
-                        
-        return False
-        
-    def _mousemove(self, ev):
-        self.mouse_x = ev.clientX             
-        self.mouse_y = ev.clientY            
-        
-    def _mousedown(self, ev):
-        self.mouse_x = ev.clientX             
-        self.mouse_y = ev.clientY
-        
-        boundingRect = self.canvas.getBoundingClientRect()    
-        
-        x = int(self.mouse_x - boundingRect.left)
-        y = int(self.height - (self.mouse_y - boundingRect.top))
-        
-        self.keys[KEY_V_LEFT] = False
-        self.keys[KEY_V_RIGHT] = False
-        self.keys[KEY_V_UP] = False
-        self.keys[KEY_V_DOWN] = False
-        self.keys[KEY_V_FIRE] = False
-        
-        if x < -self.width * 0.33 * 0.67 and y < self.height * 0.6 and y > self.height * 0.4:
-            self.keys[KEY_V_LEFT] = True
-        if x < 0 and x > -self.width * 0.33 * 0.33 and y < self.height * 0.6 and y > self.height * 0.4:
-            self.keys[KEY_V_RIGHT] = True
+def playSound(sound, loop = False, volume = 1.0):
+    if sound not in _soundPlayers:
+        sound = loadSound(sound)
 
-        if y < self.height * 0.4 and y > 0 and x < -self.width * 0.33 * 0.33 and x > -self.width * 0.33 * 0.67:
-            self.keys[KEY_V_DOWN] = True
-        if y < self.height and y > self.height * 0.6 and x < -self.width * 0.33 * 0.33 and x > -self.width * 0.33 * 0.67:
-            self.keys[KEY_V_UP] = True
+    _soundPlayers[sound].loop(loop)
+    _soundPlayers[sound].volume(volume)
+    _soundPlayers[sound].play()
 
-        if x > self.width and y < self.height and y > 0:
-            self.keys[KEY_V_FIRE] = True         
-        
-    def _mouseup(self, ev):
-        self.mouse_x = -1
-        self.mouse_y = -1
-        
-        self.keys[KEY_V_LEFT] = False
-        self.keys[KEY_V_RIGHT] = False
-        self.keys[KEY_V_UP] = False
-        self.keys[KEY_V_DOWN] = False
-        self.keys[KEY_V_FIRE] = False     
-    
-    def getMousePos(self):
-        boundingRect = self.canvas.getBoundingClientRect()    
-        
-        return Point(int(self.mouse_x - boundingRect.left), int(self.height - (self.mouse_y - boundingRect.top)))
-        
-                
-    def resourceError(self, e):
-        self.stop()
-        do_print("Error loading of resource: " + e.target.src + "\n", "red")
-        #del e.target
-        #e.target.parentElement.removeChild(e.target)
-    
-    def resourceAbort(self, e):
-        self.stop()
-        do_print("Aborted loading of resource: " + e.target.src + "\n", "red")  
-    
-    def resourceLoaded(self, e):
-        window.console.log("Successfully loaded file:" + e.target.src);
-            
-        e.target.pyangeloImage.height = e.target.naturalHeight
-        e.target.pyangeloImage.width = e.target.naturalWidth
+def stopAllSounds():
+    for sound in _soundPlayers:
+        stopSound(sound)
 
-        if e.target.pyangeloImage.sprite is not None:
-            if e.target.pyangeloImage.sprite.height == 0:
-                e.target.pyangeloImage.sprite.height = e.target.naturalHeight
-            if e.target.pyangeloImage.sprite.width == 0:
-                e.target.pyangeloImage.sprite.width = e.target.naturalWidth
-            
-        self.loadingResources -= 1
-            
-    def loadImage(self, file, sprite = None):
-        self.loadingResources += 1
-        
-        window.console.log("Attempting to load file:" + file);
-        img = html.IMG()
-        img.crossOrigin = "Anonymous"
-        img.src = file
+def pauseSound(sound):
+    if sound in _soundPlayers:
+        _soundPlayers[sound].pause()
 
-        img.bind('load', self.resourceLoaded)
-        img.bind('error', self.resourceError)
-        img.bind('abort', self.resourceAbort)
-        
-        pyangeloImage = PyAngeloImage(img, sprite)
-        img.pyangeloImage = pyangeloImage
+# alias for pauseSound
+def stopSound(sound):
+    if sound in _soundPlayers:
+        soundPlayers[sound].stop()
 
-        return pyangeloImage
+def getPixelColour(x, y):
+    pixel = window.Int8Array.new(4)
+    imageData = _ctx.getImageData(x, y, 1, 1)
+    return Colour(imageData.data[0], imageData.data[1], imageData.data[2], imageData.data[3])
 
-    def drawImage(self, image, x, y, width = None, height = None, rotation=0, anchorX = None, anchorY = None, opacity=None):
-        if (isinstance(image, str)):
-            image = self.loadImage(image)
-                   
-        self.ctx.save()
+def _start():
+    global _state
+    if _state != STATE_RUN:
+        _state = STATE_RUN
 
-        if width is None:
-            width = image.width
+def _stop():
+    global _state, _loadingResources
+    if _state != STATE_STOP:
+        _state = STATE_STOP
+        _loadingResources = 0
+        stopAllSounds()
 
-        if height is None:
-            height = image.height
+def _update(deltaTime):
+    global _state
+    if _state == STATE_STOP:
+        background(100, 149, 237)
+        ready = TextSprite("Ready", width/2, height/2, 60)
+        ready.center()
+        ready.draw()
+    elif _state == STATE_RUN:
+        if _main_loop_func is not None:
+            try:
+                _main_loop_func()
+            except Exception as e:
+                do_print("Error: " + str(e) + "\n" + traceback.format_exc(), "red")
+                _stop()
 
-        if opacity is not None:
-            if opacity > 1.0:
-                opacity = 1.0
-            elif opacity < 0.0:
-                opacity = 0.0
-            self.ctx.globalAlpha = opacity
+    timer.request_animation_frame(_update)
 
-        if rotation != 0.0:
-            # TODO: Buggy!!!
-            self.ctx.save()
-            self.ctx.translate(x, self._convY(y))
-            self.ctx.rotate(- rotation)# - 3.1415926535)# + math.PI / 180)
-            self.ctx.drawImage(image.img, -anchorX * width, -anchorY * height, width, height)
-            self.ctx.restore()
+def _loop(func):
+    global _main_loop_func
+    _main_loop_func = func
+
+def _resourceError(e):
+    _stop()
+    do_print("Error loading of resource: " + e.target.src + "\n", "red")
+
+def _resourceAbort(e):
+    _stop()
+    do_print("Aborted loading of resource: " + e.target.src + "\n", "red")
+
+def _resourceLoaded(e):
+    global _loadingResources
+    window.console.log("Successfully loaded file:" + e.target.src)
+
+    e.target.pyangeloImage.height = e.target.naturalHeight
+    e.target.pyangeloImage.width = e.target.naturalWidth
+
+    if e.target.pyangeloImage.sprite is not None:
+        if e.target.pyangeloImage.sprite.height == 0:
+            e.target.pyangeloImage.sprite.height = e.target.naturalHeight
+        if e.target.pyangeloImage.sprite.width == 0:
+            e.target.pyangeloImage.sprite.width = e.target.naturalWidth
+
+    _loadingResources -= 1
+
+def loadImage(file, sprite = None):
+    global _loadingResources
+    _loadingResources += 1
+
+    window.console.log("Attempting to load file:" + file)
+    img = html.IMG()
+    img.crossOrigin = "Anonymous"
+    img.src = file
+
+    img.bind('load', _resourceLoaded)
+    img.bind('error', _resourceError)
+    img.bind('abort', _resourceAbort)
+
+    pyangeloImage = PyAngeloImage(img, sprite)
+    img.pyangeloImage = pyangeloImage
+
+    return pyangeloImage
+
+def image(image, x, y, width = None, height = None, opacity=None):
+    if width is None:
+        width = image.width
+
+    if height is None:
+        height = image.height
+
+    ga = _ctx.globalAlpha
+    if opacity is not None:
+        if opacity > 1.0:
+            opacity = 1.0
+        elif opacity < 0.0:
+            opacity = 0.0
+        _ctx.globalAlpha = opacity
+
+    _ctx.drawImage(image.img, x, y, width, height)
+
+    _ctx.globalAlpha = ga
+
+def text(text, x, y, fontSize = 10, fontName = "Arial"):
+    _ctx.font = str(fontSize) + "pt " + fontName
+    _ctx.textBaseline = "top"
+    _ctx.fillText(text, x, y)
+
+def setCanvasSize(w, h):
+    global width, height
+    _canvas["width"] = w
+    _canvas["height"] = h
+    width = _canvas.width
+    height = _canvas.height
+
+def background(r = 0, g = 0, b = 0, a = 1):
+    fs = _ctx.fillStyle
+    _ctx.fillStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a)+ ")"
+    _ctx.fillRect(0, 0, width, height)
+    _ctx.fillStyle = fs
+
+def saveState():
+    _ctx.save()
+
+def restoreState():
+    _ctx.restore()
+
+def translate(x, y):
+    _ctx.translate(x, y)
+
+def rotate(angle):
+    if _angleMode != RADIANS:
+        angle = PI/180 * angle
+    _ctx.rotate(angle)
+
+def strokeWeight(weight):
+    _ctx.lineWidth = weight
+
+def fill(r=255, g=255, b=255, a=1.0):
+    global _doFill
+    _ctx.fillStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
+    _doFill = True
+
+def noFill():
+    global _doFill
+    _doFill = False
+
+def _fill():
+    if _doFill:
+        _ctx.fill()
+
+def stroke(r=0, g=0, b=0, a=1.0):
+    global _doStroke;
+    _ctx.strokeStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
+    _doStroke = True
+
+def noStroke():
+    global _doStroke;
+    _doStroke = False
+
+def _stroke():
+    if _doStroke:
+        _ctx.stroke()
+
+def angleMode(mode):
+    global _angleMode
+    _angleMode = mode
+
+def line(x1, y1, x2, y2):
+    _ctx.beginPath()
+    _ctx.moveTo(x1, y1)
+    _ctx.lineTo(x2, y2)
+    _stroke()
+
+def circle(x, y, radius):
+    _ctx.beginPath()
+    _ctx.arc(x, y, radius, 0, TWO_PI)
+    _fill()
+    _stroke()
+
+def ellipse(x, y, radiusX, radiusY):
+    _ctx.beginPath()
+    _ctx.ellipse(x, y, radiusX, radiusY, 0, 0, TWO_PI)
+    _fill()
+    _stroke()
+
+def arc(x, y, radiusX, radiusY, startAngle, endAngle):
+    if _angleMode != RADIANS:
+        startAngle = PI/180 * startAngle
+        endAngle = PI/180 * endAngle
+    _ctx.beginPath()
+    _ctx.ellipse(x, y, radiusX, radiusY, 0, startAngle, endAngle)
+    _fill()
+    _stroke()
+
+def triangle(x1, y1, x2, y2, x3, y3):
+    _ctx.beginPath()
+    _ctx.moveTo(x1, y1)
+    _ctx.lineTo(x2, y2)
+    _ctx.lineTo(x3, y3)
+    _ctx.closePath()
+    _fill()
+    _stroke()
+
+def quad(x1, y1, x2, y2, x3, y3, x4, y4):
+    _ctx.beginPath()
+    _ctx.moveTo(x1, y1)
+    _ctx.lineTo(x2, y2)
+    _ctx.lineTo(x3, y3)
+    _ctx.lineTo(x4, y4)
+    _ctx.closePath()
+    _fill()
+    _stroke()
+
+def point(x, y):
+    if _doStroke:
+        s = _ctx.strokeStyle
+        f = _ctx.fillStyle
+        _ctx.fillStyle = s
+
+        _ctx.beginPath()
+        if _ctx.lineWidth > 1:
+            _ctx.arc(x, y, _ctx.lineWidth / 2, 0, TWO_PI)
         else:
-            self.ctx.drawImage(image.img, x, self._convY(y + height), width, height)
+            rect(x, y, 1, 1)
+        _fill()
 
-        self.ctx.restore()    
-        
-    def measureText(self, text, fontName = "Arial", fontSize = 10):
-        self.ctx.font = str(fontSize) + "pt " + fontName
-        textMetrics = self.ctx.measureText(text)
+        _ctx.fillStyle = f
 
-        return (abs(textMetrics.actualBoundingBoxLeft) + abs(textMetrics.actualBoundingBoxRight), abs(textMetrics.actualBoundingBoxAscent) + abs(textMetrics.actualBoundingBoxDescent))
+def square(x, y, l):
+    _ctx.beginPath()
+    _ctx.rect(x, y, l, l)
+    _fill()
+    _stroke()
 
-    def drawText(self, text, x, y, fontName = "Arial", fontSize = 10, r = 255, g = 255, b = 255, a = 1.0):
-        self.ctx.fillStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
-        self.ctx.font = str(fontSize) + "pt " + fontName
-        self.ctx.textBaseline = "bottom"
-        self.ctx.fillText(text, x, self.height - y)        
+def rect(x, y, w, h):
+    _ctx.beginPath()
+    _ctx.rect(x, y, w, h)
+    _fill()
+    _stroke()
 
-    def background(self, r = 0, g = 0, b = 0, a = 1):
-        global array
-        self.ctx.fillStyle= "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a)+ ")"
-        self.ctx.fillRect(0, 0, self.width, self.height)    
-        
-    def drawLine(self, x1, y1, x2, y2, r = 255, g = 255, b = 255, a = 1.0, width = 1):
-        r = min(r, 255)
-        g = min(g, 255)
-        b = min(b, 255)
-        a = min(a, 1.0)
+def _keydown(ev):
+    _keys[ev.which] = True
 
-        self.ctx.beginPath()
-        self.ctx.lineWidth = width
-        self.ctx.strokeStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
-        self.ctx.moveTo(x1, self._convY(y1))
-        self.ctx.lineTo(x2, self._convY(y2))
-        self.ctx.stroke()
+def _keyup(ev):
+    _keys[ev.which] = False
 
-    def drawCircle(self, x, y, radius, r=255, g=255, b=255, a=1.0):
-        r = min(r, 255)
-        g = min(g, 255)
-        b = min(b, 255)
-        a = min(a, 1.0)
+def isKeyPressed(key):
+    return _keys[key]
 
-        self.ctx.fillStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
-        self.ctx.beginPath();
-        self.ctx.arc(x, self._convY(y), radius, 0, 2 * 3.1415926535);
-        self.ctx.fill();
-        
-    def drawPixel(self, x, y, r = 255, g = 255, b = 255, a = 255):
-        r = min(r, 255)
-        g = min(g, 255)
-        b = min(b, 255)
-        a = min(a, 255)
+def isMousePressed():
+    return mousePressed
 
-        self.pixel_id.data[0] = r
-        self.pixel_id.data[1] = g
-        self.pixel_id.data[2] = b
-        self.pixel_id.data[3] = a
-        self.ctx.putImageData(self.pixel_id, x, self._convY(y))
-        
-    def drawRect(self, x, y, w, h, r = 255, g = 255, b = 255, a = 1.0):
-        r = min(r, 255)
-        g = min(g, 255)
-        b = min(b, 255)
-        a = min(a, 1.0)
-        self.ctx.fillStyle = "rgba(" + str(r) + "," + str(g) + "," + str(b) + "," + str(a) + ")"
-        self.ctx.fillRect(x, self._convY(y) - h, w, h);
-        
-    def _convY(self, y):
-        return self.height - y
+_state = STATE_STOP
+_main_loop_fun = None
+_soundPlayers = {}
+_loadingResources = 0
+_canvas = document["canvas"]
+_ctx = _canvas.getContext('2d')		
+width = 0
+height = 0
+setCanvasSize(DEFAULT_WIDTH, DEFAULT_HEIGHT)
+fill(255, 255, 255)
+stroke(0, 0, 0)
 
-    def __input(self, msg):
-        # input mode triggered
-        self.state = self.STATE_INPUT
-        self.input_concluded = False
-        self.input_buffer_index = 0
-        
-    def loop(self, func):
-        self.main_loop = func
+_keys = dict([(a, False) for a in range(255)] +
+                 [(a, False) for a in range(0xff00, 0xffff)])
+_keys[KEY_V_LEFT] = False
+_keys[KEY_V_RIGHT] = False
+_keys[KEY_V_UP] = False
+_keys[KEY_V_DOWN] = False
+_keys[KEY_V_FIRE] = False
 
-        
-    def update(self, deltaTime):           
-        if self.state == self.STATE_STOP:      
-            self.background(100, 149, 237)
-            ready = TextSprite("Ready", canvas.width/2, canvas.height/2, fontSize = 60)
-            ready.center()
-            ready.draw()
-        elif self.state == self.STATE_RUN:   
-            if self.main_loop is not None:
-                try:
-                    self.main_loop()
-                except Exception as e:
-                    do_print("Error: " + str(e) + "\n" + traceback.format_exc(), "red")       
-                    self.stop()
-            	   
-        elif self.state == self.STATE_INPUT:
-            # display the commands in the queue to date
-            if self.input_concluded:
-                # TODO: if the program halts after the input, then this causes
-                # Pyangelo to keep looping in it's run state ===> FIX!
-                self.state = self.STATE_RUN
-                self.input_concluded = False
-        elif self.state == self.STATE_LOAD:
-            self.background(49, 98, 186)
-            loading = TextSprite("Loading: " + self.loading_filename, canvas.width/2, canvas.height/2, fontSize = 20)
-            loading.center()
-            loading.draw()
-        elif self.state == self.STATE_LOADED:
-            self.background(49, 98, 186)
-            
-            loaded = TextSprite("Successfully Loaded:", canvas.width/2, canvas.height/2 + 50, fontSize = 20)
-            loaded.center()
-            loaded.draw()
-            
-            loadedFilename = TextSprite(self.loading_filename, canvas.width/2, canvas.height/2 - 50, fontSize = 20)
-            loadedFilename.center()
-            loadedFilename.draw()
-        
-        timer.request_animation_frame(self.update)
-        
-    def start(self):
-        if self.state != self.STATE_RUN:
-            self.state = self.STATE_RUN
-                        
-    def stop(self):   
-        if self.state != self.STATE_STOP:
-            self.state = self.STATE_STOP            
+document.bind("keydown", _keydown)
+document.bind("keyup", _keyup)
 
-            # TODO: put all these into a Reset() method
-            self.resources =  {}
-            self.loadingResources = 0
+mousePressed = False
+mouseX = 0
+mouseY = 0
+_canvas.bind("mousedown", _mousedown)
+_canvas.bind("mouseup", _mouseup)
+_canvas.bind("mousemove", _mousemove)
 
-            self.stopAllSounds()     
+_doFill = True
+_doStroke = True
+_angleMode = True
+_state = STATE_STOP
+timer.request_animation_frame(_update)
 
-    def getPixelColour(self, x, y):
-        pixel = window.Int8Array.new(4)      
-                   
-        imageData = self.ctx.getImageData(x, self._convY(y), 1, 1)
-        
-        return Colour(imageData.data[0], imageData.data[1], imageData.data[2], imageData.data[3])
-              
-
-    def sleep(self, milliseconds):
-        # the sleep happens here, it's a tight loop - may hang the browser!
-        currTime = window.performance.now()
-        prevTime = currTime
-        while (currTime - prevTime < milliseconds):
-            currTime = window.performance.now()      
-            
-canvas = PyAngelo()
-
-def canvas_stop():
-    canvas.stop()
-
-window.canvas_stop = canvas_stop
-
-def startLoading(filename):
-    window.console.log("starting load")
-    canvas.state = canvas.STATE_LOAD
-    canvas.loading_filename = filename
-    
-def doneLoading():
-    window.console.log("finish load")
-    canvas.state = canvas.STATE_LOADED
-    
-    canvas.resources =  {}
-    canvas.loadingResources = 0
-    canvas.stopAllSounds()
+window.canvas_stop = _stop
 
 def format_string_HTML(s):
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>").replace("\"", "&quot;").replace("'", "&apos;").replace(" ", "&nbsp;")
@@ -636,17 +549,17 @@ def do_print(s, color=None):
 
 pre_globals = []
 def startSketch(src):
-    global pre_globals
-    
-    canvas.main_loop = None
+    global pre_globals, _main_loop_func
+
+    _main_loop_func = None
 
     start_tag = "@loop_animation"
     end_tag = "@loop_animation"
-    
+
     lines = src.split("\n")
-    
+
     non_frame_code = []
-    
+
     frame_code = []
 
     line_num = 0
@@ -654,10 +567,10 @@ def startSketch(src):
         line = lines[line_num]
         line_num += 1
         if line.lower()[:len(start_tag)] != start_tag:
-            non_frame_code.append(line)            
-        else:            
+            non_frame_code.append(line)
+        else:
             break
-        
+
     while line_num < len(lines):
         line = lines[line_num]
         line_num += 1
@@ -665,29 +578,28 @@ def startSketch(src):
             frame_code.append(" " + line +"\n")
         else:
             break
-                
+
     while line_num < len(lines):
         line = lines[line_num]
         non_frame_code.append(line + "\n")
-        line_num += 1                
-        
+        line_num += 1
+
     src = "\n".join(non_frame_code)
     src += "\n"
-    
+
     window.console.log("Non frame code:")
     window.console.log(src)
-        
+
     if len(pre_globals) == 0:
         pre_globals = list(globals().keys())
 
     namespace = globals()
-    namespace["__name__"] = "__main__"        
+    namespace["__name__"] = "__main__"
 
-   
-    if len(frame_code) > 0:   
+    if len(frame_code) > 0:
 
-        run_code(src, namespace, namespace, False)    
-        
+        run_code(src, namespace, namespace, False)
+
         post_globals = list(globals().keys())
         global_code = ""
         for g in post_globals:
@@ -695,47 +607,43 @@ def startSketch(src):
                 global_code += g + ","
         if len(global_code) > 0:
             frame_code.insert(0, " global " + global_code[:-1] + "\n")
-        
+
         frame_code.insert(0, "def frame_code():")
-        
-        frame_code.insert(0, "@canvas.loop")
-        
+
+        frame_code.insert(0, "@_loop")
+
         src = "\n".join(frame_code)
         window.console.log("Frame code:")
         window.console.log(src)
-       
-        run_code(src, namespace, namespace, True)    
+
+        run_code(src, namespace, namespace, True)
     else:
         run_code(src, namespace, namespace, True)
-              
+
 window.startSketch = startSketch
-    
+
 def run_code(src, globals, locals, is_frame_code = True):
     try:
         if is_frame_code:
-            canvas.start()
+            _start()
 
         exec(src, globals, locals)
-        
-    except Exception as e:
-        do_print("Error in parsing: " + str(e) + "\n" + traceback.format_exc(), "red") 
-        canvas.stop()
 
-            
+    except Exception as e:
+        do_print("Error in parsing: " + str(e) + "\n" + traceback.format_exc(), "red")
+        _stop()
+
 class ErrorOutput:
     def write(self, data):
-        do_print(data, "red") 
+        do_print(data, "red")
     def flush(self):
         pass
-        
+
 class PrintOutput:
     def write(self, data):
-        do_print(data, "green") 
+        do_print(data, "green")
     def flush(self):
         pass
 
-
 sys.stdout = PrintOutput()
-sys.stderr = ErrorOutput()    
-        
-###################################################################################        
+sys.stderr = ErrorOutput()
