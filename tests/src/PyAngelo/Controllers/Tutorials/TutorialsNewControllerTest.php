@@ -13,11 +13,13 @@ class TutorialsNewControllerTest extends TestCase {
     $this->response = new Response('views');
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
     $this->tutorialRepository = Mockery::mock('PyAngelo\Repositories\TutorialRepository');
+    $this->sketchRepository = Mockery::mock('PyAngelo\Repositories\SketchRepository');
     $this->controller = new TutorialsNewController (
       $this->request,
       $this->response,
       $this->auth,
-      $this->tutorialRepository
+      $this->tutorialRepository,
+      $this->sketchRepository
     );
   }
   public function tearDown(): void {
@@ -40,6 +42,7 @@ class TutorialsNewControllerTest extends TestCase {
   }
 
   public function testWhenAdmin() {
+    $sketchOwnerId = 1;
     $categories = [
       [
         'tutorial_category_id' => 1,
@@ -72,6 +75,9 @@ class TutorialsNewControllerTest extends TestCase {
       ->once()
       ->with()
       ->andReturn($levels);
+    $this->sketchRepository->shouldReceive('getSketches')
+      ->once()
+      ->with($sketchOwnerId);
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();

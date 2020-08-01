@@ -8,6 +8,7 @@ use Tests\views\BasicViewHtmlTest;
 class EditHtmlTest extends BasicViewHtmlTest {
 
   public function testBasicViewWhenAdmin() {
+    $sketches = [];
     $securityLevels = [
       [
         'lesson_security_level_id' => 1,
@@ -46,6 +47,8 @@ class EditHtmlTest extends BasicViewHtmlTest {
       'personInfo' => $this->setPersonInfoAdmin(),
       'securityLevels' => $securityLevels,
       'lesson' => $lesson,
+      'sketches' => $sketches,
+      'singleSketch' => 0,
       'formVars' => $formVars,
       'submitButtonText' => 'Update'
     ));

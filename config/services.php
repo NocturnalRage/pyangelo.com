@@ -513,7 +513,8 @@ $di->set('TutorialsNewController', function () use ($di) {
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),
-    $di->get('tutorialRepository')
+    $di->get('tutorialRepository'),
+    $di->get('sketchRepository')
   );
 });
 
@@ -540,7 +541,8 @@ $di->set('TutorialsEditController', function () use ($di) {
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),
-    $di->get('tutorialRepository')
+    $di->get('tutorialRepository'),
+    $di->get('sketchRepository')
   );
 });
 
@@ -558,7 +560,8 @@ $di->set('LessonsNewController', function () use ($di) {
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),
-    $di->get('tutorialRepository')
+    $di->get('tutorialRepository'),
+    $di->get('sketchRepository')
   );
 });
 
@@ -600,7 +603,8 @@ $di->set('LessonsEditController', function () use ($di) {
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),
-    $di->get('tutorialRepository')
+    $di->get('tutorialRepository'),
+    $di->get('sketchRepository')
   );
 });
 

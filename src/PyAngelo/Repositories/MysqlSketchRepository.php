@@ -138,19 +138,23 @@ class MysqlSketchRepository implements SketchRepository {
     return $fileId;
   }
 
-  public function forkSketch($sketchId, $personId, $title) {
+  public function forkSketch($sketchId, $personId, $title, $lessonId = NULL, $tutorialId = NULL) {
     $sql = "INSERT INTO sketch (
               sketch_id,
               person_id,
+              lesson_id,
+              tutorial_id,
               title,
               created_at,
               updated_at
             )
-            VALUES (NULL, ?, ?, now(), now())";
+            VALUES (NULL, ?, ?, ?, ?, now(), now())";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'is',
+      'iiis',
       $personId,
+      $lessonId,
+      $tutorialId,
       $title
     );
     $stmt->execute();

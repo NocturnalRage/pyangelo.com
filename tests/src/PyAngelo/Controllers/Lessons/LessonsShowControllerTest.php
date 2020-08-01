@@ -361,6 +361,7 @@ class LessonsShowControllerTest extends TestCase {
       'video_name' => $videoName,
       'tutorial_id' => $tutorialId,
       'single_sketch' => $singleSketch,
+      'lesson_sketch_id' => $sketchId,
       'tutorial_title' => $tutorialTitle,
       'lesson_slug' => $lessonSlug,
       'lesson_security_level_id' => $anyoneSecurityId,
@@ -384,6 +385,9 @@ class LessonsShowControllerTest extends TestCase {
       'person_id' => $personId,
       'lesson_id' => $lessonId,
       'title' => $lessonSlug
+    ];
+    $files = [
+      'name' => 'main.py'
     ];
     $comments = [];
     $this->request->get['slug'] = $tutorialSlug;
@@ -427,19 +431,24 @@ class LessonsShowControllerTest extends TestCase {
       ->with($personId, $lessonId)
       ->andReturn(NULL);
     $this->sketchRepository
-      ->shouldReceive('createNewSketch')
+      ->shouldReceive('forkSketch')
       ->once()
-      ->with($personId, $lessonTitle, $lessonId)
+      ->with($sketchId, $personId, $lessonTitle, $lessonId, NULL)
       ->andReturn($sketchId);
+    $this->sketchRepository
+      ->shouldReceive('getSketchFiles')
+      ->once()
+      ->with($sketchId)
+      ->andReturn($files);
     $this->sketchRepository
       ->shouldReceive('getSketchById')
       ->once()
       ->with($sketchId)
       ->andReturn($sketch);
     $this->sketchFiles
-      ->shouldReceive('createNewMain')
+      ->shouldReceive('forkSketch')
       ->once()
-      ->with($sketchId);
+      ->with($sketchId, $sketchId, $files);
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
@@ -479,6 +488,7 @@ class LessonsShowControllerTest extends TestCase {
       'tutorial_title' => $tutorialTitle,
       'lesson_slug' => $lessonSlug,
       'lesson_security_level_id' => $anyoneSecurityId,
+      'tutorial_sketch_id' => $sketchId,
       'youtube_url' => 'test-youtube-url',
       'display_order' => 1
     ];
@@ -499,6 +509,9 @@ class LessonsShowControllerTest extends TestCase {
       'person_id' => $personId,
       'lesson_id' => $lessonId,
       'title' => $lessonSlug
+    ];
+    $files = [
+      'name' => 'main.py'
     ];
     $comments = [];
     $this->request->get['slug'] = $tutorialSlug;
@@ -542,19 +555,24 @@ class LessonsShowControllerTest extends TestCase {
       ->with($personId, $tutorialId)
       ->andReturn(NULL);
     $this->sketchRepository
-      ->shouldReceive('createNewSketch')
+      ->shouldReceive('forkSketch')
       ->once()
-      ->with($personId, $tutorialTitle, NULL, $tutorialId)
+      ->with($sketchId, $personId, $tutorialTitle, NULL, $tutorialId)
       ->andReturn($sketchId);
+    $this->sketchRepository
+      ->shouldReceive('getSketchFiles')
+      ->once()
+      ->with($sketchId)
+      ->andReturn($files);
     $this->sketchRepository
       ->shouldReceive('getSketchById')
       ->once()
       ->with($sketchId)
       ->andReturn($sketch);
     $this->sketchFiles
-      ->shouldReceive('createNewMain')
+      ->shouldReceive('forkSketch')
       ->once()
-      ->with($sketchId);
+      ->with($sketchId, $sketchId, $files);
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();

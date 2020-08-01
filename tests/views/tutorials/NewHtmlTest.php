@@ -8,6 +8,7 @@ use Tests\views\BasicViewHtmlTest;
 class NewHtmlTest extends BasicViewHtmlTest {
 
   public function testBasicViewWhenLoggedIn() {
+    $sketches = [];
     $categories = [
       [
         'tutorial_category_id' => 1,
@@ -39,6 +40,7 @@ class NewHtmlTest extends BasicViewHtmlTest {
       'personInfo' => $this->setPersonInfoAdmin(),
       'categories' => $categories,
       'levels' => $levels,
+      'sketches' => $sketches,
       'submitButtonText' => 'Create'
     ));
     $output = $response->requireView();

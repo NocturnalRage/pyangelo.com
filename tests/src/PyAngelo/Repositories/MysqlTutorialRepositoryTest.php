@@ -70,13 +70,14 @@ class MysqlTutorialRepositoryTest extends TestCase {
     $tutorialCategoryId = 1;
     $tutorialLevelId = 1;
     $singleSketch = 0;
+    $tutorialSketchId = NULL;
     $displayOrder = 1;
     $thumbnail = 'test-tutorial.jpg';
     $expectedDeletedCount = 2;
 
     // Insert, retrieve, and delete data from the table
     $tutorialId1 = $this->tutorialRepository->insertTutorial(
-      $title, $description, $slug, $tutorialCategoryId, $tutorialLevelId, $singleSketch, $displayOrder, $thumbnail
+      $title, $description, $slug, $tutorialCategoryId, $tutorialLevelId, $singleSketch, $tutorialSketchId, $displayOrder, $thumbnail
     );
     $tutorial = $this->tutorialRepository->getTutorialBySlug($slug);
     $this->assertSame($tutorial['title'], $title);
@@ -99,10 +100,11 @@ class MysqlTutorialRepositoryTest extends TestCase {
     $tutorialCategoryId = 1;
     $tutorialLevelId = 1;
     $singleSketch = 1;
+    $tutorialSketchId = NULL;
     $displayOrder = 2;
     $thumbnail = 'test-tutorial-2.jpg';
     $tutorialId2 = $this->tutorialRepository->insertTutorial(
-      $title, $description, $slug, $tutorialCategoryId, $tutorialLevelId, $singleSketch, $displayOrder, $thumbnail
+      $title, $description, $slug, $tutorialCategoryId, $tutorialLevelId, $singleSketch, $tutorialSketchId, $displayOrder, $thumbnail
     );
 
     $description = 'A second tutorial twice removed.';
@@ -110,7 +112,7 @@ class MysqlTutorialRepositoryTest extends TestCase {
     $tutorialCategoryId = 2;
     $singleSketch = 0;
     $rowsUpdated = $this->tutorialRepository->updateTutorialBySlug(
-      $slug, $title, $description, $tutorialLevelId, $tutorialCategoryId, $singleSketch, $displayOrder
+      $slug, $title, $description, $tutorialLevelId, $tutorialCategoryId, $singleSketch, $tutorialSketchId, $displayOrder
     );
     $this->assertSame(1, $rowsUpdated);
     $tutorial = $this->tutorialRepository->getTutorialBySlug($slug);

@@ -13,11 +13,13 @@ class LessonsNewControllerTest extends TestCase {
     $this->response = new Response('views');
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
     $this->tutorialRepository = Mockery::mock('PyAngelo\Repositories\TutorialRepository');
+    $this->sketchRepository = Mockery::mock('PyAngelo\Repositories\SketchRepository');
     $this->controller = new LessonsNewController (
       $this->request,
       $this->response,
       $this->auth,
-      $this->tutorialRepository
+      $this->tutorialRepository,
+      $this->sketchRepository
     );
   }
   public function tearDown(): void {
@@ -40,6 +42,8 @@ class LessonsNewControllerTest extends TestCase {
   }
 
   public function testWhenAdmin() {
+    $sketchOwnerId = 1;
+    $sketches = [];
     $securityLevels = [
       [
         'lesson_security_level_id' => 1,
@@ -54,7 +58,8 @@ class LessonsNewControllerTest extends TestCase {
     $tutorialSlug = 'the-best-tutorial';
     $tutorial = [
       'title' => $tutorialTitle,
-      'slug' => $tutorialSlug
+      'slug' => $tutorialSlug,
+      'single_sketch' => 0
     ];
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
@@ -66,6 +71,10 @@ class LessonsNewControllerTest extends TestCase {
       ->once()
       ->with()
       ->andReturn($securityLevels);
+    $this->sketchRepository->shouldReceive('getSketches')
+      ->once()
+      ->with($sketchOwnerId)
+      ->andReturn($sketches);
     $this->request->get['slug'] = $tutorialSlug;
 
     $response = $this->controller->exec();

@@ -45,6 +45,18 @@
               <div class="alert alert-danger"><?= $this->esc($errors['tutorial_level_id']); ?></div>
             <?php endif; ?>
           </div>
+          <div class="form-group<?= isset($errors['tutorial_sketch_id']) ? ' has-error' : ''; ?>">
+            <label for="tutorial_sketch_id" class="control-label">Sketch ID:</label>
+            <select id="tutorial_sketch_id" name="tutorial_sketch_id" class="form-control">
+              <option></option>
+            <?php foreach ($sketches as $sketch): ?>
+              <option <?php if ($sketch['sketch_id'] == ($formVars['tutorial_sketch_id'] ?? '')) echo 'selected'; ?> value="<?= $this->esc($sketch['sketch_id']); ?>"><?= $this->esc($sketch['title']); ?></option>
+            <?php endforeach; ?>
+            </select>
+            <?php if (isset($errors['tutorial_sketch_id'])) :?>
+              <div class="alert alert-danger"><?= $this->esc($errors['tutorial_sketch_id']); ?></div>
+            <?php endif; ?>
+          </div>
           <div class="form-group<?= isset($errors['display_order']) ? ' has-error' : ''; ?>">
             <label for="display_order" class="control-label">Display order: </label>
             <input type="number" min="1" max="999" name="display_order" id="display_order" class="form-control" placeholder="Display order" value="<?= $this->esc($formVars['display_order'] ?? ''); ?>" maxlength="3" required />

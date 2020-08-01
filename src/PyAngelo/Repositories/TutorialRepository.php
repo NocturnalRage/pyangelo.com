@@ -22,6 +22,7 @@ interface TutorialRepository {
     $tutorialCategoryId,
     $tutorialLevelId,
     $singleSketch,
+    $tutorialSketchId,
     $displayOrder,
     $thumbnail
   );
@@ -33,6 +34,7 @@ interface TutorialRepository {
     $tutorialCategoryId,
     $tutorialLevelId,
     $singleSketch,
+    $tutorialSketchId,
     $displayOrder
   );
 

@@ -40,6 +40,10 @@ class TutorialFormService {
     $formData['slug'] = $slug;
     $formData['thumbnail'] = $thumbnail;
 
+    if (empty($formData['tutorial_sketch_id'])) {
+      $formData['tutorial_sketch_id'] = null;
+    }
+
     $tutorialId = $this->insertTutorial($formData);
 
     if ($pdfInfo['size'] > 0) {
@@ -115,6 +119,7 @@ class TutorialFormService {
       $formData['tutorial_category_id'],
       $formData['tutorial_level_id'],
       $formData['single_sketch'],
+      $formData['tutorial_sketch_id'],
       $formData['display_order']
     );
     return true;
@@ -136,6 +141,7 @@ class TutorialFormService {
       $formData['tutorial_category_id'],
       $formData['tutorial_level_id'],
       $formData['single_sketch'],
+      $formData['tutorial_sketch_id'],
       $formData['display_order'],
       $formData['thumbnail']
     );
@@ -210,6 +216,12 @@ class TutorialFormService {
     }
     else if ($formData['single_sketch'] != 0 && $formData['single_sketch'] != 1) {
       $this->errors['single_sketch'] = "You must select either true or false.";
+    }
+    else if ($formData['single_sketch'] == 1) {
+      if (empty($formData['tutorial_sketch_id'])) {
+        $this->errors['tutorial_sketch_id'] = "As this tutorial has a single sketch you must select such a sketch to be cloned by users.";
+      }
+      // TODO: Should check this is a valid sketch ID
     }
 
     if (empty($formData['display_order'])) {
