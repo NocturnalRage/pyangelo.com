@@ -36,3 +36,7 @@ STATE_RUN         =   2
 
 DEFAULT_WIDTH     = 500
 DEFAULT_HEIGHT    = 400
+
+CORNER            = 1
+CORNERS           = 2
+CENTER            = 3
