@@ -8,6 +8,7 @@ use Tests\views\BasicViewHtmlTest;
 class EditHtmlTest extends BasicViewHtmlTest {
 
   public function testBasicViewWhenLoggedIn() {
+    $sketches = [];
     $categories = [
       [
         'tutorial_category_id' => 1,
@@ -48,6 +49,7 @@ class EditHtmlTest extends BasicViewHtmlTest {
       'tutorial' => $tutorial,
       'categories' => $categories,
       'levels' => $levels,
+      'sketches' => $sketches,
       'formVars' => $formVars,
       'submitButtonText' => 'Update'
     ));

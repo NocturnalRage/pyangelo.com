@@ -187,14 +187,33 @@ class LessonsShowController extends Controller {
       $lesson['tutorial_id']
     );
     if (!$sketch) {
-      $sketchId = $this->sketchRepository->createNewSketch(
+      $sketchId = $this->sketchRepository->forkSketch(
+        $lesson['tutorial_sketch_id'],
         $this->auth->personId(),
         $lesson['tutorial_title'],
         NULL,
         $lesson['tutorial_id']
       );
 
-      $this->sketchFiles->createNewMain($sketchId);
+      if (!$sketchId) {
+        // Create default sketch
+        $sketchId = $this->sketchRepository->createNewSketch(
+          $this->auth->personId(),
+          $lesson['tutorial_title'],
+          NULL,
+          $lesson['tutorial_id']
+        );
+
+        $this->sketchFiles->createNewMain($sketchId);
+      }
+      else {
+        $sketchFiles = $this->sketchRepository->getSketchFiles($sketchId);
+        $this->sketchFiles->forkSketch(
+          $lesson['tutorial_sketch_id'],
+          $sketchId,
+          $sketchFiles
+        );
+      }
       $sketch = $this->sketchRepository->getSketchById($sketchId);
     }
     return $sketch;
@@ -206,13 +225,33 @@ class LessonsShowController extends Controller {
       $lesson['lesson_id']
     );
     if (!$sketch) {
-      $sketchId = $this->sketchRepository->createNewSketch(
+      $sketchId = $this->sketchRepository->forkSketch(
+        $lesson['lesson_sketch_id'],
         $this->auth->personId(),
         $lesson['lesson_title'],
-        $lesson['lesson_id']
+        $lesson['lesson_id'],
+        NULL
       );
 
-      $this->sketchFiles->createNewMain($sketchId);
+      if (!$sketchId) {
+        // Create default sketch
+        $sketchId = $this->sketchRepository->createNewSketch(
+          $this->auth->personId(),
+          $lesson['lesson_title'],
+          $lesson['lesson_id'],
+          NULL
+        );
+
+        $this->sketchFiles->createNewMain($sketchId);
+      }
+      else {
+        $sketchFiles = $this->sketchRepository->getSketchFiles($sketchId);
+        $this->sketchFiles->forkSketch(
+          $lesson['lesson_sketch_id'],
+          $sketchId,
+          $sketchFiles
+        );
+      }
       $sketch = $this->sketchRepository->getSketchById($sketchId);
     }
     return $sketch;

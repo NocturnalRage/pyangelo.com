@@ -17,6 +17,7 @@ class LessonFormService {
   }
 
   public function createLesson($formData, $imageInfo = NULL) {
+    $tutorial = [];
     if (empty($formData['slug'])) {
       $this->errors['tutorial_id'] = "This lesson must be part of a tutorial series.";
     }
@@ -27,12 +28,15 @@ class LessonFormService {
       $formData['tutorial_id'] = $tutorial['tutorial_id'];
     }
 
-    if (!$this->isFormDataValid($formData)) {
+    if (!$this->isFormDataValid($formData, $tutorial)) {
       $this->flashMessage = 'There were some errors. ' .
          'Please fix these and then we will create the lesson.';
       return false;
     }
 
+    if (empty($formData['lesson_sketch_id'])) {
+      $formData['lesson_sketch_id'] = null;
+    }
     $formData['lesson_slug'] = $this->generateSlug(
       $formData['lesson_title'],
       $formData['tutorial_id']
@@ -68,10 +72,14 @@ class LessonFormService {
       $this->flashMessage = "Sorry, something has gone wrong. Let's start again.";
       return false;
     }
-    if (!$this->isFormDataValid($formData)) {
+    if (!$this->isFormDataValid($formData, $tutorial)) {
       $this->flashMessage = 'There were some errors. ' .
          'Please fix these and then we will update the lesson.'; 
       return false;
+    }
+
+    if (empty($formData['lesson_sketch_id'])) {
+      $formData['lesson_sketch_id'] = null;
     }
 
     $rowsUpdated = $this->tutorialRepository->updateLessonByTutorialIdAndSlug($formData);
@@ -117,7 +125,7 @@ class LessonFormService {
     return $fullFileName;
   }
 
-  private function isFormDataValid($formData) {
+  private function isFormDataValid($formData, $tutorial) {
     if (empty($formData['tutorial_id'])) {
       $this->errors['tutorial_id'] = "This lesson must be part of a tutorial series.";
     }
@@ -170,6 +178,13 @@ class LessonFormService {
     }
     else if (! $this->tutorialRepository->getLessonSecurityLevelById($formData['lesson_security_level_id'])) {
       $this->errors['lesson_security_level_id'] = "The specified security level for this lesson does not exist.";
+    }
+
+    if (isset($tutorial['single_sketch']) && ! $tutorial['single_sketch']) {
+      if (empty($formData['lesson_sketch_id'])) {
+        $this->errors['lesson_sketch_id'] = "You must choose a sketch to clone for the users for this lesson.";
+      }
+      // TODO: Check sketch exists!
     }
 
     if (empty($formData['display_order'])) {

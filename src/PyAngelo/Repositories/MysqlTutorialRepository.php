@@ -117,6 +117,7 @@ class MysqlTutorialRepository implements TutorialRepository {
     $tutorialCategoryId,
     $tutorialLevelId,
     $singleSketch,
+    $tutorialSketchId,
     $displayOrder,
     $thumbnail
   ) {
@@ -129,14 +130,15 @@ class MysqlTutorialRepository implements TutorialRepository {
               tutorial_category_id,
               tutorial_level_id,
               single_sketch,
+              tutorial_sketch_id,
               display_order,
               created_at,
               updated_at
             )
-            VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+            VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'ssssiiii',
+      'ssssiiiii',
       $title,
       $description,
       $slug,
@@ -144,6 +146,7 @@ class MysqlTutorialRepository implements TutorialRepository {
       $tutorialCategoryId,
       $tutorialLevelId,
       $singleSketch,
+      $tutorialSketchId,
       $displayOrder
     );
     $stmt->execute();
@@ -159,6 +162,7 @@ class MysqlTutorialRepository implements TutorialRepository {
     $tutorialCategoryId,
     $tutorialLevelId,
     $singleSketch,
+    $tutorialSketchId,
     $displayOrder
   ) {
     $sql = "UPDATE tutorial
@@ -167,17 +171,19 @@ class MysqlTutorialRepository implements TutorialRepository {
                    tutorial_category_id = ?,
                    tutorial_level_id = ?,
                    single_sketch = ?,
+                   tutorial_sketch_id = ?,
                    display_order = ?,
                    updated_at = now()
             WHERE  slug = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'ssiiiis',
+      'ssiiiiis',
       $title,
       $description,
       $tutorialCategoryId,
       $tutorialLevelId,
       $singleSketch,
+      $tutorialSketchId,
       $displayOrder,
       $slug
     );
@@ -369,14 +375,15 @@ class MysqlTutorialRepository implements TutorialRepository {
               seconds,
               lesson_slug,
               lesson_security_level_id,
+              lesson_sketch_id,
               display_order,
               created_at,
               updated_at
             )
-            VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+            VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'issssisii',
+      'issssisiii',
       $lessonInfo['tutorial_id'],
       $lessonInfo['lesson_title'],
       $lessonInfo['lesson_description'],
@@ -385,6 +392,7 @@ class MysqlTutorialRepository implements TutorialRepository {
       $lessonInfo['seconds'],
       $lessonInfo['lesson_slug'],
       $lessonInfo['lesson_security_level_id'],
+      $lessonInfo['lesson_sketch_id'],
       $lessonInfo['display_order']
     );
     $stmt->execute();
@@ -562,6 +570,7 @@ class MysqlTutorialRepository implements TutorialRepository {
                    t.tutorial_id,
                    t.title as tutorial_title,
                    t.slug as tutorial_slug,
+                   t.single_sketch,
                    t.thumbnail as tutorial_thumbnail
 	        FROM   lesson l
             JOIN   tutorial t on l.tutorial_id = t.tutorial_id
@@ -581,6 +590,7 @@ class MysqlTutorialRepository implements TutorialRepository {
                    CASE WHEN lf.favourited_at IS NULL THEN 0 ELSE 1 END AS favourited,
                    t.tutorial_id,
                    t.single_sketch,
+                   t.tutorial_sketch_id,
                    t.title as tutorial_title,
                    t.slug as tutorial_slug,
                    t.thumbnail as tutorial_thumbnail,
@@ -663,19 +673,21 @@ class MysqlTutorialRepository implements TutorialRepository {
                    youtube_url = ?,
                    seconds = ?,
                    lesson_security_level_id = ?,
+                   lesson_sketch_id = ?,
                    display_order = ?,
                    updated_at = now()
             WHERE  tutorial_id = ?
             AND    lesson_slug = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'ssssiiiis',
+      'ssssiiiiis',
       $formData['lesson_title'],
       $formData['lesson_description'],
       $formData['video_name'],
       $formData['youtube_url'],
       $formData['seconds'],
       $formData['lesson_security_level_id'],
+      $formData['lesson_sketch_id'],
       $formData['display_order'],
       $formData['tutorial_id'],
       $formData['lesson_slug']

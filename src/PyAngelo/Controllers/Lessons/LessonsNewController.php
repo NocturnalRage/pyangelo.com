@@ -5,18 +5,23 @@ use Framework\{Request, Response};
 use PyAngelo\Auth\Auth;
 use PyAngelo\Controllers\Controller;
 use PyAngelo\Repositories\TutorialRepository;
+use PyAngelo\Repositories\SketchRepository;
 
 class LessonsNewController extends Controller {
   protected $tutorialRepository;
+  protected $sketchRepository;
 
   public function __construct(
     Request $request,
     Response $response,
     Auth $auth,
-    TutorialRepository $tutorialRepository
+    TutorialRepository $tutorialRepository,
+    SketchRepository $sketchRepository
   ) {
     parent::__construct($request, $response, $auth);
     $this->tutorialRepository = $tutorialRepository;
+    $this->sketchRepository = $sketchRepository;
+    $this->ownerOfStarterSketchesId = 1;
   }
 
   public function exec() {
@@ -34,6 +39,8 @@ class LessonsNewController extends Controller {
       'personInfo' => $this->auth->getPersonDetailsForViews(),
       'securityLevels' => $this->tutorialRepository->getAllLessonSecurityLevels(),
       'tutorial' => $tutorial,
+      'singleSketch' => $tutorial['single_sketch'],
+      'sketches' => $this->sketchRepository->getSketches($this->ownerOfStarterSketchesId),
       'submitButtonText' => 'Create'
     ));
     $this->addVar('errors');

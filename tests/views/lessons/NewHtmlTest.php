@@ -8,6 +8,7 @@ use Tests\views\BasicViewHtmlTest;
 class NewHtmlTest extends BasicViewHtmlTest {
 
   public function testBasicViewWhenLoggedIn() {
+    $sketches = [];
     $securityLevels = [
       [
         'lesson_security_level_id' => 1,
@@ -30,6 +31,8 @@ class NewHtmlTest extends BasicViewHtmlTest {
       'personInfo' => $this->setPersonInfoAdmin(),
       'securityLevels' => $securityLevels,
       'tutorial' => $tutorial,
+      'singleSketch' => 0,
+      'sketches' => $sketches,
       'submitButtonText' => 'Create'
     ));
     $output = $response->requireView();

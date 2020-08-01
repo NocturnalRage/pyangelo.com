@@ -79,6 +79,45 @@ class TutorialFormServiceTest extends TestCase {
     $this->assertEquals($expectedErrors, $errors);
   }
 
+  public function testCreateTutorialWithInvalidSketchId() {
+    $tutorialCategoryId = 1;
+    $tutorialLevelId = 2;
+    $singleSketch = 1;
+    $title = 'A normal title';
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->tutorialRepository->shouldReceive('getTutorialCategoryById')
+      ->once()
+      ->with($tutorialCategoryId)
+      ->andReturn(true);
+    $this->tutorialRepository->shouldReceive('getTutorialLevelById')
+      ->once()
+      ->with($tutorialLevelId)
+      ->andReturn(true);
+    $this->tutorialRepository->shouldReceive('getTutorialByTitle')
+      ->once()
+      ->with($title)
+      ->andReturn(NULL);
+    $formData = [
+      'title' => $title,
+      'description' => 'A normal description.',
+      'tutorial_category_id' => $tutorialCategoryId,
+      'tutorial_level_id' => $tutorialLevelId,
+      'single_sketch' => $singleSketch,
+      'display_order' => 1
+    ];
+
+    $success = $this->tutorialFormService->createTutorial($formData, NULL);
+    $flashMessage = $this->tutorialFormService->getFlashMessage();
+    $errors = $this->tutorialFormService->getErrors();
+    $expectedFlashMessage = 'There were some errors. Please fix these and then we will create the tutorial. You will also need to re-select the thumbnail for this tutorial series.';
+    $expectedErrors = [
+      'tutorial_sketch_id' => 'As this tutorial has a single sketch you must select such a sketch to be cloned by users.'
+    ];
+    $this->assertFalse($success);
+    $this->assertEquals($expectedFlashMessage, $flashMessage);
+    $this->assertEquals($expectedErrors, $errors);
+  }
+
   public function testCreateTutorialWithDataTooLong() {
     $tutorialCategoryId = 1;
     $tutorialLevelId = 2;
@@ -378,6 +417,7 @@ class TutorialFormServiceTest extends TestCase {
     $updatedTutorialCategoryId = 5;
     $updatedTutorialLevelId = 3;
     $updatedSingleSketch = 0;
+    $updatedTutorialSketchId = NULL;
     $updatedDisplayOrder = 1;
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->tutorialRepository->shouldReceive('getTutorialCategoryById')
@@ -398,7 +438,52 @@ class TutorialFormServiceTest extends TestCase {
       ->andReturn(NULL);
     $this->tutorialRepository->shouldReceive('updateTutorialBySlug')
       ->once()
-      ->with($slug, $updatedTitle, $updatedDescription, $updatedTutorialCategoryId, $updatedTutorialLevelId, $updatedSingleSketch, $updatedDisplayOrder)
+      ->with($slug, $updatedTitle, $updatedDescription, $updatedTutorialCategoryId, $updatedTutorialLevelId, $updatedSingleSketch, $updatedTutorialSketchId, $updatedDisplayOrder)
+      ->andReturn(NULL);
+    $formData = [
+      'slug' => $slug,
+      'title' => $updatedTitle,
+      'description' => $updatedDescription,
+      'tutorial_category_id' => $updatedTutorialCategoryId,
+      'tutorial_level_id' => $updatedTutorialLevelId,
+      'single_sketch' => $updatedSingleSketch,
+      'tutorial_sketch_id' => $updatedTutorialSketchId,
+      'display_order' => $updatedDisplayOrder
+    ];
+
+    $success = $this->tutorialFormService->updateTutorial($formData, NULL);
+    $flashMessage = $this->tutorialFormService->getFlashMessage();
+    $errors = $this->tutorialFormService->getErrors();
+    $expectedErrors = [];
+    $this->assertTrue($success);
+    $this->assertNull($flashMessage);
+    $this->assertEquals($expectedErrors, $errors);
+  }
+
+  public function testUpdateTutorialWithMissingSketchId() {
+    $slug = 'old-slug';
+    $updatedTitle = 'Updated Tutorial';
+    $updatedDescription = 'updated';
+    $updatedTutorialCategoryId = 5;
+    $updatedTutorialLevelId = 3;
+    $updatedSingleSketch = 1;
+    $updatedDisplayOrder = 1;
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->tutorialRepository->shouldReceive('getTutorialCategoryById')
+      ->once()
+      ->with($updatedTutorialCategoryId)
+      ->andReturn(['tutorial_category_id' => $updatedTutorialCategoryId, 'category' => '3x3 Videos', 'category_slug' => '3x3']);
+    $this->tutorialRepository->shouldReceive('getTutorialLevelById')
+      ->once()
+      ->with($updatedTutorialLevelId)
+      ->andReturn(['tutorial_level_id' => $updatedTutorialLevelId, 'description' => 'advanced']);
+    $this->tutorialRepository->shouldReceive('getTutorialBySlug')
+      ->once()
+      ->with($slug)
+      ->andReturn(['slug' => $slug]);
+    $this->tutorialRepository->shouldReceive('getTutorialByTitle')
+      ->once()
+      ->with($updatedTitle)
       ->andReturn(NULL);
     $formData = [
       'slug' => $slug,
@@ -414,8 +499,12 @@ class TutorialFormServiceTest extends TestCase {
     $flashMessage = $this->tutorialFormService->getFlashMessage();
     $errors = $this->tutorialFormService->getErrors();
     $expectedErrors = [];
-    $this->assertTrue($success);
-    $this->assertNull($flashMessage);
+    $this->assertFalse($success);
+    $expectedFlashMessage = 'There were some errors. Please fix these and then we will update the tutorial. You will also need to re-select the thumbnail for this tutorial series if you changed it.';
+    $expectedErrors = [
+      'tutorial_sketch_id' => 'As this tutorial has a single sketch you must select such a sketch to be cloned by users.'
+    ];
+    $this->assertEquals($expectedFlashMessage, $flashMessage);
     $this->assertEquals($expectedErrors, $errors);
   }
 }

@@ -82,6 +82,7 @@ class LessonFormServiceTest extends TestCase {
     $lessonTitle = 'A Good Lesson';
     $lessonSlug = 'a-good-lesson';
     $securityLevelId = 5;
+    $sketchId = 8;
     $displayOrder = 1;
     $videoName = 'long-lesson.mp4';
     $seconds = 120;
@@ -111,6 +112,7 @@ class LessonFormServiceTest extends TestCase {
       'lesson_security_level_id' => $securityLevelId,
       'lesson_description' => 'So short.',
       'lesson_security_level_id' => $securityLevelId,
+      'lesson_sketch_id' => $sketchId,
       'display_order' => $displayOrder
     ];
 
@@ -129,6 +131,7 @@ class LessonFormServiceTest extends TestCase {
   public function testCreateLessonWithValidData() {
     $lessonTitle = 'A Good Lesson';
     $securityLevelId = 1;
+    $sketchId = 8;
     $securityLevel = ['lesson_security_level_id' => 1, 'description' => 'Free'];
     $displayOrder = 1;
     $videoName = 'long-lesson.mp4';
@@ -149,6 +152,7 @@ class LessonFormServiceTest extends TestCase {
       'lesson_security_level_id' => $securityLevelId,
       'lesson_description' => 'So short.',
       'lesson_security_level_id' => $securityLevelId,
+      'lesson_sketch_id' => $sketchId,
       'display_order' => $displayOrder,
       'lesson_slug' => $lessonSlug,
       'tutorial_id' => $tutorialId
@@ -186,6 +190,7 @@ class LessonFormServiceTest extends TestCase {
   public function testCreateLessonWithValidDataAndExistingSlug() {
     $lessonTitle = 'A Good Lesson';
     $securityLevelId = 1;
+    $sketchId = 8;
     $securityLevel = ['lesson_security_level_id' => 1, 'description' => 'Free'];
     $displayOrder = 1;
     $videoName = 'long-lesson.mp4';
@@ -207,6 +212,7 @@ class LessonFormServiceTest extends TestCase {
       'lesson_security_level_id' => $securityLevelId,
       'lesson_description' => 'So short.',
       'lesson_security_level_id' => $securityLevelId,
+      'lesson_sketch_id' => $sketchId,
       'display_order' => $displayOrder,
       'lesson_slug' => $lessonSlugUsed,
       'tutorial_id' => $tutorialId
@@ -325,6 +331,7 @@ class LessonFormServiceTest extends TestCase {
     $lessonId = 99;
     $lessonTitle = 'A Good Lesson';
     $securityLevelId = 1;
+    $sketchId = 8;
     $securityLevel = ['lesson_security_level_id' => 1, 'description' => 'Free'];
     $displayOrder = 1;
     $videoName = 'long-lesson.mp4';
@@ -350,6 +357,7 @@ class LessonFormServiceTest extends TestCase {
       'lesson_security_level_id' => $securityLevelId,
       'lesson_description' => 'So short.',
       'lesson_security_level_id' => $securityLevelId,
+      'lesson_sketch_id' => $sketchId,
       'display_order' => $displayOrder,
       'lesson_slug' => $lessonSlug,
       'tutorial_id' => $tutorialId
