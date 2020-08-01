@@ -206,16 +206,16 @@ def _mousemove(ev):
     _setMousePosition(ev)
 
 def _mousedown(ev):
-    global mousePressed
+    global mouseIsPressed
     ev.preventDefault()
     _setMousePosition(ev)
-    mousePressed = True
+    mouseIsPressed = True
 
 def _mouseup(ev):
-    global mousePressed
+    global mouseIsPressed
     ev.preventDefault()
     _setMousePosition(ev)
-    mousePressed = False
+    mouseIsPressed = False
 
 def loadSound(filename, loop = False, streaming = False):
     global _loadingResources
@@ -412,7 +412,18 @@ def _stroke():
 
 def angleMode(mode):
     global _angleMode
-    _angleMode = mode
+    if mode == RADIANS or mode == DEGREES:
+        _angleMode = mode
+
+def rectMode(mode):
+    global _rectMode
+    if mode == CORNER or mode == CORNERS or mode == CENTER:
+        _rectMode = mode
+
+def circleMode(mode):
+    global _circleMode
+    if mode == CORNER or mode == CENTER:
+        _circleMode = mode
 
 def line(x1, y1, x2, y2):
     _ctx.beginPath()
@@ -421,18 +432,27 @@ def line(x1, y1, x2, y2):
     _stroke()
 
 def circle(x, y, radius):
+    if _circleMode == CORNER:
+        x = x + radius
+        y = y + radius
     _ctx.beginPath()
     _ctx.arc(x, y, radius, 0, TWO_PI)
     _fill()
     _stroke()
 
 def ellipse(x, y, radiusX, radiusY):
+    if _circleMode == CORNER:
+        x = x + radiusX
+        y = y + radiusY
     _ctx.beginPath()
     _ctx.ellipse(x, y, radiusX, radiusY, 0, 0, TWO_PI)
     _fill()
     _stroke()
 
 def arc(x, y, radiusX, radiusY, startAngle, endAngle):
+    if _circleMode == CORNER:
+        x = x + radiusX
+        y = y + radiusY
     if _angleMode != RADIANS:
         startAngle = PI/180 * startAngle
         endAngle = PI/180 * endAngle
@@ -482,6 +502,12 @@ def square(x, y, l):
     _stroke()
 
 def rect(x, y, w, h):
+    if _rectMode == CORNERS:
+        w = w - x
+        h = h - y
+    elif _rectMode == CENTER:
+        x = x - w * 0.5
+        y = y - h * 0.5
     _ctx.beginPath()
     _ctx.rect(x, y, w, h)
     _fill()
@@ -495,9 +521,6 @@ def _keyup(ev):
 
 def isKeyPressed(key):
     return _keys[key]
-
-def isMousePressed():
-    return mousePressed
 
 _state = STATE_STOP
 _main_loop_fun = None
@@ -522,7 +545,7 @@ _keys[KEY_V_FIRE] = False
 document.bind("keydown", _keydown)
 document.bind("keyup", _keyup)
 
-mousePressed = False
+mouseIsPressed = False
 mouseX = 0
 mouseY = 0
 _canvas.bind("mousedown", _mousedown)
@@ -531,7 +554,9 @@ _canvas.bind("mousemove", _mousemove)
 
 _doFill = True
 _doStroke = True
-_angleMode = True
+_angleMode = DEGREES
+_rectMode = CORNER
+_circleMode = CENTER
 _state = STATE_STOP
 timer.request_animation_frame(_update)
 
