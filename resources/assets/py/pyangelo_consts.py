@@ -25,11 +25,11 @@ KEY_V_FIRE        = "v_fire"
 RADIANS           = 1
 DEGREES           = 2
 
+QUARTER_PI        = 0.7853982
 HALF_PI           = 1.57079632679489661923
 PI                = 3.14159265358979323846
-QUARTER_PI        = 0.7853982
-TAU               = 6.28318530717958647693
 TWO_PI            = 6.28318530717958647693
+TAU               = 6.28318530717958647693
 
 STATE_STOP        =   1
 STATE_RUN         =   2

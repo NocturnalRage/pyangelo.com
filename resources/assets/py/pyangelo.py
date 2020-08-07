@@ -356,10 +356,14 @@ def text(text, x, y, fontSize = 10, fontName = "Arial"):
 
 def setCanvasSize(w, h):
     global width, height
+    fs = _ctx.fillStyle
+    ss = _ctx.strokeStyle
     _canvas["width"] = w
     _canvas["height"] = h
     width = _canvas.width
     height = _canvas.height
+    _ctx.fillStyle = fs
+    _ctx.strokeStyle = ss
 
 def background(r = 0, g = 0, b = 0, a = 1):
     fs = _ctx.fillStyle
@@ -523,7 +527,7 @@ def isKeyPressed(key):
     return _keys[key]
 
 _state = STATE_STOP
-_main_loop_fun = None
+_main_loop_func = None
 _soundPlayers = {}
 _loadingResources = 0
 _canvas = document["canvas"]
@@ -531,8 +535,6 @@ _ctx = _canvas.getContext('2d')
 width = 0
 height = 0
 setCanvasSize(DEFAULT_WIDTH, DEFAULT_HEIGHT)
-fill(255, 255, 255)
-stroke(0, 0, 0)
 
 _keys = dict([(a, False) for a in range(255)] +
                  [(a, False) for a in range(0xff00, 0xffff)])
@@ -574,6 +576,15 @@ def do_print(s, color=None):
 
 pre_globals = []
 def startSketch(src):
+    global _doFill, _doStroke, _angleMode, _rectMode, _circleMode, _state
+    _doFill = True
+    _doStroke = True
+    _angleMode = DEGREES
+    _rectMode = CORNER
+    _circleMode = CENTER
+    _state = STATE_STOP
+    fill(255, 255, 255)
+    stroke(0, 0, 0)
     global pre_globals, _main_loop_func
 
     _main_loop_func = None
@@ -625,17 +636,18 @@ def startSketch(src):
 
         run_code(src, namespace, namespace, False)
 
+        frame_code.insert(0, " saveState()")
         post_globals = list(globals().keys())
         global_code = ""
         for g in post_globals:
             if g not in pre_globals:
                 global_code += g + ","
         if len(global_code) > 0:
-            frame_code.insert(0, " global " + global_code[:-1] + "\n")
+            frame_code.insert(0, " global " + global_code[:-1])
 
         frame_code.insert(0, "def frame_code():")
-
         frame_code.insert(0, "@_loop")
+        frame_code.append(" restoreState()")
 
         src = "\n".join(frame_code)
         window.console.log("Frame code:")

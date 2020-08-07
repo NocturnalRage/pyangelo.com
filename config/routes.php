@@ -68,4 +68,5 @@ return [
   [ 'POST','/blog/[:slug]/update', 'BlogUpdateController', 'blogUpdate' ],
   [ 'POST','/blog/comment/[:comment_id]/unpublish', 'BlogCommentUnpublishController', 'blogCommentsUnpublish' ],
   [ 'GET','/favourites', 'FavouritesController', 'favourites' ],
+  [ 'GET','/reference', 'ReferenceController', 'reference' ],
 ];
