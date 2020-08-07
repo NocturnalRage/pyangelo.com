@@ -814,3 +814,11 @@ $di->set('BlogCommentUnpublishController', function () use ($di) {
     $di->get('blogRepository')
   );
 });
+
+$di->set('ReferenceController', function () use ($di) {
+  return new PyAngelo\Controllers\Reference\ReferenceController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth')
+  );
+});

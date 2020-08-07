@@ -396,5 +396,9 @@ class ServicesTest extends TestCase {
     $controller = $this->di->newInstance('BlogUpdateController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogUpdateController');
   }
+  public function ReferenceController() {
+    $controller = $this->di->newInstance('ReferenceController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Reference\ReferenceController');
+  }
 }
 ?>
