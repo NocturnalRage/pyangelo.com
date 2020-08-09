@@ -517,6 +517,33 @@ def rect(x, y, w, h):
     _fill()
     _stroke()
 
+def beginShape():
+    global _vertex
+    _vertex = []
+
+def vertex(x, y):
+    global _vertex
+    _vertex.append(Point(x, y))
+
+def endShape(mode = CLOSE):
+    global _vertex
+
+    if len(_vertex) == 0:
+        return
+    elif len(_vertex) == 1:
+        point(_vertex[0].x, _vertex[0].y)
+        return
+
+    _ctx.beginPath()
+    _ctx.moveTo(_vertex[0].x, _vertex[0].y)
+    _vertex.pop(0)
+    for p in _vertex:
+        _ctx.lineTo(p.x, p.y)
+    if mode == CLOSE:
+        _ctx.closePath()
+    _fill()
+    _stroke()
+
 def _keydown(ev):
     _keys[ev.which] = True
 
@@ -554,6 +581,7 @@ _canvas.bind("mousedown", _mousedown)
 _canvas.bind("mouseup", _mouseup)
 _canvas.bind("mousemove", _mousemove)
 
+_vertex = []
 _doFill = True
 _doStroke = True
 _angleMode = DEGREES
