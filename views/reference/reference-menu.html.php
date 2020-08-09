@@ -20,6 +20,16 @@
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
+          <a href="#vertex_commands">
+            <h3><i class="fa fa-bar-chart fa-fw"></i> Vertex</h3>
+          </a>
+          <div class="list-group">
+            <a href="#beginShape" class="list-group-item">beginShape()</a>
+            <a href="#vertex" class="list-group-item">vertex()</a>
+            <a href="#endShape" class="list-group-item">endShape()</a>
+          </div><!-- list-group -->
+        </div><!-- well -->
+        <div class="well">
           <a href="#colour">
             <h3><i class="fa fa-bar-chart fa-fw"></i> Colour</h3>
           </a>

@@ -40,3 +40,6 @@ DEFAULT_HEIGHT    = 400
 CORNER            = 1
 CORNERS           = 2
 CENTER            = 3
+
+CLOSE             = 1
+OPEN              = 2

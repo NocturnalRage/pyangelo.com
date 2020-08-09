@@ -11,6 +11,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
         <h1>Reference</h1>
         <?php
           include __DIR__ . DIRECTORY_SEPARATOR . '/basic-shapes.html.php';
+          include __DIR__ . DIRECTORY_SEPARATOR . '/vertex.html.php';
           include __DIR__ . DIRECTORY_SEPARATOR . '/colour.html.php';
           include __DIR__ . DIRECTORY_SEPARATOR . '/transformation.html.php';
           include __DIR__ . DIRECTORY_SEPARATOR . '/animation.html.php';
