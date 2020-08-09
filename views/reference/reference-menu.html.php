@@ -48,6 +48,7 @@
           </a>
           <div class="list-group">
             <a href="#loop_animation" class="list-group-item">@loop_animation</a>
+            <a href="#setCanvasSize" class="list-group-item">setCanvasSize()</a>
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
