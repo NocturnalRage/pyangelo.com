@@ -85,6 +85,14 @@
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
+          <a href="#maths">
+            <h3><i class="fa fa-bar-chart fa-fw"></i> Maths</h3>
+          </a>
+          <div class="list-group">
+            <a href="#dist" class="list-group-item">dist</a>
+          </div><!-- list-group -->
+        </div><!-- well -->
+        <div class="well">
           <a href="#constants">
             <h3><i class="fa fa-bar-chart fa-fw"></i> Constants</h3>
           </a>
