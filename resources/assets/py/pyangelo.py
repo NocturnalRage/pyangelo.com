@@ -3,6 +3,7 @@ import time
 import traceback
 import javascript
 import random
+import math
 from browser import document, window, alert, timer, bind, self, html, load
 
 load("/js/howler.js")
@@ -543,6 +544,10 @@ def endShape(mode = CLOSE):
         _ctx.closePath()
     _fill()
     _stroke()
+
+def dist(x1, y1, x2, y2):
+    return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+
 
 def _keydown(ev):
     _keys[ev.which] = True
