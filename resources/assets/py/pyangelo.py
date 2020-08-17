@@ -386,6 +386,19 @@ def rotate(angle):
         angle = PI/180 * angle
     _ctx.rotate(angle)
 
+def applyMatrix(a, b, c, d, e, f):
+    _ctx.transform(a, b, c, d, e, f)
+
+def shearX(angle):
+    if _angleMode != RADIANS:
+        angle = PI/180 * angle
+    _ctx.transform(1, 0, math.tan(angle), 1, 0, 0)
+
+def shearY(angle):
+    if _angleMode != RADIANS:
+        angle = PI/180 * angle
+    _ctx.transform(1, math.tan(angle), 0, 1, 0, 0)
+
 def strokeWeight(weight):
     _ctx.lineWidth = weight
 

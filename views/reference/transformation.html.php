@@ -43,6 +43,59 @@ Shapes are rotated around the origin. Positive numbers rotate in a clockwise dir
 <h4>Parameters</h4>
 <p>angle - The number of of degrees or radians to rotate the shape depending on the angleMode.</p>
 <hr />
+<h3 id="applyMatrix">applyMatrix()</h3>
+<h4>Examples</h4>
+<pre>
+for i in range(5):
+    applyMatrix(1, i*0.1, i*-0.1, 1, i*30, i*10)
+    rect(0, 0, 250, 100)
+</pre>
+<h4>Description</h4>
+<p>
+The applyMatrix() method lets you scale, rotate, move, and skew the current context.
+</p>
+<h4>Syntax</h4>
+<p>applyMatrix(a, b, c, d, e, f)</p>
+<h4>Parameters</h4>
+<p>a - Horizontal scaling</p>
+<p>b - Horizontal skewing</p>
+<p>c - Vertical skewing</p>
+<p>d - Vertical scaling</p>
+<p>e - Horizontal moving</p>
+<p>f - Vertical moving</p>
+<hr />
+<h3 id="shearX">shearX()</h3>
+<h4>Examples</h4>
+<pre>
+translate(250, 200)
+shearX(45)
+rect(0, 0, 30, 30)
+</pre>
+<h4>Description</h4>
+<p>
+Skews the shape around the x-axis by the angle specified in the only parameter. By default, the angle is in degrees. This can be changed to radians by using the <a href="#angleMode">angleMode()</a> function. The skew is relative to the origin.
+</p>
+<h4>Syntax</h4>
+<p>shearX(angle)</p>
+<h4>Parameters</h4>
+<p>angle - The number of of degrees or radians to shear the shape around the x-axis depending on the angleMode.</p>
+<hr />
+<h3 id="shearY">shearY()</h3>
+<h4>Examples</h4>
+<pre>
+translate(250, 200)
+shearY(45)
+rect(0, 0, 30, 30)
+</pre>
+<h4>Description</h4>
+<p>
+Skews the shape around the y-axis by the angle specified in the only parameter. By default, the angle is in degrees. This can be changed to radians by using the <a href="#angleMode">angleMode()</a> function. The skew is relative to the origin.
+</p>
+<h4>Syntax</h4>
+<p>shearY(angle)</p>
+<h4>Parameters</h4>
+<p>angle - The number of of degrees or radians to shear the shape around the y-axis depending on the angleMode.</p>
+<hr />
 <h3 id="saveState">saveState()</h3>
 <h4>Examples</h4>
 <pre>

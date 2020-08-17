@@ -48,6 +48,9 @@
           <div class="list-group">
             <a href="#translate" class="list-group-item">translate()</a>
             <a href="#rotate" class="list-group-item">rotate()</a>
+            <a href="#applyMatrix" class="list-group-item">applyMatrix()</a>
+            <a href="#shearX" class="list-group-item">shearX()</a>
+            <a href="#shearY" class="list-group-item">shearY()</a>
             <a href="#saveState" class="list-group-item">saveState()</a>
             <a href="#restoreState" class="list-group-item">restoreState()</a>
           </div><!-- list-group -->
