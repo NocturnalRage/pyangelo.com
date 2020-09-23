@@ -292,5 +292,32 @@ class TestData {
     $sql = "TRUNCATE TABLE notification";
     $result = $this->dbh->query($sql);
   }
+
+  public function deleteAllQuestionAlerts() {
+    $sql = "DELETE FROM question_alert";
+    $result = $this->dbh->query($sql);
+  }
+
+  public function deleteAllQuestionComments() {
+    $sql = "DELETE FROM question_comment";
+    $result = $this->dbh->query($sql);
+  }
+
+  public function deleteAllQuestions() {
+    $this->deleteAllQuestionComments();
+    $this->deleteAllQuestionAlerts();
+    $sql = "DELETE FROM question";
+    $result = $this->dbh->query($sql);
+  }
+
+  public function deleteAllQuestionCategories() {
+    $sql = "DELETE FROM question_category";
+    $result = $this->dbh->query($sql);
+  }
+
+  public function createQuestionCategory($questionCategoryId) {
+    $sql = "INSERT INTO question_category values ($questionCategoryId, 'PyAngelo')";
+    $result = $this->dbh->query($sql);
+  }
 }
 ?>

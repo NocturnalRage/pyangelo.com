@@ -55,6 +55,10 @@ $di->set('personRepository', function () use ($di) {
   return new PyAngelo\Repositories\MysqlPersonRepository($di->get('dbh'));
 });
 
+$di->set('questionRepository', function () use ($di) {
+  return new PyAngelo\Repositories\MysqlQuestionRepository($di->get('dbh'));
+});
+
 $di->set('sketchRepository', function () use ($di) {
   return new PyAngelo\Repositories\MysqlSketchRepository($di->get('dbh'));
 });
@@ -142,6 +146,10 @@ $di->set('mailer', function () use ($di) {
 });
 
 /* General objects start here */
+$di->set('notificationAvatar', function () use ($di) {
+  return new Framework\Presentation\Gravatar(25);
+});
+
 $di->set('avatar', function () use ($di) {
   return new Framework\Presentation\Gravatar(75);
 });
@@ -820,5 +828,139 @@ $di->set('ReferenceController', function () use ($di) {
     $di->get('request'),
     $di->get('response'),
     $di->get('auth')
+  );
+});
+
+$di->set('AskTheTeacherIndexController', function () use ($di) {
+  return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherIndexController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('questionRepository'),
+    $_ENV['QUESTIONS_PER_PAGE']
+  );
+});
+
+$di->set('AskTheTeacherCategoryController', function () use ($di) {
+  return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherCategoryController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('questionRepository')
+  );
+});
+
+$di->set('AskTheTeacherAskController', function () use ($di) {
+  return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherAskController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth')
+  );
+});
+
+$di->set('AskTheTeacherCreateController', function () use ($di) {
+  return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherCreateController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('questionRepository'),
+    $di->get('HtmlPurifierPurify')
+  );
+});
+
+$di->set('AskTheTeacherQuestionListController', function () use ($di) {
+  return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherQuestionListController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('questionRepository')
+  );
+});
+
+$di->set('AskTheTeacherDeleteController', function () use ($di) {
+  return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherDeleteController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('questionRepository')
+  );
+});
+
+$di->set('AskTheTeacherThanksController', function () use ($di) {
+  return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherThanksController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('questionRepository'),
+    $di->get('HtmlPurifierPurify')
+  );
+});
+
+$di->set('AskTheTeacherEditController', function () use ($di) {
+  return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherEditController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('questionRepository')
+  );
+});
+
+$di->set('AskTheTeacherUpdateController', function () use ($di) {
+  return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherUpdateController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('notificationAvatar'),
+    $di->get('questionRepository')
+  );
+});
+
+$di->set('AskTheTeacherShowController', function () use ($di) {
+  return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherShowController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('questionRepository'),
+    $di->get('HtmlPurifierPurify'),
+    $di->get('avatar'),
+    $_ENV['SHOW_COMMENT_COUNT']
+  );
+});
+
+$di->set('AskTheTeacherToggleAlertController', function () use ($di) {
+  return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherToggleAlertController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('questionRepository')
+  );
+});
+
+$di->set('AskTheTeacherToggleFavouriteController', function () use ($di) {
+  return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherToggleFavouriteController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('questionRepository')
+  );
+});
+
+$di->set('AskTheTeacherCommentController', function () use ($di) {
+  return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherCommentController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('questionRepository'),
+    $di->get('HtmlPurifierPurify'),
+    $di->get('avatar')
+  );
+});
+
+$di->set('AskTheTeacherCommentUnpublishController', function () use ($di) {
+  return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherCommentUnpublishController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('questionRepository')
   );
 });
