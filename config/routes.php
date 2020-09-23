@@ -75,6 +75,8 @@ return [
   [ 'POST','/ask-the-teacher/create', 'AskTheTeacherCreateController', 'askTheTeacherCreate' ],
   [ 'GET','/ask-the-teacher/question-list', 'AskTheTeacherQuestionListController', 'askTheTeacherQuestionList' ],
   [ 'GET','/ask-the-teacher/thanks-for-your-question', 'AskTheTeacherThanksController', 'askTheTeacherThanks' ],
+  [ 'GET','/ask-the-teacher/my-questions', 'AskTheTeacherMyQuestionsController', 'askTheTeacherMyQuestions' ],
+  [ 'GET','/ask-the-teacher/favourite-questions', 'AskTheTeacherFavouriteQuestionsController', 'askTheTeacherFavouriteQuestions' ],
   [ 'GET','/ask-the-teacher/[:slug]', 'AskTheTeacherShowController', 'askTheTeacherShow' ],
   [ 'POST','/ask-the-teacher/[:slug]/delete', 'AskTheTeacherDeleteController', 'askTheTeacherDelete' ],
   [ 'GET','/ask-the-teacher/[:slug]/edit', 'AskTheTeacherEditController', 'askTheTeacherEdit' ],

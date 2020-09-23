@@ -1,0 +1,43 @@
+<?php
+namespace PyAngelo\Controllers\AskTheTeacher;
+
+use Framework\{Request, Response};
+use PyAngelo\Auth\Auth;
+use PyAngelo\Controllers\Controller;
+use PyAngelo\Repositories\QuestionRepository;
+
+class AskTheTeacherFavouriteQuestionsController extends Controller {
+  protected $questionRepository;
+
+  public function __construct(
+    Request $request,
+    Response $response,
+    Auth $auth,
+    QuestionRepository $questionRepository
+  ) {
+    parent::__construct($request, $response, $auth);
+    $this->questionRepository = $questionRepository;
+  }
+
+  public function exec() {
+    if (!$this->auth->loggedIn()) {
+      $this->request->session['redirect'] = $this->request->server['REQUEST_URI'];
+      $this->flash('You must be logged in to view your questions!', 'danger');
+      $this->response->header('Location: /login');
+      return $this->response;
+    }
+
+    $questions = $this->questionRepository->getFavouriteQuestionsByPersonId($this->auth->personId());
+
+    $this->response->setView('ask-the-teacher/favourite-questions.html.php');
+    $this->response->setVars(array(
+      'pageTitle' => 'Favourite Questions',
+      'metaDescription' => "A list of all my favourite questions.",
+      'activeLink' => 'Ask the Teacher',
+      'personInfo' => $this->auth->getPersonDetailsForViews(),
+      'questions' => $questions
+    ));
+    $this->addVar('flash');
+    return $this->response;
+  }
+}
