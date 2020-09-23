@@ -456,5 +456,13 @@ class ServicesTest extends TestCase {
     $controller = $this->di->newInstance('AskTheTeacherCommentUnpublishController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherCommentUnpublishController');
   }
+  public function testAskTheTeacherMyQuestionsController() {
+    $controller = $this->di->newInstance('AskTheTeacherMyQuestionsController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherMyQuestionsController');
+  }
+  public function testAskTheTeacherFavouriteQuestionsController() {
+    $controller = $this->di->newInstance('AskTheTeacherFavouriteQuestionsController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherFavouriteQuestionsController');
+  }
 }
 ?>

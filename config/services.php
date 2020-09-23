@@ -964,3 +964,21 @@ $di->set('AskTheTeacherCommentUnpublishController', function () use ($di) {
     $di->get('questionRepository')
   );
 });
+
+$di->set('AskTheTeacherMyQuestionsController', function () use ($di) {
+  return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherMyQuestionsController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('questionRepository')
+  );
+});
+
+$di->set('AskTheTeacherFavouriteQuestionsController', function () use ($di) {
+  return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherFavouriteQuestionsController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('questionRepository')
+  );
+});
