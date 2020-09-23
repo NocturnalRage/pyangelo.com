@@ -32,8 +32,8 @@ class ShowHtmlTest extends BasicViewHtmlTest {
     $response = new Response('views');
     $response->setView('blog/show.html.php');
     $response->setVars(array(
-      'pageTitle' => "CubeSkills Blog",
-      'metaDescription' => "Fun blogs by CubeSkills.",
+      'pageTitle' => "PyAngelo Blog",
+      'metaDescription' => "Fun blogs by the PyAngelo team.",
       'activeLink' => 'blog',
       'personInfo' => $this->setPersonInfoLoggedOut(),
       'blog' => $blog,
@@ -75,8 +75,8 @@ class ShowHtmlTest extends BasicViewHtmlTest {
     $response = new Response('views');
     $response->setView('blog/show.html.php');
     $response->setVars(array(
-      'pageTitle' => "CubeSkills Blog",
-      'metaDescription' => "Fun blogs by CubeSkills.",
+      'pageTitle' => "PyAngelo Blog",
+      'metaDescription' => "Fun blogs by the PyAngelo team.",
       'activeLink' => 'blog',
       'personInfo' => $this->setPersonInfoAdmin(),
       'blog' => $blog,

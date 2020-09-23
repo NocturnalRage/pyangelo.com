@@ -78,7 +78,7 @@ class MysqlBlogRepositoryTest extends TestCase {
     $this->testData->deleteAllPeople();
     $personId = 1;
     $blogCategoryId = 1;
-    $this->testData->createPerson($personId, 'feliks@cubeskills.com');
+    $this->testData->createPerson($personId, 'coder@hotmail.com');
     $this->testData->createBlogCategory($blogCategoryId);
     $formData = [
       'person_id' => $personId,

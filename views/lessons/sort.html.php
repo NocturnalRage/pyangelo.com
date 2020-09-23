@@ -4,7 +4,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
 ?>
   <div class="container">
     <div class="row text-center">
-      <h1>Sort CubeSkills Lessons</h1>
+      <h1>Sort PyAngelo Lessons</h1>
       <a href="/tutorials/<?= $this->esc($tutorial['slug']); ?>" class="btn btn-warning">
       <i class="fa fa fa-history"></i> Back to <?= $this->esc($tutorial['title']); ?></a>
 

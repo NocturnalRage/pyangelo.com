@@ -1,25 +1,25 @@
 <?php
-namespace tests\src\PyAngelo\Controllers\Blog;
+namespace tests\src\PyAngelo\Controllers\AskTheTeacher;
 
 use PHPUnit\Framework\TestCase;
 use Mockery;
 use Framework\Request;
 use Framework\Response;
-use PyAngelo\Controllers\Blog\BlogCommentController;
+use PyAngelo\Controllers\AskTheTeacher\AskTheTeacherCommentController;
 
-class BlogCommentControllerTest extends TestCase {
+class AskTheTeacherCommentControllerTest extends TestCase {
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
-    $this->blogRepository = Mockery::mock('PyAngelo\Repositories\BlogRepository');
+    $this->questionRepository = Mockery::mock('PyAngelo\Repositories\QuestionRepository');
     $this->purifier = Mockery::mock('Framework\Contracts\PurifyContract');
     $this->avatar = Mockery::mock('Framework\Contracts\AvatarContract');
-    $this->controller = new BlogCommentController (
+    $this->controller = new AskTheTeacherCommentController (
       $this->request,
       $this->response,
       $this->auth,
-      $this->blogRepository,
+      $this->questionRepository,
       $this->purifier,
       $this->avatar
     );
@@ -29,14 +29,14 @@ class BlogCommentControllerTest extends TestCase {
   }
 
   public function testClassCanBeInstantiated() {
-    $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\Blog\BlogCommentController');
+    $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherCommentController');
   }
 
-  public function testBlogControllerWhenNotLoggedIn() {
+  public function testControllerWhenNotLoggedIn() {
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
-    $expectedViewName = 'blog/blog-comment.json.php';
+    $expectedViewName = 'ask-the-teacher/question-comment.json.php';
     $expectedStatus = '"error"';
     $expectedMessage = '"You must be logged in to add a comment."';
     $expectedCommentHtml = '"We could not add your comment due to errors."';
@@ -46,13 +46,13 @@ class BlogCommentControllerTest extends TestCase {
     $this->assertSame($expectedCommentHtml, $responseVars['commentHtml']);
   }
 
-  public function testBlogCommentInvalidCrsfToken() {
+  public function testQuestionCommentInvalidCrsfToken() {
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(false);
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
-    $expectedViewName = 'blog/blog-comment.json.php';
+    $expectedViewName = 'ask-the-teacher/question-comment.json.php';
     $expectedStatus = '"error"';
     $expectedMessage = '"Please add a comment from the PyAngelo website."';
     $expectedCommentHtml = '"We could not add your comment due to errors."';
@@ -62,15 +62,15 @@ class BlogCommentControllerTest extends TestCase {
     $this->assertSame($expectedCommentHtml, $responseVars['commentHtml']);
   }
 
-  public function testNoBlogId() {
+  public function testNoQuestionId() {
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
-    $expectedViewName = 'blog/blog-comment.json.php';
+    $expectedViewName = 'ask-the-teacher/question-comment.json.php';
     $expectedStatus = '"error"';
-    $expectedMessage = '"Please add a comment to a blog."';
+    $expectedMessage = '"Please add a comment to a question."';
     $expectedCommentHtml = '"We could not add your comment due to errors."';
     $this->assertSame($expectedViewName, $response->getView());
     $this->assertSame($expectedStatus, $responseVars['status']);
@@ -78,16 +78,16 @@ class BlogCommentControllerTest extends TestCase {
     $this->assertSame($expectedCommentHtml, $responseVars['commentHtml']);
   }
 
-  public function testBlogCommentNoComment() {
+  public function testQuestionCommentNoComment() {
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->request->post['blogId'] = 1;
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
-    $expectedViewName = 'blog/blog-comment.json.php';
+    $expectedViewName = 'ask-the-teacher/question-comment.json.php';
     $expectedStatus = '"error"';
-    $expectedMessage = '"A comment must contain some text."';
+    $expectedMessage = '"Please add a comment to a question."';
     $expectedCommentHtml = '"We could not add your comment due to errors."';
     $this->assertSame($expectedViewName, $response->getView());
     $this->assertSame($expectedStatus, $responseVars['status']);
@@ -95,20 +95,20 @@ class BlogCommentControllerTest extends TestCase {
     $this->assertSame($expectedCommentHtml, $responseVars['commentHtml']);
   }
 
-  public function testInvalidBlog() {
+  public function testInvalidComment() {
     $personId = 99;
-    $blogId = 1;
+    $questionId = 1;
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
-    $this->blogRepository->shouldReceive('getBlogById')->once()->with($blogId)->andReturn(NULL);
-    $this->request->post['blogId'] = $blogId;
-    $this->request->post['blogComment'] = 'Great comment';
+    $this->questionRepository->shouldReceive('getQuestionById')->once()->with($questionId)->andReturn(NULL);
+    $this->request->post['questionId'] = $questionId;
+    $this->request->post['questionComment'] = 'Great comment';
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
-    $expectedViewName = 'blog/blog-comment.json.php';
+    $expectedViewName = 'ask-the-teacher/question-comment.json.php';
     $expectedStatus = '"error"';
-    $expectedMessage = '"You must add a comment to a valid blog."';
+    $expectedMessage = '"You must add a comment to a valid question."';
     $expectedCommentHtml = '"We could not add your comment due to errors."';
     $this->assertSame($expectedViewName, $response->getView());
     $this->assertSame($expectedStatus, $responseVars['status']);
@@ -116,7 +116,7 @@ class BlogCommentControllerTest extends TestCase {
     $this->assertSame($expectedCommentHtml, $responseVars['commentHtml']);
   }
 
-  public function testBlogCommentValidComment() {
+  public function testQuestionCommentValidComment() {
     $personId = 99;
     $email = 'fastfred@hotmail.com';
     $person = [
@@ -125,34 +125,35 @@ class BlogCommentControllerTest extends TestCase {
       'family_name' => 'Fred',
       'email' => $email
     ];
-    $blogId = 1;
-    $blog = [
-      'blog_id' => $blogId,
-      'slug' => 'great-blog',
-      'title' => 'A Great Blog'
+    $questionId = 1;
+    $question = [
+      'question_id' => $questionId,
+      'slug' => 'great-question',
+      'title' => 'A Great Question'
     ];
-    $blogComment = 'Great blog';
+    $questionComment = 'Great question.';
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
     $this->auth->shouldReceive('person')->times(4)->with()->andReturn($person);
-    $this->blogRepository->shouldReceive('getBlogById')->once()->with($blogId)->andReturn($blog);
-    $this->blogRepository->shouldReceive('insertBlogComment')->once();
-    $this->blogRepository->shouldReceive('getFollowers')->once()->andReturn([]);
-    $this->purifier->shouldReceive('purify')->once()->with($blogComment)->andReturn($blogComment);
+    $this->questionRepository->shouldReceive('getQuestionById')->once()->with($questionId)->andReturn($question);
+    $this->questionRepository->shouldReceive('insertQuestionComment')->once();
+    $this->questionRepository->shouldReceive('updateQuestionLastUpdatedDate')->once()->with($questionId)->andReturn([]);
+    $this->questionRepository->shouldReceive('getFollowers')->once()->andReturn([]);
+    $this->purifier->shouldReceive('purify')->once()->with($questionComment)->andReturn($questionComment);
     $this->avatar->shouldReceive('getAvatarUrl')->twice()->with($email)->andReturn('avatar');
     $this->avatar->shouldReceive('setSizeInPixels')->once()->with(25);
-    $this->request->post['blogId'] = $blogId;
-    $this->request->post['blogComment'] = $blogComment;
+    $this->request->post['questionId'] = $questionId;
+    $this->request->post['questionComment'] = $questionComment;
     $this->request->server['REQUEST_SCHEME'] = 'https';
     $this->request->server['SERVER_NAME'] = 'www.pyangelo.com';
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
-    $expectedViewName = 'blog/blog-comment.json.php';
+    $expectedViewName = 'ask-the-teacher/question-comment.json.php';
     $expectedStatus = '"success"';
     $expectedMessage = '"Your comment has been added."';
-    $expectedCommentHtml = '"    <div class=\"media\">\n      <div class=\"media-left\">\n        <img class=\"media-object\" src=\"avatar\" alt=\"Fast Fred\" \/>\n      <\/div>\n      <div class=\"media-body\">\n        <h4 class=\"media-heading\">Fast Fred <small><i>Posted now<\/i><\/small><\/h4>\n        <p>Great blog<\/p>\n      <\/div>\n      <hr \/>\n    <\/div>"';
+    $expectedCommentHtml = '"    <div class=\"media\">\n      <div class=\"media-left\">\n        <a href=\"#\">\n          <img class=\"media-object\" src=\"avatar\" alt=\"Fast Fred\" \/>\n        <\/a>\n      <\/div>\n      <div class=\"media-body\">\n        <h4 class=\"media-heading\">Fast Fred <small><i>Posted now<\/i><\/small><\/h4>\n        <p>Great question.<\/p>\n      <\/div>\n      <hr \/>\n    <\/div>"';
     $this->assertSame($expectedViewName, $response->getView());
     $this->assertSame($expectedStatus, $responseVars['status']);
     $this->assertSame($expectedMessage, $responseVars['message']);

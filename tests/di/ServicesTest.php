@@ -360,45 +360,101 @@ class ServicesTest extends TestCase {
     $controller = $this->di->newInstance('UnsubscribeThreadController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Profile\UnsubscribeThreadController');
   }
-  public function LessonsSortController() {
+  public function testLessonsSortController() {
     $controller = $this->di->newInstance('LessonsSortController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Lessons\LessonsSortController');
   }
-  public function LessonsOrderController() {
+  public function testLessonsOrderController() {
     $controller = $this->di->newInstance('LessonsOrderController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Lessons\LessonsOrderController');
   }
-  public function BlogIndexController() {
+  public function testBlogIndexController() {
     $controller = $this->di->newInstance('BlogIndexController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogIndexController');
   }
-  public function BlogNewController() {
+  public function testBlogNewController() {
     $controller = $this->di->newInstance('BlogNewController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogNewController');
   }
-  public function BlogCreateController() {
+  public function testBlogCreateController() {
     $controller = $this->di->newInstance('BlogCreateController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogCreateController');
   }
-  public function BlogShowController() {
+  public function testBlogShowController() {
     $controller = $this->di->newInstance('BlogShowController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogShowController');
   }
-  public function BlogToggleAlertController() {
+  public function testBlogToggleAlertController() {
     $controller = $this->di->newInstance('BlogToggleAlertController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogToggleAlertController');
   }
-  public function BlogEditController() {
+  public function testBlogEditController() {
     $controller = $this->di->newInstance('BlogEditController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogEditController');
   }
-  public function BlogUpdateController() {
+  public function testBlogUpdateController() {
     $controller = $this->di->newInstance('BlogUpdateController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogUpdateController');
   }
-  public function ReferenceController() {
+  public function testReferenceController() {
     $controller = $this->di->newInstance('ReferenceController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Reference\ReferenceController');
+  }
+  public function testAskTheTeacherIndexController() {
+    $controller = $this->di->newInstance('AskTheTeacherIndexController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherIndexController');
+  }
+  public function testAskTheTeacherCategoryController() {
+    $controller = $this->di->newInstance('AskTheTeacherCategoryController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherCategoryController');
+  }
+  public function testAskTheTeacherAskController() {
+    $controller = $this->di->newInstance('AskTheTeacherAskController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherAskController');
+  }
+  public function testAskTheTeacherCreateController() {
+    $controller = $this->di->newInstance('AskTheTeacherCreateController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherCreateController');
+  }
+  public function testAskTheTeacherQuestionListController() {
+    $controller = $this->di->newInstance('AskTheTeacherQuestionListController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherQuestionListController');
+  }
+  public function testAskTheTeacherDeleteController() {
+    $controller = $this->di->newInstance('AskTheTeacherDeleteController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherDeleteController');
+  }
+  public function testAskTheTeacherThanksController() {
+    $controller = $this->di->newInstance('AskTheTeacherThanksController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherThanksController');
+  }
+  public function testAskTheTeacherEditController() {
+    $controller = $this->di->newInstance('AskTheTeacherEditController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherEditController');
+  }
+  public function testAskTheTeacherUpdateController() {
+    $controller = $this->di->newInstance('AskTheTeacherUpdateController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherUpdateController');
+  }
+  public function testAskTheTeacherShowController() {
+    $controller = $this->di->newInstance('AskTheTeacherShowController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherShowController');
+  }
+  public function testAskTheTeacherToggleAlertController() {
+    $controller = $this->di->newInstance('AskTheTeacherToggleAlertController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherToggleAlertController');
+  }
+  public function testAskTheTeacherToggleFavouriteController() {
+    $controller = $this->di->newInstance('AskTheTeacherToggleFavouriteController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherToggleFavouriteController');
+  }
+  public function testAskTheTeacherCommentController() {
+    $controller = $this->di->newInstance('AskTheTeacherCommentController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherCommentController');
+  }
+  public function testAskTheTeacherCommentUnpublishController() {
+    $controller = $this->di->newInstance('AskTheTeacherCommentUnpublishController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherCommentUnpublishController');
   }
 }
 ?>
