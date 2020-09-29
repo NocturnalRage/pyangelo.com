@@ -36,7 +36,7 @@ class ShowHtmlTest extends BasicViewHtmlTest {
     $this->assertStringContainsString($pageTitle, $output);
     $this->assertStringContainsString($metaDescription, $output);
 
-    $expect = '<base href="/sketches/' . $sketch['sketch_id'] . '/" />';
+    $expect = '<base href="/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'] . '/" />';
     $this->assertStringContainsString($expect, $output);
 
     $expect = $sketch['title'];

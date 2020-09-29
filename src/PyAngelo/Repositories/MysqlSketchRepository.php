@@ -68,9 +68,15 @@ class MysqlSketchRepository implements SketchRepository {
   }
 
   public function getSketchFiles($sketchId) {
-    $sql = "SELECT *
-            FROM   sketch_files
-            WHERE  sketch_id = ?
+    $sql = "SELECT s.person_id,
+                   sf.file_id,
+                   sf.sketch_id,
+                   sf.filename,
+                   sf.created_at,
+                   sf.updated_at
+            FROM   sketch s
+            JOIN   sketch_files sf on s.sketch_id = sf.sketch_id
+            WHERE  s.sketch_id = ?
             ORDER by file_id";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('i', $sketchId);

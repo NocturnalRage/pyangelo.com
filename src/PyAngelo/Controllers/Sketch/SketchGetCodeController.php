@@ -45,6 +45,7 @@ class SketchGetCodeController extends Controller {
     for ($i = 0; $i < count($sketchFiles); $i++) {
       if ($this->endsWith($sketchFiles[$i]['filename'], ".py")) {
         $sketchFiles[$i]['sourceCode'] = $this->readCodeFromFile(
+          $sketchFiles[$i]['person_id'],
           $sketchFiles[$i]['sketch_id'],
           $sketchFiles[$i]['filename']
         );
@@ -59,8 +60,8 @@ class SketchGetCodeController extends Controller {
     return $this->response;
   }
 
-  function readCodeFromFile($sketch_id, $programName) {
-    $basePath = $this->appDir . '/public/sketches/' . $sketch_id;
+  function readCodeFromFile($personId, $sketchId, $programName) {
+    $basePath = $this->appDir . '/public/sketches/' . $personId . '/' . $sketchId;
     $filename = $basePath . '/' . $programName;
     return file_get_contents($filename);
   }

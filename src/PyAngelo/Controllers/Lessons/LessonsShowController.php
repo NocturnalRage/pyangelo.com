@@ -18,6 +18,7 @@ class LessonsShowController extends Controller {
   protected $showCommentCount;
   protected $sketchRepository;
   protected $sketchFiles;
+  protected $ownerOfStarterSketchesId;
 
   public function __construct(
     Request $request,
@@ -28,7 +29,8 @@ class LessonsShowController extends Controller {
     AvatarContract $avatar,
     $showCommentCount,
     SketchRepository $sketchRepository,
-    SketchFiles $sketchFiles
+    SketchFiles $sketchFiles,
+    $ownerOfStarterSketchesId
   ) {
     parent::__construct($request, $response, $auth);
     $this->tutorialRepository = $tutorialRepository;
@@ -37,6 +39,7 @@ class LessonsShowController extends Controller {
     $this->showCommentCount = $showCommentCount;
     $this->sketchRepository = $sketchRepository;
     $this->sketchFiles = $sketchFiles;
+    $this->ownerOfStarterSketchesId = $ownerOfStarterSketchesId;
   }
 
   public function exec() {
@@ -175,6 +178,13 @@ class LessonsShowController extends Controller {
     if (! $this->auth->loggedIn())
       return NULL;
 
+    if ($this->auth->personId() == $this->ownerOfStarterSketchesId) {
+      if ($lesson['single_sketch'])
+        return($this->sketchRepository->getSketchById($lesson['tutorial_sketch_id']));
+      else
+        return($this->sketchRepository->getSketchById($lesson['lesson_sketch_id']));
+    }
+
     if ($lesson['single_sketch'])
       return $this->getOrCreateTutorialSketch($lesson);
     else
@@ -204,12 +214,16 @@ class LessonsShowController extends Controller {
           $lesson['tutorial_id']
         );
 
-        $this->sketchFiles->createNewMain($sketchId);
+        $this->sketchFiles->createNewMain($this->auth->personId(), $sketchId);
       }
       else {
         $sketchFiles = $this->sketchRepository->getSketchFiles($sketchId);
+        $sketchToFork = $this->sketchRepository->getSketchById(
+          $lesson['tutorial_sketch_id']
+        );
         $this->sketchFiles->forkSketch(
-          $lesson['tutorial_sketch_id'],
+          $sketchToFork,
+          $this->auth->personId(),
           $sketchId,
           $sketchFiles
         );
@@ -242,12 +256,16 @@ class LessonsShowController extends Controller {
           NULL
         );
 
-        $this->sketchFiles->createNewMain($sketchId);
+        $this->sketchFiles->createNewMain($this->auth->personId(), $sketchId);
       }
       else {
         $sketchFiles = $this->sketchRepository->getSketchFiles($sketchId);
+        $sketchToFork = $this->sketchRepository->getSketchById(
+          $lesson['lesson_sketch_id']
+        );
         $this->sketchFiles->forkSketch(
-          $lesson['lesson_sketch_id'],
+          $sketchToFork,
+          $this->auth->personId(),
           $sketchId,
           $sketchFiles
         );

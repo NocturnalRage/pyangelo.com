@@ -569,7 +569,8 @@ $di->set('LessonsNewController', function () use ($di) {
     $di->get('response'),
     $di->get('auth'),
     $di->get('tutorialRepository'),
-    $di->get('sketchRepository')
+    $di->get('sketchRepository'),
+    $_ENV['CLONE_SKETCH_PERSON_ID']
   );
 });
 
@@ -592,7 +593,8 @@ $di->set('LessonsShowController', function () use ($di) {
     $di->get('avatar'),
     $_ENV['SHOW_COMMENT_COUNT'],
     $di->get('sketchRepository'),
-    $di->get('sketchFiles')
+    $di->get('sketchFiles'),
+    $_ENV['CLONE_SKETCH_PERSON_ID']
   );
 });
 

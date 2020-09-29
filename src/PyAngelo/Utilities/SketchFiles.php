@@ -14,8 +14,8 @@ ENDDEFAULTMAINCODE;
     $this->appDir = $appDir;
   }
 
-  public function createNewMain($sketchId) {
-    $basePath = $this->appDir . '/public/sketches/' . $sketchId;
+  public function createNewMain($personId, $sketchId) {
+    $basePath = $this->appDir . '/public/sketches/' . $personId . '/' . $sketchId;
     if (! file_exists($basePath)) {
       mkdir($basePath, 0750, true);
     }
@@ -23,12 +23,12 @@ ENDDEFAULTMAINCODE;
     file_put_contents($filename, self::DEFAULT_MAIN_CODE);
   }
 
-  public function createFile($sketchId, $filename) {
-    touch($this->appDir . '/public/sketches/' . $sketchId . '/' . $filename);
+  public function createFile($sketch, $filename) {
+    touch($this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketchId'] . '/' . $filename);
   }
 
-  public function saveCode($sketchId, $filename, $code) {
-    $basePath = $this->appDir . '/public/sketches/' . $sketchId;
+  public function saveCode($sketch, $filename, $code) {
+    $basePath = $this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'];
     if (! file_exists($basePath)) {
       mkdir($basePath, 0750, true);
     }
@@ -36,9 +36,9 @@ ENDDEFAULTMAINCODE;
     $returnValue = file_put_contents($fullFilename, $code);
   }
 
-  public function forkSketch($origSketchId, $newSketchId, $sketchFiles) {
-    $src = $this->appDir . '/public/sketches/' . $origSketchId;
-    $dest = $this->appDir . '/public/sketches/' . $newSketchId;
+  public function forkSketch($origSketch, $personId, $newSketchId, $sketchFiles) {
+    $src = $this->appDir . '/public/sketches/' . $origSketch['person_id'] . '/' . $origSketch['sketch_id'];
+    $dest = $this->appDir . '/public/sketches/' . $personId . '/' . $newSketchId;
     mkdir($dest, 0750, true);
     foreach ($sketchFiles as $file) {
       $srcFile = $src . '/' . $file['filename'];

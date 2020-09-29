@@ -82,7 +82,7 @@ class SketchSaveController extends Controller {
       return $this->response;
     }
     $this->sketchFiles->saveCode(
-      $sketch['sketch_id'],
+      $sketch,
       $this->request->post['filename'],
       $this->request->post['program']
     );

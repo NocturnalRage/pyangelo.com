@@ -180,7 +180,7 @@ class SketchSaveControllerTest extends TestCase {
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
     $this->sketchRepository->shouldReceive('getSketchById')->once()->with($sketchId)->andReturn($sketch);
-    $this->sketchFiles->shouldReceive('saveCode')->once()->with($sketchId, $filename, $program)->andReturn();
+    $this->sketchFiles->shouldReceive('saveCode')->once()->with($sketch, $filename, $program)->andReturn();
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();

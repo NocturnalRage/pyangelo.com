@@ -64,8 +64,35 @@ class SketchForkControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
   }
 
+  public function testRedirectsToHomePageWhenSketchNotInDatabase() {
+    $anySketchId = 101;
+    $this->request->post['sketchId'] = $anySketchId;
+
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+
+    $anyPersonId = 101;
+    $this->sketchRepository
+         ->shouldReceive('getSketchById')
+         ->once()
+         ->with($anySketchId)
+         ->andReturn(NULL);
+
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedHeaders = array(array('header', 'Location: /'));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+  }
+
   public function testRedirectsToSketchPageWhenForkFails() {
     $anySketchId = 101;
+    $anyPersonId = 101;
+    $anySketchTitle = 'My Sketch';
+    $anySketch = [
+      'sketch_id' => $anySketchId,
+      'person_id' => $anyPersonId,
+      'title' => $anySketchTitle
+    ];
     $this->request->post['sketchId'] = $anySketchId;
 
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
@@ -74,9 +101,14 @@ class SketchForkControllerTest extends TestCase {
     $anyPersonId = 101;
     $this->auth->shouldReceive('personId')->once()->with()->andReturn($anyPersonId);
     $this->sketchRepository
+         ->shouldReceive('getSketchById')
+         ->once()
+         ->with($anySketchId)
+         ->andReturn($anySketch);
+    $this->sketchRepository
          ->shouldReceive('forkSketch')
          ->once()
-         ->with($anySketchId, $anyPersonId, \Mockery::any())
+         ->with($anySketchId, $anyPersonId, $anySketchTitle)
          ->andReturn(NULL);
 
     $response = $this->controller->exec();
@@ -87,7 +119,20 @@ class SketchForkControllerTest extends TestCase {
 
   public function testSketchForkedSuccessfully() {
     $anySketchId = 101;
+    $anyPersonId = 101;
+    $anySketchTitle = 'My Sketch';
+    $anySketch = [
+      'sketch_id' => $anySketchId,
+      'person_id' => $anyPersonId,
+      'title' => $anySketchTitle
+    ];
     $newSketchId = 1000;
+    $newPersonId = 1001;
+    $newSketch = [
+      'sketch_id' => $newSketchId,
+      'person_id' => $newPersonId,
+      'title' => $anySketchTitle
+    ];
     $sketchFiles = [
       'name' => 'main.py'
     ];
@@ -96,12 +141,16 @@ class SketchForkControllerTest extends TestCase {
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
 
-    $anyPersonId = 101;
-    $this->auth->shouldReceive('personId')->once()->with()->andReturn($anyPersonId);
+    $this->auth->shouldReceive('personId')->twice()->with()->andReturn($newPersonId);
+    $this->sketchRepository
+         ->shouldReceive('getSketchById')
+         ->once()
+         ->with($anySketchId)
+         ->andReturn($anySketch);
     $this->sketchRepository
          ->shouldReceive('forkSketch')
          ->once()
-         ->with($anySketchId, $anyPersonId, \Mockery::any())
+         ->with($anySketchId, $newPersonId, $anySketchTitle)
          ->andReturn($newSketchId);
     $this->sketchRepository
          ->shouldReceive('getSketchFiles')
@@ -112,7 +161,7 @@ class SketchForkControllerTest extends TestCase {
     $this->sketchFiles
          ->shouldReceive('forkSketch')
          ->once()
-         ->with($anySketchId, $newSketchId, $sketchFiles);
+         ->with($anySketch, $newPersonId, $newSketchId, $sketchFiles);
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();

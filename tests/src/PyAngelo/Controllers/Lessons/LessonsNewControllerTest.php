@@ -14,12 +14,14 @@ class LessonsNewControllerTest extends TestCase {
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
     $this->tutorialRepository = Mockery::mock('PyAngelo\Repositories\TutorialRepository');
     $this->sketchRepository = Mockery::mock('PyAngelo\Repositories\SketchRepository');
+    $this->ownerOfStarterSketchesId = 1;
     $this->controller = new LessonsNewController (
       $this->request,
       $this->response,
       $this->auth,
       $this->tutorialRepository,
-      $this->sketchRepository
+      $this->sketchRepository,
+      $this->ownerOfStarterSketchesId
     );
   }
   public function tearDown(): void {
