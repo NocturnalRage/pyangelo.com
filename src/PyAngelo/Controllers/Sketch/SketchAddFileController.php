@@ -86,7 +86,7 @@ class SketchAddFileController extends Controller {
     );
 
     $this->sketchFiles->createFile(
-      $sketch['sketch_id'],
+      $sketch,
       $this->request->post['filename'],
     );
 

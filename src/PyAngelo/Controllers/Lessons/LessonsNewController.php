@@ -10,18 +10,20 @@ use PyAngelo\Repositories\SketchRepository;
 class LessonsNewController extends Controller {
   protected $tutorialRepository;
   protected $sketchRepository;
+  protected $ownerOfStarterSketchesId;
 
   public function __construct(
     Request $request,
     Response $response,
     Auth $auth,
     TutorialRepository $tutorialRepository,
-    SketchRepository $sketchRepository
+    SketchRepository $sketchRepository,
+    $ownerOfStarterSketchesId
   ) {
     parent::__construct($request, $response, $auth);
     $this->tutorialRepository = $tutorialRepository;
     $this->sketchRepository = $sketchRepository;
-    $this->ownerOfStarterSketchesId = 1;
+    $this->ownerOfStarterSketchesId = $ownerOfStarterSketchesId;
   }
 
   public function exec() {

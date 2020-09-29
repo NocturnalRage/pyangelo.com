@@ -33,10 +33,17 @@ class SketchForkController extends Controller {
     if (!isset($this->request->post['sketchId']))
       return $this->redirectToHomePage();
 
+    $origSketch = $this->sketchRepository->getSketchById(
+      $this->request->post['sketchId']
+    );
+
+    if (! $origSketch)
+      return $this->redirectToHomePage();
+
     $sketchId = $this->sketchRepository->forkSketch(
-      $this->request->post['sketchId'],
+      $origSketch['sketch_id'],
       $this->auth->personId(),
-      $this->selectRandomTitle()
+      $origSketch['title']
     );
 
     if (!$sketchId)
@@ -44,7 +51,8 @@ class SketchForkController extends Controller {
 
     $sketchFiles = $this->sketchRepository->getSketchFiles($sketchId);
     $this->sketchFiles->forkSketch(
-      $this->request->post['sketchId'],
+      $origSketch,
+      $this->auth->personId(),
       $sketchId,
       $sketchFiles
     );
@@ -52,144 +60,6 @@ class SketchForkController extends Controller {
     $header = "Location: /sketch/" . $sketchId;
     $this->response->header($header);
     return $this->response;
-  }
-
-  private function selectRandomTitle() {
-    $word1 = [
-      'red',
-      'green',
-      'blue',
-      'yellow',
-      'purple',
-      'black',
-      'white',
-      'pink',
-      'ivory',
-      'pearl',
-      'coconut',
-      'tan',
-      'beige',
-      'fawn',
-      'granola',
-      'sand',
-      'shortbread',
-      'hazelnut',
-      'latte',
-      'canary',
-      'gold',
-      'butter',
-      'mustard',
-      'corn',
-      'pineapple',
-      'honey',
-      'blonde',
-      'orange',
-      'tangerine',
-      'merigold',
-      'cider',
-      'rust',
-      'ginger',
-      'tiger',
-      'fire',
-      'bronze',
-      'apricot',
-      'clay',
-      'carrot',
-      'spice',
-      'cherry',
-      'rose',
-      'jam',
-      'ruby',
-      'apple',
-      'berry',
-      'lipstick',
-      'blush',
-      'scarlet',
-      'wine',
-      'blood',
-      'punch',
-      'salmon',
-      'coral',
-      'peach',
-      'strawberry',
-      'magenta',
-      'bubblegum',
-      'plum',
-      'violet',
-      'lilac',
-      'gravy',
-      'toast',
-      'cereal',
-      'ice',
-      'cream',
-      'flavour',
-      'cool',
-      'fun',
-      'best',
-      'greatest',
-      'random',
-      'breezy',
-      'sneezy',
-      'tropical',
-      'laughable',
-      'sporty',
-      'interesting'
-    ];
-    $word2 = [
-      'train',
-      'car',
-      'bus',
-      'truck',
-      'caravan',
-      'tree',
-      'road',
-      'band',
-      'science',
-      'computer',
-      'friend',
-      'enemy',
-      'foe',
-      'cat',
-      'dog',
-      'frog',
-      'lamb',
-      'cow',
-      'bee',
-      'wasp',
-      'ant',
-      'farm',
-      'lion',
-      'bear',
-      'giraffe',
-      'bench',
-      'table',
-      'random',
-      'leader',
-      'student',
-      'statement',
-      'sketch',
-      'program',
-      'tadpole',
-      'feline',
-      'mouse',
-      'computer',
-      'screen',
-      'pen',
-      'pencil',
-      'school',
-      'university',
-      'subject',
-      'maths',
-      'language',
-      'python',
-      'bat',
-      'believer',
-      'storm',
-      'clouds',
-      'thunder',
-      'lightning'
-    ];
-    return $word1[array_rand($word1)] . '-' . $word2[array_rand($word2)];
   }
 
   private function redirectToLoginPage() {

@@ -14,7 +14,7 @@
   <?php if (isset($sketch['sketch_id'])): ?>
   <!-- Set base URL for the sketch!
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <base href="/sketches/<?= $sketch['sketch_id'] ?>/" />
+  <base href="/sketches/<?= $sketch['person_id'] ?>/<?= $sketch['sketch_id'] ?>/" />
   <!-- Brython
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.8/brython.min.js" integrity="sha256-o/getzwHeAq4xcWJ350CFg+70KNoYxxdK8ikIp76hIM=" crossorigin="anonymous"></script>
@@ -32,7 +32,7 @@
 
 </head>
 <?php if (!empty($sketch['sketch_id'])): ?>
-<body onload="brython({debug:1, pythonpath:['/sketches/<?= $sketch['sketch_id'] ?>', '/brython/lib']})">
+<body onload="brython({debug:1, pythonpath:['/sketches/<?= $sketch['person_id'] ?>/<?= $sketch['sketch_id'] ?>', '/brython/lib']})">
 <?php else: ?>
 <body>
 <?php endif; ?>

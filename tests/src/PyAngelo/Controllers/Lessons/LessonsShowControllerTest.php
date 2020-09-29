@@ -18,6 +18,7 @@ class LessonsShowControllerTest extends TestCase {
     $this->showCommentCount = 5;
     $this->sketchRepository = Mockery::mock('PyAngelo\Repositories\SketchRepository');
     $this->sketchFiles = Mockery::mock('PyAngelo\Utilities\SketchFiles');
+    $this->ownerOfStarterSketchesId = 1;
     $this->controller = new LessonsShowController (
       $this->request,
       $this->response,
@@ -27,7 +28,8 @@ class LessonsShowControllerTest extends TestCase {
       $this->avatar,
       $this->showCommentCount,
       $this->sketchRepository,
-      $this->sketchFiles
+      $this->sketchFiles,
+      $this->ownerOfStarterSketchesId
     );
   }
   public function tearDown(): void {
@@ -185,7 +187,7 @@ class LessonsShowControllerTest extends TestCase {
     $comments = [];
     $this->request->get['slug'] = $tutorialSlug;
     $this->request->get['lesson_slug'] = $lessonSlug;
-    $this->auth->shouldReceive('personId')->times(5)->with()->andReturn($personId);
+    $this->auth->shouldReceive('personId')->times(6)->with()->andReturn($personId);
     $this->auth->shouldReceive('loggedIn')->twice()->with()->andReturn(TRUE);
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
     $this->tutorialRepository
@@ -287,7 +289,7 @@ class LessonsShowControllerTest extends TestCase {
     $comments = [];
     $this->request->get['slug'] = $tutorialSlug;
     $this->request->get['lesson_slug'] = $lessonSlug;
-    $this->auth->shouldReceive('personId')->times(5)->with()->andReturn($personId);
+    $this->auth->shouldReceive('personId')->times(6)->with()->andReturn($personId);
     $this->auth->shouldReceive('loggedIn')->twice()->with()->andReturn(TRUE);
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
     $this->tutorialRepository
@@ -386,13 +388,20 @@ class LessonsShowControllerTest extends TestCase {
       'lesson_id' => $lessonId,
       'title' => $lessonSlug
     ];
+    $newSketchId = 2000;
+    $newSketch = [
+      'sketch_id' => $newSketchId,
+      'person_id' => $personId,
+      'lesson_id' => $lessonId,
+      'title' => $lessonSlug
+    ];
     $files = [
       'name' => 'main.py'
     ];
     $comments = [];
     $this->request->get['slug'] = $tutorialSlug;
     $this->request->get['lesson_slug'] = $lessonSlug;
-    $this->auth->shouldReceive('personId')->times(6)->with()->andReturn($personId);
+    $this->auth->shouldReceive('personId')->times(8)->with()->andReturn($personId);
     $this->auth->shouldReceive('loggedIn')->twice()->with()->andReturn(TRUE);
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
     $this->tutorialRepository
@@ -434,21 +443,26 @@ class LessonsShowControllerTest extends TestCase {
       ->shouldReceive('forkSketch')
       ->once()
       ->with($sketchId, $personId, $lessonTitle, $lessonId, NULL)
-      ->andReturn($sketchId);
+      ->andReturn($newSketchId);
     $this->sketchRepository
       ->shouldReceive('getSketchFiles')
       ->once()
-      ->with($sketchId)
+      ->with($newSketchId)
       ->andReturn($files);
     $this->sketchRepository
       ->shouldReceive('getSketchById')
       ->once()
       ->with($sketchId)
       ->andReturn($sketch);
+    $this->sketchRepository
+      ->shouldReceive('getSketchById')
+      ->once()
+      ->with($newSketchId)
+      ->andReturn($newSketch);
     $this->sketchFiles
       ->shouldReceive('forkSketch')
       ->once()
-      ->with($sketchId, $sketchId, $files);
+      ->with($sketch, $personId, $newSketchId, $files);
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
@@ -465,7 +479,7 @@ class LessonsShowControllerTest extends TestCase {
    */
   public function testLessonsShowShowAnyoneVideoWithNoSketchWithSingleSketch() {
     session_start();
-    $personId = 2;
+    $sketchPersonId = 2;
     $sketchId = 99;
     $this->request->server['REQUEST_URI'] = 'some-url';
     $tutorialSlug = 'f2l-magic';
@@ -506,7 +520,15 @@ class LessonsShowControllerTest extends TestCase {
     ]; 
     $sketch = [
       'sketch_id' => $sketchId,
-      'person_id' => $personId,
+      'person_id' => $sketchPersonId,
+      'lesson_id' => $lessonId,
+      'title' => $lessonSlug
+    ];
+    $newPersonId = 3001;
+    $newSketchId = 4001;
+    $newSketch = [
+      'sketch_id' => $newSketchId,
+      'person_id' => $newPersonId,
       'lesson_id' => $lessonId,
       'title' => $lessonSlug
     ];
@@ -516,13 +538,13 @@ class LessonsShowControllerTest extends TestCase {
     $comments = [];
     $this->request->get['slug'] = $tutorialSlug;
     $this->request->get['lesson_slug'] = $lessonSlug;
-    $this->auth->shouldReceive('personId')->times(6)->with()->andReturn($personId);
+    $this->auth->shouldReceive('personId')->times(8)->with()->andReturn($newPersonId);
     $this->auth->shouldReceive('loggedIn')->twice()->with()->andReturn(TRUE);
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
     $this->tutorialRepository
       ->shouldReceive('getLessonBySlugsWithStatus')
       ->once()
-      ->with($tutorialSlug, $lessonSlug, $personId)
+      ->with($tutorialSlug, $lessonSlug, $newPersonId)
       ->andReturn($lesson);
     $this->tutorialRepository
       ->shouldReceive('getLessonCaptions')
@@ -532,12 +554,12 @@ class LessonsShowControllerTest extends TestCase {
     $this->tutorialRepository
       ->shouldReceive('getTutorialBySlugWithStats')
       ->once()
-      ->with($tutorialSlug, $personId)
+      ->with($tutorialSlug, $newPersonId)
       ->andReturn($lesson);
     $this->tutorialRepository
       ->shouldReceive('getTutorialLessons')
       ->once()
-      ->with($tutorialId, $personId)
+      ->with($tutorialId, $newPersonId)
       ->andReturn($lessons);
     $this->tutorialRepository
       ->shouldReceive('getPublishedLessonComments')
@@ -547,32 +569,37 @@ class LessonsShowControllerTest extends TestCase {
     $this->tutorialRepository
       ->shouldReceive('shouldUserReceiveAlert')
       ->once()
-      ->with($lessonId, $personId)
+      ->with($lessonId, $newPersonId)
       ->andReturn(FALSE);
     $this->sketchRepository
       ->shouldReceive('getSketchByPersonAndTutorial')
       ->once()
-      ->with($personId, $tutorialId)
+      ->with($newPersonId, $tutorialId)
       ->andReturn(NULL);
     $this->sketchRepository
       ->shouldReceive('forkSketch')
       ->once()
-      ->with($sketchId, $personId, $tutorialTitle, NULL, $tutorialId)
-      ->andReturn($sketchId);
+      ->with($sketchId, $newPersonId, $tutorialTitle, NULL, $tutorialId)
+      ->andReturn($newSketchId);
     $this->sketchRepository
       ->shouldReceive('getSketchFiles')
       ->once()
-      ->with($sketchId)
+      ->with($newSketchId)
       ->andReturn($files);
     $this->sketchRepository
       ->shouldReceive('getSketchById')
       ->once()
       ->with($sketchId)
       ->andReturn($sketch);
+    $this->sketchRepository
+      ->shouldReceive('getSketchById')
+      ->once()
+      ->with($newSketchId)
+      ->andReturn($newSketch);
     $this->sketchFiles
       ->shouldReceive('forkSketch')
       ->once()
-      ->with($sketchId, $sketchId, $files);
+      ->with($sketch, $newPersonId, $newSketchId, $files);
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();

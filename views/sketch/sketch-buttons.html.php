@@ -6,7 +6,7 @@
         <?php if ($personInfo['details']['person_id'] != $sketch['person_id']) : ?>
           <p class="appHeading">
             <a id="fork"
-               class="button"
+               class="btn"
                href="/sketch/<?= $sketch['sketch_id'] ?>/fork"
                onclick="event.preventDefault();
                document.getElementById('fork-form').submit();">

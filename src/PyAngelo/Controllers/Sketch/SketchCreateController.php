@@ -34,7 +34,7 @@ class SketchCreateController extends Controller {
     if (!$sketchId)
       return $this->redirectToSketchPage();
 
-    $this->sketchFiles->createNewMain($sketchId);
+    $this->sketchFiles->createNewMain($this->auth->personId(), $sketchId);
 
     $header = "Location: /sketch/" . $sketchId;
     $this->response->header($header);

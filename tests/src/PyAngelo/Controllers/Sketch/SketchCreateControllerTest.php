@@ -65,9 +65,9 @@ class SketchCreateControllerTest extends TestCase {
     $sketch = ['sketch_id' => $sketchId];
     $this->request->post = ['data' => 'invalid'];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
-    $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
+    $this->auth->shouldReceive('personId')->twice()->with()->andReturn($personId);
     $this->sketchRepository->shouldReceive('createNewSketch')->once()->with($personId, \Mockery::any())->andReturn($sketchId);
-    $this->sketchFiles->shouldReceive('createNewMain')->once()->with($sketchId)->andReturn();
+    $this->sketchFiles->shouldReceive('createNewMain')->once()->with($personId, $sketchId)->andReturn();
 
     $response = $this->controller ->exec();
     $responseVars = $response->getVars();

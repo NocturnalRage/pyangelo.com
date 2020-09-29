@@ -58,7 +58,7 @@ class SketchGetCodeControllerTest extends TestCase {
   }
 
   public function testSuccess() {
-    $basepath = $this->appDir . "/public/sketches/0";
+    $basepath = $this->appDir . "/public/sketches/0/0";
     $filename = $basepath . "/main.py";
     $program = "canvas.background()";
     if (! file_exists($basepath)) {
@@ -70,6 +70,7 @@ class SketchGetCodeControllerTest extends TestCase {
     $personId = $ownerId;
     $sketchFiles = [
       [
+        'person_id' => 0,
         'file_id' => 1,
         'sketch_id' => 0,
         'filename' => 'main.py'
@@ -89,7 +90,7 @@ class SketchGetCodeControllerTest extends TestCase {
     $this->assertSame($expectedViewName, $response->getView());
     $this->assertSame($expectedStatus, $responseVars['status']);
     $this->assertSame($expectedMessage, $responseVars['message']);
-    $filename = $this->appDir . '/public/sketches/0/main.py';
+    $filename = $basepath . '/main.py';
     $savedProgram = file_get_contents($filename);
     $this->assertSame($savedProgram, $program);
     unlink($filename);

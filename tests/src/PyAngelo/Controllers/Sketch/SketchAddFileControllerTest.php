@@ -154,7 +154,7 @@ class SketchAddFileControllerTest extends TestCase {
     $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
     $this->sketchRepository->shouldReceive('getSketchById')->once()->with($sketchId)->andReturn($sketch);
     $this->sketchRepository->shouldReceive('addSketchFile')->once()->with($sketchId, $filename)->andReturn();
-    $this->sketchFiles->shouldReceive('createFile')->once()->with($sketchId, $filename)->andReturn();
+    $this->sketchFiles->shouldReceive('createFile')->once()->with($sketch, $filename)->andReturn();
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();

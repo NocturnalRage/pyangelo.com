@@ -73,7 +73,7 @@ class UploadAssetController extends Controller {
       return $this->response;
     }
 
-    $fullFileName = $this->moveFile($this->request->files['file']);
+    $fullFileName = $this->moveFile($this->request->files['file'], $sketch);
 
     if ($fullFileName == -1) {
       $status = 'error';
@@ -125,8 +125,8 @@ class UploadAssetController extends Controller {
     return true;
   }
 
-  private function moveFile($fileInfo) {
-    $baseDir =  'sketches/' . $this->request->post['sketchId'];
+  private function moveFile($fileInfo, $sketch) {
+    $baseDir =  'sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'];
     $filename = pathinfo($fileInfo['name'], PATHINFO_FILENAME);
     $filetype = pathinfo($fileInfo['name'], PATHINFO_EXTENSION);
     $fullFileName = $filename . '.' . $filetype;
