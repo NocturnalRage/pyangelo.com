@@ -10,11 +10,11 @@ imposter = Sprite("http://www.pyangelodev.com/images/logos/pyangelo-logo.png", 3
 background(220, 220, 220)
 pyangelo.draw()
 imposter.draw()
+pyangelo.moveBy(1, 1)
+imposter.moveBy(-1, 1)
 
 if pyangelo.overlaps(imposter):
       text("I found you imposter!", 0, 0, fontSize=30)
-      pyangelo.moveBy(1, 1)
-      imposter.moveBy(-1, 1)
 </pre>
 <h4>Description</h4>
 <p>
