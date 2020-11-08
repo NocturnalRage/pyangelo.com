@@ -10,7 +10,7 @@ background(255, 255, 0)
 Draws a rectangle the size of the canvas. The colour of the rectangle is specifed by the first three parameters representing an RGB colour. The function is typically called as part of the <a href="#loop_animation">@loop_animation</a> to clear the canvas each frame. If a fourth parameter is passed it specifies an alpha value ranging from 0 to 1 where 0 is fully transparent and 1 specifies no transparency.
 </p>
 <h4>Syntax</h4>
-<p>backgroud(r, g, b, a)</p>
+<p>background(r, g, b, a)</p>
 <h4>Parameters</h4>
 <p>r - The red value of the colour ranging from 0 to 255.</p>
 <p>g - The green value of the colour ranging from 0 to 255.</p>

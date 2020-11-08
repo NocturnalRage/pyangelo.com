@@ -247,10 +247,9 @@ def pauseSound(sound):
     if sound in _soundPlayers:
         _soundPlayers[sound].pause()
 
-# alias for pauseSound
 def stopSound(sound):
     if sound in _soundPlayers:
-        soundPlayers[sound].stop()
+        _soundPlayers[sound].stop()
 
 def getPixelColour(x, y):
     pixel = window.Int8Array.new(4)
