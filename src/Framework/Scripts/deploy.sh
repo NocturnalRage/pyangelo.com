@@ -37,6 +37,10 @@ echo "Replacing public images directory"
 rm -r $APPHOME/public/images
 cp -r $GITDIR/public/images $APPHOME/public/
 
+echo "Replacing public samples directory"
+rm -r $APPHOME/public/samples
+cp -r $GITDIR/public/samples $APPHOME/public/
+
 echo "Replacing public brython directory"
 rm -r $APPHOME/public/brython
 cp -r $GITDIR/public/brython $APPHOME/public/
