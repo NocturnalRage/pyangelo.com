@@ -18,6 +18,9 @@
     background-repeat: no-repeat;
     background-position: center;    
 }
+#canvas:focus, #canvas:hover {
+  outline: none;
+}
 #editor {
     border: 1px solid lightgray;
     margin: auto;

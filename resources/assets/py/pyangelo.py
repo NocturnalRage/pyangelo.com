@@ -257,6 +257,7 @@ def getPixelColour(x, y):
     return Colour(imageData.data[0], imageData.data[1], imageData.data[2], imageData.data[3])
 
 def _start():
+    _canvas.focus()
     global _state
     if _state != STATE_RUN:
         _state = STATE_RUN
@@ -562,9 +563,11 @@ def dist(x1, y1, x2, y2):
 
 
 def _keydown(ev):
+    ev.preventDefault()
     _keys[ev.which] = True
 
 def _keyup(ev):
+    ev.preventDefault()
     _keys[ev.which] = False
 
 def isKeyPressed(key):
@@ -588,8 +591,8 @@ _keys[KEY_V_UP] = False
 _keys[KEY_V_DOWN] = False
 _keys[KEY_V_FIRE] = False
 
-document.bind("keydown", _keydown)
-document.bind("keyup", _keyup)
+_canvas.bind("keydown", _keydown)
+_canvas.bind("keyup", _keyup)
 
 mouseIsPressed = False
 mouseX = 0
