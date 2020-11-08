@@ -77,6 +77,18 @@
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
+          <a href="#sounds">
+            <h3><i class="fa fa-file-audio-o fa-fw"></i> Sounds</h3>
+          </a>
+          <div class="list-group">
+            <a href="#loadSound" class="list-group-item">loadSound()</a>
+            <a href="#playSound" class="list-group-item">playSound()</a>
+            <a href="#stopSound" class="list-group-item">stopSound()</a>
+            <a href="#pauseSound" class="list-group-item">pauseSound()</a>
+            <a href="#stopAllSounds" class="list-group-item">stopAllSounds()</a>
+          </div><!-- list-group -->
+        </div><!-- well -->
+        <div class="well">
           <a href="#variables">
             <h3><i class="fa fa-bar-chart fa-fw"></i> Variables</h3>
           </a>

@@ -16,6 +16,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
           include __DIR__ . DIRECTORY_SEPARATOR . '/transformation.html.php';
           include __DIR__ . DIRECTORY_SEPARATOR . '/animation.html.php';
           include __DIR__ . DIRECTORY_SEPARATOR . '/sprites.html.php';
+          include __DIR__ . DIRECTORY_SEPARATOR . '/sounds.html.php';
           include __DIR__ . DIRECTORY_SEPARATOR . '/variables.html.php';
           include __DIR__ . DIRECTORY_SEPARATOR . '/maths.html.php';
           include __DIR__ . DIRECTORY_SEPARATOR . '/constants.html.php';
