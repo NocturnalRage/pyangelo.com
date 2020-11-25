@@ -41,7 +41,7 @@ class ShowHtmlTest extends BasicViewHtmlTest {
 
     $expect = $sketch['title'];
     $this->assertStringContainsString($expect, $output);
-    $expect = '<canvas id="canvas" width="500" height="400"></canvas>';
+    $expect = '<canvas id="canvas" width="500" height="400" tabindex="1"></canvas>';
     $this->assertStringContainsString($expect, $output);
     $expect = '<button id="startStop" class="btn btn-success">Start</button>';
     $this->assertStringContainsString($expect, $output);
@@ -89,7 +89,7 @@ class ShowHtmlTest extends BasicViewHtmlTest {
 
     $expect = '<h1 class="text-center">' . $sketch['title'] . '</h1>';
     $this->assertStringContainsString($expect, $output);
-    $expect = '<canvas id="canvas" width="500" height="400"></canvas>';
+    $expect = '<canvas id="canvas" width="500" height="400" tabindex="1"></canvas>';
     $this->assertStringContainsString($expect, $output);
     $expect = '<button id="startStop" class="btn btn-success">Start</button>';
     $this->assertStringContainsString($expect, $output);

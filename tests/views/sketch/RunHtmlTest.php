@@ -32,7 +32,7 @@ class RunHtmlTest extends BasicViewHtmlTest {
 
     $expect = $sketch['title'];
     $this->assertStringContainsString($expect, $output);
-    $expect = '<canvas id="canvas" width="500" height="400"></canvas>';
+    $expect = '<canvas id="canvas" width="500" height="400" tabindex="1"></canvas>';
     $this->assertStringContainsString($expect, $output);
 
     $expect = '<div id="editor">' . $sourceCode . '</div>';
