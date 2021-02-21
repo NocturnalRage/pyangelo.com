@@ -21,7 +21,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
   <script src="<?= mix('js/notify.min.js'); ?>"></script>
   <script src="<?= mix('js/blogAlert.js'); ?>"></script>
   <script src="<?= mix('js/blogComments.js'); ?>"></script>
-  <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+  <script src="https://cdn.tiny.cloud/1/1fnyfp2h3lz7wu4v2qlchoping5fjj7mdbonk8ekgaczk7vh/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
   <script type="text/javascript">
 tinymce.init({
   selector: 'textarea.tinymce',
