@@ -1,6 +1,6 @@
 <?php
-use PHPUnit\Framework\TestCase;
 namespace Framework;
+use PHPUnit\Framework\TestCase;
 class RequestTest extends \PHPUnit\Framework\TestCase
 {
     public function newRequest()
