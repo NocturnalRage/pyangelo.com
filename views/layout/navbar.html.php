@@ -21,6 +21,7 @@
             <ul class="dropdown-menu" role="menu">
               <li>
                 <a href="/categories/introduction-to-pyangelo"><i class="fa fa-handshake-o fa-fw"></i> Introduction to PyAngelo</a>
+                <a href="/categories/arcade-games"><i class="fa fa-gamepad fa-fw"></i> Arcade Games</a>
                 <a href="/tutorials"><i class="fa fa-th fa-fw"></i> All</a>
               </li>
             </ul>
