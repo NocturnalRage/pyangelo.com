@@ -4,6 +4,8 @@ let currentFilename = "main.py";
 let editor = ace.edit("editor");
 editor.$blockScrolling = Infinity;
 
+var UndoManager = ace.require("ace/undomanager").UndoManager;
+
 var PythonMode = ace.require("ace/mode/python").Mode;
 ace.require("ace/ext/language_tools");
 var EditSession = require("ace/edit_session").EditSession;
@@ -50,6 +52,7 @@ function addTab(file) {
       const readOnly = document.getElementById('editor').getAttribute('data-read-only');
       editSessions.push(new EditSession(file.sourceCode));
       editSessions[editorSession].setMode(new PythonMode());
+      editSessions[editorSession].setUndoManager(new UndoManager());
       if (readOnly == "true") {
         editor.setOptions({
             readOnly: true,
