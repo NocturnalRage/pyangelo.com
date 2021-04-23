@@ -597,7 +597,7 @@ class MysqlCampaignRepository implements CampaignRepository {
             WHERE  s.list_id = ?
             AND    s.subscriber_status_id = 1
             AND    {$autoresponderWhereCondition}
-            AND    s.subscribed_at <= now() - INTERVAL ? MINUTE
+            AND    s.subscribed_at < now() - INTERVAL ? MINUTE
             AND    s.subscribed_at >= s.last_autoresponder_at - INTERVAL ? MINUTE";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('iii', $listId, $delayInMinutes, $delayInMinutes);
