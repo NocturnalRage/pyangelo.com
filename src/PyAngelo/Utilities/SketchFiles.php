@@ -4,10 +4,6 @@ namespace PyAngelo\Utilities;
 class SketchFiles {
   const DEFAULT_MAIN_FILE = "main.py";
   const DEFAULT_MAIN_CODE = <<<'ENDDEFAULTMAINCODE'
-setCanvasSize(500, 400)
-
-@loop_animation
-background(220, 220, 220)
 ENDDEFAULTMAINCODE;
 
   public function __construct(string $appDir) {
@@ -24,7 +20,7 @@ ENDDEFAULTMAINCODE;
   }
 
   public function createFile($sketch, $filename) {
-    touch($this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketchId'] . '/' . $filename);
+    touch($this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'] . '/' . $filename);
   }
 
   public function saveCode($sketch, $filename, $code) {

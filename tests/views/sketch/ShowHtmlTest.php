@@ -52,9 +52,13 @@ class ShowHtmlTest extends BasicViewHtmlTest {
     $expect = '<div id="editor"';
     $this->assertStringContainsString($expect, $output);
 
-    $expect = '<div id="console">';
+    $expect = '<pre id="console">';
     $this->assertStringContainsString($expect, $output);
-    $expect = 'import pyangelo';
+
+    $expect = '<script src="/js/PyAngeloSetup.js';
+    $this->assertStringContainsString($expect, $output);
+
+    $expect = '<script src="/js/editor.js';
     $this->assertStringContainsString($expect, $output);
   }
 
@@ -100,9 +104,13 @@ class ShowHtmlTest extends BasicViewHtmlTest {
     $expect = '<div id="editor"';
     $this->assertStringContainsString($expect, $output);
 
-    $expect = '<div id="console">';
+    $expect = '<pre id="console">';
     $this->assertStringContainsString($expect, $output);
-    $expect = 'import pyangelo';
+
+    $expect = '<script src="/js/PyAngeloSetup.js';
+    $this->assertStringContainsString($expect, $output);
+
+    $expect = '<script src="/js/editor.js';
     $this->assertStringContainsString($expect, $output);
   }
 }

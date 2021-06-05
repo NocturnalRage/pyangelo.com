@@ -34,3 +34,8 @@ DEGREES is a constant that is used with the <a href="#angleMode">angleMode()</a>
 <p>
 RADIANS is a constant that is used with the <a href="#angleMode">angleMode()</a> function to inform PyAngelo to use radians for the <a href="#rotate">rotate()</a> and <a href="#arc">arc()</a> functions.
 </p>
+<h3 id="keys">KEY_A to KEY_Z</h3>
+<h4>Description</h4>
+<p>
+KEY_A through to KEY_Z are constants that can be used with the isKeyPressed function to check if the A through to the Z key has been pressed. In addition there is also KEY_SPACE, KEY_ENTER, KEY_ESCAPE, KEY_DEL, KEY_BACKSPACE, KEY_TAB, KEY_LEFT, KEY_RIGHT, KEY_UP and KEY_DOWN.
+</p>

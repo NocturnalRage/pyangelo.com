@@ -15,10 +15,6 @@
   <!-- Set base URL for the sketch!
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <base href="/sketches/<?= $sketch['person_id'] ?>/<?= $sketch['sketch_id'] ?>/" />
-  <!-- Brython
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.8/brython.min.js" integrity="sha256-o/getzwHeAq4xcWJ350CFg+70KNoYxxdK8ikIp76hIM=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.8/brython_stdlib.js" integrity="sha256-Gnrw9tIjrsXcZSCh/wos5Jrpn0bNVNFJuNJI9d71TDs=" crossorigin="anonymous"></script>
 
   <!-- Ace Editor
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -26,13 +22,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/mode-python.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ext-language_tools.min.js"></script>
 
+  <!-- Skulpt Files
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script src="<?= mix('js/skulpt.min.js'); ?>"></script>
+  <script src="<?= mix('js/skulpt-stdlib.js'); ?>"></script>
+
   <?php endif; ?>
 
   <script src="<?= mix('js/app.js'); ?>"></script>
 
 </head>
-<?php if (!empty($sketch['sketch_id'])): ?>
-<body onload="brython({debug:1, pythonpath:['/sketches/<?= $sketch['person_id'] ?>/<?= $sketch['sketch_id'] ?>', '/brython/lib']})">
-<?php else: ?>
 <body>
-<?php endif; ?>

@@ -2,13 +2,14 @@ let mix = require('laravel-mix');
 
    mix.setPublicPath('public');
 
-   mix.copy('./node_modules/font-awesome/fonts', 'public/fonts/font-awsome')
-   .copy('./resources/assets/js/howler.js', './public/js/')
-   .copy('./resources/assets/py/pyangelo.py', './public/brython/lib')
-   .copy('./resources/assets/py/pyangelo_consts.py', './public/brython/lib');
+   mix.copy('./node_modules/font-awesome/fonts', 'public/fonts/font-awsome');
 
    mix.js('resources/assets/js/app.js', './public/js/app.js')
    .sass('resources/assets/sass/app.scss', './public/css/pyangelo.css')
+   .copy('./resources/assets/skulpt/skulpt.min.js', './public/js/')
+   .copy('./resources/assets/skulpt/skulpt.min.js.map', './public/js/')
+   .copy('./resources/assets/skulpt/skulpt-stdlib.js', './public/js/')
+   .copy('./resources/assets/js/PyAngeloSetup.js', './public/js/')
    .copy('./resources/assets/js/editor.js', './public/js/')
    .copy('./resources/assets/js/dropzone.js', './public/js/')
    .copy('./resources/assets/js/notify.min.js', './public/js/')

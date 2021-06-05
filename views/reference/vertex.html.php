@@ -2,6 +2,7 @@
 <h3 id="beginShape">beginShape()</h3>
 <h4>Examples</h4>
 <pre>
+setCanvasSize(400, 400)
 fill(200, 90, 90)
 beginShape()
 vertex(10, 10)
@@ -21,6 +22,7 @@ The <a href="#beginShape">beginShape()</a>, <a href="#vertex">vertex()</a>, and 
 <h3 id="vertex">vertex()</h3>
 <h4>Examples</h4>
 <pre>
+setCanvasSize(400, 400)
 fill(200, 90, 90)
 beginShape()
 vertex(10, 10)
@@ -43,6 +45,7 @@ The vertex() function adds a point to the list of vertices that will be connecte
 <h3 id="endShape">endShape()</h3>
 <h4>Examples</h4>
 <pre>
+setCanvasSize(400, 400)
 fill(200, 90, 90)
 beginShape()
 vertex(10, 10)
@@ -53,6 +56,7 @@ vertex(200, 5)
 endShape()
 </pre>
 <pre>
+setCanvasSize(400, 400)
 fill(200, 90, 90)
 beginShape()
 vertex(10, 10)

@@ -3,6 +3,7 @@
 <h4>Examples</h4>
 <pre>
 # Draw a rectangle at location (10, 20) with a width of 50 and height of 25.
+setCanvasSize(100, 100)
 rect(10, 20, 50, 25)
 </pre>
 <h4>Description</h4>
@@ -21,6 +22,7 @@ Draws a rectangle on the canvas. By default, the first two parameters set the lo
 <h4>Examples</h4>
 <pre>
 # Draw a circle at location (100, 200) with a radius of 50.
+setCanvasSize(200, 400)
 circle(100, 200, 50)
 </pre>
 <h4>Description</h4>
@@ -37,8 +39,9 @@ Draws a circle on the canvas. By default, the first two parameters set the locat
 <h3 id="ellipse">ellipse()</h3>
 <h4>Examples</h4>
 <pre>
-# Draw an ellipse at location (100, 200) with an X radius of 50 and a Y radius of 75.
-ellipse(100, 200, 50, 75)
+# Draw an ellipse at location (100, 200) with an X radius of 50 and a Y radius of 100.
+setCanvasSize(200, 400)
+ellipse(100, 200, 50, 100)
 </pre>
 <h4>Description</h4>
 <p>
@@ -56,6 +59,7 @@ Draws an ellipse (oval) on the canvas. By default, the first two parameters set 
 <h4>Examples</h4>
 <pre>
 # Draw an arc at location (50, 50) with an X radius of 40 and a Y radius of 30. The arc spans from 0 to 270 degrees.
+setCanvasSize(100, 100)
 arc(50, 50, 40, 30, 0, 270)
 </pre>
 <h4>Description</h4>
@@ -76,10 +80,12 @@ Draws an arc (a portion of an ellipse) on the canvas. By default, the first two 
 <h4>Examples</h4>
 <pre>
 # Draw a line starting at (40, 20) and finishing at (60, 40).
+setCanvasSize(100, 100)
 line(40, 20, 60, 40)
 </pre>
 <pre>
 # Draw 3 lines of different colours that give a 3D effect.
+setCanvasSize(640, 360)
 stroke(0, 0, 0)
 line(40, 30, 95, 30)
 stroke(120, 120, 120)
@@ -103,10 +109,12 @@ Draws an line between two points to the screen. By default the line has a width 
 <h4>Examples</h4>
 <pre>
 # Draw a point at (40, 20).
+setCanvasSize(100, 100)
 point(40, 20)
 </pre>
 <pre>
 # Draw a blue point at (50, 30) that is 20 pixels in size.
+setCanvasSize(100, 100)
 stroke(0, 0, 255)
 strokeWeight(20)
 point(50, 30)
@@ -121,27 +129,11 @@ Draws a pixel to the screen at the position given by the two parameters. The fir
 <p>x - The x coordintate.</p>
 <p>y - The y coordintate.</p>
 <hr />
-<h3 id="square">square()</h3>
-<h4>Examples</h4>
-<pre>
-# Draw a square at location (10, 20) with a length of 50 pixels.
-square(10, 20, 50)
-</pre>
-<h4>Description</h4>
-<p>
-Draws a square on the canvas. By default, the first two parameters set the location of the upper-left corner, the third sets the length.
-</p>
-<h4>Syntax</h4>
-<p>square(x, y, l)</p>
-<h4>Parameters</h4>
-<p>x - The x coordintate of the square.</p>
-<p>y - The y coordintate of the square.</p>
-<p>l - The length of the square.</p>
-<hr />
 <h3 id="triangle">triangle()</h3>
 <h4>Examples</h4>
 <pre>
 # Draw a triangle specified by the three points (50, 75), (25, 100), and (75, 100).
+setCanvasSize(200, 200)
 triangle(50, 75, 25, 100, 75, 100)
 </pre>
 <h4>Description</h4>
@@ -162,6 +154,7 @@ Draws a triangle on the canvas specified by three points.
 <h4>Examples</h4>
 <pre>
 # Draw a quad specified by the four points (50, 75), (25, 100), (75, 100), and (100, 75).
+setCanvasSize(200, 200)
 quad(50, 75, 25, 100, 75, 100, 100, 75)
 </pre>
 <h4>Description</h4>
@@ -183,6 +176,7 @@ Draws a quadrilateral (a four sided polygon) on the canvas specified by four poi
 <h3 id="rectMode">rectMode()</h3>
 <h4>Examples</h4>
 <pre>
+setCanvasSize(640, 360)
 rectMode(CORNER)
 fill(0, 0, 255)
 # draw a blue rectangle with rectMode(CORNER)
@@ -193,6 +187,7 @@ fill(255, 0, 0)
 rect(30, 30, 60, 60)
 </pre>
 <pre>
+setCanvasSize(640, 360)
 rectMode(CENTER)
 fill(0, 0, 255)
 # draw a blue rectangle with rectMode(CENTER)
@@ -216,6 +211,7 @@ Changes the way the rect() function uses the paramters passed to it.</p>
 <h3 id="circleMode">circleMode()</h3>
 <h4>Examples</h4>
 <pre>
+setCanvasSize(640, 360)
 circleMode(CENTER)
 fill(0, 0, 255)
 # draw a blue circle with circleMode(CENTER)
@@ -238,6 +234,7 @@ Changes the way the circle(), ellipse(), and arc() functions use the paramters p
 <h3 id="strokeWeight">strokeWeight()</h3>
 <h4>Examples</h4>
 <pre>
+setCanvasSize(640, 360)
 strokeWeight(1)
 line(10, 10, 100, 10)
 strokeWeight(2)

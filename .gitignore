@@ -3,7 +3,6 @@ config/CloudFront
 /vendor
 .env
 .env.test
-public/brython
 public/css
 public/fonts
 public/js

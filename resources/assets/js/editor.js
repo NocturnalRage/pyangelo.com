@@ -49,6 +49,7 @@ function addTab(file) {
     fileTabs = document.getElementById('fileTabs');
 
     if (file.filename.endsWith(".py")) {
+      // Sk.builtinFiles.files[file.filename] = file.sourceCode;
       const readOnly = document.getElementById('editor').getAttribute('data-read-only');
       editSessions.push(new EditSession(file.sourceCode));
       editSessions[editorSession].setMode(new PythonMode());
@@ -140,6 +141,7 @@ function updateTitle(response) {
   const innerHTML = '<a id="rename" href="/sketch/' + sketchId + '/rename" onclick="showRename(event)">' + response.title + ' <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
   document.getElementById('title').innerHTML = innerHTML;
   document.getElementById('title').style.display = "block";
+  document.title = response.title;
 }
 
 function saveThenRun() {
@@ -150,15 +152,17 @@ function saveThenRun() {
   startStopButton.textContent = 'Stop';
   startStopButton.addEventListener('click', saveThenStop, false);
   document.getElementById("console").innerHTML = '';
-  // Calls startSketch method in pyangelo.py which has
-  // been linked via the window method.
-  window.startSketch(getCode(0));
+  // Calls runSkulpt defined in show.html for a sketch
+  _stopExecution = false;
+  runSkulpt(getCode(0));
 }
 function saveThenStop() {
   saveCode(currentFilename);
-  // Calls canvas_stop method in pyangelo.py which has
-  // been linked via the window method.
-  window.canvas_stop();
+  stopCode();
+}
+function stopCode() {
+  _stopExecution = true;
+  Sk.builtin.stopAllSounds();
   const startStopButton = document.getElementById('startStop');
   startStopButton.removeEventListener('click', saveThenStop, false);
   startStopButton.style.backgroundColor = '#008800';
