@@ -1,20 +1,26 @@
 <h2 id="sprites">Sprites</h2>
+<p>To use the sprite library you need to import it using the following code:</p>
+<pre>
+from sprite import *
+</pre>
 <h3 id="Sprite">Sprite()</h3>
 <h4>Examples</h4>
 <pre>
+from sprite import *
 setCanvasSize(500, 400)
-pyangelo = Sprite("http://www.pyangelodev.com/images/logos/pyangelo-logo.png", 100, 75)
-imposter = Sprite("http://www.pyangelodev.com/images/logos/pyangelo-logo.png", 300, 75)
-@loop_animation
-# The code below will be repeated as it is part of the <a href="#loop_animation">@loop_animation</a>.
-background(220, 220, 220)
-pyangelo.draw()
-imposter.draw()
-pyangelo.moveBy(1, 1)
-imposter.moveBy(-1, 1)
+pyangelo = Sprite("/samples/images/PyAngelo.png", 100, 75)
+imposter = Sprite("/samples/images/PyAngelo.png", 300, 75)
+while True:
+    background(220, 220, 220)
+    pyangelo.draw()
+    imposter.draw()
+    pyangelo.moveBy(1, 1)
+    imposter.moveBy(-1, 1)
 
-if pyangelo.overlaps(imposter):
-      text("I found you imposter!", 0, 0, fontSize=30)
+    if pyangelo.overlaps(imposter):
+        text("I found you imposter!", 0, 0, fontSize=30)
+
+    sleep(0.005)
 </pre>
 <h4>Description</h4>
 <p>
@@ -37,20 +43,22 @@ The Sprite class loads an image specified as the first parameter at a starting p
 <h3 id="TextSprite">TextSprite()</h3>
 <h4>Examples</h4>
 <pre>
+from sprite import *
 setCanvasSize(500, 400)
 hello = TextSprite("Hello", 100, 75)
 hello.setColour(255, 100, 200)
 smiley = TextSprite("☺️", 300, 75, fontSize=50)
-@loop_animation
-# The code below will be repeated as it is part of the <a href="#loop_animation">@loop_animation</a>.
-background(220, 220, 220)
-hello.draw()
-smiley.draw()
+while True:
+    background(220, 220, 220)
+    hello.draw()
+    smiley.draw()
+    hello.moveBy(1, 1)
+    smiley.moveBy(-1, 1)
 
-if hello.overlaps(smiley):
-      text("Hello there good friend", 0, 0, fontSize=30)
-      hello.moveBy(1, 1)
-      smiley.moveBy(-1, 1)
+    if hello.overlaps(smiley):
+        text("Hello there good friend", 0, 0, fontSize=30)
+
+    sleep(0.005)
 </pre>
 <h4>Description</h4>
 <p>
@@ -65,29 +73,31 @@ The TextSprite class inherits from the Sprite class and so it has the same metho
 <h3 id="RectangleSprite">RectangleSprite()</h3>
 <h4>Examples</h4>
 <pre>
+from sprite import *
 setCanvasSize(500, 400)
 r = RectangleSprite(100, 100, 50, 50)
 r.setColour(255, 10, 170)
 r.noStroke()
-xSpeed = 2
-ySpeed = 2
+xSpeed = 1
+ySpeed = 1
 
-@loop_animation
-background(220, 220, 220)
-r.draw()
-r.moveBy(xSpeed, ySpeed)
-if r.x >= width - r.width:
-    r.x = width - r.width
-    xSpeed *= -1
-elif r.x <= 0:
-    r.x = 0
-    xSpeed *= -1
-if r.y >= height - r.height:
-    r.y = height - r.height
-    ySpeed *= -1
-elif r.y <= 0:
-    r.y = 0
-    ySpeed *= -1
+while True:
+    background(220, 220, 220)
+    r.draw()
+    r.moveBy(xSpeed, ySpeed)
+    if r.x >= width - r.width:
+        r.x = width - r.width
+        xSpeed *= -1
+    elif r.x <= 0:
+        r.x = 0
+        xSpeed *= -1
+    if r.y >= height - r.height:
+        r.y = height - r.height
+        ySpeed *= -1
+    elif r.y <= 0:
+        r.y = 0
+        ySpeed *= -1
+    sleep(0.005)
 </pre>
 <h4>Description</h4>
 <p>
@@ -106,29 +116,31 @@ The RectangleSprite class inherits from the TextSprite class and so it has the s
 <h3 id="CircleSprite">CircleSprite()</h3>
 <h4>Examples</h4>
 <pre>
+from sprite import *
 setCanvasSize(500, 400)
 c = CircleSprite(100, 100, 50)
 c.setColour(255, 10, 170)
 c.noStroke()
-xSpeed = 2
-ySpeed = 2
+xSpeed = 1
+ySpeed = 1
 
-@loop_animation
-background(100, 100, 200)
-c.draw()
-c.moveBy(xSpeed, ySpeed)
-if c.x >= width - c.radius:
-    c.x = width - c.radius
-    xSpeed *= -1
-elif c.x <= c.radius:
-    c.x = c.radius
-    xSpeed *= -1
-if c.y >= height - c.radius:
-    c.y = height - c.radius
-    ySpeed *= -1
-elif c.y <= c.radius:
-    c.y = c.radius
-    ySpeed *= -1
+while True:
+    background(100, 100, 200)
+    c.draw()
+    c.moveBy(xSpeed, ySpeed)
+    if c.x >= width - c.radius:
+        c.x = width - c.radius
+        xSpeed *= -1
+    elif c.x <= c.radius:
+        c.x = c.radius
+        xSpeed *= -1
+    if c.y >= height - c.radius:
+        c.y = height - c.radius
+        ySpeed *= -1
+    elif c.y <= c.radius:
+        c.y = c.radius
+        ySpeed *= -1
+    sleep(0.005)
 </pre>
 <h4>Description</h4>
 <p>
@@ -140,29 +152,31 @@ The CircleSprite class inherits from the RectangleSprite class and so it has the
 <h3 id="EllipseSprite">EllipseSprite()</h3>
 <h4>Examples</h4>
 <pre>
+from sprite import *
 setCanvasSize(500, 400)
 e = EllipseSprite(100, 100, 50, 25)
 e.setColour(255, 10, 170)
 e.stroke(255, 0, 0)
-xSpeed = 2
-ySpeed = 2
+xSpeed = 1
+ySpeed = 1
 
-@loop_animation
-background(100, 100, 200)
-e.draw()
-e.moveBy(xSpeed, ySpeed)
-if e.x >= width - e.radiusX:
-    e.x = width - e.radiusX
-    xSpeed *= -1
-elif e.x <= e.radiusX:
-    e.x = e.radiusX
-    xSpeed *= -1
-if e.y >= height - e.radiusY:
-    e.y = height - e.radiusY
-    ySpeed *= -1
-elif e.y <= e.radiusY:
-    e.y = e.radiusY
-    ySpeed *= -1
+while True:
+    background(100, 100, 200)
+    e.draw()
+    e.moveBy(xSpeed, ySpeed)
+    if e.x >= width - e.radiusX:
+        e.x = width - e.radiusX
+        xSpeed *= -1
+    elif e.x <= e.radiusX:
+        e.x = e.radiusX
+        xSpeed *= -1
+    if e.y >= height - e.radiusY:
+        e.y = height - e.radiusY
+        ySpeed *= -1
+    elif e.y <= e.radiusY:
+        e.y = e.radiusY
+        ySpeed *= -1
+    sleep(0.005)
 </pre>
 <h4>Description</h4>
 <p>

@@ -3,11 +3,12 @@
 <h4>Examples</h4>
 <pre>
 # Draw a yellow rectangle as the background of the canvas.
+setCanvasSize(640, 360)
 background(255, 255, 0)
 </pre>
 <h4>Description</h4>
 <p>
-Draws a rectangle the size of the canvas. The colour of the rectangle is specifed by the first three parameters representing an RGB colour. The function is typically called as part of the <a href="#loop_animation">@loop_animation</a> to clear the canvas each frame. If a fourth parameter is passed it specifies an alpha value ranging from 0 to 1 where 0 is fully transparent and 1 specifies no transparency.
+Draws a rectangle the size of the canvas. The colour of the rectangle is specifed by the first three parameters representing an RGB colour. The function is typically called as part of loop to clear the canvas each frame. If a fourth parameter is passed it specifies an alpha value ranging from 0 to 1 where 0 is fully transparent and 1 specifies no transparency.
 </p>
 <h4>Syntax</h4>
 <p>background(r, g, b, a)</p>
@@ -20,7 +21,8 @@ Draws a rectangle the size of the canvas. The colour of the rectangle is specife
 <h3 id="fill">fill()</h3>
 <h4>Examples</h4>
 <pre>
-fill(220, 220, 220)
+setCanvasSize(640, 360)
+fill(100, 220, 100)
 rect(50, 50, 100, 100)
 </pre>
 <h4>Description</h4>
@@ -38,6 +40,7 @@ Sets the colour used to fill shapes. The colour is specified using the RGB colou
 <h3 id="noFill">noFill()</h3>
 <h4>Examples</h4>
 <pre>
+setCanvasSize(640, 360)
 noFill()
 rect(50, 50, 100, 100)
 </pre>
@@ -51,6 +54,7 @@ Specifies that shapes should not be filled when drawn. If both <a href="#noStrok
 <h3 id="stroke">stroke()</h3>
 <h4>Examples</h4>
 <pre>
+setCanvasSize(640, 360)
 strokeWeight(5)
 stroke(255, 0, 0)
 rect(10, 10, 100, 75)
@@ -70,6 +74,7 @@ Sets the colour used to draw points, lines, and the border around shapes. The co
 <h3 id="noStroke">noStroke()</h3>
 <h4>Examples</h4>
 <pre>
+setCanvasSize(640, 360)
 noStroke()
 rect(50, 50, 100, 100)
 </pre>

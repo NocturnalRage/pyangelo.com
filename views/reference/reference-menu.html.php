@@ -1,7 +1,17 @@
       <div class="col-md-3">
         <div class="well">
+          <a href="#canvasref">
+            <h3><i class="fa fa-picture-o fa-fw"></i> Canvas</h3>
+          </a>
+          <div class="list-group">
+            <a href="#setCanvasSize" class="list-group-item">setCanvasSize()</a>
+            <a href="#noCanvas" class="list-group-item">noCanvas()</a>
+            <a href="#focusCanvas" class="list-group-item">focusCanvas()</a>
+          </div><!-- list-group -->
+        </div><!-- well -->
+        <div class="well">
           <a href="#basic-shapes">
-            <h3><i class="fa fa-bar-chart fa-fw"></i> Basic Shapes</h3>
+            <h3><i class="fa fa-square-o fa-fw"></i> Basic Shapes</h3>
           </a>
           <div class="list-group">
             <a href="#rect" class="list-group-item">rect()</a>
@@ -10,7 +20,6 @@
             <a href="#arc" class="list-group-item">arc()</a>
             <a href="#line" class="list-group-item">line()</a>
             <a href="#point" class="list-group-item">point()</a>
-            <a href="#square" class="list-group-item">square()</a>
             <a href="#triangle" class="list-group-item">triangle()</a>
             <a href="#quad" class="list-group-item">quad()</a>
             <hr />
@@ -21,7 +30,7 @@
         </div><!-- well -->
         <div class="well">
           <a href="#vertex_commands">
-            <h3><i class="fa fa-bar-chart fa-fw"></i> Vertex</h3>
+            <h3><i class="fa fa-star-o fa-fw"></i> Vertex</h3>
           </a>
           <div class="list-group">
             <a href="#beginShape" class="list-group-item">beginShape()</a>
@@ -31,7 +40,7 @@
         </div><!-- well -->
         <div class="well">
           <a href="#colour">
-            <h3><i class="fa fa-bar-chart fa-fw"></i> Colour</h3>
+            <h3><i class="fa fa-paint-brush fa-fw"></i> Colour</h3>
           </a>
           <div class="list-group">
             <a href="#background" class="list-group-item">background()</a>
@@ -42,10 +51,37 @@
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
-          <a href="#transformation">
-            <h3><i class="fa fa-bar-chart fa-fw"></i> Transformation</h3>
+          <a href="#keyboard">
+            <h3><i class="fa fa-keyboard-o fa-fw"></i> Keyboard</h3>
           </a>
           <div class="list-group">
+            <a href="#isKeyPressed" class="list-group-item">isKeyPressed()</a>
+            <a href="#wasKeyPressed" class="list-group-item">wasKeyPressed()</a>
+          </div><!-- list-group -->
+        </div><!-- well -->
+        <div class="well">
+          <a href="#typography">
+            <h3><i class="fa fa-pencil fa-fw"></i> Typography</h3>
+          </a>
+          <div class="list-group">
+            <a href="#text" class="list-group-item">text()</a>
+          </div><!-- list-group -->
+        </div><!-- well -->
+        <div class="well">
+          <a href="#images">
+            <h3><i class="fa fa-picture-o fa-fw"></i> Images</h3>
+          </a>
+          <div class="list-group">
+            <a href="#loadImage" class="list-group-item">loadImage()</a>
+            <a href="#image" class="list-group-item">image()</a>
+          </div><!-- list-group -->
+        </div><!-- well -->
+        <div class="well">
+          <a href="#transformation">
+            <h3><i class="fa fa-exchange fa-fw"></i> Transformation</h3>
+          </a>
+          <div class="list-group">
+            <a href="#angleMode" class="list-group-item">angleMode()</a>
             <a href="#translate" class="list-group-item">translate()</a>
             <a href="#rotate" class="list-group-item">rotate()</a>
             <a href="#applyMatrix" class="list-group-item">applyMatrix()</a>
@@ -56,17 +92,19 @@
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
-          <a href="#animation">
-            <h3><i class="fa fa-bar-chart fa-fw"></i> Animation</h3>
+          <a href="#consoleref">
+            <h3><i class="fa fa-terminal fa-fw"></i> Console</h3>
           </a>
           <div class="list-group">
-            <a href="#loop_animation" class="list-group-item">@loop_animation</a>
-            <a href="#setCanvasSize" class="list-group-item">setCanvasSize()</a>
+            <a href="#setConsoleSize" class="list-group-item">setConsoleSize()</a>
+            <a href="#setTextColour" class="list-group-item">setTextColour()</a>
+            <a href="#setHighlightColour" class="list-group-item">setHighlightColour()</a>
+            <a href="#clear" class="list-group-item">clear()</a>
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
           <a href="#sprites">
-            <h3><i class="fa fa-bar-chart fa-fw"></i> Sprites</h3>
+            <h3><i class="fa fa-user fa-fw"></i> Sprites</h3>
           </a>
           <div class="list-group">
             <a href="#Sprite" class="list-group-item">Sprite()</a>
@@ -74,6 +112,14 @@
             <a href="#RectangleSprite" class="list-group-item">RectangleSprite()</a>
             <a href="#CircleSprite" class="list-group-item">CircleSprite()</a>
             <a href="#EllipseSprite" class="list-group-item">EllipseSprite()</a>
+          </div><!-- list-group -->
+        </div><!-- well -->
+        <div class="well">
+          <a href="#animation">
+            <h3><i class="fa fa-rocket fa-fw"></i> Animation</h3>
+          </a>
+          <div class="list-group">
+            <a href="#sleep" class="list-group-item">sleep()</a>
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
@@ -90,7 +136,7 @@
         </div><!-- well -->
         <div class="well">
           <a href="#variables">
-            <h3><i class="fa fa-bar-chart fa-fw"></i> Variables</h3>
+            <h3><i class="fa fa-sliders fa-fw"></i> Variables</h3>
           </a>
           <div class="list-group">
             <a href="#width" class="list-group-item">width</a>
@@ -101,7 +147,7 @@
         </div><!-- well -->
         <div class="well">
           <a href="#maths">
-            <h3><i class="fa fa-bar-chart fa-fw"></i> Maths</h3>
+            <h3><i class="fa fa-calculator fa-fw"></i> Maths</h3>
           </a>
           <div class="list-group">
             <a href="#dist" class="list-group-item">dist</a>
@@ -109,7 +155,7 @@
         </div><!-- well -->
         <div class="well">
           <a href="#constants">
-            <h3><i class="fa fa-bar-chart fa-fw"></i> Constants</h3>
+            <h3><i class="fa fa-lock fa-fw"></i> Constants</h3>
           </a>
           <div class="list-group">
             <a href="#quarter_pi" class="list-group-item">QUARTER_PI</a>
@@ -119,6 +165,7 @@
             <a href="#tau" class="list-group-item">TAU</a>
             <a href="#degrees" class="list-group-item">DEGREES</a>
             <a href="#radians" class="list-group-item">RADIANS</a>
+            <a href="#keys" class="list-group-item">KEY_A to KEY_Z</a>
           </div><!-- list-group -->
         </div><!-- well -->
       </div><!-- col-md-3 -->

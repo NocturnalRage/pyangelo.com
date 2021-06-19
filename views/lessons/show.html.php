@@ -78,21 +78,9 @@
         include __DIR__ . '/../sketch/sketch-upload.html.php';
       ?>
 
+      <script src="<?= mix('js/PyAngeloSetup.js'); ?>"></script>
       <script src="<?= mix('js/editor.js'); ?>"></script>
 
-      <script>
-          function writeOutput(data, append) {
-              if (append) document.getElementById("console").innerHTML += data;
-              else document.getElementById("console").innerHTML = data;
-
-          // keep scrolled to the bottom
-          document.getElementById("console").scrollTop = document.getElementById("console").scrollHeight
-          }
-      </script>
-
-      <script type="text/python3" id="sketchEditor">
-          import pyangelo
-      </script>
     <?php else : ?>
       <div class="row">
         <div class="col-md-12">

@@ -2,28 +2,31 @@
 <h3 id="dist">dist()</h3>
 <h4>Examples</h4>
 <pre>
+from math import *
 setCanvasSize(500, 400)
 fill(0, 0, 0)
 x1 = 20
 y1 = height - 50
 angleMode(RADIANS)
 
-@loop_animation
-background(220, 220, 220)
+while True:
+    saveState()
+    background(220, 220, 220)
 
-x2 = mouseX
-y2 = mouseY
+    x2 = mouseX
+    y2 = mouseY
 
-line(x1, y1, x2, y2)
-circle(x1, y1, 5)
-circle(x2, y2, 5)
+    line(x1, y1, x2, y2)
+    circle(x1, y1, 5)
+    circle(x2, y2, 5)
 
-d = int(dist(x1, y1, x2, y2))
+    d = int(dist(x1, y1, x2, y2))
 
-# Let's write d along the line we are drawing
-translate((x1+x2)/2, (y1+y2)/2)
-rotate(math.atan2(y2-y1, x2 - x1))
-text(d, 0, -20)
+    # Let's write d along the line we are drawing
+    translate((x1+x2)/2, (y1+y2)/2)
+    rotate(atan2(y2-y1, x2 - x1))
+    text(d, 0, -20)
+    restoreState()
 </pre>
 <h4>Description</h4>
 <p>

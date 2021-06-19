@@ -23,9 +23,10 @@ The filename is returned and can be stored in a variable. This variable can then
 setCanvasSize(500, 400)
 blip = loadSound("/samples/sounds/blip.wav")
 
-@loop_animation
-if isKeyPressed(KEY_W):
-  playSound(blip)
+text("Hit W to make a 'blip' sound!", 0, 0)
+while True:
+    if isKeyPressed(KEY_W):
+        playSound(blip)
 </pre>
 <h4>Description</h4>
 <p>
@@ -45,9 +46,10 @@ setCanvasSize(500, 400)
 music = loadSound("/samples/music/Myth.mp3")
 playSound(music)
 
-@loop_animation
-if isKeyPressed(KEY_W):
-  stopSound(music)
+text("Hit W to stop the music!", 0, 0)
+while True:
+    if isKeyPressed(KEY_W):
+        stopSound(music)
 </pre>
 <h4>Description</h4>
 <p>
@@ -64,10 +66,17 @@ stopSound() stops a sound from playing.
 setCanvasSize(500, 400)
 music = loadSound("/samples/music/Myth.mp3")
 playSound(music)
+playing = True
 
-@loop_animation
-if isKeyPressed(KEY_W):
-  pauseSound(music)
+text("Hit W to pause the music!", 0, 0)
+text("Hit S to re-start the music!", 0, 30)
+while True:
+    if isKeyPressed(KEY_W):
+        playing = False
+        pauseSound(music)
+    elif isKeyPressed(KEY_S) and not playing:
+        playSound(music)
+        playing = True
 </pre>
 <h4>Description</h4>
 <p>
@@ -81,13 +90,13 @@ pauseSound() pauses a sound from playing.
 <h3 id="stopAllSounds">stopAllSounds()</h3>
 <h4>Examples</h4>
 <pre>
-setCanvasSize(500, 400)
-music = loadSound("/samples/music/Myth.mp3")
-playSound(music)
-
-@loop_animation
-if isKeyPressed(KEY_W):
-  stopAllSounds()
+setCanvasSize(50, 50)
+music1 = loadSound("/samples/music/Myth.mp3")
+music2 = loadSound("/samples/music/SuperMonaco.mp3")
+playSound(music1)
+playSound(music2)
+sleep(3)
+stopAllSounds()
 </pre>
 <h4>Description</h4>
 <p>
