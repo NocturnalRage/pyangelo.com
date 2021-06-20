@@ -1,5 +1,5 @@
 <?php
-namespace tests\src\PyAngelo\Utilities;
+namespace Tests\src\PyAngelo\Utilities;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Request;

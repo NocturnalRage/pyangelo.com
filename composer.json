@@ -3,7 +3,7 @@
         "psr-4": {
             "PyAngelo\\": "src/PyAngelo",
             "Framework\\": "src/Framework",
-            "tests\\": "tests"
+            "Tests\\": "tests"
         },
         "files": [
             "src/Helpers/functions.php"
@@ -13,6 +13,7 @@
         "altorouter/altorouter": "^2.0",
         "nesbot/carbon": "^2.35",
         "vlucas/phpdotenv": "^5.0",
+        "google/recaptcha": "^1.1",
         "geoip2/geoip2": "^2.10",
         "aws/aws-sdk-php": "^3.145",
         "ezyang/htmlpurifier": "^4.13"

@@ -1,5 +1,5 @@
 <?php
-namespace tests\Factory;
+namespace Tests\Factory;
 
 class TestData {
   protected $dbh;

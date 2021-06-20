@@ -1,6 +1,8 @@
 <?php
-namespace Framework;
+namespace Tests\Framework;
 use PHPUnit\Framework\TestCase;
+use Framework\Request;
+
 class RequestTest extends \PHPUnit\Framework\TestCase
 {
     public function newRequest()

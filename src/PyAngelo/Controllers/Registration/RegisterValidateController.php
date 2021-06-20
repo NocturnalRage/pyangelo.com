@@ -5,6 +5,7 @@ use Framework\{Request, Response};
 use PyAngelo\Auth\Auth;
 use PyAngelo\Controllers\Controller;
 use PyAngelo\FormServices\RegisterFormService;
+use Framework\Recaptcha\RecaptchaClient;
 
 class RegisterValidateController extends Controller {
   protected $registerFormService;
@@ -13,10 +14,12 @@ class RegisterValidateController extends Controller {
     Request $request,
     Response $response,
     Auth $auth,
-    RegisterFormService $registerFormService
+    RegisterFormService $registerFormService,
+    RecaptchaClient $recaptcha
   ) {
     parent::__construct($request, $response, $auth);
     $this->registerFormService = $registerFormService;
+    $this->recaptcha = $recaptcha;
   }
 
   public function exec() {
@@ -28,6 +31,9 @@ class RegisterValidateController extends Controller {
 
     if ($this->formFilledInTooQuickly())
       return $this->logAttemptAndRedirectToRegisterPage();
+
+    if ($this->recaptchaInvalid())
+      return $this->redirectToRegisterPage();
 
     if (! $this->registerFormService->createPerson($this->request->post))
       return $this->redirectToRegisterPageAndShowErrors();
@@ -52,6 +58,24 @@ class RegisterValidateController extends Controller {
       return true;
     else
       return false;
+  }
+
+  private function recaptchaInvalid() {
+    if (empty($this->request->post['g-recaptcha-response'])) {
+      $this->request->session['formVars'] = $this->request->post;
+      return true;
+    }
+    $expectedRecaptchaAction = "registerwithversion3";
+    if (!$this->recaptcha->verified(
+      $this->request->server['SERVER_NAME'],
+      $expectedRecaptchaAction,
+      $this->request->post['g-recaptcha-response'],
+      $this->request->server['REMOTE_ADDR']
+    )) {
+      $this->request->session['formVars'] = $this->request->post;
+      return true;
+    }
+    return false;
   }
 
   private function logAttemptAndRedirectToRegisterPage() {

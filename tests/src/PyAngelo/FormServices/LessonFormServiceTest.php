@@ -1,5 +1,5 @@
 <?php
-namespace tests\src\PyAngelo\FormServices;
+namespace Tests\src\PyAngelo\FormServices;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;

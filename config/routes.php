@@ -2,6 +2,13 @@
 
 return [
   [ 'GET','/', 'HomePageController', 'homePage' ],
+  [ 'GET','/about', 'AboutPageController', 'aboutPage' ],
+  [ 'GET','/contact', 'ContactPageController', 'contactPage' ],
+  [ 'POST','/contact-validate', 'ContactValidateController', 'contactValidate' ],
+  [ 'GET','/contact-receipt', 'ContactReceiptController', 'contactReceipt' ],
+  [ 'GET','/faq', 'FaqPageController', 'faqPage' ],
+  [ 'GET','/privacy-policy', 'PrivacyPolicyController', 'privacyPolicy' ],
+  [ 'GET','/terms-of-use', 'TermsController', 'terms' ],
   [ 'GET','/register', 'RegisterController', 'register' ],
   [ 'POST','/register-validate', 'RegisterValidateController', 'registerValidate' ],
   [ 'GET','/please-confirm-your-registration', 'RegisterConfirmController', 'registerConfirm' ],
@@ -28,8 +35,6 @@ return [
   [ 'POST','/sketch/[:sketchId]/save', 'SketchSaveController', 'sketchSave' ],
   [ 'POST','/sketch/[:sketchId]/rename', 'SketchRenameController', 'sketchRename' ],
   [ 'POST','/sketch/[:sketchId]/addFile', 'SketchAddFileController', 'sketchAddFile' ],
-  [ 'GET','/run/[:sketchId]', 'SketchRunController', 'sketchRun' ],
-  [ 'GET','/present/[:sketchId]', 'SketchPresentController', 'sketchPresent' ],
   [ 'POST','/upload/asset', 'UploadAssetController', 'uploadAsset' ],
   [ 'GET','/categories/[:slug]', 'CategoriesShowController', 'categoriesShow' ],
   [ 'GET','/categories/[:slug]/sort', 'CategoriesSortController', 'categoriesSort' ],

@@ -1,5 +1,7 @@
 <?php
-namespace Framework;
+namespace Tests\Framework;
+use Framework\Di;
+
 class DiTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp(): void

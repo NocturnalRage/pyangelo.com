@@ -1,5 +1,5 @@
 <?php
-namespace tests\src\PyAngelo\Utilities;
+namespace Tests\src\PyAngelo\Utilities;
 
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;

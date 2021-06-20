@@ -1,5 +1,5 @@
 <?php
-namespace Framework;
+namespace Tests\Framework;
 class FakeResponse extends Response
 {
     public $fake_headers;

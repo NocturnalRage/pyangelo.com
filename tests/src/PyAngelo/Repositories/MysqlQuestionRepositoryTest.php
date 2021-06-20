@@ -1,9 +1,9 @@
 <?php
-namespace tests\PyAngelo\Repositories;
+namespace Tests\PyAngelo\Repositories;
 
 use PHPUnit\Framework\TestCase;
 use PyAngelo\Repositories\MysqlQuestionRepository;
-use tests\Factory\TestData;
+use Tests\Factory\TestData;
 
 class MysqlQuestionRepositoryTest extends TestCase {
   protected $dbh;

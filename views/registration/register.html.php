@@ -12,7 +12,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
     ?>
     <div class="row">
       <div class="col-md-8 col-md-offset-2">
-        <form method="post" action="/register-validate" class="form-horizontal">
+        <form id="registerForm" method="post" action="/register-validate" class="form-horizontal">
           <input type="hidden" name="crsfToken" value="<?= $personInfo['crsfToken']; ?>" />
           <input type="hidden" name="time" value="<?= time(); ?>" />
           <div class="form-group<?= isset($errors['givenName']) ? ' has-error' : ''; ?>">
@@ -78,7 +78,13 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
           </div>
           <div class="form-group">
             <div class="col-md-6 col-md-offset-4">
-              <button type="submit" class="btn btn-primary">
+              <button
+                type="submit"
+                class="g-recaptcha btn btn-primary"
+                data-sitekey="6LfyGUUbAAAAANLbF1s7C6Sc02QzfEM07kDIP_qU"
+                data-callback='onSubmit'
+                data-action='registerwithversion3'
+              >
                 <i class="fa fa-user-plus" aria-hidden="true"></i> Create My Free Account
               </button>
             </div>
@@ -91,5 +97,11 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
 include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';
 ?>
   </div><!-- container -->
+  <script src="https://www.google.com/recaptcha/api.js"></script>
+  <script>
+    function onSubmit(token) {
+      document.getElementById("registerForm").submit();
+    }
+  </script>
 </body>
 </html>

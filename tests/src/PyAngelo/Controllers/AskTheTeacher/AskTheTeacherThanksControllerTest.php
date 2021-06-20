@@ -1,5 +1,5 @@
 <?php
-namespace tests\src\PyAngelo\Controllers\AskTheTeacher;
+namespace Tests\src\PyAngelo\Controllers\AskTheTeacher;
 
 use PHPUnit\Framework\TestCase;
 use Mockery;

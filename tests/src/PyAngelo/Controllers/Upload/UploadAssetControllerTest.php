@@ -1,5 +1,5 @@
 <?php
-namespace tests\src\PyAngelo\Controllers\Upload;
+namespace Tests\src\PyAngelo\Controllers\Upload;
 
 use PHPUnit\Framework\TestCase;
 use Mockery;

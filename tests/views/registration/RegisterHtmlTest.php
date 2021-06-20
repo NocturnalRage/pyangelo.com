@@ -33,9 +33,13 @@ class RegisterHtmlTest extends BasicViewHtmlTest {
     $this->assertStringContainsString($expect, $output);
     $expect = '<input type="password" name="loginPassword" id="loginPassword" class="form-control" placeholder="Password" value="" maxlength="30" required />';
     $this->assertStringContainsString($expect, $output);
-    $expect = '<button type="submit" class="btn btn-primary">';
+    $expect = '<button';
+    $this->assertStringContainsString($expect, $output);
+    $expect = 'class="g-recaptcha btn btn-primary"';
     $this->assertStringContainsString($expect, $output);
     $expect = '<i class="fa fa-user-plus" aria-hidden="true"></i> Create My Free Account';
+    $this->assertStringContainsString($expect, $output);
+    $expect = '<script src="https://www.google.com/recaptcha/api.js"></script>';
     $this->assertStringContainsString($expect, $output);
   }
 }

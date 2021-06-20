@@ -1,5 +1,5 @@
 <?php
-namespace tests\PyAngelo\Repositories;
+namespace Tests\PyAngelo\Repositories;
 
 use PHPUnit\Framework\TestCase;
 use PyAngelo\Repositories\MysqlMailRepository;
