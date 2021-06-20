@@ -1,5 +1,5 @@
 <?php
-namespace tests\src\PyAngelo\Email;
+namespace Tests\src\PyAngelo\Email;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;

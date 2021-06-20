@@ -1,5 +1,5 @@
 <?php
-namespace tests\src\Framework\Mail;
+namespace Tests\src\Framework\Mail;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Mail\LoggerMail;

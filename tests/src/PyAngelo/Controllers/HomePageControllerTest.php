@@ -1,5 +1,5 @@
 <?php
-namespace tests\src\PyAngelo\Controllers;
+namespace Tests\src\PyAngelo\Controllers;
 
 use PHPUnit\Framework\TestCase;
 use Mockery;

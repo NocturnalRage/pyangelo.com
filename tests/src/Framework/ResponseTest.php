@@ -1,5 +1,7 @@
 <?php
-namespace Framework;
+namespace Tests\Framework;
+use Framework\FakeResponse;
+
 class ResponseTest extends \PHPUnit\Framework\TestCase
 {
     protected $response;

@@ -133,6 +133,14 @@ $di->set('forgotPasswordEmail', function () use ($di) {
   );
 });
 
+$di->set('contactUsEmail', function () use ($di) {
+  return new PyAngelo\Email\ContactUsEmail (
+    $di->get('emailTemplate'),
+    $di->get('mailRepository'),
+    $di->get('mailer')
+  );
+});
+
 $di->set('mailer', function () use ($di) {
   if ($_ENV['MAIL_METHOD'] == 'LoggerMail') {
     return new Framework\Mail\LoggerMail(
@@ -163,6 +171,14 @@ $di->set('cloudFront', function () use ($di) {
     $_ENV['CLOUDFRONT_ACCESS_KEY_ID'],
     $_ENV['CLOUDFRONT_URL_HOST']
   );
+});
+
+$di->set('googleRecaptcha', function () use ($di) {
+  return new \ReCaptcha\ReCaptcha($_ENV['RECAPTCHA_SECRET']);
+});
+
+$di->set('recaptcha', function () use ($di) {
+  return new Framework\Recaptcha\RecaptchaClient($di->get('googleRecaptcha'));
 });
 
 $di->set('countryDetector', function () use ($di) {
@@ -196,7 +212,6 @@ $di->set('sketchFiles', function () use ($di) {
   );
 });
 
-
 /* Controllers Start Here */
 $di->set('PageNotFoundController', function () use ($di) {
   return new PyAngelo\Controllers\PageNotFoundController (
@@ -214,6 +229,65 @@ $di->set('HomePageController', function () use ($di) {
   );
 });
 
+$di->set('AboutPageController', function () use ($di) {
+  return new PyAngelo\Controllers\AboutPageController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth')
+  );
+});
+
+$di->set('ContactPageController', function () use ($di) {
+  return new PyAngelo\Controllers\ContactPageController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth')
+  );
+});
+
+$di->set('ContactValidateController', function () use ($di) {
+  return new PyAngelo\Controllers\ContactValidateController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('contactUsEmail'),
+    $di->get('recaptcha')
+  );
+});
+
+$di->set('ContactReceiptController', function () use ($di) {
+  return new PyAngelo\Controllers\ContactReceiptController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth')
+  );
+});
+
+$di->set('FaqPageController', function () use ($di) {
+  return new PyAngelo\Controllers\FaqPageController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth')
+  );
+});
+
+$di->set('PrivacyPolicyController', function () use ($di) {
+  return new PyAngelo\Controllers\PrivacyPolicyController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth')
+  );
+});
+
+$di->set('TermsController', function () use ($di) {
+  return new PyAngelo\Controllers\TermsController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth')
+  );
+});
+
+
 $di->set('RegisterController', function () use ($di) {
   return new PyAngelo\Controllers\Registration\RegisterController (
     $di->get('request'),
@@ -227,7 +301,8 @@ $di->set('RegisterValidateController', function () use ($di) {
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),
-    $di->get('registerFormService')
+    $di->get('registerFormService'),
+    $di->get('recaptcha')
   );
 });
 

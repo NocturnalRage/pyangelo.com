@@ -1,5 +1,5 @@
 <?php
-namespace tests\src\PyAngelo\Controllers\PasswordReset; 
+namespace Tests\src\PyAngelo\Controllers\PasswordReset; 
 use PHPUnit\Framework\TestCase;
 use Mockery;
 use Framework\Request;

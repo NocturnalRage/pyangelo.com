@@ -1,5 +1,5 @@
 <?php
-namespace tests\src\PyAngelo\Auth;
+namespace Tests\src\PyAngelo\Auth;
 
 use PHPUnit\Framework\TestCase;
 use Mockery;
