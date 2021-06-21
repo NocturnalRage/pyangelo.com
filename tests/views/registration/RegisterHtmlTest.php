@@ -11,19 +11,23 @@ class RegisterHtmlTest extends BasicViewHtmlTest {
     $pageTitle = 'PyAngelo - Learn to Program';
     $metaDescription = 'Python Graphics Programming in the Browser';
     $activeLink = 'Home';
+    $recaptchaKey = 'recaptcha';
     $response = new Response('views');
     $response->setView('registration/register.html.php');
     $response->setVars(array(
       'pageTitle' => $pageTitle,
       'metaDescription' => $metaDescription,
       'activeLink' => $activeLink,
-      'personInfo' => $this->setPersonInfoLoggedOut()
+      'personInfo' => $this->setPersonInfoLoggedOut(),
+      'recaptchaKey' => $recaptchaKey
     ));
     $output = $response->requireView();
 
     $expect = '<h3 class="text-center">Good decision. We\'ll teach you to code.</h3>';
     $this->assertStringContainsString($expect, $output);
     $expect = '<p class="text-center">Let\'s set up your free account. Already have one? <a href="/login">Login</a> now.</p>';
+    $this->assertStringContainsString($expect, $output);
+    $expect = '<form id="registerForm" method="post" action="/register-validate" class="form-horizontal">';
     $this->assertStringContainsString($expect, $output);
     $expect = '<input type="text" name="givenName" id="givenName" class="form-control" placeholder="First Name" value="" maxlength="100" required autofocus />';
     $this->assertStringContainsString($expect, $output);
@@ -36,6 +40,8 @@ class RegisterHtmlTest extends BasicViewHtmlTest {
     $expect = '<button';
     $this->assertStringContainsString($expect, $output);
     $expect = 'class="g-recaptcha btn btn-primary"';
+    $this->assertStringContainsString($expect, $output);
+    $expect = 'data-sitekey="' . $recaptchaKey . '"';
     $this->assertStringContainsString($expect, $output);
     $expect = '<i class="fa fa-user-plus" aria-hidden="true"></i> Create My Free Account';
     $this->assertStringContainsString($expect, $output);

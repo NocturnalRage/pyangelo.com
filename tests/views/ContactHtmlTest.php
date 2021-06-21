@@ -11,17 +11,21 @@ class ContactHtmlTest extends BasicViewHtmlTest {
     $pageTitle = 'PyAngelo - Contact Us';
     $metaDescription = 'Contact the team at PyAngelo';
     $activeLink = 'Home';
+    $recaptchaKey = 'recaptcha';
     $response = new Response('views');
     $response->setView('contact.html.php');
     $response->setVars(array(
       'pageTitle' => $pageTitle,
       'metaDescription' => $metaDescription,
       'activeLink' => $activeLink,
-      'personInfo' => $this->setPersonInfoLoggedOut()
+      'personInfo' => $this->setPersonInfoLoggedOut(),
+      'recaptchaKey' => $recaptchaKey
     ));
     $output = $response->requireView();
 
     $expect = 'How Can We Help?';
+    $this->assertStringContainsString($expect, $output);
+    $expect = '<form id="contactUsForm" method="post" action="/contact-validate" class="form-horizontal">';
     $this->assertStringContainsString($expect, $output);
     $expect = '<input type="text" name="name" id="name" class="form-control" placeholder="Name" value="" maxlength="100" required autofocus />';
     $this->assertStringContainsString($expect, $output);
@@ -34,6 +38,8 @@ class ContactHtmlTest extends BasicViewHtmlTest {
     $expect = '<button';
     $this->assertStringContainsString($expect, $output);
     $expect = 'class="g-recaptcha btn btn-primary"';
+    $this->assertStringContainsString($expect, $output);
+    $expect = 'data-sitekey="' . $recaptchaKey . '"';
     $this->assertStringContainsString($expect, $output);
     $expect = '<i class="fa fa-envelope" aria-hidden="true"></i> Contact Us';
     $this->assertStringContainsString($expect, $output);

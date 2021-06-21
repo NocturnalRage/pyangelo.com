@@ -4,8 +4,21 @@ namespace PyAngelo\Controllers;
 use PyAngelo\Auth\Auth;
 use PyAngelo\Controllers\Controller;
 use Framework\{Request, Response};
+use Framework\Recaptcha\RecaptchaClient;
 
 class LoginValidateController extends Controller {
+  protected $recaptcha;
+
+  public function __construct(
+    Request $request,
+    Response $response,
+    Auth $auth,
+    RecaptchaClient $recaptcha
+  ) {
+    parent::__construct($request, $response, $auth);
+    $this->recaptcha = $recaptcha;
+  }
+
   public function exec() {
     if ($this->auth->loggedIn())
       return $this->redirectToHomePage();
@@ -13,7 +26,10 @@ class LoginValidateController extends Controller {
     if (!$this->auth->crsfTokenIsValid())
       return $this->redirectToLoginPageWithCrsfWarning();
 
-    if ($this->missingEmailOrPassword())
+    if ($this->invalidEmailOrPassword())
+      return $this->redirectToLoginPage();
+
+    if ($this->recaptchaInvalid())
       return $this->redirectToLoginPage();
 
     if (!$this->auth->authenticateLogin($this->request->post['email'], $this->request->post['loginPassword']))
@@ -43,24 +59,49 @@ class LoginValidateController extends Controller {
     return $this->response;
   }
 
-  private function missingEmailOrPassword() {
-    $missing = false;
+  private function invalidEmailOrPassword() {
+    $invalid = false;
     if (empty($this->request->post['email'])) {
       $this->request->session['errors']['email'] = "You must enter your email to log in.";
-      $missing = true;
+      $invalid = true;
+    }
+    else if (filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL) === false) {
+      $this->request->session['errors']['email'] = "You did not enter a valid email address.";
+      $invalid = true;
     }
     
     if (empty($this->request->post['loginPassword'])) {
       $this->request->session['errors']['loginPassword'] = "You must enter a password to log in.";
-      $missing = true;
+      $invalid = true;
     }
-    return $missing;
+    return $invalid;
   }
+
+  private function recaptchaInvalid() {
+    if (empty($this->request->post['g-recaptcha-response'])) {
+      $this->flash('Login could not be validated. Please ensure you are a human!', 'danger');
+      return true;
+    }
+    $expectedRecaptchaAction = "registerwithversion3";
+    if (!$this->recaptcha->verified(
+      $this->request->server['SERVER_NAME'],
+      $expectedRecaptchaAction,
+      $this->request->post['g-recaptcha-response'],
+      $this->request->server['REMOTE_ADDR']
+    )) {
+      $this->flash('Login could not be checked. Please ensure you are a human!', 'danger');
+      return true;
+    }
+    return false;
+  }
+
   private function redirectToLoginPage() {
+    $this->request->session['formVars'] = $this->request->post;
     $this->response->header("Location: /login");
     return $this->response;
   }
   private function redirectToLoginPageWithFailedLoginMessage() {
+    $this->request->session['formVars'] = $this->request->post;
     $this->flash('The email and password do not match. Login failed.', 'danger');
     $this->response->header("Location: /login");
     return $this->response;

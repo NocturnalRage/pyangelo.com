@@ -8,7 +8,7 @@ class ContactUsEmail extends EmailMessage {
     $subject = $mailInfo['name'] . ' has contacted us';
 
     // Now, put together the body of the email
-    $bodyText = htmlspecialchars($mailInfo['inquiry'], ENT_QUOTES, 'UTF-8') . ",\n" .
+    $bodyText = htmlspecialchars($mailInfo['inquiry'], ENT_QUOTES, 'UTF-8') . "\n" .
             "\n\nThis email was generated from the contact page on the PyAngelo website.";
 
     $bodyTextHtml = htmlspecialchars($mailInfo['inquiry'], ENT_QUOTES, 'UTF-8');

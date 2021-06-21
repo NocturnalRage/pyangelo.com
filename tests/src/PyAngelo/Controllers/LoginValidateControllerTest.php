@@ -13,10 +13,12 @@ class LoginValidateControllerTest extends TestCase {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
+    $this->recaptcha = Mockery::mock('Framework\Recaptcha\RecaptchaClient');
     $this->controller = new LoginValidateController (
       $this->request,
       $this->response,
-      $this->auth
+      $this->auth,
+      $this->recaptcha
     );
   }
   public function tearDown(): void {
@@ -73,7 +75,30 @@ class LoginValidateControllerTest extends TestCase {
   /**
    * @runInSeparateProcess
    */
-  public function testRedirectTOLoginWhenInvalidUsernameOrPassword() {
+  public function testRedirectToLoginPageWhenInvalidEmail() {
+    session_start();
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->request->post = [
+      'email' => 'fredhotmail.com'
+    ];
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedLocation = 'Location: /login';
+    $expectedHeaders = array(array('header', $expectedLocation));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+    $expectedErrors = [
+      'email' => 'You did not enter a valid email address.',
+      'loginPassword' => 'You must enter a password to log in.'
+
+    ];
+    $this->assertEquals($expectedErrors, $this->request->session['errors']);
+  }
+
+  /**
+   * @runInSeparateProcess
+   */
+  public function testNoRecaptcha() {
     session_start();
     $email = 'fastfreddy@hotmail.com';
     $password = 'secret';
@@ -83,6 +108,68 @@ class LoginValidateControllerTest extends TestCase {
     ];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedHeaders = array(array('header', 'Location: /login'));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+    $expectedFlashMessage = 'Login could not be validated. Please ensure you are a human!';
+    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+  }
+
+  /**
+   * @runInSeparateProcess
+   */
+  public function testInvalidRecaptcha() {
+    session_start();
+    $recaptchaResponse = 'Fake Response';
+    $ipAddress = '127.0.0.1';
+    $serverName = 'pyangelo.com';
+    $this->request->server['REMOTE_ADDR'] = $ipAddress;
+    $this->request->server['SERVER_NAME'] = $serverName;
+    $email = 'fastfreddy@hotmail.com';
+    $password = 'secret';
+    $this->request->post = [
+      'email' => $email,
+      'loginPassword' => $password,
+      'g-recaptcha-response' => $recaptchaResponse
+    ];
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->recaptcha->shouldReceive('verified')
+      ->once()
+      ->with($serverName, 'registerwithversion3', $recaptchaResponse, $ipAddress)
+      ->andReturn(false);
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedHeaders = array(array('header', 'Location: /login'));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+    $expectedFlashMessage = 'Login could not be checked. Please ensure you are a human!';
+    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+  }
+
+  /**
+   * @runInSeparateProcess
+   */
+  public function testRedirectTOLoginWhenInvalidUsernameOrPassword() {
+    session_start();
+    $recaptchaResponse = 'Fake Response';
+    $ipAddress = '127.0.0.1';
+    $serverName = 'pyangelo.com';
+    $this->request->server['REMOTE_ADDR'] = $ipAddress;
+    $this->request->server['SERVER_NAME'] = $serverName;
+    $email = 'fastfreddy@hotmail.com';
+    $password = 'secret';
+    $this->request->post = [
+      'email' => $email,
+      'loginPassword' => $password,
+      'g-recaptcha-response' => $recaptchaResponse
+    ];
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->recaptcha->shouldReceive('verified')
+      ->once()
+      ->with($serverName, 'registerwithversion3', $recaptchaResponse, $ipAddress)
+      ->andReturn(true);
     $this->auth->shouldReceive('authenticateLogin')
       ->once()
       ->with($email, $password)
@@ -100,14 +187,24 @@ class LoginValidateControllerTest extends TestCase {
    */
   public function testLoginWithoutRememberMe() {
     session_start();
+    $recaptchaResponse = 'Fake Response';
+    $ipAddress = '127.0.0.1';
+    $serverName = 'pyangelo.com';
+    $this->request->server['REMOTE_ADDR'] = $ipAddress;
+    $this->request->server['SERVER_NAME'] = $serverName;
     $email = 'fastfreddy@hotmail.com';
     $password = 'secret';
     $this->request->post = [
       'email' => $email,
-      'loginPassword' => $password
+      'loginPassword' => $password,
+      'g-recaptcha-response' => $recaptchaResponse
     ];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->recaptcha->shouldReceive('verified')
+      ->once()
+      ->with($serverName, 'registerwithversion3', $recaptchaResponse, $ipAddress)
+      ->andReturn(true);
     $this->auth->shouldReceive('authenticateLogin')
       ->once()
       ->with($email, $password)
@@ -125,16 +222,26 @@ class LoginValidateControllerTest extends TestCase {
    */
   public function testLoginWithRedirectWithoutRememberMe() {
     session_start();
+    $recaptchaResponse = 'Fake Response';
+    $ipAddress = '127.0.0.1';
+    $serverName = 'pyangelo.com';
+    $this->request->server['REMOTE_ADDR'] = $ipAddress;
+    $this->request->server['SERVER_NAME'] = $serverName;
     $redirect = '/tutorials';
     $this->request->session['redirect'] = $redirect;
     $email = 'fastfreddy@hotmail.com';
     $password = 'secret';
     $this->request->post = [
       'email' => $email,
-      'loginPassword' => $password
+      'loginPassword' => $password,
+      'g-recaptcha-response' => $recaptchaResponse
     ];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->recaptcha->shouldReceive('verified')
+      ->once()
+      ->with($serverName, 'registerwithversion3', $recaptchaResponse, $ipAddress)
+      ->andReturn(true);
     $this->auth->shouldReceive('authenticateLogin')
       ->once()
       ->with($email, $password)
@@ -152,6 +259,11 @@ class LoginValidateControllerTest extends TestCase {
    */
   public function testLoginSuccessWithRememberMe() {
     session_start();
+    $recaptchaResponse = 'Fake Response';
+    $ipAddress = '127.0.0.1';
+    $serverName = 'pyangelo.com';
+    $this->request->server['REMOTE_ADDR'] = $ipAddress;
+    $this->request->server['SERVER_NAME'] = $serverName;
     $personId = 99;
     $email = 'fastfreddy@hotmail.com';
     $password = 'secret';
@@ -160,9 +272,14 @@ class LoginValidateControllerTest extends TestCase {
       'email' => $email,
       'loginPassword' => $password,
       'rememberme' => 'y',
+      'g-recaptcha-response' => $recaptchaResponse
     ];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->recaptcha->shouldReceive('verified')
+      ->once()
+      ->with($serverName, 'registerwithversion3', $recaptchaResponse, $ipAddress)
+      ->andReturn(true);
     $this->auth->shouldReceive('authenticateLogin')
       ->once()
       ->with($email, $password)
