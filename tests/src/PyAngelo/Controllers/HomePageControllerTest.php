@@ -26,19 +26,30 @@ class HomePageControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\HomePageController');
   }
 
-  public function testViewHasBeenSet() {
+  public function testViewHasBeenSetWhenNotLoggedIn() {
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedViewName = 'home.html.php';
     $this->assertSame($expectedViewName, $this->response->getView());
   }
 
-  public function testViewMetaDataHasBeenSet() {
+  public function testViewHasBeenSetWhenLoggedIn() {
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
-    $expectedPageTitle = "PyAngelo - Learn To Program";
+    $expectedViewName = 'home-logged-in.html.php';
+    $this->assertSame($expectedViewName, $this->response->getView());
+  }
+
+  public function testViewMetaDataHasBeenSet() {
+    $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedPageTitle = "PyAngelo - Learn To Code";
     $this->assertSame($expectedPageTitle, $responseVars['pageTitle']);
     $expectedMetaDescription = "Python Graphics Programming in the Browser";
     $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
@@ -51,6 +62,7 @@ class HomePageControllerTest extends TestCase {
       'isAdmin' => false
     ];
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with()->andReturn($details);
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $this->assertSame($details, $responseVars['personInfo']);
