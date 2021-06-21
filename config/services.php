@@ -174,7 +174,10 @@ $di->set('cloudFront', function () use ($di) {
 });
 
 $di->set('googleRecaptcha', function () use ($di) {
-  return new \ReCaptcha\ReCaptcha($_ENV['RECAPTCHA_SECRET']);
+  return new \ReCaptcha\ReCaptcha(
+    $_ENV['RECAPTCHA_SECRET'],
+    new \ReCaptcha\RequestMethod\CurlPost()
+  );
 });
 
 $di->set('recaptcha', function () use ($di) {

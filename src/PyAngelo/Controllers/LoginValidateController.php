@@ -82,7 +82,7 @@ class LoginValidateController extends Controller {
       $this->flash('Login could not be validated. Please ensure you are a human!', 'danger');
       return true;
     }
-    $expectedRecaptchaAction = "registerwithversion3";
+    $expectedRecaptchaAction = "loginwithversion3";
     if (!$this->recaptcha->verified(
       $this->request->server['SERVER_NAME'],
       $expectedRecaptchaAction,
