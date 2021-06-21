@@ -112,6 +112,9 @@ class TutorialFormService {
         $pdf
       );
     }
+    if (empty($formData['tutorial_sketch_id'])) {
+      $formData['tutorial_sketch_id'] = null;
+    }
     $rowsUpdated = $this->tutorialRepository->updateTutorialBySlug(
       $formData['slug'],
       $formData['title'],
