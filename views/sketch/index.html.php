@@ -14,7 +14,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
 
           <form id="create-sketch-form" action="/sketch/create" method="POST" style="display: none;">
             <input type="hidden" name="crsfToken" value="<?= $personInfo['crsfToken']; ?>" />
-      <    /form>
+          </form>
       </div><!-- col-md-12 -->
     </div><!-- row -->
     <div class="row">
