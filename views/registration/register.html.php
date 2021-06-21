@@ -81,7 +81,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
               <button
                 type="submit"
                 class="g-recaptcha btn btn-primary"
-                data-sitekey="6LfyGUUbAAAAANLbF1s7C6Sc02QzfEM07kDIP_qU"
+                data-sitekey="<?= $this->esc($recaptchaKey); ?>"
                 data-callback='onSubmit'
                 data-action='registerwithversion3'
               >

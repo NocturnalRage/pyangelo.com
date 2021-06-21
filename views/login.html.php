@@ -10,7 +10,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . 'layout/navbar.html.php';
     ?>
     <div class="row">
       <div class="col-md-8 col-md-offset-2">
-        <form method="post" action="/login-validate" class="form-horizontal">
+        <form id="loginForm" method="post" action="/login-validate" class="form-horizontal">
           <input type="hidden" name="crsfToken" value="<?= $personInfo['crsfToken']; ?>" />
           <div class="form-group<?= isset($errors['email']) ? ' has-error' : ''; ?>">
             <label for="email" class="control-label col-md-4">Email:</label>
@@ -43,7 +43,13 @@ include __DIR__ . DIRECTORY_SEPARATOR . 'layout/navbar.html.php';
 
           <div class="form-group">
             <div class="col-md-6 col-md-offset-4">
-              <button type="submit" class="btn btn-primary">
+              <button
+                type="submit"
+                class="g-recaptcha btn btn-primary"
+                data-sitekey="<?= $this->esc($recaptchaKey); ?>"
+                data-callback='onSubmit'
+                data-action='registerwithversion3'
+              >
                 <i class="fa fa-sign-in" aria-hidden="true"></i> Login To Your Account
               </button>
             </div>
@@ -59,5 +65,11 @@ include __DIR__ . DIRECTORY_SEPARATOR . 'layout/navbar.html.php';
 include __DIR__ . DIRECTORY_SEPARATOR . 'layout/footer.html.php';
 ?>
   </div><!-- container -->
+  <script src="https://www.google.com/recaptcha/api.js"></script>
+  <script>
+    function onSubmit(token) {
+      document.getElementById("loginForm").submit();
+    }
+  </script>
 </body>
 </html>

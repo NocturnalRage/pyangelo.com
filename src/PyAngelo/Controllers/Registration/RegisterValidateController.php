@@ -9,6 +9,7 @@ use Framework\Recaptcha\RecaptchaClient;
 
 class RegisterValidateController extends Controller {
   protected $registerFormService;
+  protected $recaptcha;
 
   public function __construct(
     Request $request,
