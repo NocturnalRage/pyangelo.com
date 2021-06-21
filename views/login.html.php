@@ -48,7 +48,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . 'layout/navbar.html.php';
                 class="g-recaptcha btn btn-primary"
                 data-sitekey="<?= $this->esc($recaptchaKey); ?>"
                 data-callback='onSubmit'
-                data-action='registerwithversion3'
+                data-action='loginwithversion3'
               >
                 <i class="fa fa-sign-in" aria-hidden="true"></i> Login To Your Account
               </button>

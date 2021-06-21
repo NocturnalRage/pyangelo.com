@@ -137,7 +137,7 @@ class LoginValidateControllerTest extends TestCase {
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->recaptcha->shouldReceive('verified')
       ->once()
-      ->with($serverName, 'registerwithversion3', $recaptchaResponse, $ipAddress)
+      ->with($serverName, 'loginwithversion3', $recaptchaResponse, $ipAddress)
       ->andReturn(false);
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
@@ -168,7 +168,7 @@ class LoginValidateControllerTest extends TestCase {
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->recaptcha->shouldReceive('verified')
       ->once()
-      ->with($serverName, 'registerwithversion3', $recaptchaResponse, $ipAddress)
+      ->with($serverName, 'loginwithversion3', $recaptchaResponse, $ipAddress)
       ->andReturn(true);
     $this->auth->shouldReceive('authenticateLogin')
       ->once()
@@ -203,7 +203,7 @@ class LoginValidateControllerTest extends TestCase {
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->recaptcha->shouldReceive('verified')
       ->once()
-      ->with($serverName, 'registerwithversion3', $recaptchaResponse, $ipAddress)
+      ->with($serverName, 'loginwithversion3', $recaptchaResponse, $ipAddress)
       ->andReturn(true);
     $this->auth->shouldReceive('authenticateLogin')
       ->once()
@@ -240,7 +240,7 @@ class LoginValidateControllerTest extends TestCase {
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->recaptcha->shouldReceive('verified')
       ->once()
-      ->with($serverName, 'registerwithversion3', $recaptchaResponse, $ipAddress)
+      ->with($serverName, 'loginwithversion3', $recaptchaResponse, $ipAddress)
       ->andReturn(true);
     $this->auth->shouldReceive('authenticateLogin')
       ->once()
@@ -278,7 +278,7 @@ class LoginValidateControllerTest extends TestCase {
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->recaptcha->shouldReceive('verified')
       ->once()
-      ->with($serverName, 'registerwithversion3', $recaptchaResponse, $ipAddress)
+      ->with($serverName, 'loginwithversion3', $recaptchaResponse, $ipAddress)
       ->andReturn(true);
     $this->auth->shouldReceive('authenticateLogin')
       ->once()
