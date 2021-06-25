@@ -74,6 +74,7 @@ return [
   [ 'POST','/blog/comment/[:comment_id]/unpublish', 'BlogCommentUnpublishController', 'blogCommentsUnpublish' ],
   [ 'GET','/favourites', 'FavouritesController', 'favourites' ],
   [ 'GET','/reference', 'ReferenceController', 'reference' ],
+  [ 'GET','/asset-library', 'AssetLibraryController', 'assetLibrary' ],
   [ 'GET','/ask-the-teacher', 'AskTheTeacherIndexController', 'askTheTeacherIndex' ],
   [ 'GET','/ask-the-teacher/topic/[:slug]', 'AskTheTeacherCategoryController', 'askTheTeacherCategory' ],
   [ 'GET','/ask-the-teacher/ask', 'AskTheTeacherAskController', 'askTheTeacherAsk' ],

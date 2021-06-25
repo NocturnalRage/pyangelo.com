@@ -42,6 +42,7 @@
             </ul>
           </li>
           <li <?= $activeLink == 'Reference' ? 'class="active"' : ''; ?> ><a href="/reference">Reference</a></li>
+          <li <?= $activeLink == 'Asset Library' ? 'class="active"' : ''; ?> ><a href="/asset-library">Asset Library</a></li>
         </ul>
         <!-- Right Side Of Navbar -->
         <ul class="nav navbar-nav navbar-right">

@@ -915,6 +915,14 @@ $di->set('ReferenceController', function () use ($di) {
   );
 });
 
+$di->set('AssetLibraryController', function () use ($di) {
+  return new PyAngelo\Controllers\Reference\AssetLibraryController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth')
+  );
+});
+
 $di->set('AskTheTeacherIndexController', function () use ($di) {
   return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherIndexController (
     $di->get('request'),

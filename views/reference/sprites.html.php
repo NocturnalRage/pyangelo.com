@@ -101,7 +101,7 @@ while True:
 </pre>
 <h4>Description</h4>
 <p>
-The RectangleSprite class inherits from the TextSprite class and so it has the same methods draw(), setColour(), moveBy(), moveTo(), contains(), and overlaps(). However the first four parameter passed to a RectangleSprite are the x and y coordintates and the width and height of the rectangle.
+The RectangleSprite class inherits from the TextSprite class and so it has the same methods draw(), setColour(), moveBy(), moveTo(), contains(), and overlaps(). However the first four parameter passed to a RectangleSprite are the x and y coordinates and the width and height of the rectangle.
 </p>
 <h5>RectangleSprite(x, y, width, height, r, g, b, a)</h5>
 <p>The first four parameter specify the x and y coordinates and the width and height of the rectangle. The first four parameters are mandatory, the rest are optional. The r, g, b, and a parameters specify the colour and transparency of the rectangle.</p>
@@ -144,7 +144,7 @@ while True:
 </pre>
 <h4>Description</h4>
 <p>
-The CircleSprite class inherits from the RectangleSprite class and so it has the same methods draw(), stroke(), noStroke(), strokeWeight(), setColour(), moveBy(), moveTo(), contains(), and overlaps(). However the first three parameter passed to a CircleSprite are the x and y coordintates of the center of the circle, and the radius of the circle.
+The CircleSprite class inherits from the RectangleSprite class and so it has the same methods draw(), stroke(), noStroke(), strokeWeight(), setColour(), moveBy(), moveTo(), contains(), and overlaps(). However the first three parameter passed to a CircleSprite are the x and y coordinates of the center of the circle, and the radius of the circle.
 </p>
 <h5>CircleSprite(x, y, radius, r, g, b, a)</h5>
 <p>The first three parameter specify the x and y coordinates of the center of the circle and the radius of the circle. The first three parameters are mandatory, the rest are optional. The r, g, b, and a parameters specify the colour and transparency of the rectangle.</p>
@@ -180,7 +180,7 @@ while True:
 </pre>
 <h4>Description</h4>
 <p>
-The EllipseSprite class inherits from the RectangleSprite class and so it has the same methods draw(), stroke(), noStroke(), strokeWeight(), setColour(), moveBy(), moveTo(), contains(), and overlaps(). However the first four parameter passed to a EllipseSprite are the x and y coordintates of the center of the circle, and the X radius and Y radius of the ellipse.
+The EllipseSprite class inherits from the RectangleSprite class and so it has the same methods draw(), stroke(), noStroke(), strokeWeight(), setColour(), moveBy(), moveTo(), contains(), and overlaps(). However the first four parameter passed to a EllipseSprite are the x and y cooridinates of the center of the circle, and the X radius and Y radius of the ellipse.
 </p>
 <h5>EllipseSprite(x, y, radiusX, radiusY, r, g, b, a)</h5>
 <p>The first four parameter specify the x and y coordinates of the center of the ellipse and the X radius and Y radius of the ellipse. The first four parameters are mandatory, the rest are optional. The r, g, b, and a parameters specify the colour and transparency of the rectangle.</p>
