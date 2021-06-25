@@ -13,8 +13,8 @@ Draws a rectangle on the canvas. By default, the first two parameters set the lo
 <h4>Syntax</h4>
 <p>rect(x, y, w, h)</p>
 <h4>Parameters</h4>
-<p>x - The x coordintate of the rectangle.</p>
-<p>y - The y coordintate of the rectangle.</p>
+<p>x - The x coordinate of the rectangle.</p>
+<p>y - The y coordinate of the rectangle.</p>
 <p>w - The width of the rectangle.</p>
 <p>h - The height of the rectangle.</p>
 <hr />
@@ -32,8 +32,8 @@ Draws a circle on the canvas. By default, the first two parameters set the locat
 <h4>Syntax</h4>
 <p>circle(x, y, radius)</p>
 <h4>Parameters</h4>
-<p>x - The x coordintate of the circle.</p>
-<p>y - The y coordintate of the circle.</p>
+<p>x - The x coordinate of the circle.</p>
+<p>y - The y coordinate of the circle.</p>
 <p>radius - The radius of the circle.</p>
 <hr />
 <h3 id="ellipse">ellipse()</h3>
@@ -50,8 +50,8 @@ Draws an ellipse (oval) on the canvas. By default, the first two parameters set 
 <h4>Syntax</h4>
 <p>ellipse(x, y, radiusX, radiusY)</p>
 <h4>Parameters</h4>
-<p>x - The x coordintate of the ellipse.</p>
-<p>y - The y coordintate of the ellipse.</p>
+<p>x - The x coordinate of the ellipse.</p>
+<p>y - The y coordinate of the ellipse.</p>
 <p>radiusX - The X radius of the ellipse.</p>
 <p>radiusY - The Y radius of the ellipse.</p>
 <hr />
@@ -69,8 +69,8 @@ Draws an arc (a portion of an ellipse) on the canvas. By default, the first two 
 <h4>Syntax</h4>
 <p>arc(x, y, radiusX, radiusY, startAngle, endAngle)</p>
 <h4>Parameters</h4>
-<p>x - The x coordintate of the arc.</p>
-<p>y - The y coordintate of the arc.</p>
+<p>x - The x coordinate of the arc.</p>
+<p>y - The y coordinate of the arc.</p>
 <p>radiusX - The X radius of the arc.</p>
 <p>radiusY - The Y radius of the arc.</p>
 <p>startAngle - The starting angle of the arc.</p>
@@ -100,10 +100,10 @@ Draws an line between two points to the screen. By default the line has a width 
 <h4>Syntax</h4>
 <p>line(x1, y1, x2, y2)</p>
 <h4>Parameters</h4>
-<p>x1 - The x coordintate of the starting point.</p>
-<p>y1 - The y coordintate of the starting point.</p>
-<p>x2 - The x coordintate of the ending point.</p>
-<p>y2 - The y coordintate of the ending point.</p>
+<p>x1 - The x coordinate of the starting point.</p>
+<p>y1 - The y coordinate of the starting point.</p>
+<p>x2 - The x coordinate of the ending point.</p>
+<p>y2 - The y coordinate of the ending point.</p>
 <hr />
 <h3 id="point">point()</h3>
 <h4>Examples</h4>
@@ -126,8 +126,8 @@ Draws a pixel to the screen at the position given by the two parameters. The fir
 <h4>Syntax</h4>
 <p>point(x, y)</p>
 <h4>Parameters</h4>
-<p>x - The x coordintate.</p>
-<p>y - The y coordintate.</p>
+<p>x - The x coordinate.</p>
+<p>y - The y coordinate.</p>
 <hr />
 <h3 id="triangle">triangle()</h3>
 <h4>Examples</h4>
@@ -143,12 +143,12 @@ Draws a triangle on the canvas specified by three points.
 <h4>Syntax</h4>
 <p>triangle(x1, y1, x2, y2, x3, y3)</p>
 <h4>Parameters</h4>
-<p>x1 - The x coordintate of the first point.</p>
-<p>y1 - The y coordintate of the first point.</p>
-<p>x2 - The x coordintate of the second point.</p>
-<p>y2 - The y coordintate of the second point.</p>
-<p>x3 - The x coordintate of the third point.</p>
-<p>y3 - The y coordintate of the third point.</p>
+<p>x1 - The x coordinate of the first point.</p>
+<p>y1 - The y coordinate of the first point.</p>
+<p>x2 - The x coordinate of the second point.</p>
+<p>y2 - The y coordinate of the second point.</p>
+<p>x3 - The x coordinate of the third point.</p>
+<p>y3 - The y coordinate of the third point.</p>
 <hr />
 <h3 id="quad">quad()</h3>
 <h4>Examples</h4>
@@ -164,14 +164,14 @@ Draws a quadrilateral (a four sided polygon) on the canvas specified by four poi
 <h4>Syntax</h4>
 <p>quad(x1, y1, x2, y2, x3, y3, x4, y4)</p>
 <h4>Parameters</h4>
-<p>x1 - The x coordintate of the first point.</p>
-<p>y1 - The y coordintate of the first point.</p>
-<p>x2 - The x coordintate of the second point.</p>
-<p>y2 - The y coordintate of the second point.</p>
-<p>x3 - The x coordintate of the third point.</p>
-<p>y3 - The y coordintate of the third point.</p>
-<p>x4 - The x coordintate of the fourth point.</p>
-<p>y4 - The y coordintate of the fourth point.</p>
+<p>x1 - The x coordinate of the first point.</p>
+<p>y1 - The y coordinate of the first point.</p>
+<p>x2 - The x coordinate of the second point.</p>
+<p>y2 - The y coordinate of the second point.</p>
+<p>x3 - The x coordinate of the third point.</p>
+<p>y3 - The y coordinate of the third point.</p>
+<p>x4 - The x coordinate of the fourth point.</p>
+<p>y4 - The y coordinate of the fourth point.</p>
 <hr />
 <h3 id="rectMode">rectMode()</h3>
 <h4>Examples</h4>
