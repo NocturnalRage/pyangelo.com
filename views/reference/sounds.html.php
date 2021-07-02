@@ -6,14 +6,12 @@ blip = loadSound("/samples/sounds/blip.wav")
 </pre>
 <h4>Description</h4>
 <p>
-loadSound loads a sound file that can be played with the <a href="#playSound()">playSound()</a> function. Sprite class loads an image specified as the first parameter at a starting position specified by the second and third parameters. You can also specify the optional parameters of width, height, and opacity for the image.
+loadSound loads a sound file that can be played with the <a href="#playSound()">playSound()</a> function.
 </p>
 <h4>Syntax</h4>
-<p>loadSound(filename, loop, streaming)</p>
+<p>loadSound(filename)</p>
 <h4>Parameters</h4>
 <p>filename - A URL specifying the location of the sound file to load.</p>
-<p>loop - A boolean value specifying if the sound should loop when played.</p>
-<p>streaming - A boolean value specifying if the file should be streamed or kept in memory.</p>
 <h4>Return Values</h4>
 The filename is returned and can be stored in a variable. This variable can then be passed to the <a href="#playSound">playSound()</a> function in order to play the sound.
 <hr />
