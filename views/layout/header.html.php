@@ -10,7 +10,15 @@
   <title><?= $this->esc($pageTitle); ?></title>
   <link rel="stylesheet" href="<?= mix('css/pyangelo.css'); ?>">
   <link href="//vjs.zencdn.net/5.8.8/video-js.css" rel="stylesheet">
-  <link rel="icon" type="image/png" href="/images/icons/pyangelo-favicon.png">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16x16.png">
+  <link rel="manifest" href="/images/icons/site.webmanifest">
+  <link rel="mask-icon" href="/images/icons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+
   <?php if (isset($sketch['sketch_id'])): ?>
   <!-- Set base URL for the sketch!
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
