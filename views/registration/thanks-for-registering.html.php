@@ -27,7 +27,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
     <div class="row">
       <div class="col-md-6">
         <a href="/tutorials/introduction-to-programming">
-          <img src="/images/PyAngelo.png" class="img-responsive featuredThumbnail" alt="Introduction to Programming">
+          <img src="/images/introduction-to-programming.png" class="img-responsive featuredThumbnail" alt="Introduction to Programming">
         </a>
         <div class="caption">
           <h3><a href="/tutorials/introduction-to-programming">Introduction to Programming</a></h3>
@@ -42,7 +42,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
 
       <div class="col-md-6">
         <a href="/blog">
-          <img src="/images/PyAngelo.png" class="img-responsive featuredThumbnail" alt="Read the PyAngelo Blog">
+          <img src="/images/PyAngelo-640x360.png" class="img-responsive" alt="Read the PyAngelo Blog">
         </a>
         <div class="caption">
           <h3><a href="/blog">Read the Blog</a></h3>
