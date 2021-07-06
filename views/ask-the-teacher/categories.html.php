@@ -3,7 +3,7 @@
     <li role="presentation"><a href="/ask-the-teacher/topic/general">General</a></li>
     <li role="presentation"><a href="/ask-the-teacher/topic/pyangelo">PyAngelo</a></li>
     <li role="presentation"><a href="/ask-the-teacher/topic/tutorials">Tutorials</a></li>
-    <li role="presentation"><a href="/ask-the-teacher/topic/alogorithms">Alogorithms</a></li>
+    <li role="presentation"><a href="/ask-the-teacher/topic/algorithms">Algorithms</a></li>
     <li role="presentation"><a href="/ask-the-teacher/topic/loops">Loops</a></li>
     <li role="presentation"><a href="/ask-the-teacher/topic/conditionals">Conditionals</a></li>
     <li role="presentation"><a href="/ask-the-teacher/topic/variables">Variables</a></li>
