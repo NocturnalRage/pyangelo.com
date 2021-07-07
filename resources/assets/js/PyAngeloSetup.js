@@ -25,6 +25,9 @@ Sk.builtins.HALF_PI = new Sk.builtin.float_(1.57079632679489661923);
 Sk.builtins.PI = new Sk.builtin.float_(3.14159265358979323846);
 Sk.builtins.TWO_PI = new Sk.builtin.float_(6.28318530717958647693);
 Sk.builtins.TAU = new Sk.builtin.float_(6.28318530717958647693);
+// Used to set y axis mode
+Sk.builtins.CARTESIAN = new Sk.builtin.int_(1);
+Sk.builtins.JAVASCRIPT = new Sk.builtin.int_(2);
 // Used to set angle mode
 Sk.builtins.RADIANS = new Sk.builtin.int_(1);
 Sk.builtins.DEGREES = new Sk.builtin.int_(2);
