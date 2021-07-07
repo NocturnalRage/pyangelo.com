@@ -34,6 +34,16 @@ DEGREES is a constant that is used with the <a href="#angleMode">angleMode()</a>
 <p>
 RADIANS is a constant that is used with the <a href="#angleMode">angleMode()</a> function to inform PyAngelo to use radians for the <a href="#rotate">rotate()</a> and <a href="#arc">arc()</a> functions.
 </p>
+<h3 id="cartesian">CARTESIAN</h3>
+<h4>Description</h4>
+<p>
+CARTESIAN is a constant that is used with the <a href="#setCanvasSize">setCanvasSize()</a> function to inform PyAngelo to use a maths based y-axis where the y value increases as you move up the canvas.
+</p>
+<h3 id="javascript">JAVASCRIPT</h3>
+<h4>Description</h4>
+<p>
+JAVASCRIPT is a constant that is used with the <a href="#setCanvasSize">setCanvasSize()</a> function to inform PyAngelo to use a JavaScript based y-axis where the y value increases as you move down the canvas.
+</p>
 <h3 id="keys">KEY_A to KEY_Z</h3>
 <h4>Description</h4>
 <p>
