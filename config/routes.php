@@ -30,6 +30,7 @@ return [
   [ 'GET','/sketch', 'SketchIndexController', 'sketchIndex' ],
   [ 'POST','/sketch/create', 'SketchCreateController', 'sketchCreate' ],
   [ 'GET','/sketch/[:sketchId]', 'SketchShowController', 'sketchShow' ],
+  [ 'GET','/canvasonly/[:sketchId]', 'SketchCanvasOnlyController', 'sketchCanvasOnly' ],
   [ 'GET','/sketch/code/[:sketchId]', 'SketchGetCodeController', 'sketchGetCode' ],
   [ 'POST','/sketch/[:sketchId]/fork', 'SketchForkController', 'sketchFork' ],
   [ 'POST','/sketch/[:sketchId]/save', 'SketchSaveController', 'sketchSave' ],

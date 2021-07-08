@@ -200,7 +200,7 @@ $di->set('HtmlPurifierPurify', function () use ($di) {
   $config->set('HTML.Nofollow', true);
   $config->set('URI.Host', 'www.pyangelo.com');
   $config->set('HTML.SafeIframe', true);
-  $config->set('URI.SafeIframeRegexp','%^//(www.youtube.com/embed/)%');
+  $config->set('URI.SafeIframeRegexp','%^//(www.youtube.com/embed/|www.pyangelo.com/canvasonly/|pyangelo.com/canvasonly/|www.pyangelodev.com/canvasonly)%');
   $htmlPurifier = new \HTMLPurifier($config);
   return new Framework\Presentation\HtmlPurifierPurify($htmlPurifier);
 });
@@ -480,6 +480,15 @@ $di->set('SketchCreateController', function () use ($di) {
 
 $di->set('SketchShowController', function () use ($di) {
   return new PyAngelo\Controllers\Sketch\SketchShowController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('sketchRepository')
+  );
+});
+
+$di->set('SketchCanvasOnlyController', function () use ($di) {
+  return new PyAngelo\Controllers\Sketch\SketchCanvasOnlyController (
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),

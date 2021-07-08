@@ -3,8 +3,8 @@
         <p class="appHeading">
           <button id="startStop" class="btn btn-success">Start</button>
         </p>
-        <?php if ($personInfo['details']['person_id'] != $sketch['person_id']) : ?>
-          <p class="appHeading">
+        <?php if ($personInfo['loggedIn'] && $personInfo['details']['person_id'] != $sketch['person_id']) : ?>
+          <p id="forkParagraph" class="appHeading">
             <a id="fork"
                class="btn"
                href="/sketch/<?= $sketch['sketch_id'] ?>/fork"
