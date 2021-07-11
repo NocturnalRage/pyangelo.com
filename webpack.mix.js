@@ -6,9 +6,9 @@ let mix = require('laravel-mix');
 
    mix.js('resources/assets/js/app.js', './public/js/app.js')
    .sass('resources/assets/sass/app.scss', './public/css/pyangelo.css')
-   .copy('./resources/assets/skulpt/skulpt.min.js', './public/js/')
-   .copy('./resources/assets/skulpt/skulpt.min.js.map', './public/js/')
-   .copy('./resources/assets/skulpt/skulpt-stdlib.js', './public/js/')
+   .copy('./node_modules/skulpt/dist/skulpt.min.js', './public/js/')
+   .copy('./node_modules/skulpt/dist/skulpt.min.js.map', './public/js/')
+   .copy('./node_modules/skulpt/dist/skulpt-stdlib.js', './public/js/')
    .copy('./resources/assets/js/PyAngeloSetup.js', './public/js/')
    .copy('./resources/assets/js/editor.js', './public/js/')
    .copy('./resources/assets/js/dropzone.js', './public/js/')
