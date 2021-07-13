@@ -12,3 +12,4 @@ public/uploads
 logs
 tags
 TODO
+.phpunit.result.cache
