@@ -11,7 +11,8 @@ class IndexHtmlTest extends BasicViewHtmlTest {
     $sketches = [
       [
         'sketch_id' => 1,
-        'title' => 'funny-name'
+        'title' => 'funny-name',
+        'updated_at' => '2021-07-13 18:51:30'
       ]
     ];
     $pageTitle = "PyAngelo - Programming Made Simple";

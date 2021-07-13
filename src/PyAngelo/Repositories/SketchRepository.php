@@ -22,5 +22,7 @@ interface SketchRepository {
   public function forkSketch($sketchId, $personId, $title);
 
   public function renameSketch($sketchId, $title);
+
+  public function updateSketchUpdatedAt($sketchId);
 }
 ?>
