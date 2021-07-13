@@ -1,6 +1,6 @@
     <div class="row">
       <div class="col-md-12">
-        <?php if ($personInfo['details']['person_id'] == $sketch['person_id']): ?>
+        <?php if ($personInfo['loggedIn'] && $personInfo['details']['person_id'] == $sketch['person_id']): ?>
           <h1 id="title" class="text-center">
             <a id="rename" href="/sketch/<?= $this->esc($sketch['sketch_id']); ?>/rename" onclick="showRename(event)">
               <?= $this->esc($sketch['title']) ?> <i class="fa fa-pencil-square-o" aria-hidden="true"></i>

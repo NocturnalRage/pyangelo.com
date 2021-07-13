@@ -26,9 +26,9 @@
 
   <!-- Ace Editor
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ace.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/mode-python.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ext-language_tools.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.min.js"></script>
 
   <!-- Skulpt Files
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->

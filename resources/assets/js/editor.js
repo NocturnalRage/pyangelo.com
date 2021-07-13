@@ -3,6 +3,8 @@ let currentSession = 0;
 let currentFilename = "main.py";
 let editor = ace.edit("editor");
 editor.$blockScrolling = Infinity;
+ace.config.set("basePath", "https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/");
+editor.setTheme("ace/theme/dracula");
 
 var UndoManager = ace.require("ace/undomanager").UndoManager;
 
@@ -62,18 +64,18 @@ function addTab(file) {
       editSessions.push(new EditSession(file.sourceCode));
       editSessions[editorSession].setMode(new PythonMode());
       editSessions[editorSession].setUndoManager(new UndoManager());
-      if (readOnly == "true") {
+      if (readOnly == true) {
         editor.setOptions({
             readOnly: true,
-            fontSize: "11pt",
+            fontSize: "12pt",
             enableBasicAutocompletion: true
         });
       }
       else {
         editor.setOptions({
             readOnly: false,
-            fontSize: "11pt",
-            enableBasicAutocompletion: true
+            fontSize: "12pt",
+            enableBasicAutocompletion: true,
         });
       }
 

@@ -1,9 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "predev": "npm run skulpt",
     "dev": "mix",
-    "predevelopment": "npm run skulpt",
     "development": "mix",
     "watch": "mix watch",
     "watch-poll": "mix watch -- --watch-options-poll=1000",
