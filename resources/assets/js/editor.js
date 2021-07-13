@@ -9,7 +9,86 @@ editor.setTheme("ace/theme/dracula");
 var UndoManager = ace.require("ace/undomanager").UndoManager;
 
 var PythonMode = ace.require("ace/mode/python").Mode;
-ace.require("ace/ext/language_tools");
+let langTools = ace.require("ace/ext/language_tools");
+var staticWordCompleter = {
+    getCompletions: function(editor, session, pos, prefix, callback) {
+        var wordList = [
+          "setCanvasSize",
+          "noCanvas",
+          "focusCanvas",
+          "rect",
+          "circle",
+          "ellipse",
+          "arc",
+          "line",
+          "point",
+          "triangle",
+          "quad",
+          "rectMode",
+          "circleMode",
+          "strokeWeight",
+          "beginShape",
+          "vertex",
+          "endShape",
+          "background",
+          "fill",
+          "noFill",
+          "stroke",
+          "noStroke",
+          "isKeyPressed",
+          "wasKeyPressed",
+          "text",
+          "loadImage",
+          "image",
+          "angleMode",
+          "translate",
+          "rotate",
+          "applyMatrix",
+          "shearX",
+          "shearY",
+          "saveState",
+          "restoreState",
+          "setConsoleSize",
+          "setTextColour",
+          "setHighlightColour",
+          "clear",
+          "sleep",
+          "loadSound",
+          "playSound",
+          "stopSound",
+          "pauseSound",
+          "stopAllSounds",
+          "width",
+          "height",
+          "mouseX",
+          "mouseY",
+          "dist",
+          "Sprite",
+          "TextSprite",
+          "RectangleSprite",
+          "CircleSprite",
+          "EllipseSprite",
+        ];
+        callback(null, [...wordList.map(function(word) {
+            return {
+                caption: word,
+                value: word,
+                meta: "static"
+            };
+        }), ...session.$mode.$highlightRules.$keywordList.map(function(word) {
+        return {
+          caption: word,
+          value: word,
+          meta: 'keyword',
+        };
+      })]);
+
+    }
+}
+
+langTools.setCompleters([staticWordCompleter])
+// or
+editor.completers = [staticWordCompleter]
 var EditSession = require("ace/edit_session").EditSession;
 var editSessions = [];
 
@@ -68,7 +147,9 @@ function addTab(file) {
         editor.setOptions({
             readOnly: true,
             fontSize: "12pt",
-            enableBasicAutocompletion: true
+            enableBasicAutocompletion: true,
+            enableSnippets: false,
+            enableLiveAutocompletion: true,
         });
       }
       else {
@@ -76,6 +157,8 @@ function addTab(file) {
             readOnly: false,
             fontSize: "12pt",
             enableBasicAutocompletion: true,
+            enableSnippets: true,
+            enableLiveAutocompletion: true,
         });
       }
 
