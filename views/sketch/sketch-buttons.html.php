@@ -3,6 +3,10 @@
         <p class="appHeading">
           <button id="startStop" class="btn btn-success">Start</button>
         </p>
+        <p class="appHeading">
+          <input type="checkbox" id="debug" name="debug" value="debug">
+          <label for="debug"> Run line by line</label>
+        </p>
         <?php if ($personInfo['details']['person_id'] != $sketch['person_id']) : ?>
           <p class="appHeading">
             <a id="fork"
