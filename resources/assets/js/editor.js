@@ -2,6 +2,16 @@ let editorSession = 0;
 let currentSession = 0;
 let currentFilename = "main.py";
 let editor = ace.edit("editor");
+// Set up function to listen for resize
+const onresize = (dom_elem, callback) => {
+  const resizeObserver = new ResizeObserver(() => callback() );
+  resizeObserver.observe(dom_elem);
+};
+editorWindow = document.getElementById("editor");
+onresize(editorWindow, function () {
+  editor.resize();
+});
+
 editor.$blockScrolling = Infinity;
 ace.config.set("basePath", "https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/");
 editor.setTheme("ace/theme/dracula");
