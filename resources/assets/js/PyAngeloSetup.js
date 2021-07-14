@@ -235,14 +235,14 @@ function runSkulpt(code) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    let currentLineNo = 0
+    let currentLineNo = 1
     async function lineStepper(susp) {
         try {
           if (currentLineNo !== susp.child.$lineno) {
             currentLineNo = susp.child.$lineno;
             checkForStop();
-            editor.gotoLine(currentLineNo);
             await sleep(1000);
+            editor.gotoLine(currentLineNo);
           }
           return Promise.resolve(susp.resume());
         } catch(e) {
@@ -259,6 +259,7 @@ function runSkulpt(code) {
 
     let myPromise;
     if (Sk.debugging) {
+      editor.gotoLine(currentLineNo);
       myPromise = Sk.misceval.asyncToPromise(function() {
         return Sk.importMainWithBody("<stdin>", true, code, true);
       },{
