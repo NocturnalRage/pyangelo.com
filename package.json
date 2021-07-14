@@ -6,8 +6,12 @@
     "watch": "mix watch",
     "watch-poll": "mix watch -- --watch-options-poll=1000",
     "hot": "mix watch --hot",
+    "preprod": "npm run skulpt",
     "prod": "mix --production",
-    "production": "mix --production"
+    "preproduction": "npm run skulpt",
+    "production": "mix --production",
+    "skulpt": "npm --prefix node_modules/skulpt install --legacy-peer-deps && npm --prefix node_modules/skulpt run build",
+    "refreshskulpt": "npm uninstall skulpt && npm install pingskills/skulpt#pyangelo --save-dev"
   },
   "devDependencies": {
     "bootstrap-sass": "^3.4.1",
@@ -18,6 +22,7 @@
     "resolve-url-loader": "^3.1.2",
     "sass": "^1.32.8",
     "sass-loader": "^8.0.2",
+    "skulpt": "github:pingskills/skulpt#pyangelo",
     "vue-template-compiler": "^2.6.12"
   }
 }

@@ -216,6 +216,13 @@ function runSkulpt(code) {
         __future__: Sk.python3
     });
 
+    if (document.getElementById("debug").checked) {
+      Sk.debugging = true;
+      console.log("Running in debug mode");
+    } else {
+      Sk.debugging = false;
+    }
+
     Sk.onBeforeImport = function() {
         return Sk.misceval.promiseToSuspension(new Promise(function(resolve, reject) {
             setTimeout(function() {
@@ -224,19 +231,51 @@ function runSkulpt(code) {
         }));
     };
 
-    var myPromise = Sk.misceval.asyncToPromise(function() {
-        return Sk.importMainWithBody("<stdin>", true, code, true);
-    },{
-      // handle a suspension of the executing code
-      // "*" says handle all types of suspensions
-      "*": () => {
-        if (_stopExecution) {
-            Sk.builtin.stopAllSounds();
-            throw "Program stopped!";
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    let currentLineNo = 1
+    async function lineStepper(susp) {
+        try {
+          if (currentLineNo !== susp.child.$lineno) {
+            currentLineNo = susp.child.$lineno;
+            checkForStop();
+            await sleep(1000);
+            editor.gotoLine(currentLineNo);
+          }
+          return Promise.resolve(susp.resume());
+        } catch(e) {
+          return Promise.reject(e);
         }
+    }
+
+    function checkForStop() {
+      if (_stopExecution) {
+        Sk.builtin.stopAllSounds();
+        throw "Program stopped!";
       }
     }
-    );
+
+    let myPromise;
+    if (Sk.debugging) {
+      editor.gotoLine(currentLineNo);
+      myPromise = Sk.misceval.asyncToPromise(function() {
+        return Sk.importMainWithBody("<stdin>", true, code, true);
+      },{
+        // handle a suspension of the executing code
+        // "*" says handle all types of suspensions
+        "*": lineStepper
+      });
+    } else {
+      myPromise = Sk.misceval.asyncToPromise(function() {
+        return Sk.importMainWithBody("<stdin>", true, code, true);
+      },{
+        // handle a suspension of the executing code
+        // "*" says handle all types of suspensions
+        "*": checkForStop
+      });
+    }
 
     myPromise.then(function(mod) {}, function(err) {
         let tc = Sk.PyAngelo.textColour;

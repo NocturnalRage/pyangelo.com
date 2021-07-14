@@ -2,12 +2,103 @@ let editorSession = 0;
 let currentSession = 0;
 let currentFilename = "main.py";
 let editor = ace.edit("editor");
+// Set up function to listen for resize
+const onresize = (dom_elem, callback) => {
+  const resizeObserver = new ResizeObserver(() => callback() );
+  resizeObserver.observe(dom_elem);
+};
+editorWindow = document.getElementById("editor");
+onresize(editorWindow, function () {
+  editor.resize();
+});
+
 editor.$blockScrolling = Infinity;
+ace.config.set("basePath", "https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/");
+editor.setTheme("ace/theme/dracula");
 
 var UndoManager = ace.require("ace/undomanager").UndoManager;
 
 var PythonMode = ace.require("ace/mode/python").Mode;
-ace.require("ace/ext/language_tools");
+let langTools = ace.require("ace/ext/language_tools");
+var staticWordCompleter = {
+    getCompletions: function(editor, session, pos, prefix, callback) {
+        var wordList = [
+          "setCanvasSize",
+          "noCanvas",
+          "focusCanvas",
+          "rect",
+          "circle",
+          "ellipse",
+          "arc",
+          "line",
+          "point",
+          "triangle",
+          "quad",
+          "rectMode",
+          "circleMode",
+          "strokeWeight",
+          "beginShape",
+          "vertex",
+          "endShape",
+          "background",
+          "fill",
+          "noFill",
+          "stroke",
+          "noStroke",
+          "isKeyPressed",
+          "wasKeyPressed",
+          "text",
+          "loadImage",
+          "image",
+          "angleMode",
+          "translate",
+          "rotate",
+          "applyMatrix",
+          "shearX",
+          "shearY",
+          "saveState",
+          "restoreState",
+          "setConsoleSize",
+          "setTextColour",
+          "setHighlightColour",
+          "clear",
+          "sleep",
+          "loadSound",
+          "playSound",
+          "stopSound",
+          "pauseSound",
+          "stopAllSounds",
+          "width",
+          "height",
+          "mouseX",
+          "mouseY",
+          "dist",
+          "Sprite",
+          "TextSprite",
+          "RectangleSprite",
+          "CircleSprite",
+          "EllipseSprite",
+        ];
+        callback(null, [...wordList.map(function(word) {
+            return {
+                caption: word,
+                value: word,
+                meta: "static"
+            };
+        }), ...session.$mode.$highlightRules.$keywordList.map(function(word) {
+        return {
+          caption: word,
+          value: word,
+          meta: 'keyword',
+        };
+      })]);
+
+    }
+}
+
+langTools.setCompleters([staticWordCompleter])
+// or
+editor.completers = [staticWordCompleter]
 var EditSession = require("ace/edit_session").EditSession;
 var editSessions = [];
 
@@ -70,18 +161,22 @@ function addTab(file) {
       editSessions.push(new EditSession(file.sourceCode));
       editSessions[editorSession].setMode(new PythonMode());
       editSessions[editorSession].setUndoManager(new UndoManager());
-      if (readOnly == "true") {
+      if (readOnly == true) {
         editor.setOptions({
             readOnly: true,
-            fontSize: "11pt",
-            enableBasicAutocompletion: true
+            fontSize: "12pt",
+            enableBasicAutocompletion: true,
+            enableSnippets: false,
+            enableLiveAutocompletion: true,
         });
       }
       else {
         editor.setOptions({
             readOnly: false,
-            fontSize: "11pt",
-            enableBasicAutocompletion: true
+            fontSize: "12pt",
+            enableBasicAutocompletion: true,
+            enableSnippets: true,
+            enableLiveAutocompletion: true,
         });
       }
 

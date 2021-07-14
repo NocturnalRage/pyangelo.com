@@ -25,6 +25,7 @@
     margin: auto;
     width: 100%;
     height: 600px;
+    resize: vertical;
 }
 #fileTabs {
   border-bottom: 2px solid black;
@@ -51,7 +52,7 @@
 }
 .appHeading {
   box-sizing: border-box;
-  color: white;
+  color: #f5910f;;
   text-align: center;
   padding: 10px;
   margin-top: 10px 0 0 0;

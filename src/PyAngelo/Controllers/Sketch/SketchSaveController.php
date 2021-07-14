@@ -87,6 +87,8 @@ class SketchSaveController extends Controller {
       $this->request->post['program']
     );
 
+    $sketch = $this->sketchRepository->updateSketchUpdatedAt($this->request->post['sketchId']);
+
     $this->response->setVars(array(
         'status' => 'success',
         'message' => 'File saved.'

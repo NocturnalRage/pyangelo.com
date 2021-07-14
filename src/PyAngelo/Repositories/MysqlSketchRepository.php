@@ -198,5 +198,17 @@ class MysqlSketchRepository implements SketchRepository {
     $stmt->close();
     return $rowsUpdated;
   }
+
+  public function updateSketchUpdatedAt($sketchId) {
+    $sql = "UPDATE sketch
+            SET    updated_at = now()
+            WHERE  sketch_id = ?";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->bind_param('i', $sketchId);
+    $stmt->execute();
+    $rowsUpdated = $this->dbh->affected_rows;
+    $stmt->close();
+    return $rowsUpdated;
+  }
 }
 ?>
