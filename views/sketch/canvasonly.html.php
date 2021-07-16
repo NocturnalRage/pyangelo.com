@@ -16,18 +16,14 @@ include 'sketch-buttons.html.php';
 <script src="<?= mix('js/editor.js'); ?>"></script>
 <script>
 loadCodeAndRun();
-</script>
-
-<script>
-Sk.PyAngelo.console.style.display = "none";
-Sk.PyAngelo.console.style.display = "none";
-pyEditor = document.getElementById('editor');
-pyEditor.style.display = "none";
+consoleWrapper = document.getElementById('consoleWrapper');
+consoleWrapper.style.display = "none";
+editorWrapper = document.getElementById('editorWrapper');
+editorWrapper.style.display = "none";
 pyEditorFiles = document.getElementById('editorFiles');
 pyEditorFiles.style.display = "none";
-forkParagraph = document.getElementById('forkParagraph');
-if (forkParagraph)
-    forkParagraph.style.display = "none";
+buttonsWrapper = document.getElementById('buttonsWrapper');
+buttonsWrapper.style.display = "none";
 </script>
 
 </body>

@@ -1,5 +1,5 @@
     <!-- console -->
-    <div class="row">
+    <div id="consoleWrapper" class="row">
       <div class="col-md-12">
         <p class="appHeading">Console</p>
         <pre id="console">

@@ -58,6 +58,7 @@ return [
   [ 'GET','/get-next-video', 'LessonsGetNextVideoController', 'lessonsGetNextVideoUrl' ],
   [ 'POST','/lessons/comment', 'LessonsCommentController', 'lessonsComment' ],
   [ 'POST','/lessons/comment/[:comment_id]/unpublish', 'LessonsCommentUnpublishController', 'lessonsCommentsUnpublish' ],
+  [ 'GET','/latest-comments', 'LatestCommentsController', 'latestComments' ],
   [ 'GET','/notifications', 'NotificationsController', 'notifications' ],
   [ 'POST','/notification-read', 'NotificationsReadController', 'notificationsRead' ],
   [ 'POST','/notification-all-read', 'NotificationsAllReadController', 'notificationsAllRead' ],

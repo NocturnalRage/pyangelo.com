@@ -21,7 +21,7 @@ class AskHtmlTest extends BasicViewHtmlTest {
     $this->assertStringContainsString($expect, $output);
     $expect = '<input type="text" name="question_title" id="question_title" class="form-control" placeholder="Question Title" value="" maxlength="100" required autofocus />';
     $this->assertStringContainsString($expect, $output);
-    $expect = '<textarea name="question" id="question" class="form-control tinymce" placeholder="Enter your question..." rows="10" required />';
+    $expect = '<textarea name="question" id="question" class="form-control tinymce" placeholder="Enter your question..." rows="10" />';
     $this->assertStringContainsString($expect, $output);
     $expect = '<button type="submit" class="btn btn-primary">';
     $this->assertStringContainsString($expect, $output);

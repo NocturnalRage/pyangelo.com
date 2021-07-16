@@ -774,6 +774,17 @@ $di->set('LessonsCommentUnpublishController', function () use ($di) {
   );
 });
 
+$di->set('LatestCommentsController', function () use ($di) {
+  return new PyAngelo\Controllers\Profile\LatestCommentsController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository'),
+    $di->get('questionRepository'),
+    $di->get('blogRepository')
+  );
+});
+
 $di->set('NotificationsController', function () use ($di) {
   return new PyAngelo\Controllers\Profile\NotificationsController (
     $di->get('request'),

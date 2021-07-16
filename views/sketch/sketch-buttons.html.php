@@ -1,4 +1,4 @@
-    <div class="row">
+    <div id="buttonsWrapper" class="row">
       <div class="col-md-12">
         <p class="appHeading">
           <button id="startStop" class="btn btn-success">Start</button>

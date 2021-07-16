@@ -168,6 +168,7 @@ class MysqlBlogRepository implements BlogRepository {
     $sql = "SELECT p.person_id,
                    concat(p.given_name, ' ', p.family_name) as display_name,
                    p.email,
+                   p.admin,
                    bc.*
             FROM   blog_comment bc
             JOIN   person p ON p.person_id = bc.person_id
@@ -186,7 +187,7 @@ class MysqlBlogRepository implements BlogRepository {
     $sql = "SELECT bc.comment_id, bc.blog_id, bc.person_id,
                    bc.blog_comment, bc.created_at,
                    b.title, b.slug,
-                   p.person_id, p.email,
+                   p.person_id, p.email, p.admin,
                    concat(p.given_name, ' ', p.family_name) as display_name
             FROM   blog_comment bc
             JOIN   blog b ON bc.blog_id = b.blog_id

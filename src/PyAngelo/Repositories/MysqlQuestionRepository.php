@@ -28,6 +28,26 @@ class MysqlQuestionRepository implements QuestionRepository {
     return $result->fetch_all(MYSQLI_ASSOC);
   }
 
+  public function getLatestComments($offset, $limit) {
+    $sql = "SELECT qc.comment_id, qc.question_id,
+                   qc.question_comment, qc.created_at,
+                   q.question_title, q.slug,
+                   p.person_id, p.email, p.admin,
+                   concat(p.given_name, ' ', p.family_name) as display_name
+            FROM   question_comment qc
+            JOIN   question q ON qc.question_id = q.question_id
+            JOIN   person p ON qc.person_id = p.person_id
+            WHERE  qc.published = TRUE
+            ORDER BY qc.created_at DESC
+            LIMIT ?, ?";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->bind_param('ii', $offset, $limit);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    return $result->fetch_all(MYSQLI_ASSOC);
+  }
+
   public function getUnansweredQuestions() {
     $sql = "SELECT q.*,
                    qt.description as category_description,
