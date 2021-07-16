@@ -38,6 +38,14 @@ include __DIR__ . DIRECTORY_SEPARATOR . 'layout/navbar.html.php';
             <i class="fa fa-video-camera" aria-hidden="true"></i> <strong>Watch a Tutorial</strong></a>
       </div>
     </div><!-- row -->
+    <div class="row text-center">
+      <div class="col-md-12 add-bottom">
+        <h2>Or, just play a game of breakout!</h2>
+        <p>
+          <iframe src="https://www.pyangelo.com/canvasonly/2114" width="1000" height="580"></iframe>
+        </p>
+      </div>
+    </div>
     <?php include __DIR__ . '/layout/footer.html.php'; ?>
   </div><!-- container -->
 </body>

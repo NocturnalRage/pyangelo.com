@@ -61,13 +61,13 @@ class CanvasOnlyHtmlTest extends BasicViewHtmlTest {
     $expect = '<script src="/js/editor.js';
     $this->assertStringContainsString($expect, $output);
 
-    $expect = 'pyEditor.style.display = "none"';
+    $expect = 'editorWrapper.style.display = "none"';
     $this->assertStringContainsString($expect, $output);
 
-    $expect = 'pyEditorFiles.style.display = "none"';
+    $expect = 'editorWrapper.style.display = "none"';
     $this->assertStringContainsString($expect, $output);
    
-    $expect = 'forkParagraph.style.display = "none";';
+    $expect = 'buttonsWrapper.style.display = "none";';
     $this->assertStringContainsString($expect, $output);
   }
 
@@ -122,13 +122,13 @@ class CanvasOnlyHtmlTest extends BasicViewHtmlTest {
     $expect = '<script src="/js/editor.js';
     $this->assertStringContainsString($expect, $output);
 
-    $expect = 'pyEditor.style.display = "none"';
+    $expect = 'editorWrapper.style.display = "none"';
     $this->assertStringContainsString($expect, $output);
 
-    $expect = 'pyEditorFiles.style.display = "none"';
+    $expect = 'editorWrapper.style.display = "none"';
     $this->assertStringContainsString($expect, $output);
    
-    $expect = 'forkParagraph.style.display = "none";';
+    $expect = 'buttonsWrapper.style.display = "none";';
     $this->assertStringContainsString($expect, $output);
   }
 }
