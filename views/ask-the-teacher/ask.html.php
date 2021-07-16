@@ -22,7 +22,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
 
           <div class="form-group<?= isset($errors['question']) ? ' has-error' : ''; ?>">
             <label for="question" class="control-label">Question:</label>
-            <textarea name="question" id="question" class="form-control tinymce" placeholder="Enter your question..." rows="10" required /><?= $formVars['question'] ?? '' ?></textarea>
+            <textarea name="question" id="question" class="form-control tinymce" placeholder="Enter your question..." rows="10" /><?= $formVars['question'] ?? '' ?></textarea>
             <?php if (isset($errors['question'])) :?>
               <div class="alert alert-danger"><?= $this->esc($errors['question']); ?></div>
             <?php endif; ?>
