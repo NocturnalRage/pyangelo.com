@@ -1,4 +1,4 @@
-    <div class="row">
+    <div id="buttonsWrapper" class="row">
       <div class="col-md-12">
         <p class="appHeading">
           <button id="startStop" class="btn btn-success">Start</button>
@@ -7,8 +7,8 @@
           <input type="checkbox" id="debug" name="debug" value="debug">
           <label for="debug"> Run line by line</label>
         </p>
-        <?php if ($personInfo['details']['person_id'] != $sketch['person_id']) : ?>
-          <p class="appHeading">
+        <?php if ($personInfo['loggedIn'] && $personInfo['details']['person_id'] != $sketch['person_id']) : ?>
+          <p id="forkParagraph" class="appHeading">
             <a id="fork"
                class="btn"
                href="/sketch/<?= $sketch['sketch_id'] ?>/fork"

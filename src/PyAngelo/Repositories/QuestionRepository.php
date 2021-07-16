@@ -5,6 +5,8 @@ interface QuestionRepository {
 
   public function getLatestQuestions($offset, $limit);
 
+  public function getLatestComments($offset, $limit);
+
   public function getUnansweredQuestions();
 
   public function getQuestionsByPersonId($personId);

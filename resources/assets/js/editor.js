@@ -134,6 +134,14 @@ function loadCode() {
     .then(setupEditor)
     .catch((error) => { console.error('Error: ', error); })
 }
+function loadCodeAndRun() {
+  const sketchId = document.getElementById('editor').getAttribute('data-sketch-id');
+  fetch('/sketch/code/' + sketchId)
+    .then(response => response.json())
+    .then(setupEditor)
+    .then(runCode)
+    .catch((error) => { console.error('Error: ', error); })
+}
 function setupEditor(response) {
   response.files.forEach(addTab);
   editor.setSession(editSessions[currentSession]);
@@ -496,13 +504,15 @@ function updateTitle(response) {
 
 function saveThenRun() {
   saveCode(currentFilename);
+  runCode();
+}
+function runCode() {
   const startStopButton = document.getElementById('startStop');
   startStopButton.removeEventListener('click', saveThenRun, false);
   startStopButton.style.backgroundColor = '#880000';
   startStopButton.textContent = 'Stop';
   startStopButton.addEventListener('click', saveThenStop, false);
   document.getElementById("console").innerHTML = '';
-  // Calls runSkulpt defined in show.html for a sketch
   _stopExecution = false;
   runSkulpt(getCode(0));
 }
@@ -521,5 +531,3 @@ function stopCode() {
 }
 
 document.getElementById('startStop').addEventListener('click', saveThenRun, false);
-
-loadCode();

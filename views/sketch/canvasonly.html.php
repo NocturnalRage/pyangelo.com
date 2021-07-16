@@ -1,16 +1,13 @@
 <?php
 include __DIR__ . DIRECTORY_SEPARATOR . '../layout/header.html.php';
-include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
 ?>
   <div class="container">
 
 <?php
-include 'sketch-title.html.php';
 include 'sketch-editor.html.php';
 include 'sketch-console.html.php';
 include 'sketch-output.html.php';
 include 'sketch-buttons.html.php';
-include 'sketch-upload.html.php';
 ?>
 
   </div><!-- container -->
@@ -18,11 +15,16 @@ include 'sketch-upload.html.php';
 <script src="<?= mix('js/PyAngeloSetup.js'); ?>"></script>
 <script src="<?= mix('js/editor.js'); ?>"></script>
 <script>
-loadCode();
+loadCodeAndRun();
+consoleWrapper = document.getElementById('consoleWrapper');
+consoleWrapper.style.display = "none";
+editorWrapper = document.getElementById('editorWrapper');
+editorWrapper.style.display = "none";
+pyEditorFiles = document.getElementById('editorFiles');
+pyEditorFiles.style.display = "none";
+buttonsWrapper = document.getElementById('buttonsWrapper');
+buttonsWrapper.style.display = "none";
 </script>
 
-<?php
-include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';
-?>
 </body>
 </html>

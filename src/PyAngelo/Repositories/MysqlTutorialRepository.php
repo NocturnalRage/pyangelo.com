@@ -742,6 +742,7 @@ class MysqlTutorialRepository implements TutorialRepository {
   public function getPublishedLessonComments($lessonId) {
     $sql = "SELECT concat(p.given_name, ' ', p.family_name) as display_name,
                    p.email,
+                   p.admin,
                    lc.*
             FROM   lesson_comment lc
             JOIN   person p ON p.person_id = lc.person_id
@@ -760,7 +761,7 @@ class MysqlTutorialRepository implements TutorialRepository {
     $sql = "SELECT lc.comment_id, lc.lesson_id, lc.person_id,
                    lc.lesson_comment, lc.created_at,
                    l.lesson_title, l.lesson_slug, t.slug as tutorial_slug,
-                   p.person_id, p.email,
+                   p.person_id, p.email, p.admin,
                    concat(p.given_name, ' ', p.family_name) as display_name
             FROM   lesson_comment lc
             JOIN   lesson l ON lc.lesson_id = l.lesson_id
