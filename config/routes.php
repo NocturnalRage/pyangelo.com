@@ -93,4 +93,8 @@ return [
   [ 'POST','/toggle-question-favourite', 'AskTheTeacherToggleFavouriteController', 'askTheTeacherToggleFavourite' ],
   [ 'POST','/ask-the-teacher/comment', 'AskTheTeacherCommentController', 'askTheTeacherComment' ],
   [ 'POST','/ask-the-teacher/comment/[:comment_id]/unpublish', 'AskTheTeacherCommentUnpublishController', 'askTheTeacherCommentUnpublish' ],
+  [ 'GET','/admin', 'MetricsController', 'metrics' ],
+  [ 'GET','/admin/users', 'UsersController', 'users' ],
+  [ 'GET','/admin/user-search', 'UserSearchController', 'userSearch' ],
+  [ 'GET','/admin/users/[:person_id]', 'UserController', 'user' ],
 ];

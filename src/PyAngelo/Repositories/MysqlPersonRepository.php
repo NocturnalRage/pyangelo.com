@@ -50,8 +50,12 @@ class MysqlPersonRepository implements PersonRepository {
   }
 
   public function getPersonById($personId) {
-    $sql = "SELECT *
-            FROM   person
+    $sql = "SELECT p.*,
+                   CASE WHEN p.premium_end_date > now()
+                        THEN 1
+                        ELSE 0
+                   END as premium_status_boolean
+            FROM   person p
             WHERE  active = 1
             AND    person_id = ?";
     $stmt = $this->dbh->prepare($sql);
@@ -256,7 +260,11 @@ class MysqlPersonRepository implements PersonRepository {
   public function getPersonByIdForAdmin($personId) {
     $sql = "SELECT p.*,
                    concat(p.given_name, ' ', p.family_name) as display_name,
-                   c.country_name
+                   c.country_name,
+                   CASE WHEN p.premium_end_date > now()
+                        THEN 1
+                        ELSE 0
+                   END as premium_status_boolean
             FROM   person p
             JOIN   country c on c.country_code = p.country_code
             WHERE  active = 1
@@ -460,9 +468,14 @@ class MysqlPersonRepository implements PersonRepository {
     $sql = "SELECT p.person_id,
                    concat(p.given_name, ' ', p.family_name) as display_name,
                    p.email,
-                   p.created_at,
-                   c.country_name
-	        FROM   person p
+                   c.country_name,
+                   CASE WHEN p.premium_end_date > now()
+                        THEN 1
+                        ELSE 0
+                   END as premium_status_boolean,
+                   p.premium_end_date,
+                   p.created_at
+	          FROM   person p
             JOIN   country c on c.country_code = p.country_code
             WHERE  active = 1 ";
     $terms = explode(" ", $searchTerms);
@@ -584,6 +597,32 @@ class MysqlPersonRepository implements PersonRepository {
     $rowsUpdated = $this->dbh->affected_rows;
     $stmt->close();
     return $rowsUpdated;
+  }
+
+  public function getPaymentHistory($personId) {
+    $sql = "SELECT ssp.subscription_id,
+                   ssp.payment_type_id,
+                   ssp.currency_code,
+                   ssp.total_amount_in_cents,
+                   ssp.charge_id,
+                   ssp.original_charge_id,
+                   ssp.refund_status,
+                   ssp.total_amount_in_cents / c.stripe_divisor display_amount,
+                   DATE_FORMAT(ssp.paid_at, '%W %D %M %Y') paid_at_formatted,
+                   pt.payment_type_name,
+                   c.currency_symbol
+            FROM   stripe_subscription ss
+            JOIN   stripe_subscription_payment ssp on ss.subscription_id = ssp.subscription_id
+            JOIN   stripe_payment_type pt on ssp.payment_type_id = pt.payment_type_id
+            JOIN   currency c on ssp.currency_code = c.currency_code
+            WHERE  ss.person_id = ?
+            ORDER BY ssp.paid_at";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->bind_param('i', $personId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    return $result->fetch_all(MYSQLI_ASSOC);
   }
 }
 ?>

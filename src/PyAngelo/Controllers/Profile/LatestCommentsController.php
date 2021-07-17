@@ -48,7 +48,6 @@ class LatestCommentsController extends Controller {
       'pageTitle' => 'Latest Comments | PyAngelo',
       'metaDescription' => "The latest comments on the PyAngelo website.",
       'activeLink' => 'profile',
-      'auth' => $this->auth,
       'personInfo' => $this->auth->getPersonDetailsForViews(),
       'commentsPerPage' => $commentsPerPage,
       'lessonComments' => $lessonComments,

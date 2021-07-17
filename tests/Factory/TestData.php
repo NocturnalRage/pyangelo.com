@@ -38,6 +38,7 @@ class TestData {
   }
 
   public function deleteAllPeople() {
+    $this->deleteAllQuestions();
     $this->deleteAllCampaignActivity();
     $this->deleteAllSubscriptions();
     $this->deleteAllBlogs();
@@ -109,15 +110,10 @@ class TestData {
     $result = $this->dbh->query($sql);
   }
 
-  public function createMonthlyAndYearlyMembershipPlan(
-    $monthlyPlan,
-    $yearlyPlan
-  ) {
+  public function createMonthlyMembershipPlan($monthlyPlan) {
     $sql = "DELETE FROM membership_plan";
     $result = $this->dbh->query($sql);
     $sql = "INSERT INTO membership_plan values ('$monthlyPlan', 'Monthly', 'USD', 899, 1, 1)";
-    $result = $this->dbh->query($sql);
-    $sql = "INSERT INTO membership_plan values ('$yearlyPlan', 'Yearly', 'USD', 899, 1, 1)";
     $result = $this->dbh->query($sql);
   }
 
@@ -273,7 +269,6 @@ class TestData {
       1000,
       '2017-01-01',
       10,
-      300,
       90,
       600,
       'CHG-1',
