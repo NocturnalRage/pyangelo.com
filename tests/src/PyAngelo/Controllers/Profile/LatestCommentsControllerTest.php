@@ -52,7 +52,6 @@ class LatestCommentsControllerTest extends TestCase {
     $expectedPageTitle = 'Latest Comments | PyAngelo';
     $expectedMetaDescription = "The latest comments on the PyAngelo website.";
     $this->assertSame($expectedViewName, $response->getView());
-    $this->assertSame($this->auth, $responseVars['auth']);
     $this->assertSame($expectedPageTitle, $responseVars['pageTitle']);
     $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
   }

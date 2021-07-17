@@ -51,6 +51,10 @@ $di->set('mailRepository', function () use ($di) {
   return new PyAngelo\Repositories\MysqlMailRepository($di->get('dbh'));
 });
 
+$di->set('metricRepository', function () use ($di) {
+  return new PyAngelo\Repositories\MysqlMetricRepository($di->get('dbh'));
+});
+
 $di->set('personRepository', function () use ($di) {
   return new PyAngelo\Repositories\MysqlPersonRepository($di->get('dbh'));
 });
@@ -61,6 +65,10 @@ $di->set('questionRepository', function () use ($di) {
 
 $di->set('sketchRepository', function () use ($di) {
   return new PyAngelo\Repositories\MysqlSketchRepository($di->get('dbh'));
+});
+
+$di->set('stripeRepository', function () use ($di) {
+  return new PyAngelo\Repositories\MysqlStripeRepository($di->get('dbh'));
 });
 
 $di->set('tutorialRepository', function () use ($di) {
@@ -160,6 +168,10 @@ $di->set('notificationAvatar', function () use ($di) {
 
 $di->set('avatar', function () use ($di) {
   return new Framework\Presentation\Gravatar(75);
+});
+
+$di->set('profileAvatar', function () use ($di) {
+  return new Framework\Presentation\Gravatar(150);
 });
 
 $di->set('cloudFront', function () use ($di) {
@@ -1092,5 +1104,44 @@ $di->set('AskTheTeacherFavouriteQuestionsController', function () use ($di) {
     $di->get('response'),
     $di->get('auth'),
     $di->get('questionRepository')
+  );
+});
+
+$di->set('MetricsController', function () use ($di) {
+  return new PyAngelo\Controllers\Admin\MetricsController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('metricRepository')
+  );
+});
+
+$di->set('UsersController', function () use ($di) {
+  return new PyAngelo\Controllers\Admin\UsersController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth')
+  );
+});
+
+$di->set('UserSearchController', function () use ($di) {
+  return new PyAngelo\Controllers\Admin\UserSearchController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('personRepository'),
+    $di->get('profileAvatar')
+  );
+});
+
+$di->set('UserController', function () use ($di) {
+  return new PyAngelo\Controllers\Admin\UserController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('personRepository'),
+    $di->get('profileAvatar'),
+    $di->get('stripeRepository'),
+    $di->get('numberFormatter')
   );
 });

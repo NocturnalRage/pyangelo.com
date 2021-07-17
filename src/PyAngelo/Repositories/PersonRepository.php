@@ -84,6 +84,7 @@ interface PersonRepository {
   public function markNotificationAsRead($personId, $notificationId);
 
   public function markAllNotificationsAsRead($personId);
-
+ 
+  public function getPaymentHistory($personId);
 }
 ?>
