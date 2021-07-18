@@ -97,4 +97,6 @@ return [
   [ 'GET','/admin/users', 'UsersController', 'users' ],
   [ 'GET','/admin/user-search', 'UserSearchController', 'userSearch' ],
   [ 'GET','/admin/users/[:person_id]', 'UserController', 'user' ],
+  [ 'POST','/admin/update-premium-end-date', 'UpdateEndDateController', 'updateEndDate' ],
+  [ 'GET','/admin/premium-users', 'PremiumUsersController', 'premiumUsers' ],
 ];

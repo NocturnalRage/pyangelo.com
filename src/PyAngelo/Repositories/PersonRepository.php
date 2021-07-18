@@ -68,6 +68,10 @@ interface PersonRepository {
 
   public function searchByNameAndEmail($searchTerms);
 
+  public function updatePremiumEndDate($personId, $futureDate);
+
+  public function getPremiumMembers();
+
   public function getAllNotifications($personId);
 
   public function getUnreadNotifications($personId);

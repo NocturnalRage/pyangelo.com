@@ -1145,3 +1145,22 @@ $di->set('UserController', function () use ($di) {
     $di->get('numberFormatter')
   );
 });
+
+$di->set('UpdateEndDateController', function () use ($di) {
+  return new PyAngelo\Controllers\Admin\UpdateEndDateController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('personRepository')
+  );
+});
+
+$di->set('PremiumUsersController', function () use ($di) {
+  return new PyAngelo\Controllers\Admin\PremiumUsersController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('personRepository'),
+    $di->get('profileAvatar')
+  );
+});
