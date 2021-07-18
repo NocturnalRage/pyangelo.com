@@ -1,5 +1,5 @@
         <hr />
-        <h2>Premium Member Growth</h2>
+        <h2>Paying Member Growth</h2>
         <div id="subscriberGrowth"></div>
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <script type="text/javascript">

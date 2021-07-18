@@ -15,12 +15,4 @@
             <a href="/admin/images/email" class="list-group-item<?= $activeLink == 'images' ? ' active' : '' ?>"><i class="fa fa-picture-o fa-fw"></i> Images</a>
           </div><!-- list-group -->
         </div><!-- well -->
-        <div class="well">
-          <h3>Stripe Setup</h3>
-          <div class="list-group">
-            <a href="/admin/discounts" class="list-group-item<?= $activeLink == 'discounts' ? ' active' : '' ?>"><i class="fa fa-tags fa-fw"></i> Discounts</a>
-            <a href="/admin/stripe-setup" class="list-group-item<?= $activeLink == 'connect' ? ' active' : '' ?>"><i class="fa fa-cc-stripe fa-fw"></i> Connect to Stripe</a>
-            <a href="/admin/stripe-plans" class="list-group-item<?= $activeLink == 'plans' ? ' active' : '' ?>"><i class="fa fa-money fa-fw"></i> Stripe Plans</a>
-          </div><!-- list-group -->
-        </div><!-- well -->
       </div><!-- col-md-3 -->

@@ -4,8 +4,7 @@
           <thead>
             <tr>
               <th>Total Members</th>
-              <th>Monthly Members</th>
-              <th>Yearly Members</th>
+              <th>Paying Members</th>
               <th>Past Due</th>
             </tr>
           </thead>

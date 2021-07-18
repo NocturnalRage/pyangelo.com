@@ -501,6 +501,41 @@ class MysqlPersonRepository implements PersonRepository {
     return $result->fetch_all(MYSQLI_ASSOC);
   }
 
+  public function updatePremiumEndDate($personId, $futureDate) {
+    $sql = "UPDATE person
+            SET    premium_end_date = ?,
+                   updated_at = now()
+            WHERE  person_id = ?";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->bind_param('si', $futureDate, $personId);
+    $stmt->execute();
+    $rowsUpdated = $this->dbh->affected_rows;
+    $stmt->close();
+    return $rowsUpdated;
+  }
+
+  public function getPremiumMembers() {
+    $sql = "SELECT p.person_id,
+                   concat(p.given_name, ' ', p.family_name) as display_name,
+                   p.email,
+                   c.country_name,
+                   CASE WHEN p.premium_end_date > now()
+                        THEN 1
+                        ELSE 0
+                   END as premium_status_boolean,
+                   p.created_at,
+                   max(ss.start) premium_start_date,
+                   p.premium_end_date
+            FROM   person p
+            JOIN   country c on c.country_code = p.country_code
+            LEFT JOIN stripe_subscription ss on ss.person_id = p.person_id
+            WHERE  p.premium_end_date > now()
+            GROUP BY p.person_id
+            ORDER by max(ss.start) DESC";
+    $result = $this->dbh->query($sql);
+    return $result->fetch_all(MYSQLI_ASSOC);
+  }
+
   public function getUnreadNotifications($personId) {
     $sql = "SELECT *
             FROM   notification

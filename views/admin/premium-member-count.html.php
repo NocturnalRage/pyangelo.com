@@ -1,5 +1,5 @@
         <hr />
-        <h2>Premium Members Last 12 Months</h2>
+        <h2>Paying Members Last 12 Months</h2>
         <div id="premiumMemberCount"></div>
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <script type="text/javascript">

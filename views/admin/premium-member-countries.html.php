@@ -1,5 +1,5 @@
         <hr />
-        <h2>Premium Members Per Country</h2>
+        <h2>Paying Members Per Country</h2>
         <div id="premiumMemberCountries"></div>
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <script type="text/javascript">
