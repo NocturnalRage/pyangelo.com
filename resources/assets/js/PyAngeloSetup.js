@@ -167,9 +167,9 @@ function stopSkulpt() {
 
 function runSkulpt(code) {
     Sk.PyAngelo.ctx.save();
+    Sk.PyAngelo.console.innerHTML = "";
     Sk.PyAngelo.textColour = "rgba(147, 161, 161, 1)";
     Sk.PyAngelo.highlightColour = "rgba(0, 0, 0, 1)";
-    Sk.PyAngelo.console.innerHTML = '';
     Sk.PyAngelo.keys = {};
     Sk.PyAngelo.keyWasPressed = {};
     Sk.builtins._angleModeValue = new Sk.builtin.int_(2);
@@ -238,8 +238,14 @@ function runSkulpt(code) {
     let currentLineNo = 1
     async function lineStepper(susp) {
         try {
-          if (currentLineNo !== susp.child.$lineno) {
-            currentLineNo = susp.child.$lineno;
+	  var child = susp.child;
+	  // traversing down to lowest child for a step-into
+          // TODO: make this optional depending on 'step into' vs 'step over' modes
+	  while (child.child.child != null) {
+	    child = child.child;
+	  }
+          if (currentLineNo !== child.$lineno) {
+            currentLineNo = child.$lineno;
             checkForStop();
             await sleep(1000);
             editor.gotoLine(currentLineNo);
