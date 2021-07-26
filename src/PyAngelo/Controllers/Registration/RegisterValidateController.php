@@ -55,7 +55,7 @@ class RegisterValidateController extends Controller {
   }
 
   private function formFilledInTooQuickly() {
-    if ((int)time() - (int)$this->request->post['time'] < 3)
+    if ((int)time() - (int)$this->request->post['time'] < 2)
       return true;
     else
       return false;
@@ -80,8 +80,8 @@ class RegisterValidateController extends Controller {
   }
 
   private function logAttemptAndRedirectToRegisterPage() {
-      $message = "User " . $this->request->post['givenName'] . " " . $this->request->post['familyName'] . " (" . $this->request->post['email'] . ") tried to register in less than 3 seconds\n";
-      file_put_contents($_ENV['APPLICATION_LOG_FILE'], $message, FILE_APPEND);
+      $message = "User " . $this->request->post['givenName'] . " " . $this->request->post['familyName'] . " (" . $this->request->post['email'] . ") tried to register in less than 2 seconds\n";
+      $this->logMessage($message, 'WARNING');
       $this->flash('Please register manually from the PyAngelo website!', 'danger');
       $this->response->header('Location: /register');
       return $this->response;

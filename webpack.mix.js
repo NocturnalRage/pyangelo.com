@@ -23,4 +23,6 @@ let mix = require('laravel-mix');
    .copy('./resources/assets/js/questionFavourite.js', './public/js/')
    .copy('./resources/assets/js/notifications.js', './public/js/')
    .copy('./resources/assets/js/userSearch.js', './public/js/')
+   .copy('./resources/assets/js/subscription.js', './public/js/')
+   .copy('./resources/assets/js/new-payment-method.js', './public/js/')
    .version();

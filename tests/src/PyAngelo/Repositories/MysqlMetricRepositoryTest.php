@@ -101,7 +101,8 @@ class MysqlMetricRepositoryTest extends TestCase {
     $plans = $this->metricRepository->getPremiumMemberCountByPlan();
     $expectedPlans = [
       [
-        'display_plan_name' => 'Monthly',
+        'product_name' => 'Test Subscription',
+        'product_description' => 'Test subscription for PyAngelo',
         'count' => 1
       ]
     ];

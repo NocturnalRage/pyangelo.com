@@ -49,12 +49,6 @@ class MetricHtmlTest extends BasicViewHtmlTest {
         'premium_member_count' => 1
       ]
     ];
-    $plans = [
-      [
-        'display_plan_name' => 'Monthly',
-        'count' => 1
-      ]
-    ];
     $premiumCountries = [
       [
         'country_name' => 'Australia',
@@ -95,7 +89,6 @@ class MetricHtmlTest extends BasicViewHtmlTest {
       'subscriberGrowth' => $subscriberGrowth,
       'subscriberPayments' => $subscriberPayments,
       'premiumMembers' => $premiumMembers,
-      'plans' => $plans,
       'premiumCountries' => $premiumCountries,
       'membersMonthly' => $membersMonthly,
       'membersDaily' => $membersDaily,
@@ -111,8 +104,6 @@ class MetricHtmlTest extends BasicViewHtmlTest {
     $expect = 'Subscription Payments';
     $this->assertStringContainsString($expect, $output);
     $expect = 'Paying Members Last 12 Months';
-    $this->assertStringContainsString($expect, $output);
-    $expect = 'Paying Members By Plan';
     $this->assertStringContainsString($expect, $output);
     $expect = 'Paying Members Per Country';
     $this->assertStringContainsString($expect, $output);

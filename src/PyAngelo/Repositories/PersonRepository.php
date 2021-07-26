@@ -66,6 +66,8 @@ interface PersonRepository {
 
   public function updateSubscriber($listId, $personId, $subscriberStatusId);
 
+  public function getActiveSubscriptionCount($personId);
+
   public function searchByNameAndEmail($searchTerms);
 
   public function updatePremiumEndDate($personId, $futureDate);

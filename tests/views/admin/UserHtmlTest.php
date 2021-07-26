@@ -37,12 +37,12 @@ class UserHtmlTest extends BasicViewHtmlTest {
     $avatar = \Mockery::mock('Framework\Presentation\Gravatar');
     $avatar->shouldReceive('getAvatarUrl')->once()->with($email)->andReturn('avatar');
     $numberFormatter = \Mockery::mock('\NumberFormatter');
-    $numberFormatter->shouldReceive('formatCurrency')->times(2)->with(10.00, 'AUD')->andReturn('$10.00');
+    $numberFormatter->shouldReceive('formatCurrency')->times(1)->with(10.00, 'AUD')->andReturn('$10.00');
     $response = new Response('views');
     $response->setView('admin/user.html.php');
     $response->setVars(array(
-      'pageTitle' => "CubeSkills Admin",
-      'metaDescription' => "Update the CubeSkills website through the administration pages.",
+      'pageTitle' => "PyAngelo Admin",
+      'metaDescription' => "Update the PyAngelo website through the administration pages.",
       'activeLink' => 'Admin',
       'personInfo' => $this->setPersonInfoAdmin(),
       'person' => $person,

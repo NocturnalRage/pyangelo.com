@@ -39,8 +39,58 @@ class MysqlStripeRepositoryTest extends TestCase {
     $this->assertEquals($stripeDivisor, $currency['stripe_divisor']);
   }
 
+  public function testGetIncompleteSubscription() {
+    $priceId = 'Price1';
+    $productId = 'Product1';
+    $clientSecret = 'SECRET';
+    $productId = 'Product1';
+    $personId = 1;
+    $email = 'fastfred@hotmail.com';
+    $subscriptionId = 'SUB-INCOMPLETE';
+    $periodStart = 1482017003;
+    $periodEnd = 1484655802;
+    $periodStartUpdated = 1482017003;
+    $periodEndUpdated = 1487334202;
+    $stripeCustomerId = 'CUS-1';
+    $start_date = 1482017003;
+    $status = 'incomplete';
+    $currencyCode = 'USD';
+    $totalAmount = 1000;
+    $paidAt = 1482017003;
+    $stripeFee = 24;
+    $taxFee = 2;
+    $net = 674;
+
+    $this->testData->deleteAllSubscriptions();
+    $this->testData->createPerson($personId, $email);
+    $this->testData->createPrice($priceId, $productId);
+    $rowsInserted = $this->stripeRepository->insertSubscription(
+      $subscriptionId,
+      $personId,
+      $periodStart,
+      $periodEnd,
+      $stripeCustomerId,
+      $priceId,
+      $clientSecret,
+      $start_date,
+      $status,
+      0
+    );
+    $this->assertEquals(1, $rowsInserted);
+
+    $subscription = $this->stripeRepository->getIncompleteSubscription(
+      $personId,
+      $priceId
+    );
+    $this->assertEquals($status, $subscription['status']);
+    $this->assertEquals($subscriptionId, $subscription['subscription_id']);
+    $this->assertEquals($clientSecret, $subscription['stripe_client_secret']);
+  }
+
   public function testInsertAndUpdateSubscription() {
-    $monthlyPlanId = 'Monthly_USD';
+    $priceId = 'Price1';
+    $productId = 'Product1';
+    $clientSecret = 'SECRET';
     $personId = 1;
     $email = 'fastfred@hotmail.com';
     $subscriptionId = 'SUB-1';
@@ -49,7 +99,7 @@ class MysqlStripeRepositoryTest extends TestCase {
     $periodStartUpdated = 1482017003;
     $periodEndUpdated = 1487334202;
     $stripeCustomerId = 'CUS-1';
-    $start = 1482017003;
+    $start_date = 1482017003;
     $status = 'active';
     $currencyCode = 'USD';
     $totalAmount = 1000;
@@ -62,15 +112,16 @@ class MysqlStripeRepositoryTest extends TestCase {
 
     $this->testData->deleteAllSubscriptions();
     $this->testData->createPerson($personId, $email);
-    $this->testData->createMonthlyMembershipPlan($monthlyPlanId);
+    $this->testData->createPrice($priceId, $productId);
     $rowsInserted = $this->stripeRepository->insertSubscription(
       $subscriptionId,
       $personId,
       $periodStart,
       $periodEnd,
       $stripeCustomerId,
-      $monthlyPlanId,
-      $start,
+      $priceId,
+      $clientSecret,
+      $start_date,
       $status,
       0
     );
@@ -79,7 +130,6 @@ class MysqlStripeRepositoryTest extends TestCase {
       $subscriptionId,
       $periodStartUpdated,
       $periodEndUpdated,
-      $monthlyPlanId,
       $status
     );
     $this->assertEquals(1, $rowsUpdated);
@@ -135,71 +185,22 @@ class MysqlStripeRepositoryTest extends TestCase {
     $subscription = $this->stripeRepository->getCurrentSubscription($personId);
     $expectedSubscription = [
       'subscription_id' => $subscriptionId,
-      'start' => '2016-12-18 10:23:23',
+      'start_date' => '2016-12-18 10:23:23',
       'current_period_start' => '2016-12-18 10:23:23',
       'current_period_end' => '2017-02-17 23:23:22',
       'stripe_customer_id' => 'CUS-1',
-      'stripe_plan_id' => 'Monthly_USD',
+      'stripe_price_id' => 'Price1',
       'status' => 'past_due',
       'percent_off' => 0,
       'cancel_at_period_end' => 0,
-      'display_plan_name' => 'Monthly',
+      'product_name' => 'Test Subscription',
+      'product_description' => 'Test subscription for PyAngelo',
       'currency_code' => 'USD',
-      'price_in_cents' => 899,
-      'billing_period_in_months' => 1,
+      'price_in_cents' => 695,
+      'billing_period' => 'month',
       'currency_description' => 'US Dollars',
       'currency_symbol' => '$',
       'stripe_divisor' => 100,
-    ];
-    $this->assertEquals($expectedSubscription, $subscription);
-
-    $rowsUpdated = $this->stripeRepository->cancelSubscriptionAtPeriodEnd(
-      $subscriptionId
-    );
-    $this->assertEquals(1, $rowsUpdated);
-    $subscription = $this->stripeRepository->getCurrentSubscription($personId);
-    $expectedSubscription = [
-      'subscription_id' => $subscriptionId,
-      'start' => '2016-12-18 10:23:23',
-      'current_period_start' => '2016-12-18 10:23:23',
-      'current_period_end' => '2017-02-17 23:23:22',
-      'stripe_customer_id' => 'CUS-1',
-      'stripe_plan_id' => 'Monthly_USD',
-      'status' => 'past_due',
-      'percent_off' => 0,
-      'cancel_at_period_end' => 1,
-      'display_plan_name' => 'Monthly',
-      'currency_code' => 'USD',
-      'price_in_cents' => 899,
-      'billing_period_in_months' => 1,
-      'currency_description' => 'US Dollars',
-      'currency_symbol' => '$',
-      'stripe_divisor' => 100
-    ];
-    $this->assertEquals($expectedSubscription, $subscription);
-
-    $rowsUpdated = $this->stripeRepository->resumeSubscription(
-      $subscriptionId
-    );
-    $this->assertEquals(1, $rowsUpdated);
-    $subscription = $this->stripeRepository->getCurrentSubscription($personId);
-    $expectedSubscription = [
-      'subscription_id' => $subscriptionId,
-      'start' => '2016-12-18 10:23:23',
-      'current_period_start' => '2016-12-18 10:23:23',
-      'current_period_end' => '2017-02-17 23:23:22',
-      'stripe_customer_id' => 'CUS-1',
-      'stripe_plan_id' => 'Monthly_USD',
-      'status' => 'past_due',
-      'percent_off' => 0,
-      'cancel_at_period_end' => 0,
-      'display_plan_name' => 'Monthly',
-      'currency_code' => 'USD',
-      'price_in_cents' => 899,
-      'billing_period_in_months' => 1,
-      'currency_description' => 'US Dollars',
-      'currency_symbol' => '$',
-      'stripe_divisor' => 100
     ];
     $this->assertEquals($expectedSubscription, $subscription);
 
@@ -211,6 +212,26 @@ class MysqlStripeRepositoryTest extends TestCase {
       $subscriptionId
     );
     $this->assertEquals(0, $rowsUpdated);
+
+    $rowsUpdated = $this->stripeRepository->updateSubscriptionStatus(
+      $subscriptionId, 'canceled'
+    );
+    $this->assertEquals(1, $rowsUpdated);
+    $pastSubscriptions = $this->stripeRepository->getPastSubscriptions($personId);
+    $this->assertEquals('canceled', $pastSubscriptions[0]['status']);
+    $this->assertEquals('SUB-1', $pastSubscriptions[0]['subscription_id']);
+  }
+
+  public function testUpdateStripeCustomerId() {
+    $personId = 100;
+    $email = 'fastfred@hotmail.com';
+    $this->testData->createPerson($personId, $email);
+    $rowsUpdated = $this->stripeRepository->updateStripeCustomerId(
+      $personId,
+      'CUS_00000000'
+    );
+    $this->assertEquals(1, $rowsUpdated);
+
   }
 
   public function testUpdatePersonPremiumMemberDetails() {
@@ -244,7 +265,7 @@ class MysqlStripeRepositoryTest extends TestCase {
       $eventType
     );
     $this->assertEquals(1, $rowsInserted);
-    $stripeEvent = $this->stripeRepository->getStripeEvent($eventId);
+    $stripeEvent = $this->stripeRepository->getStripeEventById($eventId);
     $this->assertEquals($eventId, $stripeEvent['event_id']);
     $this->assertEquals($apiVersion, $stripeEvent['api_version']);
     $this->assertEquals($createdAtDate, $stripeEvent['created_at']);

@@ -103,17 +103,14 @@ class TestData {
     $result = $this->dbh->query($sql);
   }
 
-  public function createMembershipPlan($testPlan) {
-    $sql = "DELETE FROM membership_plan";
+  public function createPrice($priceId, $productId) {
+    $sql = "DELETE FROM stripe_price";
     $result = $this->dbh->query($sql);
-    $sql = "INSERT INTO membership_plan values ('$testPlan', 'Monthly', 'USD', 899, 1, 1)";
+    $sql = "DELETE FROM stripe_product";
     $result = $this->dbh->query($sql);
-  }
-
-  public function createMonthlyMembershipPlan($monthlyPlan) {
-    $sql = "DELETE FROM membership_plan";
+    $sql = "INSERT INTO stripe_product values ('$productId', 'Test Subscription', 'Test subscription for PyAngelo', 1)";
     $result = $this->dbh->query($sql);
-    $sql = "INSERT INTO membership_plan values ('$monthlyPlan', 'Monthly', 'USD', 899, 1, 1)";
+    $sql = "INSERT INTO stripe_price values ('$priceId', '$productId', 'USD', 695, 'month', 1)";
     $result = $this->dbh->query($sql);
   }
 
@@ -189,7 +186,7 @@ class TestData {
   public function createSubscribers() {
     $this->deleteAllSubscriptions();
     $this->deleteAllPeople();
-    $this->createMembershipPlan('Monthly');
+    $this->createPrice('Price1', 'Monthly');
     $this->createPerson(1, 'fastfred@hotmail.com');
     $sql = "INSERT INTO stripe_subscription values (
       'SUB-1',
@@ -199,7 +196,8 @@ class TestData {
       '2017-01-01',
       '2017-02-01',
       'CUS-1',
-      'Monthly',
+      'Price1',
+      'SECRET',
       '2017-01-01',
       'active',
       0,
@@ -215,7 +213,8 @@ class TestData {
       '2016-12-01',
       '2017-01-01',
       'CUS-2',
-      'Monthly',
+      'Price1',
+      'SECRET',
       '2016-12-01',
       'canceled',
       0,
@@ -231,7 +230,8 @@ class TestData {
       '2016-12-16',
       '2017-01-16',
       'CUS-3',
-      'Monthly',
+      'Price1',
+      'SECRET',
       '2016-12-21',
       'canceled',
       0,
@@ -244,7 +244,7 @@ class TestData {
   public function createSubscriberPayments() {
     $this->deleteAllSubscriptions();
     $this->deleteAllPeople();
-    $this->createMembershipPlan('Monthly');
+    $this->createPrice('Price1', 'Monthly');
     $this->createPerson(1, 'fastfred@hotmail.com');
     $sql = "INSERT INTO stripe_subscription values (
       'SUB-1',
@@ -254,7 +254,8 @@ class TestData {
       '2017-01-01',
       '2017-02-01',
       'CUS-1',
-      'Monthly',
+      'Price1',
+      'SECRET',
       '2017-01-01',
       'active',
       0,

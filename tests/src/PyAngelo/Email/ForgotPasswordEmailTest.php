@@ -12,6 +12,9 @@ class ForgotPasswordEmailTest extends TestCase {
   }
 
   public function testForgotPasswordEmail() {
+    $dotenv = \Dotenv\Dotenv::createMutable(__DIR__ . '/../../../../');
+    $dotenv->load();
+    $webDeveloperEmail = $_ENV['WEB_DEVELOPER_EMAIL'];
     $emailTemplate = Mockery::mock('PyAngelo\Email\EmailTemplate');
     $emailTemplate->shouldReceive('addEmailHeader')
       ->twice()
@@ -32,7 +35,8 @@ class ForgotPasswordEmailTest extends TestCase {
     $email = new ForgotPasswordEmail(
       $emailTemplate,
       $mailRepository,
-      $mailer
+      $mailer,
+      $webDeveloperEmail
     );
 
     $resetToken = 'a-test-reset-token';

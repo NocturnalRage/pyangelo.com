@@ -398,10 +398,10 @@ class MysqlPersonRepository implements PersonRepository {
     $stmt->close();
     return $rowsUpdated;
   }
-/*
+
   public function getActiveSubscriptionCount($personId) {
     $sql = "SELECT count(*) as active_subscription_count
-	        FROM   stripe_subscription
+	          FROM   stripe_subscription
             WHERE  person_id = ?
             AND    status in ('active', 'past_due')";
     $stmt = $this->dbh->prepare($sql);
@@ -411,58 +411,6 @@ class MysqlPersonRepository implements PersonRepository {
     $stmt->close();
     return $result->fetch_assoc();
   }
-
-  public function getPaymentHistory($personId) {
-    $sql = "SELECT ssp.subscription_id,
-                   ssp.payment_type_id,
-                   ssp.currency_code,
-                   ssp.total_amount_in_cents,
-                   ssp.charge_id,
-                   ssp.original_charge_id,
-                   ssp.refund_status,
-                   ssp.total_amount_in_cents / c.stripe_divisor display_amount,
-                   DATE_FORMAT(ssp.paid_at, '%W %D %M %Y') paid_at_formatted,
-                   pt.payment_type_name,
-                   c.currency_symbol
-            FROM   stripe_subscription ss
-            JOIN   stripe_subscription_payment ssp on ss.subscription_id = ssp.subscription_id
-            JOIN   stripe_payment_type pt on ssp.payment_type_id = pt.payment_type_id
-            JOIN   currency c on ssp.currency_code = c.currency_code
-            WHERE  ss.person_id = ?
-            ORDER BY ssp.paid_at";
-    $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('i', $personId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $stmt->close();
-    return $result->fetch_all(MYSQLI_ASSOC);
-  }
-
-  public function getSubscriptionPayment($chargeId) {
-    $sql = "SELECT ssp.subscription_id,
-                   ssp.payment_type_id,
-                   ssp.currency_code,
-                   ssp.total_amount_in_cents,
-                   ssp.charge_id,
-                   ssp.original_charge_id,
-                   ssp.refund_status,
-                   ssp.total_amount_in_cents / c.stripe_divisor display_amount,
-                   DATE_FORMAT(ssp.paid_at, '%W %D %M %Y') paid_at_formatted,
-                   pt.payment_type_name,
-                   c.currency_symbol
-            FROM   stripe_subscription ss
-            JOIN   stripe_subscription_payment ssp on ss.subscription_id = ssp.subscription_id
-            JOIN   stripe_payment_type pt on ssp.payment_type_id = pt.payment_type_id
-            JOIN   currency c on ssp.currency_code = c.currency_code
-            WHERE  charge_id = ?";
-    $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('s', $chargeId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $stmt->close();
-    return $result->fetch_assoc();
-  }
-*/
 
   public function searchByNameAndEmail($searchTerms) {
     $sql = "SELECT p.person_id,
@@ -524,14 +472,14 @@ class MysqlPersonRepository implements PersonRepository {
                         ELSE 0
                    END as premium_status_boolean,
                    p.created_at,
-                   max(ss.start) premium_start_date,
+                   max(ss.start_date) premium_start_date,
                    p.premium_end_date
             FROM   person p
             JOIN   country c on c.country_code = p.country_code
             LEFT JOIN stripe_subscription ss on ss.person_id = p.person_id
             WHERE  p.premium_end_date > now()
             GROUP BY p.person_id
-            ORDER by max(ss.start) DESC";
+            ORDER by max(ss.start_date) DESC";
     $result = $this->dbh->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
   }
@@ -651,7 +599,7 @@ class MysqlPersonRepository implements PersonRepository {
             JOIN   stripe_payment_type pt on ssp.payment_type_id = pt.payment_type_id
             JOIN   currency c on ssp.currency_code = c.currency_code
             WHERE  ss.person_id = ?
-            ORDER BY ssp.paid_at";
+            ORDER BY ssp.paid_at DESC";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('i', $personId);
     $stmt->execute();
