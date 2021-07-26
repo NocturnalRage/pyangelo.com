@@ -12,6 +12,9 @@ class ActivateMembershipEmailTest extends TestCase {
   }
 
   public function testActivateMembershipEmail() {
+    $dotenv = \Dotenv\Dotenv::createMutable(__DIR__ . '/../../../../');
+    $dotenv->load();
+    $webDeveloperEmail = $_ENV['WEB_DEVELOPER_EMAIL'];
     $emailTemplate = Mockery::mock('PyAngelo\Email\EmailTemplate');
     $emailTemplate->shouldReceive('addEmailHeader')
       ->twice()
@@ -29,10 +32,11 @@ class ActivateMembershipEmailTest extends TestCase {
     $mailer = Mockery::mock('Framework\Mail\LoggerMail');
     $mailer->shouldReceive('send')->once();
 
-    $activateMembershipEmail= new ActivateMembershipEmail(
+    $activateMembershipEmail = new ActivateMembershipEmail(
       $emailTemplate,
       $mailRepository,
-      $mailer
+      $mailer,
+      $webDeveloperEmail
     );
 
     $activateToken = 'a-test-reset-token';

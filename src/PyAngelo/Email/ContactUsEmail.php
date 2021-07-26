@@ -19,7 +19,6 @@ class ContactUsEmail extends EmailMessage {
     $bodyHtml .= $this->emailTemplate->addEmailBodyEnd();
     $bodyHtml .= $this->emailTemplate->addEmailFooterMessage('This email was generated from the contact page on the PyAngelo website.');
 
-    $this->setToEmail('jeff@nocturnalrage.com');
     $this->setReplyEmail($replyEmail);
     $this->setSubject($subject);
     $this->setBodyText($bodyText);

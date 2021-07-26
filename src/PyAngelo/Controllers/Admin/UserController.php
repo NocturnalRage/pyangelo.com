@@ -68,11 +68,19 @@ class UserController extends Controller {
     $subscription = $this->stripeRepository->getCurrentSubscription(
       $this->request->get['person_id']
     );
+    $pastSubscriptions = $this->stripeRepository->getPastSubscriptions(
+      $this->request->get['person_id']
+    );
     if ($subscription) {
-      $subscription['premiumMemberSince'] = Carbon::createFromFormat('Y-m-d H:i:s', $subscription['start'])->diffForHumans();
+      $subscription['premiumMemberSince'] = Carbon::createFromFormat('Y-m-d H:i:s', $subscription['start_date'])->diffForHumans();
       $subscription['nextPaymentDate'] = Carbon::createFromFormat('Y-m-d H:i:s', $subscription['current_period_end'])->diffForHumans();
       $this->response->addVars(array(
         'subscription' => $subscription
+      ));
+    }
+    if ($pastSubscriptions) {
+      $this->response->addVars(array(
+        'pastSubscriptions' => $pastSubscriptions
       ));
     }
 

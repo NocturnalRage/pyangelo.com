@@ -32,8 +32,8 @@ class UserSearchHtmlTest extends BasicViewHtmlTest {
     $response = new Response('views');
     $response->setView('admin/user-search.html.php');
     $response->setVars(array(
-      'pageTitle' => "CubeSkills Admin",
-      'metaDescription' => "Update the CubeSkills website through the administration pages.",
+      'pageTitle' => "PyAngelo Admin",
+      'metaDescription' => "Update the PyAngelo website through the administration pages.",
       'activeLink' => 'Admin',
       'personInfo' => $this->setPersonInfoAdmin(),
       'people' => $people,

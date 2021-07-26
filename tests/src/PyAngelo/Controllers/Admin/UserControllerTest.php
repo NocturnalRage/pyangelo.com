@@ -105,6 +105,10 @@ class UserControllerTest extends TestCase {
       ->once()
       ->with($personId)
       ->andReturn();
+    $this->stripeRepository->shouldReceive('getPastSubscriptions')
+      ->once()
+      ->with($personId)
+      ->andReturn();
     $this->request->get['person_id'] = $personId;
 
     $response = $this->controller->exec();

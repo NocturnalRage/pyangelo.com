@@ -47,6 +47,10 @@ class Auth {
     return $this->person['person_id'] ?? 0;
   }
 
+  public function stripeCustomerId() {
+    return $this->person['stripe_customer_id'] ?? NULL;
+  }
+
   public function insertRememberMe($personId, $session, $tokenHash) {
     return $this->personRepository->insertRememberMe($personId, $session, $tokenHash);
   }
@@ -158,6 +162,16 @@ class Auth {
       return TRUE;
     else
       return FALSE;
+  }
+
+  public function hasActiveSubscription() {
+    $sub = $this->personRepository->getActiveSubscriptionCount($this->personId());
+    if ($sub['active_subscription_count'] == 0) {
+      return false;
+    }
+    else {
+      return true;
+    }
   }
 
   public function createNotification(

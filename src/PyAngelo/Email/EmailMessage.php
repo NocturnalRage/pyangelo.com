@@ -5,8 +5,8 @@ use PyAngelo\Repositories\MailRepository;
 use Framework\Contracts\MailContract;
 
 abstract class EmailMessage {
-  private $fromEmail = "PyAngelo <jeff@nocturnalrage.com>";
-  private $replyEmail = "PyAngelo <jeff@nocturnalrage.com>";
+  private $fromEmail;
+  private $replyEmail;
   private $toEmail;
   private $subject;
   private $bodyText;
@@ -19,11 +19,16 @@ abstract class EmailMessage {
   public function __construct(
     EmailTemplate $emailTemplate,
     MailRepository $mailRepository,
-    MailContract $mailer)
+    MailContract $mailer,
+    $webDeveloperEmail
+  )
   {
     $this->emailTemplate = $emailTemplate;
     $this->mailRepository = $mailRepository;
     $this->mailer = $mailer;
+    $this->toEmail = $webDeveloperEmail;
+    $this->fromEmail = $webDeveloperEmail;
+    $this->replyEmail = $webDeveloperEmail;
   }
 
   public function queueEmail(array $mailInfo) {
@@ -45,8 +50,16 @@ abstract class EmailMessage {
     );
   }
 
+  public function getFromEmail() {
+     return $this->fromEmail;
+  }
+
   public function setFromEmail($fromEmail) {
      $this->fromEmail = $fromEmail;
+  }
+
+  public function getReplyEmail() {
+     return $this->replyEmail;
   }
 
   public function setReplyEmail($replyEmail) {

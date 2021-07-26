@@ -1,0 +1,5 @@
+*/5 * * * * /srv/http/pyangelo.com/src/Framework/Cron/HandleSqsMail.php >> /srv/http/pyangelo.com/logs/pyangelo-cron.log 2>&1
+*/1 * * * * /srv/http/pyangelo.com/src/Framework/Cron/SendMail.php >> /srv/http/pyangelo.com/logs/pyangelo-cron.log 2>&1
+*/1 * * * * /srv/http/pyangelo.com/src/Framework/Cron/SendCampaigns.php >> /srv/http/pyangelo.com/logs/pyangelo-cron.log 2>&1
+*/1 * * * * /srv/http/pyangelo.com/src/Framework/Cron/SendAutoresponders.php >> /srv/http/pyangelo.com/logs/pyangelo-cron.log 2>&1
+12 08 * * * /srv/http/pyangelo.com/src/Framework/Cron/MysqlBackup.sh >> /srv/http/pyangelo.com/logs/pyangelo-cron.log 2>&1

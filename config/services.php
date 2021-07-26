@@ -47,6 +47,10 @@ $di->set('campaignRepository', function () use ($di) {
   return new PyAngelo\Repositories\MysqlCampaignRepository($di->get('dbh'));
 });
 
+$di->set('countryRepository', function () use ($di) {
+  return new PyAngelo\Repositories\MysqlCountryRepository($di->get('dbh'));
+});
+
 $di->set('mailRepository', function () use ($di) {
   return new PyAngelo\Repositories\MysqlMailRepository($di->get('dbh'));
 });
@@ -129,7 +133,8 @@ $di->set('activateMembershipEmail', function () use ($di) {
   return new PyAngelo\Email\ActivateMembershipEmail (
     $di->get('emailTemplate'),
     $di->get('mailRepository'),
-    $di->get('mailer')
+    $di->get('mailer'),
+    $_ENV['WEB_DEVELOPER_EMAIL']
   );
 });
 
@@ -137,7 +142,8 @@ $di->set('forgotPasswordEmail', function () use ($di) {
   return new PyAngelo\Email\ForgotPasswordEmail (
     $di->get('emailTemplate'),
     $di->get('mailRepository'),
-    $di->get('mailer')
+    $di->get('mailer'),
+    $_ENV['WEB_DEVELOPER_EMAIL']
   );
 });
 
@@ -145,7 +151,17 @@ $di->set('contactUsEmail', function () use ($di) {
   return new PyAngelo\Email\ContactUsEmail (
     $di->get('emailTemplate'),
     $di->get('mailRepository'),
-    $di->get('mailer')
+    $di->get('mailer'),
+    $_ENV['WEB_DEVELOPER_EMAIL']
+  );
+});
+
+$di->set('whyCancelEmail', function () use ($di) {
+  return new PyAngelo\Email\WhyCancelEmail (
+    $di->get('emailTemplate'),
+    $di->get('mailRepository'),
+    $di->get('mailer'),
+    $_ENV['WEB_DEVELOPER_EMAIL']
   );
 });
 
@@ -159,6 +175,47 @@ $di->set('mailer', function () use ($di) {
     $_ENV['AWS_SES_KEY'],
     $_ENV['AWS_SES_SECRET'],
     $_ENV['AWS_SES_REGION']);
+});
+
+$di->set('awsSqsMailProcessor', function () use ($di) {
+  return new Framework\Mail\AwsSqsMailProcessor(
+    $_ENV['AWS_SQS_KEY'],
+    $_ENV['AWS_SQS_SECRET'],
+    $_ENV['AWS_SES_REGION'],
+    $_ENV['SQS_BOUNCE_URL'],
+    $_ENV['SQS_COMPLAINT_URL'],
+    $di->get('personRepository'),
+    $di->get('campaignRepository')
+  );
+});
+
+$di->set('mailQueue', function () use ($di) {
+  return new Framework\Mail\MailQueue(
+    $di->get('mailRepository'),
+    $di->get('mailer')
+  );
+});
+
+$di->set('HTML5DOMDocument', function () use ($di) {
+  return new IvoPetkov\HTML5DOMDocument();
+});
+
+$di->set('campaigns', function () use ($di) {
+  return new Framework\Mail\Campaigns(
+    $di->get('campaignRepository'),
+    $di->get('mailer'),
+    $di->get('HTML5DOMDocument'),
+    $_ENV['EMAIL_DOMAIN']
+  );
+});
+
+$di->set('autoresponders', function () use ($di) {
+  return new Framework\Mail\Autoresponders(
+    $di->get('campaignRepository'),
+    $di->get('mailer'),
+    $di->get('HTML5DOMDocument'),
+    $_ENV['EMAIL_DOMAIN']
+  );
 });
 
 /* General objects start here */
@@ -205,6 +262,10 @@ $di->set('countryDetector', function () use ($di) {
 
 $di->set('geoReader', function () use ($di) {
   return new GeoIp2\Database\Reader($_ENV['GEOIP2_COUNTRY_DB']);
+});
+
+$di->set('stripeWrapper', function () use ($di) {
+  return new Framework\Billing\StripeWrapper($_ENV['STRIPE_SECRET_KEY']);
 });
 
 $di->set('HtmlPurifierPurify', function () use ($di) {
@@ -468,6 +529,18 @@ $di->set('FavouritesController', function () use ($di) {
     $di->get('response'),
     $di->get('auth'),
     $di->get('tutorialRepository')
+  );
+});
+
+$di->set('PremiumMembershipController', function () use ($di) {
+  return new PyAngelo\Controllers\Membership\PremiumMembershipController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('stripeRepository'),
+    $di->get('countryRepository'),
+    $di->get('countryDetector'),
+    $di->get('numberFormatter')
   );
 });
 
@@ -1162,5 +1235,103 @@ $di->set('PremiumUsersController', function () use ($di) {
     $di->get('auth'),
     $di->get('personRepository'),
     $di->get('profileAvatar')
+  );
+});
+
+$di->set('ProcessSubscriptionController', function () use ($di) {
+  return new PyAngelo\Controllers\Membership\ProcessSubscriptionController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('stripeWrapper'),
+    $di->get('stripeRepository')
+  );
+});
+
+$di->set('stripeWebhookEmails', function () use ($di) {
+  return new PyAngelo\Email\StripeWebhookEmails (
+    $di->get('emailTemplate'),
+    $di->get('mailRepository'),
+    $di->get('mailer'),
+    $_ENV['WEB_DEVELOPER_EMAIL']
+  );
+});
+
+$di->set('StripeWebhookController', function () use ($di) {
+  return new PyAngelo\Controllers\Admin\StripeWebhookController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('stripeWrapper'),
+    $di->get('stripeWebhookEmails'),
+    $di->get('stripeRepository'),
+    $di->get('personRepository'),
+    $_ENV['STRIPE_WEBHOOK_SECRET'],
+    $di->get('numberFormatter')
+  );
+});
+
+$di->set('SubscriptionController', function () use ($di) {
+  return new PyAngelo\Controllers\Profile\SubscriptionController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('stripeRepository'),
+    $di->get('numberFormatter')
+  );
+});
+
+$di->set('CancelSubscriptionController', function () use ($di) {
+  return new PyAngelo\Controllers\Profile\CancelSubscriptionController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('stripeWrapper'),
+    $di->get('stripeRepository'),
+    $di->get('whyCancelEmail')
+  );
+});
+
+$di->set('InvoicesController', function () use ($di) {
+  return new PyAngelo\Controllers\Profile\InvoicesController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('personRepository'),
+    $di->get('numberFormatter')
+  );
+});
+
+$di->set('PremiumWelcomeController', function () use ($di) {
+  return new PyAngelo\Controllers\Membership\PremiumWelcomeController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth')
+  );
+});
+
+$di->set('PaymentMethodController', function () use ($di) {
+  return new PyAngelo\Controllers\Profile\PaymentMethodController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth')
+  );
+});
+
+$di->set('PaymentMethodUpdateController', function () use ($di) {
+  return new PyAngelo\Controllers\Profile\PaymentMethodUpdateController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('stripeWrapper'),
+    $di->get('stripeRepository')
+  );
+});
+
+$di->set('PaymentMethodUpdatedController', function () use ($di) {
+  return new PyAngelo\Controllers\Profile\PaymentMethodUpdatedController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth')
   );
 });

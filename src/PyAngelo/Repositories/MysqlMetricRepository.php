@@ -14,8 +14,8 @@ class MysqlMetricRepository implements MetricRepository {
                   , sum(cancelled) cancelled
                   , sum(subscribed) - sum(cancelled) net
             FROM (
-              SELECT DATE_FORMAT(s.start, '%b %Y') startmonth,
-                     DATE_FORMAT(s.start, '%Y%m') ordermonth,
+              SELECT DATE_FORMAT(s.start_date, '%b %Y') startmonth,
+                     DATE_FORMAT(s.start_date, '%Y%m') ordermonth,
                      1 as subscribed,
                      0 as cancelled
               FROM   stripe_subscription s
@@ -50,7 +50,7 @@ class MysqlMetricRepository implements MetricRepository {
 
   public function getPremiumMemberCountByMonth() {
     $sql = "SELECT DATE_FORMAT(months.month, '%b %Y') month,
-                   SUM(case when months.month between s.start and s.current_period_end then 1 else 0 end) premium_member_count
+                   SUM(case when months.month between s.start_date and s.current_period_end then 1 else 0 end) premium_member_count
             FROM   stripe_subscription s
             CROSS JOIN (
               SELECT now() month
@@ -84,13 +84,15 @@ class MysqlMetricRepository implements MetricRepository {
   }
 
   public function getPremiumMemberCountByPlan() {
-    $sql = "SELECT mp.display_plan_name,
+    $sql = "SELECT sprod.product_name,
+                   sprod.product_description,
                    COUNT(*) count
             FROM   stripe_subscription s
-            JOIN   membership_plan mp on s.stripe_plan_id = mp.stripe_plan_id
+            JOIN   stripe_price sp on sp.stripe_price_id = s.stripe_price_id
+            JOIN   stripe_product sprod on sprod.stripe_product_id = sp.stripe_product_id
             WHERE  s.status = 'active'
             AND    s.canceled_at IS NULL
-            GROUP BY mp.display_plan_name";
+            GROUP BY sprod.product_name, sprod.product_description";
 
     $result = $this->dbh->query($sql);
     return $result->fetch_all(MYSQLI_ASSOC);
@@ -167,10 +169,8 @@ class MysqlMetricRepository implements MetricRepository {
                      COUNT(*) premium_members,
                      0 past_due
               FROM   stripe_subscription s
-              JOIN   membership_plan mp on s.stripe_plan_id = mp.stripe_plan_id
               WHERE  s.status = 'active'
               AND    s.canceled_at IS NULL
-              AND    mp.display_plan_name = 'Premium'
               UNION ALL
               SELECT 0 total_members,
                      0 premium_members,

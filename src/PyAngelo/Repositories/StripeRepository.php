@@ -2,11 +2,9 @@
 namespace PyAngelo\Repositories;
 
 interface StripeRepository {
-  public function getAllMembershipPlans();
+  public function updateStripeCustomerId($personId, $stripeCustomerId);
 
-  public function getMembershipPlans($currencyCode);
-
-  public function getPlanById($stripePlanId);
+  public function getMembershipPrices($currencyCode);
 
   public function updatePersonPremiumMemberDetails(
     $personId,
@@ -21,13 +19,14 @@ interface StripeRepository {
     $current_period_start,
     $current_period_end,
     $customer_id,
-    $plan_id,
+    $price_id,
+    $stripe_client_secret,
     $start,
     $status,
     $percentOff
   );
 
-  public function getStripeEvent($eventId);
+  public function getStripeEventById($eventId);
 
   public function saveStripeEvent(
     $eventId,
@@ -44,7 +43,6 @@ interface StripeRepository {
     $subscriptionId,
     $periodStart,
     $periodEnd,
-    $planId,
     $status
   );
 
@@ -83,9 +81,9 @@ interface StripeRepository {
 
   public function getCurrentSubscription($personId);
 
-  public function cancelSubscriptionAtPeriodEnd($subscriptionId);
+  public function getPastSubscriptions($personId);
 
-  public function resumeSubscription($subscriptionId);
+  public function getIncompleteSubscription($personId, $stripePriceId);
 
   public function updatePersonLast4($personId, $last4);
 }

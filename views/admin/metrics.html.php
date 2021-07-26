@@ -15,7 +15,6 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
           include __DIR__ . DIRECTORY_SEPARATOR . '/subscriber-growth.html.php';
           include __DIR__ . DIRECTORY_SEPARATOR . '/subscriber-payments.html.php';
           include __DIR__ . DIRECTORY_SEPARATOR . '/premium-member-count.html.php';
-          include __DIR__ . DIRECTORY_SEPARATOR . '/premium-member-plans.html.php';
           include __DIR__ . DIRECTORY_SEPARATOR . '/premium-member-countries.html.php';
           include __DIR__ . DIRECTORY_SEPARATOR . '/free-members-per-month.html.php';
           include __DIR__ . DIRECTORY_SEPARATOR . '/free-members-per-day.html.php';

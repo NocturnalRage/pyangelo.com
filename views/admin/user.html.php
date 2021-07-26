@@ -62,7 +62,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
         <?php if (empty($subscription)) : ?>
           <h2>This User Doesn't Have an Active Subscription</h2>
         <?php else : ?>
-          <h2>This User is on the <?= $this->esc($subscription['display_plan_name']) ?> Plan</h2>
+          <h2>This User Has a Subscription</h2>
           <?php if ($subscription['percent_off'] > 0) : ?>
             <h3>They have a permanent discount of <?= $this->esc($subscription['percent_off']) ?>%</h3>
           <?php endif ?>
@@ -72,8 +72,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
           <ul class="list-group">
             <li class="list-group-item">
               Cost:
-              <?= $subscription['currency_symbol'] . $numberFormatter->formatCurrency((($subscription['price_in_cents'] * ((100 - $subscription['percent_off']) / 100)) / $subscription['stripe_divisor']), $subscription['currency_code']) ?> per
-              <?= $subscription['billing_period_in_months'] == 1 ? ' month' : 'year' ?>
+              <?= $subscription['currency_symbol'] . $numberFormatter->formatCurrency((($subscription['price_in_cents'] * ((100 - $subscription['percent_off']) / 100)) / $subscription['stripe_divisor']), $subscription['currency_code']) ?> per month
             </li>
             <li class="list-group-item">
               Started:
@@ -97,7 +96,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
               <h1>Cancel This Subscription</h1>
               <p>By clicking the button below you are cancelling this person's stripe subscription. They will still have access for the period that have paid for which ends <?= $this->esc($subscription['nextPaymentDate']) ?>. If you wish to stop all access you need to cancel the membership and then revoke access above.</p>
               <form action="/admin/cancel-subscription" method="POST">
-                <input type="hidden" name="crsfToken" value="<?= $auth->createCrsfToken(); ?>" />
+                <input type="hidden" name="crsfToken" value="<?= $personInfo['crsfToken']; ?>" />
                 <input type="hidden" name="person_id" value="<?= $this->esc($person['person_id']) ?>" />
                 <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this membership?')">
                   <i class="fa fa-times" aria-hidden="true"></i> Cancel This Subscription
@@ -106,29 +105,15 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
             </div>
           <?php endif ?>
         <?php endif ?>
+
+        <?php if (! empty($pastSubscriptions)) : ?>
+          <?php         include __DIR__ . '/../profile/past-subscriptions.html.php'; ?>
+        <?php endif ?>
+
         <?php if (empty($payments)) : ?>
           <h2>No Payments Have Been Made By This Person</h2>
         <?php else : ?>
-          <h2>Payment History</h2>
-          <div class="table-responsive">
-            <table class="table table-striped table-hover">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Amount</th>
-                  <th>Type</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php
-                  foreach($payments as $payment) {
-                    include __DIR__ . '/payment.html.php';
-                  }
-                ?>
-              </tbody>
-            </table>
-          </div>
+          <?php         include __DIR__ . '/../profile/payment-history.html.php'; ?>
         <?php endif ?>
       </div><!-- col-md-9 -->
     </div><!-- row -->

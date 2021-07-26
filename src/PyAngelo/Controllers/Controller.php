@@ -1,6 +1,7 @@
 <?php
 namespace PyAngelo\Controllers;
 
+use DateTime;
 use Framework\{Request, Response};
 use PyAngelo\Auth\Auth;
 
@@ -35,5 +36,17 @@ abstract class Controller {
       'message' => $message,
       'type' => $messageType
     ];
+  }
+
+  public function logMessage($message, $logLevel) {
+    if (! in_array($logLevel, ['DEBUG', 'INFO', 'WARNING', 'ERROR']))
+      $logLevel = 'INFO';
+
+    $date = new DateTime();
+    $logDate = $date->format("y-m-d h:i:s");
+
+    $message = '[' . $logDate . '] ' . $logLevel . ': ' . $message . PHP_EOL;
+
+    file_put_contents($_ENV['APPLICATION_LOG_FILE'], $message, FILE_APPEND);
   }
 }

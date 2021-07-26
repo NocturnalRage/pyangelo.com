@@ -7,38 +7,38 @@ class MysqlStripeRepository implements StripeRepository {
   public function __construct(\Mysqli $dbh) {
     $this->dbh = $dbh;
   }
-  public function getAllMembershipPlans() {
-    $sql = "SELECT *
-            FROM   membership_plan
-            ORDER BY currency_code, billing_period_in_months";
-    $result = $this->dbh->query($sql);
-    return $result->fetch_all(MYSQLI_ASSOC);
+
+  public function updateStripeCustomerId($personId, $stripeCustomerId) {
+    $sql = "UPDATE person
+            SET    stripe_customer_id = ?
+            WHERE  person_id = ?";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->bind_param('si', $stripeCustomerId, $personId);
+    $stmt->execute();
+    $rowsUpdated = $this->dbh->affected_rows;
+    $stmt->close();
+    return $rowsUpdated;
   }
 
-  public function getMembershipPlans($currencyCode) {
-    $sql = "SELECT *
-            FROM   membership_plan
-            WHERE  currency_code = ?
-            AND    active = TRUE
-            ORDER BY billing_period_in_months";
+  public function getMembershipPrices($currencyCode) {
+    $sql = "SELECT prod.stripe_product_id,
+                   prod.product_name,
+                   price.stripe_price_id,
+                   price.currency_code,
+                   price.price_in_cents,
+                   price.billing_period
+            FROM   stripe_product prod
+            JOIN   stripe_price price ON prod.stripe_product_id = price.stripe_product_id
+
+            WHERE  price.currency_code = ?
+            AND    prod.active = TRUE
+            AND    price.active = TRUE";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('s', $currencyCode);
     $stmt->execute();
     $result = $stmt->get_result();
     $stmt->close();
     return $result->fetch_all(MYSQLI_ASSOC);
-  }
-
-  public function getPlanById($stripePlanId) {
-    $sql = "SELECT *
-	          FROM   membership_plan
-            WHERE  stripe_plan_id = ?";
-    $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('s', $stripePlanId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $stmt->close();
-    return $result->fetch_assoc();
   }
 
   public function updatePersonPremiumMemberDetails(
@@ -67,8 +67,9 @@ class MysqlStripeRepository implements StripeRepository {
     $current_period_start,
     $current_period_end,
     $customer_id,
-    $plan_id,
-    $start,
+    $price_id,
+    $stripe_client_secret,
+    $start_date,
     $status,
     $percentOff
   ) {
@@ -80,24 +81,26 @@ class MysqlStripeRepository implements StripeRepository {
               current_period_start,
               current_period_end,
               stripe_customer_id,
-              stripe_plan_id,
-              start,
+              stripe_price_id,
+              stripe_client_secret,
+              start_date,
               status,
               percent_off,
               created_at,
               updated_at
             )
-            VALUES (?, ?, 0, NULL, from_unixtime(?), from_unixtime(?), ?, ?, from_unixtime(?), ?, ?, now(), now())";
+            VALUES (?, ?, 0, NULL, from_unixtime(?), from_unixtime(?), ?, ?, ?, from_unixtime(?), ?, ?, now(), now())";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'siiissisi',
+      'siiisssisi',
       $subscription_id,
       $person_id,
       $current_period_start,
       $current_period_end,
       $customer_id,
-      $plan_id,
-      $start,
+      $price_id,
+      $stripe_client_secret,
+      $start_date,
       $status,
       $percentOff
     );
@@ -107,9 +110,9 @@ class MysqlStripeRepository implements StripeRepository {
     return $rowsInserted;
   }
 
-  public function getStripeEvent($eventId) {
+  public function getStripeEventById($eventId) {
     $sql = "SELECT *
-	        FROM   stripe_event
+	          FROM   stripe_event
             WHERE  event_id = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('s', $eventId);
@@ -148,7 +151,7 @@ class MysqlStripeRepository implements StripeRepository {
 
   public function getCurrencyFromCode($currencyCode) {
     $sql = "SELECT *
-	        FROM   currency
+	          FROM   currency
             WHERE  currency_code = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('s', $currencyCode);
@@ -178,22 +181,19 @@ class MysqlStripeRepository implements StripeRepository {
     $subscriptionId,
     $periodStart,
     $periodEnd,
-    $planId,
     $status
   ) {
     $sql = "UPDATE stripe_subscription
             SET    current_period_start = from_unixtime(?),
                    current_period_end = from_unixtime(?),
-                   stripe_plan_id = ?,
                    status = ?,
                    updated_at = now()
             WHERE  subscription_id = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'iisss',
+      'iiss',
       $periodStart,
       $periodEnd,
-      $planId,
       $status,
       $subscriptionId
     );
@@ -351,24 +351,26 @@ class MysqlStripeRepository implements StripeRepository {
 
   public function getCurrentSubscription($personId) {
     $sql = "SELECT ss.subscription_id,
-                   ss.start,
+                   ss.start_date,
                    ss.current_period_start,
                    ss.current_period_end,
                    ss.stripe_customer_id,
-                   ss.stripe_plan_id,
+                   ss.stripe_price_id,
                    ss.status,
                    ss.percent_off,
                    ss.cancel_at_period_end,
-                   mp.display_plan_name,
-                   mp.currency_code,
-                   mp.price_in_cents,
-                   mp.billing_period_in_months,
+                   sprod.product_name,
+                   sprod.product_description,
+                   sp.currency_code,
+                   sp.price_in_cents,
+                   sp.billing_period,
                    c.currency_description,
                    c.currency_symbol,
                    c.stripe_divisor
             FROM   stripe_subscription ss
-            JOIN   membership_plan mp on mp.stripe_plan_id = ss.stripe_plan_id
-            JOIN   currency c on mp.currency_code = c.currency_code
+            JOIN   stripe_price sp on sp.stripe_price_id = ss.stripe_price_id
+            JOIN   stripe_product sprod on sprod.stripe_product_id = sp.stripe_product_id
+            JOIN   currency c on sp.currency_code = c.currency_code
             WHERE  ss.person_id = ?
             AND    ss.status in ('active', 'past_due')";
     $stmt = $this->dbh->prepare($sql);
@@ -378,33 +380,74 @@ class MysqlStripeRepository implements StripeRepository {
     $stmt->close();
     return $result->fetch_assoc();
   }
-
-  public function cancelSubscriptionAtPeriodEnd($subscriptionId) {
-    $sql = "UPDATE stripe_subscription
-            SET    canceled_at = now(),
-                   cancel_at_period_end = 1,
-                   updated_at = now()
-            WHERE  subscription_id = ?";
+  
+  public function getPastSubscriptions($personId) {
+    $sql = "SELECT ss.subscription_id,
+                   ss.start_date,
+                   ss.current_period_start,
+                   ss.current_period_end,
+                   ss.stripe_customer_id,
+                   ss.stripe_price_id,
+                   ss.status,
+                   ss.percent_off,
+                   ss.cancel_at_period_end,
+                   sprod.product_name,
+                   sprod.product_description,
+                   sp.currency_code,
+                   sp.price_in_cents,
+                   sp.billing_period,
+                   c.currency_description,
+                   c.currency_symbol,
+                   c.stripe_divisor,
+                   DATE_FORMAT(ss.start_date, '%W %D %M %Y') start_date_formatted,
+                   DATE_FORMAT(ss.current_period_end, '%W %D %M %Y') current_period_end_formatted
+            FROM   stripe_subscription ss
+            JOIN   stripe_price sp on sp.stripe_price_id = ss.stripe_price_id
+            JOIN   stripe_product sprod on sprod.stripe_product_id = sp.stripe_product_id
+            JOIN   currency c on sp.currency_code = c.currency_code
+            WHERE  ss.person_id = ?
+            AND    ss.status not in ('active', 'past_due')
+            ORDER BY ss.start_date DESC";
     $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('s', $subscriptionId);
+    $stmt->bind_param('i', $personId);
     $stmt->execute();
-    $rowsUpdated = $this->dbh->affected_rows;
+    $result = $stmt->get_result();
     $stmt->close();
-    return $rowsUpdated;
+    return $result->fetch_all(MYSQLI_ASSOC);
   }
 
-  public function resumeSubscription($subscriptionId) {
-    $sql = "UPDATE stripe_subscription
-            SET    canceled_at = NULL,
-                   cancel_at_period_end = 0,
-                   updated_at = now()
-            WHERE  subscription_id = ?";
+  public function getIncompleteSubscription($personId, $stripePriceId) {
+    $sql = "SELECT ss.subscription_id,
+                   ss.start_date,
+                   ss.current_period_start,
+                   ss.current_period_end,
+                   ss.stripe_customer_id,
+                   ss.stripe_price_id,
+                   ss.stripe_client_secret,
+                   ss.status,
+                   ss.percent_off,
+                   ss.cancel_at_period_end,
+                   sprod.product_name,
+                   sprod.product_description,
+                   sp.currency_code,
+                   sp.price_in_cents,
+                   sp.billing_period,
+                   c.currency_description,
+                   c.currency_symbol,
+                   c.stripe_divisor
+            FROM   stripe_subscription ss
+            JOIN   stripe_price sp on sp.stripe_price_id = ss.stripe_price_id
+            JOIN   stripe_product sprod on sprod.stripe_product_id = sp.stripe_product_id
+            JOIN   currency c on sp.currency_code = c.currency_code
+            WHERE  ss.person_id = ?
+            AND    ss.stripe_price_id = ?
+            AND    ss.status = 'incomplete'";
     $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('s', $subscriptionId);
+    $stmt->bind_param('is', $personId, $stripePriceId);
     $stmt->execute();
-    $rowsUpdated = $this->dbh->affected_rows;
+    $result = $stmt->get_result();
     $stmt->close();
-    return $rowsUpdated;
+    return $result->fetch_assoc();
   }
 
   public function updatePersonLast4($personId, $last4) {
