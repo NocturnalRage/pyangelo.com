@@ -309,6 +309,6 @@ insert into db_change
 values (
   45,
   'Update product and prices tables for Stripe in production.',
-  '0045_update_stripe_produts_and_prices_for_production.sql',
+  '0045_update_stripe_produts_and_prices.sql',
   now()
 );
