@@ -115,5 +115,11 @@ class StripeWrapper {
     }
     return $fees;
   }
+
+  public function updateEmail($customerId, $email) {
+    $customer = $this->stripe->customers->retrieve($customerId, []);
+    $customer->email = $email;
+    $customer->save();
+  }
 }
 ?>

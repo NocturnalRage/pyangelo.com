@@ -23,6 +23,8 @@ return [
   [ 'GET','/reset-password', 'ResetPasswordController', 'resetPassword' ],
   [ 'POST','/reset-password-validate', 'ResetPasswordValidateController', 'resetPasswordValidate' ],
   [ 'GET','/profile', 'ProfileController', 'profile' ],
+  [ 'GET','/profile/edit', 'ProfileEditController', 'profileEdit' ],
+  [ 'POST','/profile/update', 'ProfileUpdateController', 'profileUpdate' ],
   [ 'GET','/password', 'PasswordController', 'password' ],
   [ 'POST','/password-validate', 'PasswordValidateController', 'passwordValidate' ],
   [ 'GET','/newsletter', 'NewsletterController', 'newsletter' ],

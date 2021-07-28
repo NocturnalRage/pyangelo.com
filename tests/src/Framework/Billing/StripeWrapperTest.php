@@ -164,5 +164,15 @@ class StripeWrapperTest extends TestCase {
     $this->assertSame("payment_intent", $retrieved->object);
     $this->assertSame($amountInCents, $retrieved->amount);
   }
+
+  public function testUpdateEmail() {
+    $email = 'joel+stripetest@hotmail.com';
+    $updatedEmail = 'joel@geelongfc.com.au';
+    $name = 'Joel Selwood';
+    $customer = $this->stripeWrapper->createCustomer($email, $name);
+    $this->stripeWrapper->updateEmail($customer->id, $updatedEmail);
+    $retrieved = $this->stripeWrapper->retrieveCustomer($customer->id);
+    $this->assertSame($updatedEmail, $retrieved->email);
+  }
 }
 ?>
