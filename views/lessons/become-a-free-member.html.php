@@ -8,7 +8,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
     <hr />
     <div class="row">
       <div class="col-md-8 col-md-offset-2 text-center">
-        <a href="/membership-options">
+        <a href="/register">
           <img src="/uploads/images/tutorials/<?= $this->esc($lesson['tutorial_thumbnail']); ?>" class="img-responsive center-block featuredThumbnail">
         </a>
         <p>

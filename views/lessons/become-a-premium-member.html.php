@@ -8,7 +8,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
     <hr />
     <div class="row">
       <div class="col-md-8 col-md-offset-2 text-center">
-        <a href="/membership-options">
+        <a href="/premium-membership">
           <img src="/uploads/images/tutorials/<?= $this->esc($lesson['tutorial_thumbnail']); ?>" class="img-responsive center-block featuredThumbnail">
         </a>
         <p>
@@ -17,7 +17,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
         we've ever made and learn the coding strategies taught by our teachers. 
         </p>
         <p>
-          <a href="/membership-options" class="btn btn-large btn-primary btn-responsive">
+          <a href="/premium-membership" class="btn btn-large btn-primary btn-responsive">
           <i class="fa fa-cube"></i> FIND OUT MORE ABOUT THE PREMIUM MEMBERSHIP</a>
         </p>
       </div><!-- col-md-8 -->

@@ -35,6 +35,13 @@ class Auth {
     return false;
   }
 
+  public function isPremium() {
+    if ($this->loggedIn) {
+      return $this->person['premium_status_boolean'] == 1;
+    }
+    return false;
+  }
+
   public function unreadNotificationCount() {
     return $this->loggedIn ? $this->personRepository->unreadNotificationCount($this->person['person_id'])['unread'] : 0;
   }
@@ -196,6 +203,7 @@ class Auth {
     return [
       'loggedIn' => $this->loggedIn,
       'details' => $this->person,
+      'isPremium' => $this->isPremium(),
       'isAdmin' => $this->isAdmin(),
       'isImpersonating' => $this->impersonating(),
       'crsfToken' => $this->createCrsfToken(),
