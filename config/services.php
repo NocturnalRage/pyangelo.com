@@ -487,6 +487,27 @@ $di->set('ProfileController', function () use ($di) {
   );
 });
 
+$di->set('ProfileEditController', function () use ($di) {
+  return new PyAngelo\Controllers\Profile\ProfileEditController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('countryRepository')
+  );
+});
+
+$di->set('ProfileUpdateController', function () use ($di) {
+  return new PyAngelo\Controllers\Profile\ProfileUpdateController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('personRepository'),
+    $di->get('countryRepository'),
+    $di->get('countryDetector'),
+    $di->get('stripeWrapper')
+  );
+});
+
 $di->set('PasswordController', function () use ($di) {
   return new PyAngelo\Controllers\Profile\PasswordController (
     $di->get('request'),
