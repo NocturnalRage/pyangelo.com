@@ -103,6 +103,13 @@ class MysqlPersonRepositoryTest extends TestCase {
     $this->assertSame($updatedCountryCode, $person['country_code']);
     $this->assertSame($updatedDetectedCountryCode, $person['detected_country_code']);
     $this->assertSame(1, $person['active']);
+    $this->assertSame(0, $person['premium_status_boolean']);
+    $this->personRepository->updatePremiumEndDate($personId, '2000-01-01 00:00:00');
+    $person = $this->personRepository->getPersonByEmail($updatedEmail);
+    $this->assertSame(0, $person['premium_status_boolean']);
+    $this->personRepository->updatePremiumEndDate($personId, '2100-01-01 00:00:00');
+    $person = $this->personRepository->getPersonByEmail($updatedEmail);
+    $this->assertSame(1, $person['premium_status_boolean']);
 
     $rowsUpdated = $this->personRepository->incrementBounceCount($personId);
     $person = $this->personRepository->getPersonById($personId);

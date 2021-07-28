@@ -22,7 +22,8 @@ class AuthTest extends TestCase {
       'email' => $this->nonAdminLoginEmail,
       'given_name' => 'Fred',
       'password' => $this->passwordHash,
-      'admin' => 0
+      'admin' => 0,
+      'premium_status_boolean' => 0
     ];
 
     $this->adminPersonId = 1;
@@ -32,7 +33,8 @@ class AuthTest extends TestCase {
       'email' => $this->adminLoginEmail,
       'given_name' => 'Jeff',
       'password' => $this->passwordHash,
-      'admin' => 1
+      'admin' => 1,
+      'premium_status_boolean' => 1
     ];
 
     session_start();
@@ -107,7 +109,15 @@ class AuthTest extends TestCase {
   /**
    * @runInSeparateProcess
    */
-  public function testLoggedInUserIsNotAdmin() {
+  public function testAnonymousUserIsNotPremium() {
+    $auth = new Auth($this->personRepository, $this->request);
+    $this->assertFalse($auth->isPremium());
+  }
+
+  /**
+   * @runInSeparateProcess
+   */
+  public function testLoggedInUserIsNotAdminAndNotPremium() {
     $this->request->session['loginEmail'] = $this->nonAdminLoginEmail;
     $this->personRepository->shouldReceive('getPersonByEmail')
       ->once()
@@ -115,12 +125,13 @@ class AuthTest extends TestCase {
       ->andReturn($this->nonAdminPerson);
     $auth = new Auth($this->personRepository, $this->request);
     $this->assertFalse($auth->isAdmin());
+    $this->assertFalse($auth->isPremium());
   }
 
   /**
    * @runInSeparateProcess
    */
-  public function testUserIsAdmin() {
+  public function testUserIsAdminAndPremiumBecauseOfPremiumStatusBoolean() {
     $this->request->session['loginEmail'] = $this->adminLoginEmail;
     $this->personRepository = Mockery::mock('PyAngelo\Repositories\PersonRepository');
     $this->personRepository->shouldReceive('getPersonByEmail')
@@ -129,6 +140,7 @@ class AuthTest extends TestCase {
       ->andReturn($this->adminPerson);
     $auth = new Auth($this->personRepository, $this->request);
     $this->assertTrue($auth->isAdmin());
+    $this->assertTrue($auth->isPremium());
   }
 
   /**
@@ -363,6 +375,7 @@ class AuthTest extends TestCase {
     $expectedPersonDetails = [
       'loggedIn' => false,
       'details' => NULL,
+      'isPremium' => false,
       'isAdmin' => false,
       'isImpersonating' => false,
       'crsfToken' => $crsfToken,
@@ -395,6 +408,7 @@ class AuthTest extends TestCase {
     $expectedPersonDetails = [
       'loggedIn' => true,
       'details' => $this->nonAdminPerson,
+      'isPremium' => false,
       'isAdmin' => false,
       'isImpersonating' => false,
       'crsfToken' => $crsfToken,
@@ -427,6 +441,7 @@ class AuthTest extends TestCase {
     $expectedPersonDetails = [
       'loggedIn' => true,
       'details' => $this->adminPerson,
+      'isPremium' => true,
       'isAdmin' => true,
       'isImpersonating' => false,
       'crsfToken' => $crsfToken,
@@ -460,6 +475,7 @@ class AuthTest extends TestCase {
     $expectedPersonDetails = [
       'loggedIn' => true,
       'details' => $this->adminPerson,
+      'isPremium' => true,
       'isAdmin' => true,
       'isImpersonating' => true,
       'crsfToken' => $crsfToken,

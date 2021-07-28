@@ -22,7 +22,11 @@ class MysqlPersonRepository implements PersonRepository {
 
   public function getPersonByEmail($email) {
     $sql = "SELECT p.*,
-                   c.country_name
+                   c.country_name,
+                   CASE WHEN p.premium_end_date > now()
+                        THEN 1
+                        ELSE 0
+                   END as premium_status_boolean
 	        FROM   person p
             JOIN   country c on c.country_code = p.country_code
             WHERE  email = ?
