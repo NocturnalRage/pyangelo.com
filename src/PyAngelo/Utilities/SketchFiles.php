@@ -22,6 +22,11 @@ ENDDEFAULTMAINCODE;
   public function createFile($sketch, $filename) {
     touch($this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'] . '/' . $filename);
   }
+  
+  public function deleteFile($sketch, $filename) {
+    unlink($this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'] . '/' . $filename);
+    // does that work?? srsly?
+  }
 
   public function saveCode($sketch, $filename, $code) {
     $basePath = $this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'];
