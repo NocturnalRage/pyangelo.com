@@ -18,6 +18,8 @@ interface SketchRepository {
   public function createNewSketch($personId, $title, $lessonId = NULL);
 
   public function addSketchFile($sketchId, $filename);
+  
+  public function deleteSketchFile($sketchId, $filename);
 
   public function forkSketch($sketchId, $personId, $title);
 
