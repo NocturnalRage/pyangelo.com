@@ -156,7 +156,9 @@ function addTab(file) {
       deleteButton.innerHTML = '&times;';
       deleteButton.onclick = function(this) {
         let span = this.parentNode;
-        deleteFile(span.dataset.filename);
+        if(confirm('Are you sure you want to delete ' + span.dataset.filename + '?')) {
+          deleteFile(span.dataset.filename);
+        }
       };
       deleteButton.classList.add('smallButton');
       span.appendChild(deleteButton);
