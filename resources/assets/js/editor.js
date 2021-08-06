@@ -148,7 +148,17 @@ function setupEditor(response) {
 }
 function addTab(file) {
     let span = document.createElement('span');
-    span.innerHTML = file.filename;
+    span.dataset.filename = file.filename;
+    let text = document.createTextNode(file.filename);
+    span.appendChild(text);
+    let deleteButton = document.createElement('span');
+    deleteButton.innerHTML = '×';
+    deleteButton.onclick = function(this) {
+      let span = this.parentNode;
+      deleteFile(span.dataset.filename);
+    };
+    deleteButton.classList.add('smallButton');
+    span.appendChild(deleteButton);
     span.classList.add("editorTab");
     fileTabs = document.getElementById('fileTabs');
 
@@ -465,6 +475,26 @@ function newPythonFile() {
 function addNewFile(response) {
   let file = { "filename": response.filename, "sourceCode": "" };
   addTab(file);
+}
+function deleteFile(filename) {
+  const sketchId = document.getElementById('editor').getAttribute('data-sketch-id');
+  const crsfToken = document.getElementById('editor').getAttribute('data-crsf-token');
+  const data = "filename=" + encodeURIComponent(filename) + "&sketchId=" + encodeURIComponent(sketchId) + "&crsfToken=" + encodeURIComponent(crsfToken);
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: data
+  };
+  fetch('/sketch/' + sketchId + '/deleteFile', options)
+    .then(response => response.json())
+    .then(deleteOldFile)
+    .catch((error) => { console.log('Error: ', error); })
+}
+function deleteOldFile(response) {
+  let span = document.querySelector(`.editorTab[data-filename='${response.filename}']`);
+  span.remove();
 }
 function showRename(event) {
   event.preventDefault();
