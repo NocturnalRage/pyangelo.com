@@ -41,19 +41,35 @@
   color: white;
   padding: 10px 10px 5px 10px;
 }
+.editorTab {
+  box-sizing: border-box;
+  border-top: 2px black solid;
+  border-right: 2px black solid;
+  border-left: 2px black solid;
+  background-color: #50394c;
+  color: white;
+  padding: 10px 10px 5px 10px;
+}
 .smallButton {
+  /* Funny padding/height values are so the cross is higher */
   margin: 5px;
-  padding: 5px;
+  padding: 0 5px;
   
-  display: inline-box;
-  width: 20px;
-  height: 20px;
+  display: inline-block;
+  width: 15px;
+  height: 25px;
   border-radius: 5px;
   
-  background: lightgrey;
-  color: #111;
+  background: #614A5D;
   cursor: pointer;
+  
+  color: white;
   text-align: center;
+  font-size: 20px;
+  font-family: Arial;
+}
+.smallButton:hover {
+  background: #40283B;
 }
 #console {
     border: 10px solid lightgray;
