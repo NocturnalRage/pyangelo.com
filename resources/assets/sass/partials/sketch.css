@@ -41,6 +41,20 @@
   color: white;
   padding: 10px 10px 5px 10px;
 }
+.smallButton {
+  margin: 5px;
+  padding: 5px;
+  
+  display: inline-box;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  
+  background: lightgrey;
+  color: #111;
+  cursor: pointer;
+  text-align: center;
+}
 #console {
     border: 10px solid lightgray;
     margin: auto;
