@@ -151,14 +151,16 @@ function addTab(file) {
     span.dataset.filename = file.filename;
     let text = document.createTextNode(file.filename);
     span.appendChild(text);
-    let deleteButton = document.createElement('span');
-    deleteButton.innerHTML = '×';
-    deleteButton.onclick = function(this) {
-      let span = this.parentNode;
-      deleteFile(span.dataset.filename);
-    };
-    deleteButton.classList.add('smallButton');
-    span.appendChild(deleteButton);
+    if(file.filename != 'main.py') {
+      let deleteButton = document.createElement('span');
+      deleteButton.innerHTML = '&times;';
+      deleteButton.onclick = function(this) {
+        let span = this.parentNode;
+        deleteFile(span.dataset.filename);
+      };
+      deleteButton.classList.add('smallButton');
+      span.appendChild(deleteButton);
+    }
     span.classList.add("editorTab");
     fileTabs = document.getElementById('fileTabs');
 
