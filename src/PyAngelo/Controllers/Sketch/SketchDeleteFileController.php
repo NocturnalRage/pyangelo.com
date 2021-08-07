@@ -77,7 +77,26 @@ class SketchDeleteFileController extends Controller {
       $this->response->setVars(array(
         'status' => 'error',
         'message' => 'You must be the owner of the sketch to delete a file from it.',
-        'filename' => 'File not delete'
+        'filename' => 'File not deleted'
+      ));
+      return $this->response;
+    }
+    if ($this->request->post['filename'] == 'main.py') {
+      $this->response->setVars(array(
+        'status' => 'error',
+        'message' => 'You cannot delete main.py!',
+        'filename' => 'File not deleted'
+      ));
+      return $this->response;
+    }
+    if ($this->sketchFiles->doesFileExist(
+      $sketch,
+      $this->request->post['filename']
+    )) {
+      $this->response->setVars(array(
+        'status' => 'error',
+        'message' => 'The requested file does not exist.',
+        'filename' => 'Non-existant file not deleted'
       ));
       return $this->response;
     }
@@ -91,7 +110,7 @@ class SketchDeleteFileController extends Controller {
 
     $this->sketchFiles->deleteFile(
       $sketch,
-      $this->request->post['filename'],
+      $this->request->post['filename']
     );
 
     $this->response->setVars(array(
