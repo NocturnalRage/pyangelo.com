@@ -101,8 +101,8 @@ Sk.builtins.KEY_DOWN = "ArrowDown";
 // Add mouse handlers
 function _setMousePosition(ev) {
     boundingRect = Sk.PyAngelo.canvas.getBoundingClientRect();
-    Sk.builtins.mouseX = Sk.ffi.remapToPy(ev.clientX - boundingRect.left);
-    Sk.builtins.mouseY = Sk.ffi.remapToPy(ev.clientY - boundingRect.top);
+    Sk.builtins.mouseX = Sk.ffi.remapToPy(Math.round(ev.clientX - boundingRect.left));
+    Sk.builtins.mouseY = Sk.ffi.remapToPy(Math.round(ev.clientY - boundingRect.top));
 }
 function _canvasMouseMove(ev) {
     ev.preventDefault();
