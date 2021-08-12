@@ -670,7 +670,7 @@ $di->set('SketchAddFileController', function () use ($di) {
 });
 
 $di->set('SketchDeleteFileController', function () use ($di) {
-  return new Pyangelo\Controllers\Sketch\SketchDeleteFileController (
+  return new PyAngelo\Controllers\Sketch\SketchDeleteFileController (
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),
