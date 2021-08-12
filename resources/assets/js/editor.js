@@ -492,19 +492,19 @@ function deleteFile(filename) {
   };
   fetch('/sketch/' + sketchId + '/deleteFile', options)
   .then(response => {
-		if(response.status < 200 || response.status > 299) {
-			throw response;
-		}
-		return response.json();
-	})
-	.then(deleteOldFile)
+    if(response.status < 200 || response.status > 299) {
+      throw response;
+    }
+    return response.json();
+  })
+  .then(deleteOldFile)
   .catch(error => { console.log('Error: ', error); })
 }
 function deleteOldFile(response) {
   let span = document.querySelector(`.editorTab[data-filename='${response.filename}']`);
   if(!span) {
-	  alert("An unknown error occured; please try again or contact us.");
-	  return;
+    alert("An unknown error occured; please try again or contact us.");
+    return;
   }
   span.remove();
 }
