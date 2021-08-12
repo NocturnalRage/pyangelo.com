@@ -154,8 +154,7 @@ function addTab(file) {
     if(file.filename != 'main.py') {
       let deleteButton = document.createElement('span');
       deleteButton.innerHTML = '&times;';
-      deleteButton.onclick = function(this) {
-        let span = this.parentNode;
+      deleteButton.onclick = function() {
         if(confirm('Are you sure you want to delete ' + span.dataset.filename + '?')) {
           deleteFile(span.dataset.filename);
         }
@@ -492,12 +491,21 @@ function deleteFile(filename) {
     body: data
   };
   fetch('/sketch/' + sketchId + '/deleteFile', options)
-    .then(response => response.json())
-    .then(deleteOldFile)
-    .catch((error) => { console.log('Error: ', error); })
+  .then(response => {
+		if(response.status < 200 || response.status > 299) {
+			throw response;
+		}
+		return response.json();
+	})
+	.then(deleteOldFile)
+  .catch(error => { console.log('Error: ', error); })
 }
 function deleteOldFile(response) {
   let span = document.querySelector(`.editorTab[data-filename='${response.filename}']`);
+  if(!span) {
+	  alert("An unknown error occured; please try again or contact us.");
+	  return;
+  }
   span.remove();
 }
 function showRename(event) {
