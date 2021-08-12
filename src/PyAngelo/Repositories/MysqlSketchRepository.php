@@ -143,6 +143,19 @@ class MysqlSketchRepository implements SketchRepository {
 
     return $fileId;
   }
+  
+	public function deleteSketchFile($sketchId, $filename) {
+		$sql = "DELETE
+						FROM 		sketch_files
+						WHERE 	sketch_id = ?
+						AND 		filename = ?";
+		$stmt = $this->dbh->prepare($sql);
+		$stmt->bind_param('is', $sketchId, $filename);
+		$res = $stmt->execute();
+		$stmt->close();
+		
+		return $res;
+	}
 
   public function forkSketch($sketchId, $personId, $title, $lessonId = NULL, $tutorialId = NULL) {
     $sql = "INSERT INTO sketch (
