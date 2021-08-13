@@ -80,6 +80,9 @@
 
       <script src="<?= mix('js/PyAngeloSetup.js'); ?>"></script>
       <script src="<?= mix('js/editor.js'); ?>"></script>
+      <script>
+      loadCode();
+      </script>
 
     <?php else : ?>
       <div class="row">
