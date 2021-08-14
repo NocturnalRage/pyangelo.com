@@ -1,6 +1,4 @@
 <?php
-// Lol I copied SketchAddFileController.php. Same thing really but different...?
-
 namespace PyAngelo\Controllers\Sketch;
 
 use PyAngelo\Auth\Auth;
@@ -25,7 +23,7 @@ class SketchDeleteFileController extends Controller {
   }
 
   public function exec() {
-    $this->response->setView('sketch/add.json.php');
+    $this->response->setView('sketch/delete.json.php');
     $this->response->header('Content-Type: application/json');
 
     if (! $this->auth->loggedIn()) {
@@ -41,7 +39,7 @@ class SketchDeleteFileController extends Controller {
     if (!$this->auth->crsfTokenIsValid()) {
       $this->response->setVars(array(
         'status' => 'error',
-        'message' => 'You must delete a file from the PyAngelo website. No CORS muahahaha',
+        'message' => 'You must delete a file from the PyAngelo website.',
         'filename' => 'File not deleted'
       ));
       return $this->response;
@@ -101,8 +99,6 @@ class SketchDeleteFileController extends Controller {
       return $this->response;
     }
     
-    // Wow 83 lines just to verify the request... kinda hardcore imo
-    // *when you scroll through a 100 line code and find that the actual stuff is does in 10 lines*
     $this->sketchRepository->deleteSketchFile(
       $sketch['sketch_id'],
       $this->request->post['filename']
