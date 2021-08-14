@@ -24,12 +24,11 @@ ENDDEFAULTMAINCODE;
   }
   
   public function doesFileExist($sketch, $filename) {
-    return file_exists($this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'] . '/' . $filename); // something like that perhaps?!
+    return file_exists($this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'] . '/' . $filename);
   }
   
   public function deleteFile($sketch, $filename) {
     unlink($this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'] . '/' . $filename);
-    // does that work?? srsly?
   }
 
   public function saveCode($sketch, $filename, $code) {
