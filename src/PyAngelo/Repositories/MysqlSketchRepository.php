@@ -151,10 +151,10 @@ class MysqlSketchRepository implements SketchRepository {
             AND     filename = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('is', $sketchId, $filename);
-    $res = $stmt->execute();
+    $stmt->execute();
+    $rowsDeleted = $this->dbh->affected_rows;
     $stmt->close();
-    
-    return $res;
+    return $rowsDeleted;
   }
 
   public function forkSketch($sketchId, $personId, $title, $lessonId = NULL, $tutorialId = NULL) {
