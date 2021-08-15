@@ -32,6 +32,7 @@ return [
   [ 'GET','/premium-membership', 'PremiumMembershipController', 'premiumMembership' ],
   [ 'POST','/process-subscription', 'ProcessSubscriptionController', 'processSubscription' ],
   [ 'GET','/premium-member-welcome', 'PremiumWelcomeController', 'premiumWelcome' ],
+  [ 'GET','/playground', 'SketchPlaygroundController', 'sketchPlayground' ],
   [ 'GET','/sketch', 'SketchIndexController', 'sketchIndex' ],
   [ 'POST','/sketch/create', 'SketchCreateController', 'sketchCreate' ],
   [ 'GET','/sketch/[:sketchId]', 'SketchShowController', 'sketchShow' ],
