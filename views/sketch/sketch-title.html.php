@@ -15,7 +15,6 @@
         <?php else: ?>
           <h1 class="text-center"><?= $this->esc($sketch['title']) ?></h1>
         <?php endif; ?>
-      </h1>
       </div><!-- col-md-12 -->
     </div><!-- row -->
 

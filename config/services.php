@@ -584,6 +584,14 @@ $di->set('SketchCreateController', function () use ($di) {
   );
 });
 
+$di->set('SketchPlaygroundController', function () use ($di) {
+  return new PyAngelo\Controllers\Sketch\SketchPlaygroundController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth')
+  );
+});
+
 $di->set('SketchShowController', function () use ($di) {
   return new PyAngelo\Controllers\Sketch\SketchShowController (
     $di->get('request'),

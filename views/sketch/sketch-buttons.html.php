@@ -7,7 +7,7 @@
           <input type="checkbox" id="debug" name="debug" value="debug">
           <label for="debug"> Run line by line</label>
         </p>
-        <?php if ($personInfo['loggedIn'] && $personInfo['details']['person_id'] != $sketch['person_id']) : ?>
+        <?php if ($personInfo['loggedIn'] && !empty($sketch['person_id']) && $personInfo['details']['person_id'] != $sketch['person_id']) : ?>
           <p id="forkParagraph" class="appHeading">
             <a id="fork"
                class="btn"

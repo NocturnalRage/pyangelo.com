@@ -11,6 +11,7 @@ let mix = require('laravel-mix');
    .copy('./node_modules/skulpt/dist/skulpt-stdlib.js', './public/js/')
    .copy('./resources/assets/js/PyAngeloSetup.js', './public/js/')
    .copy('./resources/assets/js/editor.js', './public/js/')
+   .copy('./resources/assets/js/playground.js', './public/js/')
    .copy('./resources/assets/js/dropzone.js', './public/js/')
    .copy('./resources/assets/js/notify.min.js', './public/js/')
    .copy('./resources/assets/js/lessonToggle.js', './public/js/')
