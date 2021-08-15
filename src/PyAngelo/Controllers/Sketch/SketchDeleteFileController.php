@@ -87,7 +87,7 @@ class SketchDeleteFileController extends Controller {
       ));
       return $this->response;
     }
-    if ($this->sketchFiles->doesFileExist(
+    if (! $this->sketchFiles->doesFileExist(
       $sketch,
       $this->request->post['filename']
     )) {
