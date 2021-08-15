@@ -17,7 +17,7 @@ class SketchDeleteJsonTest extends TestCase {
     $output = $response->requireView();
     $expect = '"status":"success"';
     $this->assertStringContainsString($expect, $output);
-    $expect = '"message":"file added"';
+    $expect = '"message":"file deleted"';
     $this->assertStringContainsString($expect, $output);
     $expect = '"filename":"main.py"';
     $this->assertStringContainsString($expect, $output);
