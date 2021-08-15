@@ -134,17 +134,25 @@ class SketchDeleteFileControllerTest extends TestCase {
     $this->assertSame($expectedMessage, $responseVars['message']);
   }
   
-  public function testFileNotMainFile() {
-    $sketchId = 10;
+  public function testAttemptDeleteMain() {
+    $personId = 101;
+    $ownerId = 101;
+    $sketchId = 101;
     $filename = 'main.py';
+    $this->request->post = [
+      'sketchId' => $sketchId,
+      'filename' => $filename
+    ];
+    $sketch = ['sketch_id' => $sketchId, 'person_id' => $ownerId];
     $this->request->post = [
       'sketchId' => $sketchId,
       'filename' => $filename
     ];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
-    $this->sketchRepository->shouldReceive('getSketchById')->once()->with($sketchId)->andReturn(NULL);
-    
+    $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
+    $this->sketchRepository->shouldReceive('getSketchById')->once()->with($sketchId)->andReturn($sketch);
+
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedViewName = 'sketch/delete.json.php';
@@ -156,16 +164,25 @@ class SketchDeleteFileControllerTest extends TestCase {
   }
   
   public function testFileDoesNotExist() {
+    $ownerId = 101;
+    $personId = $ownerId;
     $sketchId = 10;
     $filename = 'randomFile.py';
     $this->request->post = [
       'sketchId' => $sketchId,
       'filename' => $filename
     ];
+    $sketch = ['sketch_id' => $sketchId, 'person_id' => $ownerId];
+    $this->request->post = [
+      'sketchId' => $sketchId,
+      'filename' => $filename
+    ];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
-    $this->sketchRepository->shouldReceive('getSketchById')->once()->with($sketchId)->andReturn(NULL);
-    
+    $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
+    $this->sketchRepository->shouldReceive('getSketchById')->once()->with($sketchId)->andReturn($sketch);
+    $this->sketchFiles->shouldReceive('doesFileExist')->once()->with($sketch, $filename)->andReturn(false);
+
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedViewName = 'sketch/delete.json.php';
@@ -196,6 +213,7 @@ class SketchDeleteFileControllerTest extends TestCase {
     $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
     $this->sketchRepository->shouldReceive('getSketchById')->once()->with($sketchId)->andReturn($sketch);
     $this->sketchRepository->shouldReceive('deleteSketchFile')->once()->with($sketchId, $filename)->andReturn();
+    $this->sketchFiles->shouldReceive('doesFileExist')->once()->with($sketch, $filename)->andReturn(true);
     $this->sketchFiles->shouldReceive('deleteFile')->once()->with($sketch, $filename)->andReturn();
 
     $response = $this->controller->exec();
