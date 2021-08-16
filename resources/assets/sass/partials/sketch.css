@@ -40,6 +40,18 @@
   background-color: #50394c;
   color: white;
   padding: 10px 10px 5px 10px;
+  cursor: pointer;
+}
+.smallButton {
+  margin-left: 10px;
+  padding: 0 5px;
+  border-radius: 100%;
+  background: #614A5D;
+  color: white;
+  text-align: center;
+}
+.smallButton:hover {
+  background: #40283B;
 }
 #console {
     border: 10px solid lightgray;
@@ -52,7 +64,7 @@
 }
 .appHeading {
   box-sizing: border-box;
-  color: #f5910f;;
+  color: #f5910f;
   text-align: center;
   padding: 10px;
   margin-top: 10px 0 0 0;

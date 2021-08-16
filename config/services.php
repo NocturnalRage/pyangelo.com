@@ -677,6 +677,16 @@ $di->set('SketchAddFileController', function () use ($di) {
   );
 });
 
+$di->set('SketchDeleteFileController', function () use ($di) {
+  return new PyAngelo\Controllers\Sketch\SketchDeleteFileController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('sketchRepository'),
+    $di->get('sketchFiles')
+  );
+});
+
 $di->set('UploadAssetController', function () use ($di) {
   return new PyAngelo\Controllers\Upload\UploadAssetController (
     $di->get('request'),

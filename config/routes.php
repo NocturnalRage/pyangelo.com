@@ -42,6 +42,7 @@ return [
   [ 'POST','/sketch/[:sketchId]/save', 'SketchSaveController', 'sketchSave' ],
   [ 'POST','/sketch/[:sketchId]/rename', 'SketchRenameController', 'sketchRename' ],
   [ 'POST','/sketch/[:sketchId]/addFile', 'SketchAddFileController', 'sketchAddFile' ],
+  [ 'POST','/sketch/[:sketchId]/deleteFile', 'SketchDeleteFileController', 'sketchDeleteFile' ],
   [ 'POST','/upload/asset', 'UploadAssetController', 'uploadAsset' ],
   [ 'GET','/categories/[:slug]', 'CategoriesShowController', 'categoriesShow' ],
   [ 'GET','/categories/[:slug]/sort', 'CategoriesSortController', 'categoriesSort' ],

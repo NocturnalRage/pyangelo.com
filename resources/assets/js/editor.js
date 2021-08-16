@@ -148,7 +148,26 @@ function setupEditor(response) {
 }
 function addTab(file) {
     let span = document.createElement('span');
-    span.innerHTML = file.filename;
+    span.dataset.filename = file.filename;
+    let text = document.createTextNode(file.filename);
+    span.appendChild(text);
+    if (file.filename !== "main.py") {
+      let deleteButton = document.createElement('span');
+      deleteButton.innerHTML = '&times;';
+      deleteButton.onclick = function(ev) {
+        ev.stopPropagation();
+        if (confirm('Are you sure you want to delete ' + file.filename + '? This operation cannot be undone!')) {
+          if (currentFilename == file.filename) {
+            currentSession = 0;
+            editor.setSession(editSessions[currentSession]);
+          }
+          deleteFile(file.filename);
+          delete Sk.builtinFiles.files["./" + file.filename];
+        }
+      };
+      deleteButton.classList.add('smallButton');
+      span.appendChild(deleteButton);
+    }
     span.classList.add("editorTab");
     fileTabs = document.getElementById('fileTabs');
 
@@ -175,7 +194,7 @@ function addTab(file) {
             readOnly: false,
             fontSize: "12pt",
             enableBasicAutocompletion: true,
-            enableSnippets: true,
+            enableSnippets: false,
             enableLiveAutocompletion: true,
         });
       }
@@ -465,6 +484,30 @@ function newPythonFile() {
 function addNewFile(response) {
   let file = { "filename": response.filename, "sourceCode": "" };
   addTab(file);
+}
+function deleteFile(filename) {
+  const sketchId = document.getElementById('editor').getAttribute('data-sketch-id');
+  const crsfToken = document.getElementById('editor').getAttribute('data-crsf-token');
+  const data = "filename=" + encodeURIComponent(filename) + "&sketchId=" + encodeURIComponent(sketchId) + "&crsfToken=" + encodeURIComponent(crsfToken);
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: data
+  };
+  fetch('/sketch/' + sketchId + '/deleteFile', options)
+    .then(response => response.json())
+    .then(deleteOldFile)
+    .catch(error => { console.log('Error: ', error); })
+}
+function deleteOldFile(response) {
+  let span = document.querySelector(`.editorTab[data-filename='${response.filename}']`);
+  if(!span) {
+    alert("An unknown error occured; please try again or contact us.");
+    return;
+  }
+  span.remove();
 }
 function showRename(event) {
   event.preventDefault();

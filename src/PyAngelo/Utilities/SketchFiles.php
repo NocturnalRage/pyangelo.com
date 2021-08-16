@@ -22,6 +22,14 @@ ENDDEFAULTMAINCODE;
   public function createFile($sketch, $filename) {
     touch($this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'] . '/' . $filename);
   }
+  
+  public function doesFileExist($sketch, $filename) {
+    return file_exists($this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'] . '/' . $filename);
+  }
+  
+  public function deleteFile($sketch, $filename) {
+    unlink($this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'] . '/' . $filename);
+  }
 
   public function saveCode($sketch, $filename, $code) {
     $basePath = $this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'];
