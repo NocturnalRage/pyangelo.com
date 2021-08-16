@@ -56,6 +56,7 @@ function updateWebPage(response) {
     paraName.innerText = 'File uploaded: ' + response.filename;
     document.getElementById('gallery').appendChild(paraName);
     addTab(response);
+    assetUpload.value = "";
   }
   else {
     let paraUploadError = document.createElement('p');
