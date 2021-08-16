@@ -40,24 +40,15 @@
   background-color: #50394c;
   color: white;
   padding: 10px 10px 5px 10px;
+  cursor: pointer;
 }
 .smallButton {
-  /* Funny padding/height values are so the cross is higher */
-  margin: 5px;
+  margin-left: 10px;
   padding: 0 5px;
-  
-  display: inline-block;
-  width: 15px;
-  height: 25px;
-  border-radius: 5px;
-  
+  border-radius: 100%;
   background: #614A5D;
-  cursor: pointer;
-  
   color: white;
   text-align: center;
-  font-size: 20px;
-  font-family: Arial;
 }
 .smallButton:hover {
   background: #40283B;
