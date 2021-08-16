@@ -151,12 +151,18 @@ function addTab(file) {
     span.dataset.filename = file.filename;
     let text = document.createTextNode(file.filename);
     span.appendChild(text);
-    if(file.filename != 'main.py') {
+    if (file.filename !== "main.py") {
       let deleteButton = document.createElement('span');
       deleteButton.innerHTML = '&times;';
-      deleteButton.onclick = function() {
-        if(confirm('Are you sure you want to delete ' + span.dataset.filename + '?')) {
-          deleteFile(span.dataset.filename);
+      deleteButton.onclick = function(ev) {
+        ev.stopPropagation();
+        if (confirm('Are you sure you want to delete ' + file.filename + '? This operation cannot be undone!')) {
+          if (currentFilename == file.filename) {
+            currentSession = 0;
+            editor.setSession(editSessions[currentSession]);
+          }
+          deleteFile(file.filename);
+          delete Sk.builtinFiles.files["./" + file.filename];
         }
       };
       deleteButton.classList.add('smallButton');
@@ -188,7 +194,7 @@ function addTab(file) {
             readOnly: false,
             fontSize: "12pt",
             enableBasicAutocompletion: true,
-            enableSnippets: true,
+            enableSnippets: false,
             enableLiveAutocompletion: true,
         });
       }
@@ -491,14 +497,9 @@ function deleteFile(filename) {
     body: data
   };
   fetch('/sketch/' + sketchId + '/deleteFile', options)
-  .then(response => {
-    if(response.status < 200 || response.status > 299) {
-      throw response;
-    }
-    return response.json();
-  })
-  .then(deleteOldFile)
-  .catch(error => { console.log('Error: ', error); })
+    .then(response => response.json())
+    .then(deleteOldFile)
+    .catch(error => { console.log('Error: ', error); })
 }
 function deleteOldFile(response) {
   let span = document.querySelector(`.editorTab[data-filename='${response.filename}']`);
