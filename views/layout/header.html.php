@@ -18,7 +18,6 @@
   <link rel="mask-icon" href="/images/icons/safari-pinned-tab.svg" color="#5bbad5">
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
-  <meta name="client-is-author" content="<?= $personInfo['loggedIn'] && !empty($sketch['person_id']) && $personInfo['details']['person_id'] == $sketch['person_id']? "true" : "false" ?>">
 
   <?php if (isset($sketch['sketch_id'])): ?>
   <!-- Set base URL for the sketch!
@@ -39,5 +38,6 @@
   <?php endif; ?>
 
   <script src="<?= mix('js/app.js'); ?>"></script>
+
 </head>
 <body>
