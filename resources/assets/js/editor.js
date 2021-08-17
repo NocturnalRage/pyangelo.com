@@ -147,11 +147,13 @@ function setupEditor(response) {
   editor.setSession(editSessions[currentSession]);
 }
 function addTab(file) {
+    const readOnly = document.getElementById('editor').getAttribute('data-read-only');
+  
     let span = document.createElement('span');
     span.dataset.filename = file.filename;
     let text = document.createTextNode(file.filename);
     span.appendChild(text);
-    if (file.filename !== "main.py") {
+    if (file.filename !== "main.py" && readOnly == false) {
       let deleteButton = document.createElement('span');
       deleteButton.innerHTML = '&times;';
       deleteButton.onclick = function(ev) {
@@ -176,7 +178,6 @@ function addTab(file) {
       if (file.filename !== "main.py") {
           Sk.builtinFiles.files["./" + file.filename] = file.sourceCode;
       }
-      const readOnly = document.getElementById('editor').getAttribute('data-read-only');
       editSessions.push(new EditSession(file.sourceCode));
       editSessions[editorSession].setMode(new PythonMode());
       editSessions[editorSession].setUndoManager(new UndoManager());
