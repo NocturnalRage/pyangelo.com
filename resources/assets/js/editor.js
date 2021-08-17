@@ -1,3 +1,5 @@
+const clientIsAuthor = document.querySelector(`meta[name='client-is-author']`).content === 'true';
+
 let editorSession = 0;
 let currentSession = 0;
 let currentFilename = "main.py";
@@ -151,7 +153,7 @@ function addTab(file) {
     span.dataset.filename = file.filename;
     let text = document.createTextNode(file.filename);
     span.appendChild(text);
-    if (file.filename !== "main.py") {
+    if (file.filename !== "main.py" && clientIsAuthor) {
       let deleteButton = document.createElement('span');
       deleteButton.innerHTML = '&times;';
       deleteButton.onclick = function(ev) {
