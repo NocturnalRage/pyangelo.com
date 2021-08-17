@@ -1,4 +1,17 @@
 {
+    "name": "nocturnalrage/pyangelo",
+    "description": "Python graphics programming in your web browser",
+    "keywords": ["Python", "Skulpt", "coding", "tutorials"],
+    "homepage": "https://www.PyAngelo.com",
+    "license": "proprietary",
+    "authors": [
+      {
+        "name": "Jeff Plumb",
+        "email": "jeff@nocturnalrage.com",
+        "homepage": "https://www.jeffplumb.com",
+        "role": "Developer"
+      }
+    ],
     "autoload": {
         "psr-4": {
             "PyAngelo\\": "src/PyAngelo",
