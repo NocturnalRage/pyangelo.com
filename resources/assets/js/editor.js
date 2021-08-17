@@ -123,27 +123,35 @@ function saveCode(filename) {
   const sketchId = document.getElementById('editor').getAttribute('data-sketch-id');
   fetch('/sketch/' + sketchId + '/save', options)
     .then(response => response.json())
-    .then(data => {
-      console.log(data);
-    });
+    .then(data => { console.log(data); });
 }
 function loadCode() {
   const sketchId = document.getElementById('editor').getAttribute('data-sketch-id');
   fetch('/sketch/code/' + sketchId)
     .then(response => response.json())
-    .then(setupEditor)
-    .catch((error) => { console.error('Error: ', error); })
+    .then(data => {
+      if (data.status !== 'success') {
+        throw new Error(data.message);
+      }
+      setupEditor(data);
+    })
+    .catch(error => { console.error(error); })
 }
 function loadCodeAndRun() {
   const sketchId = document.getElementById('editor').getAttribute('data-sketch-id');
   fetch('/sketch/code/' + sketchId)
     .then(response => response.json())
-    .then(setupEditor)
+    .then(data => {
+      if (data.status !== 'success') {
+        throw new Error(data.message);
+      }
+      setupEditor(data);
+    })
     .then(runCode)
-    .catch((error) => { console.error('Error: ', error); })
+    .catch(error => { console.error(error); })
 }
-function setupEditor(response) {
-  response.files.forEach(addTab);
+function setupEditor(data) {
+  data.files.forEach(addTab);
   editor.setSession(editSessions[currentSession]);
 }
 function addTab(file) {
@@ -174,7 +182,9 @@ function addTab(file) {
     fileTabs = document.getElementById('fileTabs');
 
     if (file.filename.endsWith(".py")) {
-
+      if (!file.sourceCode) {
+        file.sourceCode = "";
+      }
       if (file.filename !== "main.py") {
           Sk.builtinFiles.files["./" + file.filename] = file.sourceCode;
       }
@@ -457,6 +467,10 @@ function newPythonFile() {
     alert("The filename must end with .py");
     return;
   }
+  if (filename === "main.py") {
+    alert("You cannot create a second main.py. Please choose a different name for your file");
+    return;
+  }
   const moduleName = filename.substr(0, filename.lastIndexOf("."));
   if (moduleNames.includes(moduleName)) {
     alert(moduleName + " is a system module. Please choose a different name for your file");
@@ -479,11 +493,16 @@ function newPythonFile() {
   };
   fetch('/sketch/' + sketchId +'/addFile', options)
     .then(response => response.json())
-    .then(addNewFile)
-    .catch((error) => { console.error('Error: ', error); })
+    .then(data => {
+      if (data.status !== 'success') {
+        throw new Error(data.message);
+      }
+      addNewFile(data);
+    })
+    .catch(error => { console.error(error); });
 }
-function addNewFile(response) {
-  let file = { "filename": response.filename, "sourceCode": "" };
+function addNewFile(data) {
+  let file = { "filename": data.filename, "sourceCode": "" };
   addTab(file);
 }
 function deleteFile(filename) {
@@ -499,11 +518,16 @@ function deleteFile(filename) {
   };
   fetch('/sketch/' + sketchId + '/deleteFile', options)
     .then(response => response.json())
-    .then(deleteOldFile)
-    .catch(error => { console.log('Error: ', error); })
+    .then(data => {
+      if (data.status !== 'success') {
+        throw new Error(data.message);
+      }
+      deleteOldFile(data);
+    })
+    .catch(error => { console.error(error); })
 }
-function deleteOldFile(response) {
-  let span = document.querySelector(`.editorTab[data-filename='${response.filename}']`);
+function deleteOldFile(data) {
+  let span = document.querySelector(`.editorTab[data-filename='${data.filename}']`);
   if(!span) {
     alert("An unknown error occured; please try again or contact us.");
     return;
@@ -534,16 +558,21 @@ function submitRename(event) {
   };
   fetch('/sketch/' + sketchId +'/rename', options)
     .then(response => response.json())
-    .then(updateTitle)
-    .catch((error) => { console.error('Error: ', error); })
+    .then(data => {
+      if (data.status !== 'success') {
+        throw new Error(data.message);
+      }
+      updateTitle(data);
+    })
+    .catch((error) => { console.error(error); })
 }
-function updateTitle(response) {
+function updateTitle(data) {
   const sketchId = document.getElementById('editor').getAttribute('data-sketch-id');
   document.getElementById('rename-form').style.display = "none";
-  const innerHTML = '<a id="rename" href="/sketch/' + sketchId + '/rename" onclick="showRename(event)">' + response.title + ' <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+  const innerHTML = '<a id="rename" href="/sketch/' + sketchId + '/rename" onclick="showRename(event)">' + data.title + ' <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
   document.getElementById('title').innerHTML = innerHTML;
   document.getElementById('title').style.display = "block";
-  document.title = response.title;
+  document.title = data.title;
 }
 
 function saveThenRun() {
