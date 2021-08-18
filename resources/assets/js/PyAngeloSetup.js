@@ -102,7 +102,12 @@ Sk.builtins.KEY_DOWN = "ArrowDown";
 function _setMousePosition(ev) {
     boundingRect = Sk.PyAngelo.canvas.getBoundingClientRect();
     Sk.builtins.mouseX = Sk.ffi.remapToPy(Math.round(ev.clientX - boundingRect.left));
-    Sk.builtins.mouseY = Sk.ffi.remapToPy(Math.round(ev.clientY - boundingRect.top));
+    if (Sk.builtins._yAxisMode == 1) {
+      Sk.builtins.mouseY = Sk.ffi.remapToPy(Sk.PyAngelo.canvas.height - (Math.round(ev.clientY - boundingRect.top)));
+    }
+    else {
+      Sk.builtins.mouseY = Sk.ffi.remapToPy(Math.round(ev.clientY - boundingRect.top));
+    }
 }
 function _canvasMouseMove(ev) {
     ev.preventDefault();
