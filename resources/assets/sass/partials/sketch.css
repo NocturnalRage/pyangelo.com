@@ -53,6 +53,17 @@
 .smallButton:hover {
   background: #40283B;
 }
+.editorTab.current {
+  background-color: #FEEF96;
+  color: #50394C;
+}
+.editorTab.current .smallButton {
+  background: #DCCD74;
+  color: #50394C;
+}
+.editorTab.current .smallButton:hover {
+  background: #BAAB52;
+}
 #console {
     border: 10px solid lightgray;
     margin: auto;
