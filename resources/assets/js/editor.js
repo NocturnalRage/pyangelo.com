@@ -179,6 +179,9 @@ function addTab(file) {
       span.appendChild(deleteButton);
     }
     span.classList.add("editorTab");
+    if(file.filename === "main.py") {
+      span.classList.add("current");
+    }
     fileTabs = document.getElementById('fileTabs');
 
     if (file.filename.endsWith(".py")) {
@@ -222,6 +225,9 @@ function loadSession(ev) {
   currentFilename = ev.target.getAttribute("data-filename");
   currentSession = ev.target.getAttribute("data-editor-session");
   editor.setSession(editSessions[currentSession]);
+  
+  document.querySelector(".editorTab.current").classList.remove("current");
+  document.querySelector(`.editorTab[data-filename='${currentFilename}']`).classList.add("current");
 }
 function newPythonFile() {
   const moduleNames = [
