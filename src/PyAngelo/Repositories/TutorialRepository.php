@@ -92,6 +92,45 @@ interface TutorialRepository {
 
   public function getTutorialLessons($tutorialId, $personId);
 
+  public function getTutorialSkills($tutorialId, $personId);
+
+  public function getAllTutorialQuestions($tutorialId);
+
+  public function createTutorialQuiz($tutorialId, $personId);
+
+  public function addTutorialQuizQuestion($tutorialId, $skillQuestionId);
+
+  public function getUncompletedTutorialQuiz($tutorialId, $personId);
+
+  public function getUncompletedTutorialQuizInfo($tutorialId, $personId);
+
+  public function getTutorialQuizOptions($tutorialQuizId);
+
+  public function updateTutorialQuiz(
+    $tutorialQuizId,
+    $questionStartTime,
+    $questionEndTime
+  );
+
+  public function updateTutorialQuizQuestion(
+    $tutorialQuizId,
+    $skillQuestionId,
+    $skillQuestionOptionId,
+    $correctUnaided,
+    $questionStartTime,
+    $questionEndTime
+  );
+
+  public function getQuizResultsAndSkillMastery($tutorialQuizId);
+
+  public function getSkillQuestionHints($skillQuestionId);
+
+  public function getSkillMastery($skillId, $personId);
+
+  public function updateSkillMastery($skillId, $personId, $masteryLevelId);
+
+  public function insertSkillMastery($skillId, $personId, $masteryLevelId);
+
   public function getLessonBySlugAndTutorialId($lessonSlug, $tutorialId);
 
   public function getLessonBySlugs($tutorialSlug, $lessonSlug);
