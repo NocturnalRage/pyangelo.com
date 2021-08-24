@@ -45,6 +45,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . 'tutorial-info-panel.html.php';
     </div><!-- row -->
 <?php
 include __DIR__ . DIRECTORY_SEPARATOR . '../lessons/lessons-table.html.php';
+include __DIR__ . DIRECTORY_SEPARATOR . '../lessons/skills-table.html.php';
 include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';
 ?>
   </div><!-- container -->

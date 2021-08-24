@@ -1,0 +1,17 @@
+#quiz {
+  display: none;
+}
+#hint {
+  display: none;
+  background-color: #EEEEEE; 
+  color: green;
+  padding: 20px;
+  border: 2px solid black;
+  margin: 10px;
+}
+#feedback {
+  display: none;
+}
+#action {
+  display: none;
+}

@@ -909,6 +909,51 @@ $di->set('LatestCommentsController', function () use ($di) {
   );
 });
 
+$di->set('QuizzesCreateController', function () use ($di) {
+  return new PyAngelo\Controllers\Quizzes\QuizzesCreateController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository')
+  );
+});
+
+$di->set('QuizzesShowController', function () use ($di) {
+  return new PyAngelo\Controllers\Quizzes\QuizzesShowController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository')
+  );
+});
+
+$di->set('QuizzesFetchQuestionsController', function () use ($di) {
+  return new PyAngelo\Controllers\Quizzes\QuizzesFetchQuestionsController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository')
+  );
+});
+
+$di->set('QuizzesRecordResponseController', function () use ($di) {
+  return new PyAngelo\Controllers\Quizzes\QuizzesRecordResponseController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository')
+  );
+});
+
+$di->set('QuizzesRecordCompletionController', function () use ($di) {
+  return new PyAngelo\Controllers\Quizzes\QuizzesRecordCompletionController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository')
+  );
+});
+
 $di->set('NotificationsController', function () use ($di) {
   return new PyAngelo\Controllers\Profile\NotificationsController (
     $di->get('request'),
