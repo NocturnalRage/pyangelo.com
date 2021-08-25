@@ -63,7 +63,6 @@ class QuizzesFetchQuestionsController extends Controller {
       return $this->response;
     }
 
-
     $answers = [];
     $quizOption = [];
     $tutorialSlug = $options[0]["slug"];
@@ -106,6 +105,8 @@ class QuizzesFetchQuestionsController extends Controller {
       "hints" => $hints
     ];
 
+    // Give questions in random order
+    shuffle($quizOptions);
     $this->response->setVars(array(
         'status' => json_encode('success'),
         'options' => json_encode($quizOptions),

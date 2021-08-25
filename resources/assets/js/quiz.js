@@ -1,7 +1,9 @@
 const startButton = document.getElementById('startBtn');
+const instructions = document.getElementById('instructions');
 const quizContainer = document.getElementById('quiz');
 const hintContainer = document.getElementById('hint');
 const feedbackContainer = document.getElementById('feedback');
+const progressContainer = document.getElementById('progress');
 const actionButton = document.getElementById('action');
 
 const tutorialQuizId = quizContainer.getAttribute('data-tutorial-quiz-id');
@@ -27,10 +29,42 @@ let questionStartTime;
 let questionEndTime;
 let skillsMatrix = []
 
+let correctSound = new Howl({
+    src: ['/samples/sounds/powerup.wav']
+});
+let hundredPercentSound = new Howl({
+    src: ['/samples/sounds/pickup.wav']
+});
+
+function randomInRange(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function fireworks(timeInSeconds) {
+  var duration = timeInSeconds * 1000;
+  var animationEnd = Date.now() + duration;
+  var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+  var interval = setInterval(function() {
+    var timeLeft = animationEnd - Date.now();
+
+    if (timeLeft <= 0) {
+      return clearInterval(interval);
+    }
+
+    var particleCount = 50 * (timeLeft / duration);
+    // since particles fall down, start a bit higher than random
+    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+  }, 250);
+}
+
 function fetchQuestions(){
   startButton.style.display = "none";
+  instructions.style.display = "none";
   quizContainer.style.display = "block";
   feedbackContainer.style.display = "block";
+  progressContainer.style.display = "block";
   actionButton.style.display = "block";
   // Fetch the quizOptions
   fetch('/quizzes/questions/' + tutorialQuizId)
@@ -70,7 +104,8 @@ function askMultipleChoiceQuestion(currentQuestion) {
       );
   }
   output.push(
-      `<div class="question_number">Question ${questionNo + 1} of ${totalQuestions} </div>
+      `<p class="question_number text-right">Question ${questionNo + 1} of ${totalQuestions} </p>
+       <hr />
        <div class="question">${currentQuestion.question}</div>
        <hr />
        <div class="answers">${answers.join('')}</div>`
@@ -99,7 +134,20 @@ function checkMultipleChoiceAnswer(currentQuestion) {
 
   let correctOrNot = 0;
   if (choice == correctValue) {
+    const box = actionButton.getBoundingClientRect();
+    const confettiX = (box.x + box.width/2) / screen.width;
+    const confettiY = (box.y + box.height/2) / screen.height;
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      startVelocity: 30,
+      gravity: 1.5,
+      origin: { x: confettiX, y: confettiY }
+    });
+    correctSound.play();
     if (incorrectAttempts == 0 && !hintUsed) {
+      document.getElementById("dot" + questionNo).classList.remove("dot");
+      document.getElementById("dot" + questionNo).classList.add("dotCorrect");
       correctUnaidedTotal++;
       correctOrNot = 1;
     }
@@ -202,7 +250,7 @@ function processClick() {
   }
   else if (state == SHOW_SUMMARY) {
     const output = [];
-    actionButton.innerHTML = "Done";
+    actionButton.innerHTML = "Back To Tutorial Page";
     state = DONE;
     actionButton.disabled=false;
     feedbackContainer.innerHTML = "";
@@ -236,6 +284,10 @@ function processClick() {
           </table>
         </div><!-- table-responsive -->`);
     quizContainer.innerHTML = output.join('');
+    if (correctUnaidedTotal == totalQuestions) {
+      fireworks(5);
+      hundredPercentSound.play();
+    }
   }
   else if (state == DONE) {
     window.location.href='/tutorials/' + tutorialSlug;

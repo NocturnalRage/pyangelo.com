@@ -112,7 +112,7 @@ class QuizzesRecordCompletionController extends Controller {
       $previousMastery = $result["mastery_level_id"];
       $percent = $result["correct"]/$result["total"];
       if ($percent >= 1) {
-        if ($previousMastery == 3) {
+        if ($previousMastery >= 3) {
           $mastery = 4;
           $mastery_desc = "Mastered";
         }
