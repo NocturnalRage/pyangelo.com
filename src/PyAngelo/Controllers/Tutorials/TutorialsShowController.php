@@ -33,6 +33,10 @@ class TutorialsShowController extends Controller {
       $tutorial['tutorial_id'],
       $this->auth->personId()
     );
+    $skills = $this->tutorialRepository->getTutorialSkills(
+      $tutorial['tutorial_id'],
+      $this->auth->personId()
+    );
     $this->response->setView('tutorials/show.html.php');
     $this->response->setVars(array(
       'pageTitle' => $tutorial['title'] . ' | PyAngelo',
@@ -40,7 +44,8 @@ class TutorialsShowController extends Controller {
       'activeLink' => 'Tutorials',
       'personInfo' => $this->auth->getPersonDetailsForViews(),
       'tutorial' => $tutorial,
-      'lessons' => $lessons
+      'lessons' => $lessons,
+      'skills' => $skills
     ));
     return $this->response;
   }

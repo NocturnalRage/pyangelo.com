@@ -82,7 +82,10 @@ class TutorialsShowControllerTest extends TestCase {
         'display_duration' => '1:00',
       ]
     ];
-    $this->auth->shouldReceive('personId')->twice()->with()->andReturn(NULL);
+    $skills = [
+       "skill_id" => 1
+    ];
+    $this->auth->shouldReceive('personId')->times(3)->with()->andReturn(NULL);
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
     $this->tutorialRepository->shouldReceive('getTutorialBySlugWithStats')
       ->once()
@@ -92,6 +95,10 @@ class TutorialsShowControllerTest extends TestCase {
       ->once()
       ->with($tutorial['tutorial_id'], 0)
       ->andReturn($lessons);
+    $this->tutorialRepository->shouldReceive('getTutorialSkills')
+      ->once()
+      ->with($tutorial['tutorial_id'], 0)
+      ->andReturn($skills);
     $this->request->get['slug'] = $slug;
 
     $response = $this->controller->exec();
@@ -102,6 +109,7 @@ class TutorialsShowControllerTest extends TestCase {
     $this->assertSame($expectedViewName, $response->getView());
     $this->assertSame($expectedPageTitle, $responseVars['pageTitle']);
     $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
+    $this->assertSame($skills, $responseVars['skills']);
   }
 }
 ?>
