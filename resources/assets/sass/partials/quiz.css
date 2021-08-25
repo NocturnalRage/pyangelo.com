@@ -12,6 +12,33 @@
 #feedback {
   display: none;
 }
+#progress {
+  display: none;
+}
 #action {
   display: none;
+  float: right;
+  margin-left: 20px;
+}
+
+.dot {
+  height: 10px;
+  width: 10px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  margin-top: 20px;
+  margin-right: 10px;
+  float: right;
+}
+
+.dotCorrect {
+  height: 12px;
+  width: 12px;
+  background-color: #3cb371;
+  border-radius: 50%;
+  display: inline-block;
+  margin-top: 19px;
+  margin-right: 10px;
+  float: right;
 }
