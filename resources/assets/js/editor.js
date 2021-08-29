@@ -169,6 +169,7 @@ function addTab(file) {
         if (confirm('Are you sure you want to delete ' + file.filename + '? This operation cannot be undone!')) {
           if (currentFilename == file.filename) {
             currentSession = 0;
+            document.querySelector(".editorTab[data-filename='main.py']").classList.add("current");
             editor.setSession(editSessions[currentSession]);
           }
           deleteFile(file.filename);
