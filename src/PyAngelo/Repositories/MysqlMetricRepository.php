@@ -79,6 +79,7 @@ class MysqlMetricRepository implements MetricRepository {
               UNION ALL
               SELECT last_day(now() - INTERVAL 11 MONTH) month
             ) months
+            WHERE  status != 'incomplete'
             GROUP BY months.month";
 
     $result = $this->dbh->query($sql);
