@@ -32,7 +32,21 @@ class MysqlSketchRepository implements SketchRepository {
   public function getSketchById($sketchId) {
     $sql = "SELECT *
 	          FROM   sketch
-            WHERE  sketch_id = ?";
+            WHERE  sketch_id = ?
+            AND    deleted = FALSE";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->bind_param('i', $sketchId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    return $result->fetch_assoc();
+  }
+
+  public function getDeletedSketchById($sketchId) {
+    $sql = "SELECT *
+	          FROM   sketch
+            WHERE  sketch_id = ?
+            AND    deleted = TRUE";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('i', $sketchId);
     $stmt->execute();
@@ -45,7 +59,8 @@ class MysqlSketchRepository implements SketchRepository {
     $sql = "SELECT *
 	          FROM   sketch
             WHERE  person_id = ?
-            AND    tutorial_id = ?";
+            AND    tutorial_id = ?
+            AND    deleted = FALSE";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('ii', $personId, $tutorialId);
     $stmt->execute();
@@ -58,7 +73,8 @@ class MysqlSketchRepository implements SketchRepository {
     $sql = "SELECT *
 	          FROM   sketch
             WHERE  person_id = ?
-            AND    lesson_id = ?";
+            AND    lesson_id = ?
+            AND    deleted = FALSE";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('ii', $personId, $lessonId);
     $stmt->execute();
@@ -124,6 +140,34 @@ class MysqlSketchRepository implements SketchRepository {
     $stmt->close();
 
     return $sketchId;
+  }
+
+  public function deleteSketch($sketchId) {
+    $sql = "UPDATE sketch
+            SET    deleted = TRUE,
+                   deleted_at = now(),
+                   tutorial_id = NULL,
+                   lesson_id = NULL
+            WHERE   sketch_id = ?";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->bind_param('i', $sketchId);
+    $stmt->execute();
+    $rowsUpdated = $this->dbh->affected_rows;
+    $stmt->close();
+    return $rowsUpdated;
+  }
+
+  public function restoreSketch($sketchId) {
+    $sql = "UPDATE sketch
+            SET    deleted = FALSE,
+                   deleted_at = NULL
+            WHERE   sketch_id = ?";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->bind_param('i', $sketchId);
+    $stmt->execute();
+    $rowsUpdated = $this->dbh->affected_rows;
+    $stmt->close();
+    return $rowsUpdated;
   }
 
   public function addSketchFile($sketchId, $filename) {
