@@ -21,14 +21,16 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
     <?php
       include 'sketches.html.php';
     ?>
-    <div class="row">
-      <div class="col-md-12 text-center add-bottom">
-        <h2>Deleted Sketches</h2>
-      </div><!-- col-md-12 -->
-    </div><!-- row -->
-    <?php
-      include 'deleted-sketches.html.php';
-    ?>
+    <?php if (! empty($deletedSketches)) : ?>
+      <div class="row">
+        <div class="col-md-12 text-center add-bottom">
+          <h2>Deleted Sketches</h2>
+        </div><!-- col-md-12 -->
+      </div><!-- row -->
+      <?php
+        include 'deleted-sketches.html.php';
+      ?>
+    <?php endif; ?>
   </div><!-- container -->
 <?php
 include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';
