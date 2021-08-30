@@ -9,6 +9,8 @@ interface SketchRepository {
  
   public function getSketchById($sketchId);
 
+  public function getDeletedSketchById($sketchId);
+
   public function getSketchByPersonAndTutorial($personId, $lessonId);
 
   public function getSketchByPersonAndLesson($personId, $lessonId);
@@ -16,6 +18,10 @@ interface SketchRepository {
   public function getSketchFiles($sketchId);
 
   public function createNewSketch($personId, $title, $lessonId = NULL);
+
+  public function deleteSketch($sketchId);
+
+  public function restoreSketch($sketchId);
 
   public function addSketchFile($sketchId, $filename);
   

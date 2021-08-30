@@ -128,3 +128,6 @@ input.visually-hidden:focus-within + label {
   margin-right: 10px;
   vertical-align: middle;
 }
+.sketchCell {
+  margin-top: 15px;
+}
