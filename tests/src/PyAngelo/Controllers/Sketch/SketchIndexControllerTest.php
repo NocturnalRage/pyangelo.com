@@ -40,10 +40,17 @@ class SketchIndexControllerTest extends TestCase {
   }
 
   public function testSuccessShowView() {
+    $sketch1 = [
+        'sketch_id' => 1,
+        'deleted' => 0
+    ];
+    $sketch2 = [
+        'sketch_id' => 2,
+        'deleted' => 1
+    ];
     $sketches = [
-      [
-        'sketch_id' => 1
-      ]
+      $sketch1,
+      $sketch2
     ];
     $personId = 101;
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);

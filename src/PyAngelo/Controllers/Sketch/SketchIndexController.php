@@ -23,7 +23,13 @@ class SketchIndexController extends Controller {
     if (! $this->auth->loggedIn())
       return $this->redirectToLoginPage();
 
-    $sketches = $this->sketchRepository->getSketches($this->auth->personId());
+    $allSketches = $this->sketchRepository->getSketches($this->auth->personId());
+    $sketches = array_filter($allSketches, function($sketch) {
+      return ! $sketch['deleted'];
+    });
+    $deletedSketches = array_filter($allSketches, function($sketch) {
+      return $sketch['deleted'];
+    });
 
     $this->response->setView('sketch/index.html.php');
     $this->response->setVars(array(
@@ -31,8 +37,10 @@ class SketchIndexController extends Controller {
       'metaDescription' => "View all the great sketches you have been created on PyAngelo.",
       'activeLink' => 'My Sketches',
       'personInfo' => $this->auth->getPersonDetailsForViews(),
-      'sketches' => $sketches
+      'sketches' => $sketches,
+      'deletedSketches' => $deletedSketches
     ));
+    $this->addVar('flash');
     return $this->response;
   }
 

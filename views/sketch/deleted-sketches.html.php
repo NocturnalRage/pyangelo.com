@@ -3,23 +3,22 @@
     <div class="table-responsive">
       <table class="table table-striped table-hover">
         <tbody>
-          <?php foreach($sketches as $sketch) : ?>
+          <?php foreach($deletedSketches as $sketch) : ?>
           <?php
-            $lastUpdatedDate = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $sketch['updated_at'])->diffForHumans();
+            $deletedDate = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $sketch['deleted_at'])->diffForHumans();
           ?>
-
             <tr>
               <td>
-                  <h3><a href="/sketch/<?= $this->esc($sketch['sketch_id']) ?>"><?= $this->esc($sketch['title']) ?></a></h3>
+                  <h3><?= $this->esc($sketch['title']) ?></h3>
               </td>
               <td>
-                 <p class="sketchCell">Last saved: <em><?= $this->esc($lastUpdatedDate) ?></em></p>
+                 <p class="sketchCell">Deleted: <em><?= $this->esc($deletedDate) ?></em></p>
               </td>
               <td class="text-right">
-                  <form action="/sketch/<?= $this->esc($sketch['sketch_id']); ?>/delete" method="post">
+                  <form action="/sketch/<?= $this->esc($sketch['sketch_id']); ?>/restore" method="post">
                     <input type="hidden" name="crsfToken" value="<?= $personInfo['crsfToken']; ?>" />
-                    <button type="submit" class="pull-right btn btn-sm btn-danger sketchCell" onclick="return confirm('Are you sure you want to delete this sketch?')">
-                      <i class="fa fa-times"></i>
+                    <button type="submit" class="pull-right btn btn-sm btn-success sketchCell" onclick="return confirm('Are you sure you want to restore this sketch?')">
+                      <i class="fa fa-check"></i>
                     </button>
                   </form>
               </td>

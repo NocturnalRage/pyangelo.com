@@ -19,6 +19,7 @@ class MysqlMetricRepository implements MetricRepository {
                      1 as subscribed,
                      0 as cancelled
               FROM   stripe_subscription s
+              WHERE  status != 'incomplete'
               UNION ALL
               SELECT DATE_FORMAT(s.canceled_at, '%b %Y') startmonth,
                      DATE_FORMAT(s.canceled_at, '%Y%m') ordermonth,
@@ -26,6 +27,7 @@ class MysqlMetricRepository implements MetricRepository {
                      1 as cancelled
               FROM   stripe_subscription s
               WHERE  canceled_at is not null
+              AND    status != 'incomplete'
             ) stats
             GROUP BY startmonth, ordermonth
             ORDER BY ordermonth";
@@ -77,6 +79,7 @@ class MysqlMetricRepository implements MetricRepository {
               UNION ALL
               SELECT last_day(now() - INTERVAL 11 MONTH) month
             ) months
+            WHERE  status != 'incomplete'
             GROUP BY months.month";
 
     $result = $this->dbh->query($sql);

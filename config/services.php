@@ -677,6 +677,24 @@ $di->set('SketchAddFileController', function () use ($di) {
   );
 });
 
+$di->set('SketchDeleteController', function () use ($di) {
+  return new PyAngelo\Controllers\Sketch\SketchDeleteController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('sketchRepository')
+  );
+});
+
+$di->set('SketchRestoreController', function () use ($di) {
+  return new PyAngelo\Controllers\Sketch\SketchRestoreController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('sketchRepository')
+  );
+});
+
 $di->set('SketchDeleteFileController', function () use ($di) {
   return new PyAngelo\Controllers\Sketch\SketchDeleteFileController (
     $di->get('request'),
