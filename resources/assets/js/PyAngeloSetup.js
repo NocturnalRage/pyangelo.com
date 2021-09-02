@@ -215,7 +215,6 @@ function runSkulpt(code) {
         output:outf,
         inputfunTakesPrompt: false,
         debugging: false,
-        goto: true,
         killableWhile: true,
         killableFor: false,
         __future__: Sk.python3
