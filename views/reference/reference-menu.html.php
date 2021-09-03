@@ -97,6 +97,7 @@
           </a>
           <div class="list-group">
             <a href="#setConsoleSize" class="list-group-item">setConsoleSize()</a>
+            <a href="#setTextSize" class="list-group-item">setTextSize()</a>
             <a href="#setTextColour" class="list-group-item">setTextColour()</a>
             <a href="#setHighlightColour" class="list-group-item">setHighlightColour()</a>
             <a href="#clear" class="list-group-item">clear()</a>

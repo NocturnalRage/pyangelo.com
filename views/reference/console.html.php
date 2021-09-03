@@ -2,22 +2,42 @@
 <h3 id="setConsoleSize">setConsoleSize()</h3>
 <h4>Examples</h4>
 <pre>
-setConsoleSize(SMALL)
+setConsoleSize(SMALL_SCREEN)
 </pre>
 <pre>
-setConsoleSize(MEDIUM)
+setConsoleSize(MEDIUM_SCREEN)
 </pre>
 <pre>
-setConsoleSize(LARGE)
+setConsoleSize(LARGE_SCREEN)
 </pre>
 <h4>Description</h4>
 <p>
-Sets the size of the console in pixels. The first and only parameter is an integer that must be between between 100 and 2000. The PyAngelo constants of SMALL (100), MEDIUM (500), and LARGE (1000) can be used.
+Sets the size of the console in pixels. The first and only parameter is an integer that must be between between 100 and 2000. The PyAngelo constants of SMALL_SCREEN (100), MEDIUM_SCREEN (500), and LARGE_SCREEN (1000) can be used.
 </p>
 <h4>Syntax</h4>
 <p>setConsoleSize(size)</p>
 <h4>Parameters</h4>
 <p>size - The height of the console in pixels.</p>
+<hr />
+<h3 id="setTextSize">setTextSize()</h3>
+<h4>Examples</h4>
+<pre>
+setTextSize(SMALL_FONT)
+</pre>
+<pre>
+setTextSize(MEDIUM_FONT)
+</pre>
+<pre>
+setTextSize(LARGE_FONT)
+</pre>
+<h4>Description</h4>
+<p>
+Sets the size of the text printed to the console in pixels. The first and only parameter is an integer that must be between between 8 and 128. The PyAngelo constants of SMALL_FONT (8), MEDIUM_FONT (16), and LARGE_FONT (24) can be used.
+</p>
+<h4>Syntax</h4>
+<p>setTextSize(size)</p>
+<h4>Parameters</h4>
+<p>size - The size of the text in pixels.</p>
 <hr />
 <h3 id="setTextColour">setTextColour()</h3>
 <h4>Examples</h4>

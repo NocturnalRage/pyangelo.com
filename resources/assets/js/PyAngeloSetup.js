@@ -39,11 +39,16 @@ Sk.builtins.CENTER = new Sk.builtin.int_(3);
 Sk.builtins.CLOSE = new Sk.builtin.int_(1);
 Sk.builtins.OPEN = new Sk.builtin.int_(2);
 // Used for console height
-Sk.builtins.SMALL = new Sk.builtin.int_(300);
-Sk.builtins.MEDIUM = new Sk.builtin.int_(500);
-Sk.builtins.LARGE = new Sk.builtin.int_(1000);
+Sk.builtins.SMALL_SCREEN = new Sk.builtin.int_(300);
+Sk.builtins.MEDIUM_SCREEN = new Sk.builtin.int_(500);
+Sk.builtins.LARGE_SCREEN = new Sk.builtin.int_(1000);
+// Used for text size
+Sk.builtins.SMALL_FONT = new Sk.builtin.int_(8);
+Sk.builtins.MEDIUM_FONT = new Sk.builtin.int_(16);
+Sk.builtins.LARGE_FONT = new Sk.builtin.int_(24);
 
 // Global Python Colours
+Sk.PyAngelo.textSize = "16px";
 Sk.PyAngelo.textColour = "rgba(147, 161, 161, 1)";
 Sk.PyAngelo.highlightColour = "rgba(0, 0, 0, 1)";
 Sk.builtins.YELLOW = 0;
@@ -158,6 +163,7 @@ function createColouredTextSpanElement(text) {
   spanElement.appendChild(document.createTextNode(text));
   spanElement.style.color = Sk.PyAngelo.textColour;
   spanElement.style.backgroundColor = Sk.PyAngelo.highlightColour;
+  spanElement.style.fontSize = Sk.PyAngelo.textSize;
   return spanElement;
 }
 

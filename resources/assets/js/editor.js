@@ -59,6 +59,7 @@ var staticWordCompleter = {
           "saveState",
           "restoreState",
           "setConsoleSize",
+          "setTextSize",
           "setTextColour",
           "setHighlightColour",
           "clear",
