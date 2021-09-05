@@ -8,6 +8,15 @@
             <a href="/password" class="list-group-item<?= $activeLink == 'password' ? ' active' : '' ?>"><i class="fa fa-key fa-fw"></i> Password</a>
           </div><!-- list-group -->
         </div><!-- well -->
+
+        <div class="well">
+          <h3>Classes</h3>
+          <div class="list-group">
+            <a href="/classes/teacher" class="list-group-item<?= $activeLink == 'teacher' ? ' active' : '' ?>"><i class="fa fa-university fa-fw"></i> Teacher</a>
+            <a href="/classes/student" class="list-group-item<?= $activeLink == 'student' ? ' active' : '' ?>"><i class="fa fa-graduation-cap fa-fw"></i> Student</a>
+          </div><!-- list-group -->
+        </div><!-- well -->
+
         <div class="well">
           <h3>Billing</h3>
           <div class="list-group">

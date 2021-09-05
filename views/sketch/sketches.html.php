@@ -30,8 +30,3 @@
     </div><!-- table-responsive -->
   <div><!-- twelve columns -->
 <div><!-- row -->
-
-<div class="row">
-  <div class="col-md-12">
-  <div><!-- twelve columns -->
-<div><!-- row -->

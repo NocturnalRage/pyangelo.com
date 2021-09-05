@@ -47,6 +47,10 @@ $di->set('campaignRepository', function () use ($di) {
   return new PyAngelo\Repositories\MysqlCampaignRepository($di->get('dbh'));
 });
 
+$di->set('classRepository', function () use ($di) {
+  return new PyAngelo\Repositories\MysqlClassRepository($di->get('dbh'));
+});
+
 $di->set('countryRepository', function () use ($di) {
   return new PyAngelo\Repositories\MysqlCountryRepository($di->get('dbh'));
 });
@@ -1435,5 +1439,104 @@ $di->set('PaymentMethodUpdatedController', function () use ($di) {
     $di->get('request'),
     $di->get('response'),
     $di->get('auth')
+  );
+});
+
+$di->set('TeacherIndexController', function () use ($di) {
+  return new PyAngelo\Controllers\Classes\TeacherIndexController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('classRepository')
+  );
+});
+
+$di->set('TeacherNewController', function () use ($di) {
+  return new PyAngelo\Controllers\Classes\TeacherNewController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('classRepository')
+  );
+});
+
+$di->set('TeacherCreateController', function () use ($di) {
+  return new PyAngelo\Controllers\Classes\TeacherCreateController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('classRepository')
+  );
+});
+
+$di->set('TeacherShowController', function () use ($di) {
+  return new PyAngelo\Controllers\Classes\TeacherShowController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('classRepository')
+  );
+});
+
+$di->set('TeacherEditController', function () use ($di) {
+  return new PyAngelo\Controllers\Classes\TeacherEditController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('classRepository')
+  );
+});
+
+$di->set('TeacherUpdateController', function () use ($di) {
+  return new PyAngelo\Controllers\Classes\TeacherUpdateController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('classRepository')
+  );
+});
+
+$di->set('TeacherSketchController', function () use ($di) {
+  return new PyAngelo\Controllers\Classes\TeacherSketchController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('classRepository')
+  );
+});
+
+$di->set('TeacherArchiveController', function () use ($di) {
+  return new PyAngelo\Controllers\Classes\TeacherArchiveController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('classRepository')
+  );
+});
+
+$di->set('TeacherRestoreController', function () use ($di) {
+  return new PyAngelo\Controllers\Classes\TeacherRestoreController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('classRepository')
+  );
+});
+
+$di->set('ClassJoinController', function () use ($di) {
+  return new PyAngelo\Controllers\Classes\ClassJoinController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('classRepository')
+  );
+});
+
+$di->set('StudentIndexController', function () use ($di) {
+  return new PyAngelo\Controllers\Classes\StudentIndexController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('classRepository')
   );
 });

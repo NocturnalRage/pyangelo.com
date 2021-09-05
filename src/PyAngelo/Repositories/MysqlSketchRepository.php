@@ -148,7 +148,7 @@ class MysqlSketchRepository implements SketchRepository {
                    deleted_at = now(),
                    tutorial_id = NULL,
                    lesson_id = NULL
-            WHERE   sketch_id = ?";
+            WHERE  sketch_id = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('i', $sketchId);
     $stmt->execute();
