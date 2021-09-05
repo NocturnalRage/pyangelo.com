@@ -74,6 +74,8 @@
               <ul class="dropdown-menu" role="menu">
                 <li><a href="/profile"><i class="fa fa-user fa-fw"></i> Profile</a></li>
                 <li><a href="/favourites"><i class="fa fa-star fa-fw"></i> Favourites</a></li>
+                <li><a href="/classes/student"><i class="fa fa-graduation-cap fa-fw"></i> Student</a></li>
+                <li><a href="/classes/teacher"><i class="fa fa-university fa-fw"></i> Teacher</a></li>
                 <li>
                   <a href="/logout"
                     onclick="event.preventDefault();
