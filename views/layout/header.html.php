@@ -30,11 +30,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-python.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.min.js"></script>
 
-  <!-- Skulpt Files
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script src="<?= mix('js/skulpt.min.js'); ?>"></script>
-  <script src="<?= mix('js/skulpt-stdlib.js'); ?>"></script>
-
   <?php endif; ?>
 
   <script src="<?= mix('js/app.js'); ?>"></script>

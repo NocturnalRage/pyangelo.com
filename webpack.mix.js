@@ -31,8 +31,5 @@ require('laravel-mix-eslint');
      .copy('./resources/assets/js/userSearch.js', './public/js/')
      .copy('./resources/assets/js/subscription.js', './public/js/')
      .copy('./resources/assets/js/new-payment-method.js', './public/js/')
-     .copy('./node_modules/skulpt/dist/skulpt.min.js', './public/js/')
-     .copy('./node_modules/skulpt/dist/skulpt.min.js.map', './public/js/')
-     .copy('./node_modules/skulpt/dist/skulpt-stdlib.js', './public/js/')
      .eslint()
      .version();

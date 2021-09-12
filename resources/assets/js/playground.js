@@ -1,6 +1,6 @@
 import { runSkulpt, stopSkulpt } from './SkulptSetup'
 import { Editor } from './EditorSetup'
-import Sk from 'Sk'
+const Sk = require('skulpt')
 
 // Only one session in playground
 const session = 0
