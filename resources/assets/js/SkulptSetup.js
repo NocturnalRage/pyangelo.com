@@ -1,4 +1,4 @@
-import Sk from 'Sk'
+const Sk = require('skulpt')
 
 Sk.preparePyAngeloPage()
 
