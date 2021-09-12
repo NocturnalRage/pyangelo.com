@@ -1,57 +1,55 @@
-$( document ).ready(function() {
-  var lessonCompleteToggle = (function() {
+$(document).ready(function () {
+  const lessonCompleteToggle = (function () {
+    const setCompleteInTable = function (lessonId) {
+      $('.btn' + lessonId).toggleClass('btn-default').toggleClass('btn-success')
+    }
+    const unsetCompleteInTable = function (lessonId) {
+      $('.btn' + lessonId).toggleClass('btn-success').toggleClass('btn-default')
+    }
+    const updatePercentComplete = function (percentComplete) {
+      $('#percent-complete').html(percentComplete)
+    }
 
-    var setCompleteInTable = function(lesson_id) {
-      $('.btn' + lesson_id).toggleClass('btn-default').toggleClass('btn-success');
-    }
-    var unsetCompleteInTable = function(lesson_id) {
-      $('.btn' + lesson_id).toggleClass('btn-success').toggleClass('btn-default');
-    }
-    var updatePercentComplete = function(percentComplete) {
-      $('#percent-complete').html(percentComplete);
-    }
-
-    var toggleCompleteVideo = function(lesson_id) {
+    const toggleCompleteVideo = function (lessonId) {
       $.ajax({
         type: 'POST',
         url: '/toggle-lesson-completed',
-        data: { lessonId: lesson_id, action: 'toggle' }
+        data: { lessonId: lessonId, action: 'toggle' }
       })
-      .done(function(data) {
-        $.notify(data.message, { className: data.status, position:"right-bottom" });
-        if (data.status == "info") {
-          unsetCompleteInTable(lesson_id);
-        }
-        else {
-          setCompleteInTable(lesson_id);
-        }
-        updatePercentComplete(data.percentComplete);
-      })
-      .fail(function() {
-        $.notify('There was an issue and we could not record the completion of your lesson.', { className: 'error', position:"right-bottom" });
-      })
-      .always(function() {
+        .done(function (data) {
+          $.notify(data.message, { className: data.status, position: 'right-bottom' })
+          if (data.status === 'info') {
+            unsetCompleteInTable(lessonId)
+          } else {
+            setCompleteInTable(lessonId)
+          }
+          updatePercentComplete(data.percentComplete)
+        })
+        .fail(function () {
+          $.notify('There was an issue and we could not record the completion of your lesson.', { className: 'error', position: 'right-bottom' })
+        })
+        .always(function () {
           // Do something only if requried
-      });
+        })
     }
 
-    var bindFunctions = function() {
-      $(".toggleComplete").on("click", toggleButtonClick)
-    };
+    const bindFunctions = function () {
+      $('.toggleComplete').on('click', toggleButtonClick)
+    }
 
-    var init = function() {
-      bindFunctions();
-    };
+    const init = function () {
+      bindFunctions()
+    }
 
-    var toggleButtonClick = function(e) {
-      e.preventDefault();
-      lesson_id = jQuery(this).data('lesson-id');
-      toggleCompleteVideo(lesson_id);
-    };
+    const toggleButtonClick = function (e) {
+      e.preventDefault()
+      const lessonId = $(this).data('lesson-id')
+      toggleCompleteVideo(lessonId)
+    }
     return {
       init: init
-    };
-  })();
+    }
+  })()
 
-  lessonCompleteToggle.init();
-});
+  lessonCompleteToggle.init()
+})

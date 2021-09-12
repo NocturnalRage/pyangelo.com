@@ -1,103 +1,47 @@
-let editorSession = 0;
-let currentSession = 0;
-let editor = ace.edit("editor");
-// Set up function to listen for resize
-const onresize = (dom_elem, callback) => {
-  const resizeObserver = new ResizeObserver(() => callback() );
-  resizeObserver.observe(dom_elem);
-};
-editorWindow = document.getElementById("editor");
-onresize(editorWindow, function () {
-  editor.resize();
-});
+import { runSkulpt, stopSkulpt } from './SkulptSetup'
+import { Editor } from './EditorSetup'
+import Sk from 'Sk'
 
-editor.$blockScrolling = Infinity;
-ace.config.set("basePath", "https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/");
-editor.setTheme("ace/theme/dracula");
+// Only one session in playground
+const session = 0
 
-var UndoManager = ace.require("ace/undomanager").UndoManager;
+const editorWindow = document.getElementById('editor')
+const crsfToken = 'no-token-needed-in-playground'
+const sketchId = 0
+const isReadOnly = false
+const fileTabs = null
 
-var PythonMode = ace.require("ace/mode/python").Mode;
-let langTools = ace.require("ace/ext/language_tools");
-var staticWordCompleter = {
-    getCompletions: function(editor, session, pos, prefix, callback) {
-        var wordList = [
-          "setCanvasSize",
-          "noCanvas",
-          "focusCanvas",
-          "rect",
-          "circle",
-          "ellipse",
-          "arc",
-          "line",
-          "point",
-          "triangle",
-          "quad",
-          "rectMode",
-          "circleMode",
-          "strokeWeight",
-          "beginShape",
-          "vertex",
-          "endShape",
-          "background",
-          "fill",
-          "noFill",
-          "stroke",
-          "noStroke",
-          "isKeyPressed",
-          "wasKeyPressed",
-          "text",
-          "loadImage",
-          "image",
-          "angleMode",
-          "translate",
-          "rotate",
-          "applyMatrix",
-          "shearX",
-          "shearY",
-          "saveState",
-          "restoreState",
-          "setConsoleSize",
-          "setTextColour",
-          "setHighlightColour",
-          "clear",
-          "sleep",
-          "loadSound",
-          "playSound",
-          "stopSound",
-          "pauseSound",
-          "stopAllSounds",
-          "width",
-          "height",
-          "mouseX",
-          "mouseY",
-          "dist",
-          "Sprite",
-          "TextSprite",
-          "RectangleSprite",
-          "CircleSprite",
-          "EllipseSprite",
-        ];
-        callback(null, [...wordList.map(function(word) {
-            return {
-                caption: word,
-                value: word,
-                meta: "static"
-            };
-        }), ...session.$mode.$highlightRules.$keywordList.map(function(word) {
-        return {
-          caption: word,
-          value: word,
-          meta: 'keyword',
-        };
-      })]);
+const aceEditor = new Editor(sketchId, crsfToken, Sk, fileTabs, isReadOnly)
+Sk.PyAngelo.aceEditor = aceEditor
 
-    }
+const startStopButton = document.getElementById('startStop')
+startStopButton.addEventListener('click', runCode)
+
+function runCode () {
+  startStopButton.removeEventListener('click', runCode, false)
+  startStopButton.style.backgroundColor = '#880000'
+  startStopButton.textContent = 'Stop'
+  startStopButton.addEventListener('click', stopCode, false)
+  Sk.PyAngelo.console.innerHTML = ''
+  runSkulpt(aceEditor.getCode(session), stopCode)
 }
 
-langTools.setCompleters([staticWordCompleter])
-// or
-editor.completers = [staticWordCompleter]
+function stopCode () {
+  stopSkulpt()
+  startStopButton.removeEventListener('click', stopCode, false)
+  startStopButton.style.backgroundColor = '#008800'
+  startStopButton.textContent = 'Start'
+  startStopButton.addEventListener('click', runCode, false)
+}
+
+const onresize = (domElem, callback) => {
+  const resizeObserver = new ResizeObserver(() => callback())
+  resizeObserver.observe(domElem)
+}
+
+onresize(editorWindow, function () {
+  aceEditor.resize()
+})
 
 const snake = `from sprite import *
 from random import *
@@ -217,7 +161,7 @@ while playing:
             resetGame()
         elif isKeyPressed(KEY_Q):
             playing = False
-`;
+`
 
 const breakout = `from sprite import *
 from random import *
@@ -437,7 +381,7 @@ while True:
     while gameOver:
         if isKeyPressed(KEY_ENTER):
             gameOver = False
-`;
+`
 
 const randomCircles = `from random import *
 setCanvasSize(640, 360)
@@ -453,50 +397,18 @@ while True:
     fill(r, g, b, 0.7)
     circle(x, y, size)
     sleep(0.05)
-`;
+`
 
-const snakeBtn = document.getElementById("snakeBtn");
-snakeBtn.onclick=function() {editSessions[editorSession].setValue(snake);};
-const breakoutBtn = document.getElementById("breakoutBtn");
-breakoutBtn.onclick=function() {editSessions[editorSession].setValue(breakout);};
-const randomCirclesBtn = document.getElementById("randomCirclesBtn");
-randomCirclesBtn.onclick=function() {editSessions[editorSession].setValue(randomCircles);};
+const blankEditor = ''
 
-var EditSession = require("ace/edit_session").EditSession;
-var editSessions = [];
-editSessions.push(new EditSession(snake));
-editSessions[editorSession].setMode(new PythonMode());
-editSessions[editorSession].setUndoManager(new UndoManager());
-editor.setOptions({
-    readOnly: false,
-    fontSize: "12pt",
-    enableBasicAutocompletion: true,
-    enableSnippets: false,
-    enableLiveAutocompletion: true,
-});
-editor.setSession(editSessions[currentSession]);
+const snakeBtn = document.getElementById('snakeBtn')
+snakeBtn.onclick = function () { aceEditor.replaceSession(session, snake) }
+const breakoutBtn = document.getElementById('breakoutBtn')
+breakoutBtn.onclick = function () { aceEditor.replaceSession(session, breakout) }
+const randomCirclesBtn = document.getElementById('randomCirclesBtn')
+randomCirclesBtn.onclick = function () { aceEditor.replaceSession(session, randomCircles) }
+const blankEditorBtn = document.getElementById('blankEditorBtn')
+blankEditorBtn.onclick = function () { aceEditor.replaceSession(session, blankEditor) }
 
-function getCode(session) {
-  return editSessions[session].getValue();
-}
-function runCode() {
-  const startStopButton = document.getElementById('startStop');
-  startStopButton.removeEventListener('click', runCode, false);
-  startStopButton.style.backgroundColor = '#880000';
-  startStopButton.textContent = 'Stop';
-  startStopButton.addEventListener('click', stopCode, false);
-  document.getElementById("console").innerHTML = '';
-  _stopExecution = false;
-  runSkulpt(getCode(0));
-}
-function stopCode() {
-  _stopExecution = true;
-  Sk.builtin.stopAllSounds();
-  const startStopButton = document.getElementById('startStop');
-  startStopButton.removeEventListener('click', stopCode, false);
-  startStopButton.style.backgroundColor = '#008800';
-  startStopButton.textContent = 'Start';
-  startStopButton.addEventListener('click', runCode, false);
-}
-
-document.getElementById('startStop').addEventListener('click', runCode, false);
+aceEditor.addSession(snake)
+aceEditor.setSession(session)
