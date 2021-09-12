@@ -13,4 +13,3 @@
     </div>
   </div><!-- col-md-12 -->
 </div><!-- row -->
-<script src="<?= mix('js/dropzone.js'); ?>"></script>

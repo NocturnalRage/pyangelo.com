@@ -22,21 +22,26 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
       </div><!-- col-md-12 -->
     </div><!-- row -->
     <div class="row add-bottom text-center">
-      <div class="col-md-4">
-        <button id="snakeBtn" class="btn btn-lg btn-primary">
+      <div class="col-md-3">
+        <button id="snakeBtn" class="btn btn-block btn-primary">
             <i class="fa fa-square" aria-hidden="true"></i> <strong>Snake</strong></a>
         </button>
-      </div><!-- col-md-4 -->
-      <div class="col-md-4">
-        <button id="breakoutBtn" class="btn btn-lg btn-success">
+      </div><!-- col-md-3 -->
+      <div class="col-md-3">
+        <button id="breakoutBtn" class="btn btn-block btn-success">
             <i class="fa fa-building-o" aria-hidden="true"></i> <strong>Breakout</strong></a>
         </button>
-      </div><!-- col-md-4 -->
-      <div class="col-md-4">
-        <button id="randomCirclesBtn" class="btn btn-lg btn-warning">
+      </div><!-- col-md-3 -->
+      <div class="col-md-3">
+        <button id="randomCirclesBtn" class="btn btn-block btn-warning">
             <i class="fa fa-circle" aria-hidden="true"></i> <strong>Random Circles</strong></a>
         </button>
-      </div><!-- col-md-4 -->
+      </div><!-- col-md-3 -->
+      <div class="col-md-3">
+        <button id="blankEditorBtn" class="btn btn-block btn-danger">
+            <i class="fa fa-eraser" aria-hidden="true"></i> <strong>Write Your Own</strong></a>
+        </button>
+      </div><!-- col-md-3 -->
     </div><!-- row -->
     <div id="editorWrapper" class="row">
       <div class="col-md-12">
@@ -52,7 +57,6 @@ include 'sketch-buttons.html.php';
 
   </div><!-- container -->
 
-<script src="<?= mix('js/PyAngeloSetup.js'); ?>"></script>
 <script src="<?= mix('js/playground.js'); ?>"></script>
 
 <?php

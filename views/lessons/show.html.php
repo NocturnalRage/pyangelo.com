@@ -78,11 +78,7 @@
         include __DIR__ . '/../sketch/sketch-upload.html.php';
       ?>
 
-      <script src="<?= mix('js/PyAngeloSetup.js'); ?>"></script>
-      <script src="<?= mix('js/editor.js'); ?>"></script>
-      <script>
-      loadCode();
-      </script>
+      <script src="<?= mix('js/SkulptSketch.js'); ?>"></script>
 
     <?php else : ?>
       <div class="row">

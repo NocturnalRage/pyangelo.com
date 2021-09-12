@@ -1,7 +1,7 @@
     <!-- editor -->
     <div id="editorFiles" class="row">
       <div class="col-md-12" id="fileTabs">
-        <span class="editorTab" onclick="newPythonFile();">+</span>
+        <span id="addNewFileTab" class="editorTab">+</span>
       </div><!-- col-md-12 -->
     </div><!-- row -->
     <div id="editorWrapper" class="row">
