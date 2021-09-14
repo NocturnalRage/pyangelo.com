@@ -1,4 +1,5 @@
 <h2 id="colour">Colour</h2>
+<p>This section describes how colour is used in the canvas when using graphics functions. For colour related to the console see the <a href="#setTextColour">setTextColour</a>, <a href="#setHighlightColour">setHighlightColour</a>, and <a href="#clear">clear</a> functions.</p>
 <h3 id="background">background()</h3>
 <h4>Examples</h4>
 <pre>
