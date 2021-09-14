@@ -49,25 +49,11 @@ print("I am red.")
 <p>
 Sets the text colour for any print statements which will be output on the console. The following constants should be used as a parameter:
 </p>
-<p>
-<ul>
-  <li>YELLOW</li>
-  <li>ORANGE</li>
-  <li>RED</li>
-  <li>MAGENTA</li>
-  <li>VIOLET</li>
-  <li>BLUE</li>
-  <li>CYAN</li>
-  <li>GREEN</li>
-  <li>WHITE</li>
-  <li>GREY or GRAY</li>
-  <li>BLACK</li>
-</ul>
-</p>
+<?php include __DIR__ . DIRECTORY_SEPARATOR . 'console-colours.html.php'; ?>
 <h4>Syntax</h4>
 <p>setTextColour()</p>
 <h4>Parameters</h4>
-<p>colour - An integer between 1 and 10 represeting the colour. The above constants should be used for clarity.</p>
+<p>colour - An integer between 1 and 22 represeting the colour. The above constants should be used for clarity.</p>
 <hr />
 <h3 id="setHighlightColour">setHighlightColour()</h3>
 <h4>Examples</h4>
@@ -80,25 +66,11 @@ print("I am red text on a white background.")
 <p>
 Sets the highlight or background colour for any print statements which will be output on the console. The following constants should be used as a parameter:
 </p>
-<p>
-<ul>
-  <li>YELLOW</li>
-  <li>ORANGE</li>
-  <li>RED</li>
-  <li>MAGENTA</li>
-  <li>VIOLET</li>
-  <li>BLUE</li>
-  <li>CYAN</li>
-  <li>GREEN</li>
-  <li>WHITE</li>
-  <li>GREY or GRAY</li>
-  <li>BLACK</li>
-</ul>
-</p>
+<?php include __DIR__ . DIRECTORY_SEPARATOR . 'console-colours.html.php'; ?>
 <h4>Syntax</h4>
 <p>setHighlightColour()</p>
 <h4>Parameters</h4>
-<p>colour - An integer between 1 and 10 represeting the colour. The above constants should be used for clarity.</p>
+<p>colour - An integer between 1 and 22 represeting the colour. The above constants should be used for clarity.</p>
 <hr />
 <h3 id="clear">clear()</h3>
 <h4>Examples</h4>
@@ -117,20 +89,6 @@ Clears the console.
 <h4>Syntax</h4>
 <p>clear(colour)</p>
 <h4>Parameters</h4>
-<p>colour -  The colour of the console after the screen is cleared. This is an optional parameter. If no colour is specified, a black colour will be displayed. The parameter is an integer from 1 to 10 but the following constants should be used for clarity:</p>
-<p>
-<ul>
-  <li>YELLOW</li>
-  <li>ORANGE</li>
-  <li>RED</li>
-  <li>MAGENTA</li>
-  <li>VIOLET</li>
-  <li>BLUE</li>
-  <li>CYAN</li>
-  <li>GREEN</li>
-  <li>WHITE</li>
-  <li>GREY or GRAY</li>
-  <li>BLACK</li>
-</ul>
-</p>
+<p>colour -  The colour of the console after the screen is cleared. This is an optional parameter. If no colour is specified, a black colour will be displayed. The parameter is an integer from 1 to 22 but the following constants should be used for clarity:</p>
+<?php include __DIR__ . DIRECTORY_SEPARATOR . 'console-colours.html.php'; ?>
 <hr />

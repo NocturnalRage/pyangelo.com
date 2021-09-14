@@ -55,19 +55,7 @@ class CanvasOnlyHtmlTest extends BasicViewHtmlTest {
     $expect = '<pre id="console">';
     $this->assertStringContainsString($expect, $output);
 
-    $expect = '<script src="/js/PyAngeloSetup.js';
-    $this->assertStringContainsString($expect, $output);
-
-    $expect = '<script src="/js/editor.js';
-    $this->assertStringContainsString($expect, $output);
-
-    $expect = 'editorWrapper.style.display = "none"';
-    $this->assertStringContainsString($expect, $output);
-
-    $expect = 'editorWrapper.style.display = "none"';
-    $this->assertStringContainsString($expect, $output);
-   
-    $expect = 'buttonsWrapper.style.display = "none";';
+    $expect = '<script src="/js/SkulptSketchCanvasOnly.js';
     $this->assertStringContainsString($expect, $output);
   }
 
@@ -116,19 +104,7 @@ class CanvasOnlyHtmlTest extends BasicViewHtmlTest {
     $expect = '<pre id="console">';
     $this->assertStringContainsString($expect, $output);
 
-    $expect = '<script src="/js/PyAngeloSetup.js';
-    $this->assertStringContainsString($expect, $output);
-
-    $expect = '<script src="/js/editor.js';
-    $this->assertStringContainsString($expect, $output);
-
-    $expect = 'editorWrapper.style.display = "none"';
-    $this->assertStringContainsString($expect, $output);
-
-    $expect = 'editorWrapper.style.display = "none"';
-    $this->assertStringContainsString($expect, $output);
-   
-    $expect = 'buttonsWrapper.style.display = "none";';
+    $expect = '<script src="/js/SkulptSketchCanvasOnly.js';
     $this->assertStringContainsString($expect, $output);
   }
 }

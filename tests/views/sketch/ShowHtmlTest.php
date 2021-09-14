@@ -55,10 +55,7 @@ class ShowHtmlTest extends BasicViewHtmlTest {
     $expect = '<pre id="console">';
     $this->assertStringContainsString($expect, $output);
 
-    $expect = '<script src="/js/PyAngeloSetup.js';
-    $this->assertStringContainsString($expect, $output);
-
-    $expect = '<script src="/js/editor.js';
+    $expect = '<script src="/js/SkulptSketch.js';
     $this->assertStringContainsString($expect, $output);
   }
 
@@ -107,10 +104,7 @@ class ShowHtmlTest extends BasicViewHtmlTest {
     $expect = '<pre id="console">';
     $this->assertStringContainsString($expect, $output);
 
-    $expect = '<script src="/js/PyAngeloSetup.js';
-    $this->assertStringContainsString($expect, $output);
-
-    $expect = '<script src="/js/editor.js';
+    $expect = '<script src="/js/SkulptSketch.js';
     $this->assertStringContainsString($expect, $output);
   }
 }
