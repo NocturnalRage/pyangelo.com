@@ -48,8 +48,8 @@ export class Editor {
     this.editor.setSession(this.editSessions[index])
   }
 
-  gotoLine (lineNo) {
-    this.editor.gotoLine(lineNo)
+  gotoLine (lineNo, colNo = 0, animate = true) {
+    this.editor.gotoLine(lineNo, colNo, animate)
   }
 
   getCode (session) {

@@ -138,20 +138,36 @@ export function runSkulpt (code, stopFunction) {
     const hc = Sk.PyAngelo.highlightColour
     Sk.PyAngelo.textColour = 'rgba(255, 0, 0, 1)'
     Sk.PyAngelo.highlightColour = 'rgba(255, 255, 255, 1)'
+    let errorMessage
     if (err.name === 'ProgramStopped') {
       outf(err.message + '\n')
+      errorMessage = err.message
     } else if (err.message) {
       outf(err.message + '\n')
       outf(err.stack)
+      errorMessage = err.message
     } else if (err.nativeError) {
       outf(err.nativeError.message + '\n')
       outf(err.nativeError.stack)
+      errorMessage = err.nativeError.message
     } else {
       outf(err.toString())
       outf(err.stack || '')
+      errorMessage = err.toString()
     }
     Sk.PyAngelo.textColour = tc
     Sk.PyAngelo.highlightColour = hc
+    if (err.traceback) {
+      const lineno = err.traceback[0].lineno
+      const colno = err.traceback[0].colno
+      Sk.PyAngelo.aceEditor.gotoLine(lineno, colno)
+      Sk.PyAngelo.aceEditor.editor.getSession().setAnnotations([{
+        row: lineno - 1,
+        column: colno,
+        text: errorMessage,
+        type: 'error'
+      }])
+    }
   })
   myPromise.finally(function () { stopFunction() })
   Sk.PyAngelo.ctx.restore()
