@@ -32,6 +32,43 @@ export class Editor {
     this.editSessions = []
   }
 
+  monitorErrorsOnChange () {
+    const closureEditor = this
+    this.editor.on('change', function (delta) {
+      closureEditor.editor.getSession().clearAnnotations()
+      closureEditor.Sk.configure({
+        __future__: closureEditor.Sk.python3
+      })
+      try {
+        closureEditor.Sk.compile(
+          closureEditor.getCode(closureEditor.currentSession),
+          closureEditor.currentFilename,
+          'exec',
+          true
+        )
+      } catch (err) {
+        if (err.traceback) {
+          const lineno = err.traceback[0].lineno
+          const colno = err.traceback[0].colno
+          let errorMessage
+          if (err.message) {
+            errorMessage = err.message
+          } else if (err.nativeError) {
+            errorMessage = err.nativeError.message
+          } else {
+            errorMessage = err.toString()
+          }
+          closureEditor.editor.getSession().setAnnotations([{
+            row: lineno - 1,
+            column: colno,
+            text: errorMessage,
+            type: 'error'
+          }])
+        }
+      }
+    })
+  }
+
   addSession (code) {
     let index = this.editSessions.push(new this.EditSession(code))
     index--
