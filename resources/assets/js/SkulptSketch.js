@@ -27,42 +27,7 @@ if (!isReadOnly) {
 const aceEditor = new Editor(sketchId, crsfToken, Sk, fileTabs, isReadOnly)
 Sk.PyAngelo.aceEditor = aceEditor
 aceEditor.loadCode()
-aceEditor.editor.on('change', function (delta) {
-  Sk.PyAngelo.aceEditor.editor.getSession().clearAnnotations()
-  Sk.configure({
-    __future__: Sk.python3
-  })
-  try {
-    Sk.compile(
-      aceEditor.getCode(aceEditor.currentSession),
-      aceEditor.currentFilename,
-      'exec',
-      true
-    )
-  } catch (err) {
-    if (err.traceback) {
-      const lineno = err.traceback[0].lineno
-      const colno = err.traceback[0].colno
-      console.log(err)
-      console.log(lineno)
-      console.log(colno)
-      let errorMessage
-      if (err.message) {
-        errorMessage = err.message
-      } else if (err.nativeError) {
-        errorMessage = err.nativeError.message
-      } else {
-        errorMessage = err.toString()
-      }
-      Sk.PyAngelo.aceEditor.editor.getSession().setAnnotations([{
-        row: lineno - 1,
-        column: colno,
-        text: errorMessage,
-        type: 'error'
-      }])
-    }
-  }
-})
+aceEditor.monitorErrorsOnChange()
 
 const startStopButton = document.getElementById('startStop')
 startStopButton.addEventListener('click', saveThenRun)
@@ -457,7 +422,6 @@ function updateWebPage (response) {
     paraUploadError.innerText = response.message
     paraUploadError.style.color = 'red'
     document.getElementById('gallery').appendChild(paraUploadError)
-    console.log(response)
   }
 }
 
