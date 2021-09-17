@@ -1,6 +1,6 @@
 const Sk = require('skulpt')
 
-Sk.preparePyAngeloPage()
+Sk.PyAngelo.preparePage()
 
 // Allow skulpt script to be stopped
 let _stopExecution = false
@@ -27,7 +27,7 @@ export function stopSkulpt () {
 export function runSkulpt (code, stopFunction) {
   _stopExecution = false
   Sk.PyAngelo.ctx.save()
-  Sk.resetPyAngelo()
+  Sk.PyAngelo.reset()
 
   Sk.inputfun = function (prompt) {
     return new Promise(function (resolve, reject) {
