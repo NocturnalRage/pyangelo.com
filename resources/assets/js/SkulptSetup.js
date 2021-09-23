@@ -11,6 +11,13 @@ function createColouredTextSpanElement (text) {
   spanElement.style.color = Sk.PyAngelo.textColour
   spanElement.style.backgroundColor = Sk.PyAngelo.highlightColour
   spanElement.style.fontSize = Sk.PyAngelo.textSize
+  spanElement.style.lineHeight = '1.5em'
+  spanElement.style.margin = '0px'
+  let padding = Sk.PyAngelo.textSize
+  padding = parseInt(padding)
+  padding = 0.25 * padding + 'px'
+  spanElement.style.paddingBottom = padding
+  spanElement.style.paddingTop = padding
   return spanElement
 }
 
