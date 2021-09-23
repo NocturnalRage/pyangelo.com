@@ -155,12 +155,19 @@ export function runSkulpt (code, debugging, stopFunction) {
       consoleErrorMessage = err.toString() + '\n' + (err.stack || '') + '\n'
     }
     if (err.traceback) {
-      editorErrorMessage += 'Error found in file ' + err.traceback[0].filename
-      consoleErrorMessage += 'Error found in file ' + err.traceback[0].filename + '\n'
+      let topMostFilename = err.traceback[0].filename
+      if (topMostFilename === '<stdin>.py') {
+        topMostFilename = 'main.py'
+      } else {
+        topMostFilename = topMostFilename.substring(topMostFilename.lastIndexOf('/') + 1)
+      }
+      editorErrorMessage += 'Error found in file ' + topMostFilename
+      consoleErrorMessage += 'Error found in file ' + topMostFilename + '\n'
     }
     outf(consoleErrorMessage)
     Sk.PyAngelo.textColour = tc
     Sk.PyAngelo.highlightColour = hc
+    let reportedError = false
     if (err.traceback) {
       for (let i = err.traceback.length - 1; i >= 0; i--) {
         const lineno = err.traceback[i].lineno
@@ -173,6 +180,7 @@ export function runSkulpt (code, debugging, stopFunction) {
         }
         const editSession = document.querySelector(".editorTab[data-filename='" + filename + "']")
         if (editSession !== null) {
+          reportedError = true
           const errorSession = editSession.getAttribute('data-editor-session')
           Sk.PyAngelo.aceEditor.editSessions[errorSession].setAnnotations([{
             row: lineno - 1,
@@ -187,6 +195,21 @@ export function runSkulpt (code, debugging, stopFunction) {
           Sk.PyAngelo.aceEditor.setSession(Sk.PyAngelo.aceEditor.currentSession)
           Sk.PyAngelo.aceEditor.gotoLine(lineno, colno)
         }
+      }
+      // This might happen on playground
+      // where there are no tabs
+      if (reportedError === false) {
+        const lineno = err.traceback[0].lineno
+        const colno = err.traceback[0].colno
+        console.log(lineno)
+        console.log(colno)
+        Sk.PyAngelo.aceEditor.gotoLine(lineno, colno)
+        Sk.PyAngelo.aceEditor.editSessions[0].setAnnotations([{
+          row: lineno - 1,
+          column: colno,
+          text: editorErrorMessage,
+          type: 'error'
+        }])
       }
     }
   })
