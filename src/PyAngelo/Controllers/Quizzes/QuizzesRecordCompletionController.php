@@ -109,6 +109,9 @@ class QuizzesRecordCompletionController extends Controller {
     }
     $skillsMatrix = [];
     foreach($resultsSkillsMatrix as $result) {
+      $result["mastery_level_id"] = (int) $result["mastery_level_id"];
+      $result["correct"] = (int) $result["correct"];
+      $result["total"] = (int) $result["total"];
       $previousMastery = $result["mastery_level_id"];
       $percent = $result["correct"]/$result["total"];
       if ($percent >= 1) {

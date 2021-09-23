@@ -30,10 +30,10 @@ let questionEndTime
 let skillsMatrix = []
 
 const correctSound = new Howl({
-  src: ['/samples/sounds/powerup.wav']
+  src: ['/samples/sounds/correct.mp3']
 })
 const hundredPercentSound = new Howl({
-  src: ['/samples/sounds/pickup.wav']
+  src: ['/samples/music/success.mp3']
 })
 
 function randomInRange (min, max) {
