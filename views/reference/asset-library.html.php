@@ -97,6 +97,13 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
             </audio>
         </figure>
         <pre>/samples/sounds/shoot2.wav</pre>
+        <figure>
+          <figcaption>Correct</figcaption>
+            <audio controls preload="none" src="/samples/sounds/correct.mp3">
+              Your browser does not support the <code>audio</code> element.
+            </audio>
+        </figure>
+        <pre>/samples/sounds/correct.mp3</pre>
         <h2>Music</h2>
         <figure>
           <figcaption>After Burner</figcaption>
@@ -252,6 +259,13 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
             </audio>
         </figure>
         <pre>/samples/music/we-are-haileybury-8-bit.mp3</pre>
+        <figure>
+          <figcaption>Success</figcaption>
+            <audio controls preload="none" src="/samples/music/success.mp3">
+              Your browser does not support the <code>audio</code> element.
+            </audio>
+        </figure>
+        <pre>/samples/music/success.mp3</pre>
       </div><!-- col-md-12 -->
     </div><!-- row -->
     <?php
