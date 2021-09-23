@@ -24,7 +24,7 @@ export function stopSkulpt () {
   Sk.builtin.stopAllSounds()
 }
 
-export function runSkulpt (code, stopFunction) {
+export function runSkulpt (code, debugging, stopFunction) {
   _stopExecution = false
   Sk.PyAngelo.ctx.save()
   Sk.PyAngelo.reset()
@@ -55,18 +55,11 @@ export function runSkulpt (code, stopFunction) {
   Sk.configure({
     output: outf,
     inputfunTakesPrompt: false,
-    debugging: false,
+    debugging: debugging,
     killableWhile: true,
     killableFor: false,
     __future__: Sk.python3
   })
-
-  if (Sk.PyAngelo.debug.checked) {
-    Sk.debugging = true
-    console.log('Running in debug mode')
-  } else {
-    Sk.debugging = false
-  }
 
   Sk.onBeforeImport = function () {
     return Sk.misceval.promiseToSuspension(new Promise(function (resolve, reject) {

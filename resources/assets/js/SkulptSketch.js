@@ -11,6 +11,7 @@ const addNewFileTab = document.getElementById('addNewFileTab')
 const showRenameLink = document.getElementById('rename')
 const renameSubmitButton = document.getElementById('renameSubmit')
 const renameCancelButton = document.getElementById('renameCancel')
+
 if (!isReadOnly) {
   addNewFileTab.addEventListener('click', newPythonFile)
   if (!(showRenameLink === null)) {
@@ -41,7 +42,8 @@ function saveThenRun () {
   startStopButton.textContent = 'Stop'
   startStopButton.addEventListener('click', saveThenStop, false)
   Sk.PyAngelo.console.innerHTML = ''
-  runSkulpt(aceEditor.getCode(0), saveThenStop)
+  const debugging = document.getElementById('debug').checked
+  runSkulpt(aceEditor.getCode(0), debugging, saveThenStop)
 }
 
 function saveThenStop () {

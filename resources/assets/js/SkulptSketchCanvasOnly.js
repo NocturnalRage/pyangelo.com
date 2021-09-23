@@ -19,7 +19,8 @@ function runCode () {
     setTimeout(runCode, 10)
     return
   }
-  runSkulpt(aceEditor.getCode(0), () => {})
+  const debugging = false
+  runSkulpt(aceEditor.getCode(0), debugging, () => {})
 }
 
 const consoleWrapper = document.getElementById('consoleWrapper')
