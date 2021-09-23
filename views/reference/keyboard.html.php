@@ -2,13 +2,13 @@
 <h3 id="isKeyPressed">isKeyPressed()</h3>
 <h4>Examples</h4>
 <pre>
-pyangelo = loadImage("/samples/images/PyAngelo.png")
+pyangelo = Image("/samples/images/PyAngelo.png")
 setCanvasSize(640, 360)
 x = width/2 - 64
 y = height/2 - 48
 while True:
     background(255, 255, 0)
-    image(pyangelo, x, y)
+    drawImage(pyangelo, x, y)
     text("Use the WASD keys to move me around!", 20, 30)
     if isKeyPressed(KEY_W):
         y -= 1
@@ -32,13 +32,13 @@ Returns True if the key specified by the first parameter is currently pressed, o
 <h3 id="wasKeyPressed">wasKeyPressed()</h3>
 <h4>Examples</h4>
 <pre>
-pyangelo = loadImage("/samples/images/PyAngelo.png")
+pyangelo = Image("/samples/images/PyAngelo.png")
 setCanvasSize(640, 360)
 x = width/2 - 64
 y = height/2 - 48
 while True:
     background(255, 255, 0)
-    image(pyangelo, x, y)
+    drawImage(pyangelo, x, y)
     text("Use the WASD keys to move me around!", 20, 30)
     if wasKeyPressed(KEY_W):
         y -= 1

@@ -72,8 +72,8 @@
             <h3><i class="fa fa-picture-o fa-fw"></i> Images</h3>
           </a>
           <div class="list-group">
-            <a href="#loadImage" class="list-group-item">loadImage()</a>
-            <a href="#image" class="list-group-item">image()</a>
+            <a href="#Image" class="list-group-item">Image()</a>
+            <a href="#drawImage" class="list-group-item">drawImage()</a>
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
