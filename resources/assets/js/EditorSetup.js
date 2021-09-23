@@ -32,6 +32,12 @@ export class Editor {
     this.editSessions = []
   }
 
+  clearAllAnnotations () {
+    for (const session in this.editSessions) {
+      this.editSessions[session].clearAnnotations()
+    }
+  }
+
   monitorErrorsOnChange () {
     const closureEditor = this
     this.editor.on('change', function (delta) {
@@ -179,7 +185,7 @@ export class Editor {
         }
         closureEditor.currentFilename = ev.target.getAttribute('data-filename')
         closureEditor.currentSession = ev.target.getAttribute('data-editor-session')
-        closureEditor.editor.setSession(closureEditor.editSessions[closureEditor.currentSession])
+        closureEditor.setSession(closureEditor.currentSession)
         document.querySelector('.editorTab.current').classList.remove('current')
         ev.target.classList.add('current')
       }
