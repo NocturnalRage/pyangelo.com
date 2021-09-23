@@ -24,7 +24,8 @@ function runCode () {
   startStopButton.textContent = 'Stop'
   startStopButton.addEventListener('click', stopCode, false)
   Sk.PyAngelo.console.innerHTML = ''
-  runSkulpt(aceEditor.getCode(session), stopCode)
+  const debugging = document.getElementById('debug').checked
+  runSkulpt(aceEditor.getCode(session), debugging, stopCode)
 }
 
 function stopCode () {
