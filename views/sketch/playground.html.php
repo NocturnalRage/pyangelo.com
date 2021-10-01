@@ -38,15 +38,9 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
         </button>
       </div><!-- col-md-3 -->
     </div><!-- row -->
-    <div id="editorWrapper" class="row">
-      <div class="col-md-12">
-        <div id="editor"></div>
-      </div><!-- col-md-12 -->
-    </div><!-- row -->
-
 <?php
+include 'sketch-split-editor-console.html.php';
 include 'sketch-debug-table.html.php';
-include 'sketch-console.html.php';
 include 'sketch-output.html.php';
 include 'sketch-buttons.html.php';
 ?>
