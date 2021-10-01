@@ -1,4 +1,4 @@
-import { runSkulpt, stopSkulpt } from './SkulptSetup'
+import { runSkulpt, stopSkulpt, debugSkulpt } from './SkulptSetup'
 import { Editor } from './EditorSetup'
 const Sk = require('skulpt')
 
@@ -14,9 +14,18 @@ const fileTabs = null
 const aceEditor = new Editor(sketchId, crsfToken, Sk, fileTabs, isReadOnly)
 Sk.PyAngelo.aceEditor = aceEditor
 aceEditor.monitorErrorsOnChange()
+aceEditor.listenForBreakPoints()
 
 const startStopButton = document.getElementById('startStop')
 startStopButton.addEventListener('click', runCode)
+const stepIntoButton = document.getElementById('stepInto')
+stepIntoButton.addEventListener('click', debugSkulpt)
+const stepOverButton = document.getElementById('stepOver')
+stepOverButton.addEventListener('click', debugSkulpt)
+const slowMotionButton = document.getElementById('slowMotion')
+slowMotionButton.addEventListener('click', debugSkulpt)
+const continueButton = document.getElementById('continue')
+continueButton.addEventListener('click', debugSkulpt)
 
 function runCode () {
   startStopButton.removeEventListener('click', runCode, false)

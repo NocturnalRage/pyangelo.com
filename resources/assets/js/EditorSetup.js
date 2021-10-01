@@ -41,7 +41,7 @@ export class Editor {
   monitorErrorsOnChange () {
     const closureEditor = this
     this.editor.on('change', function (delta) {
-      closureEditor.editor.getSession().clearAnnotations()
+      closureEditor.editSessions[closureEditor.currentSession].clearAnnotations()
       closureEditor.Sk.configure({
         __future__: closureEditor.Sk.python3
       })
@@ -64,13 +64,42 @@ export class Editor {
           } else {
             errorMessage = err.toString()
           }
-          closureEditor.editor.getSession().setAnnotations([{
+          closureEditor.editSessions[closureEditor.currentSession].setAnnotations([{
             row: lineno - 1,
             column: colno,
             text: errorMessage,
             type: 'error'
           }])
         }
+      }
+    })
+  }
+
+  listenForBreakPoints () {
+    const closureEditor = this
+    this.editor.on('guttermousedown', function (e) {
+      const target = e.domEvent.target
+
+      if (target.className.indexOf('ace_gutter-cell') === -1) {
+        return
+      }
+
+      if (!closureEditor.editor.isFocused()) {
+        return
+      }
+
+      if (e.clientX > 25 + target.getBoundingClientRect().left) {
+        return
+      }
+
+      const row = e.getDocumentPosition().row
+      const breakpoints = closureEditor.editSessions[closureEditor.currentSession].getBreakpoints(row, 0)
+
+      // If there's a breakpoint already defined, it should be removed, offering the toggle feature
+      if (typeof breakpoints[row] === typeof undefined) {
+        closureEditor.editSessions[closureEditor.currentSession].setBreakpoint(row)
+      } else {
+        closureEditor.editSessions[closureEditor.currentSession].clearBreakpoint(row)
       }
     })
   }

@@ -11,7 +11,6 @@
   padding-top: 10px;
 }
 #canvas {
-    display: block;
     padding: 0px;
     margin: auto;
     display: none;
@@ -72,6 +71,9 @@
     overflow-y: auto;
     background-color: rgba(0, 0, 0, 1);
 }
+#debugButtons, #debugTableWrapper {
+    display: none;
+}
 .appHeading {
   box-sizing: border-box;
   color: #f5910f;
@@ -130,4 +132,8 @@ input.visually-hidden:focus-within + label {
 }
 .sketchCell {
   margin-top: 15px;
+}
+.ace_gutter-cell.ace_breakpoint{
+    border-radius: 20px 0px 0px 20px;
+    box-shadow: 0px 0px 1px 1px #248c46 inset;
 }
