@@ -31,7 +31,8 @@ class SketchShowController extends Controller {
     $this->response->setView('sketch/show.html.php'); $this->response->setVars(array( 'pageTitle' => $sketch['title'] . ' | PyAngelo', 'metaDescription' => 'Another Wonderful PyAngelo Sketch',
       'personInfo' => $this->auth->getPersonDetailsForViews(),
       'activeLink' => 'My Sketches',
-      'sketch' => $sketch
+      'sketch' => $sketch,
+      'layout' => 'cols'
     ));
     return $this->response;
   }

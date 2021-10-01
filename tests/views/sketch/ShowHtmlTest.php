@@ -14,12 +14,6 @@ class ShowHtmlTest extends BasicViewHtmlTest {
       'person_id' => $personId,
       'title' => 'My Great Sketch'
     ];
-    $sketchFiles = [
-      [
-        'file_id' => 1,
-        'filename' => 'main.py'
-      ]
-    ];
     $pageTitle = "PyAngelo - Programming Made Simple";
     $metaDescription = "Python in the browser";
     $response = new Response('views');
@@ -30,7 +24,7 @@ class ShowHtmlTest extends BasicViewHtmlTest {
       'activeLink' => 'Home',
       'personInfo' => $this->setPersonInfoLoggedIn($personId),
       'sketch' => $sketch,
-      'sketchFiles' => $sketchFiles
+      'layout' => 'cols',
     ));
     $output = $response->requireView();
     $this->assertStringContainsString($pageTitle, $output);
@@ -66,12 +60,6 @@ class ShowHtmlTest extends BasicViewHtmlTest {
       'person_id' => 50,
       'title' => 'My Great Sketch'
     ];
-    $sketchFiles = [
-      [
-        'file_id' => 1,
-        'filename' => 'main.py'
-      ]
-    ];
     $pageTitle = "PyAngelo - Programming Made Simple";
     $metaDescription = "Python in the browser";
     $response = new Response('views');
@@ -82,7 +70,7 @@ class ShowHtmlTest extends BasicViewHtmlTest {
       'activeLink' => 'Home',
       'personInfo' => $this->setPersonInfoLoggedIn($personId),
       'sketch' => $sketch,
-      'sketchFiles' => $sketchFiles
+      'layout' => 'rows'
     ));
     $output = $response->requireView();
     $this->assertStringContainsString($pageTitle, $output);
