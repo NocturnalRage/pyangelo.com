@@ -45,6 +45,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
     </div><!-- row -->
 
 <?php
+include 'sketch-debug-table.html.php';
 include 'sketch-console.html.php';
 include 'sketch-output.html.php';
 include 'sketch-buttons.html.php';
