@@ -5,9 +5,9 @@
     <?php endif; ?>
       <div id="editor" data-sketch-id="<?= $this->esc($sketch['sketch_id']); ?>" data-crsf-token="<?= $personInfo['crsfToken'] ?>" data-layout="<?= $layout ?>" data-read-only="<?= $personInfo['loggedIn'] && $personInfo['details']['person_id'] == $sketch['person_id'] ? 0 : 1 ?>"></div>
       <?php if ($layout == 'cols') : ?>
-        <div class="gutter-col-1"></div>
+        <div id="editorGutter" class="gutter-col-1"></div>
       <?php else : ?>
-        <div class="gutter-row-1"></div>
+        <div id="editorGutter" class="gutter-row-1"></div>
       <?php endif; ?>
       <pre id="console"></pre>
     </div><!-- editorWrapper grid -->

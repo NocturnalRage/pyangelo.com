@@ -7,6 +7,10 @@
           <input type="checkbox" id="debug" name="debug" value="debug">
           <label for="debug"> Run in debug mode</label>
         </p>
+        <p class="appHeading">
+          <input type="checkbox" id="rows" name="rows" value="rows">
+          <label for="rows"> View editor and console as rows</label>
+        </p>
         <?php if ($personInfo['loggedIn'] && !empty($sketch['person_id']) && $personInfo['details']['person_id'] != $sketch['person_id']) : ?>
           <p id="forkParagraph" class="appHeading">
             <a id="fork"
