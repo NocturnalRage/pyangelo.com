@@ -9,7 +9,5 @@
       <?php else : ?>
         <div class="gutter-row-1"></div>
       <?php endif; ?>
-      <div>
-        <pre id="console"></pre>
-      </div>
+      <pre id="console"></pre>
     </div><!-- editorWrapper grid -->
