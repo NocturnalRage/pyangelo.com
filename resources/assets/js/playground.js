@@ -1,34 +1,16 @@
 import { runSkulpt, stopSkulpt, debugSkulpt } from './SkulptSetup'
 import { Editor } from './EditorSetup'
-import Split from 'split-grid'
+import './editorLayout'
 const Sk = require('skulpt')
 
 // Only one session in playground
 const session = 0
 
 const editorWindow = document.getElementById('editor')
-const layout = editorWindow.getAttribute('data-layout')
 const crsfToken = 'no-token-needed-in-playground'
 const sketchId = 0
 const isReadOnly = false
 const fileTabs = null
-
-if (layout === 'cols') {
-  Split({
-    columnGutters: [{
-      track: 1,
-      element: document.querySelector('.gutter-col-1')
-    }]
-  })
-} else {
-  console.log('Split via rows')
-  Split({
-    rowGutters: [{
-      track: 1,
-      element: document.querySelector('.gutter-row-1')
-    }]
-  })
-}
 
 const aceEditor = new Editor(sketchId, crsfToken, Sk, fileTabs, isReadOnly)
 Sk.PyAngelo.aceEditor = aceEditor

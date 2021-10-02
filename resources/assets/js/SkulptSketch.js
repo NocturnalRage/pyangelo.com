@@ -1,35 +1,17 @@
 import { runSkulpt, stopSkulpt, debugSkulpt } from './SkulptSetup'
 import { Editor } from './EditorSetup'
-import Split from 'split-grid'
+import './editorLayout'
 const Sk = require('skulpt')
 
 const editorWindow = document.getElementById('editor')
 const crsfToken = editorWindow.getAttribute('data-crsf-token')
 const sketchId = editorWindow.getAttribute('data-sketch-id')
-const layout = editorWindow.getAttribute('data-layout')
 const isReadOnly = (editorWindow.getAttribute('data-read-only') === '1')
 const fileTabs = document.getElementById('fileTabs')
 const addNewFileTab = document.getElementById('addNewFileTab')
 const showRenameLink = document.getElementById('rename')
 const renameSubmitButton = document.getElementById('renameSubmit')
 const renameCancelButton = document.getElementById('renameCancel')
-
-if (layout === 'cols') {
-  Split({
-    columnGutters: [{
-      track: 1,
-      element: document.querySelector('.gutter-col-1')
-    }]
-  })
-} else {
-  console.log('Split via rows')
-  Split({
-    rowGutters: [{
-      track: 1,
-      element: document.querySelector('.gutter-row-1')
-    }]
-  })
-}
 
 if (!isReadOnly) {
   addNewFileTab.addEventListener('click', newPythonFile)

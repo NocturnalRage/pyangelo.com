@@ -15,7 +15,7 @@ class SketchPlaygroundController extends Controller {
       'personInfo' => $this->auth->getPersonDetailsForViews(),
       'activeLink' => 'My Sketches',
       'sketch' => $sketch,
-      'layout' => 'rows'
+      'layout' => 'cols'
     ));
     return $this->response;
   }
