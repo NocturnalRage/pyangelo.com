@@ -27,10 +27,12 @@ interface SketchRepository {
   
   public function deleteSketchFile($sketchId, $filename);
 
-  public function forkSketch($sketchId, $personId, $title);
+  public function forkSketch($sketchId, $personId, $title, $lessonId = NULL, $tutorialId = NULL, $layout = 'cols');
 
   public function renameSketch($sketchId, $title);
 
   public function updateSketchUpdatedAt($sketchId);
+
+  public function updateSketchLayout($sketchId, $layout);
 }
 ?>

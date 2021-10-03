@@ -88,10 +88,12 @@ class SketchForkControllerTest extends TestCase {
     $anySketchId = 101;
     $anyPersonId = 101;
     $anySketchTitle = 'My Sketch';
+    $anyLayout = 'cols';
     $anySketch = [
       'sketch_id' => $anySketchId,
       'person_id' => $anyPersonId,
-      'title' => $anySketchTitle
+      'title' => $anySketchTitle,
+      'layout' => $anyLayout
     ];
     $this->request->post['sketchId'] = $anySketchId;
 
@@ -108,7 +110,7 @@ class SketchForkControllerTest extends TestCase {
     $this->sketchRepository
          ->shouldReceive('forkSketch')
          ->once()
-         ->with($anySketchId, $anyPersonId, $anySketchTitle)
+         ->with($anySketchId, $anyPersonId, $anySketchTitle, NULL, NULL, $anyLayout)
          ->andReturn(NULL);
 
     $response = $this->controller->exec();
@@ -121,10 +123,12 @@ class SketchForkControllerTest extends TestCase {
     $anySketchId = 101;
     $anyPersonId = 101;
     $anySketchTitle = 'My Sketch';
+    $anyLayout = 'cols';
     $anySketch = [
       'sketch_id' => $anySketchId,
       'person_id' => $anyPersonId,
-      'title' => $anySketchTitle
+      'title' => $anySketchTitle,
+      'layout' => $anyLayout
     ];
     $newSketchId = 1000;
     $newPersonId = 1001;
@@ -150,7 +154,7 @@ class SketchForkControllerTest extends TestCase {
     $this->sketchRepository
          ->shouldReceive('forkSketch')
          ->once()
-         ->with($anySketchId, $newPersonId, $anySketchTitle)
+         ->with($anySketchId, $newPersonId, $anySketchTitle, NULL, NULL, $anyLayout)
          ->andReturn($newSketchId);
     $this->sketchRepository
          ->shouldReceive('getSketchFiles')

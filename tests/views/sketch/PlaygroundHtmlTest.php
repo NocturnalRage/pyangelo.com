@@ -10,7 +10,8 @@ class PlaygroundHtmlTest extends BasicViewHtmlTest {
   public function testBasicViewPlayground() {
     $sketch = [
       'sketch_id' => 0,
-      'person_id' => 0
+      'person_id' => 0,
+      'layout' => 'cols'
     ];
     $pageTitle = "PyAngelo Playground";
     $metaDescription = "Python in the browser";
@@ -21,8 +22,7 @@ class PlaygroundHtmlTest extends BasicViewHtmlTest {
       'metaDescription' => $metaDescription,
       'activeLink' => 'Home',
       'personInfo' => $this->setPersonInfoLoggedIn(),
-      'sketch' => $sketch,
-      'layout' => 'rows'
+      'sketch' => $sketch
     ));
     $output = $response->requireView();
     $this->assertStringContainsString($pageTitle, $output);

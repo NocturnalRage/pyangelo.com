@@ -652,6 +652,15 @@ $di->set('SketchSaveController', function () use ($di) {
   );
 });
 
+$di->set('SketchUpdateLayoutController', function () use ($di) {
+  return new PyAngelo\Controllers\Sketch\SketchUpdateLayoutController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('sketchRepository')
+  );
+});
+
 $di->set('SketchForkController', function () use ($di) {
   return new PyAngelo\Controllers\Sketch\SketchForkController (
     $di->get('request'),
