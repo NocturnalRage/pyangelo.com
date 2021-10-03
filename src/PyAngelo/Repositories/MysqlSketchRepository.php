@@ -102,24 +102,26 @@ class MysqlSketchRepository implements SketchRepository {
     return $result->fetch_all(MYSQLI_ASSOC);
   }
 
-  public function createNewSketch($personId, $title, $lessonId = NULL, $tutorialId = NULL) {
+  public function createNewSketch($personId, $title, $lessonId = NULL, $tutorialId = NULL, $layout = 'cols') {
     $sql = "INSERT INTO sketch (
               sketch_id,
               person_id,
               lesson_id,
               tutorial_id,
               title,
+              layout,
               created_at,
               updated_at
             )
-            VALUES (NULL, ?, ?, ?, ?, now(), now())";
+            VALUES (NULL, ?, ?, ?, ?, ?, now(), now())";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'iiis',
+      'iiiss',
       $personId,
       $lessonId,
       $tutorialId,
-      $title
+      $title,
+      $layout
     );
     $stmt->execute();
     $sketchId = $this->dbh->insert_id;
@@ -201,24 +203,26 @@ class MysqlSketchRepository implements SketchRepository {
     return $rowsDeleted;
   }
 
-  public function forkSketch($sketchId, $personId, $title, $lessonId = NULL, $tutorialId = NULL) {
+  public function forkSketch($sketchId, $personId, $title, $lessonId = NULL, $tutorialId = NULL, $layout = 'cols') {
     $sql = "INSERT INTO sketch (
               sketch_id,
               person_id,
               lesson_id,
               tutorial_id,
               title,
+              layout,
               created_at,
               updated_at
             )
-            VALUES (NULL, ?, ?, ?, ?, now(), now())";
+            VALUES (NULL, ?, ?, ?, ?, ?, now(), now())";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'iiis',
+      'iiiss',
       $personId,
       $lessonId,
       $tutorialId,
-      $title
+      $title,
+      $layout
     );
     $stmt->execute();
     $newSketchId = $this->dbh->insert_id;
@@ -262,6 +266,19 @@ class MysqlSketchRepository implements SketchRepository {
             WHERE  sketch_id = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('i', $sketchId);
+    $stmt->execute();
+    $rowsUpdated = $this->dbh->affected_rows;
+    $stmt->close();
+    return $rowsUpdated;
+  }
+
+  public function updateSketchLayout($sketchId, $layout) {
+    $sql = "UPDATE sketch
+            SET    layout = ?,
+                   updated_at = now()
+            WHERE  sketch_id = ?";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->bind_param('si', $layout, $sketchId);
     $stmt->execute();
     $rowsUpdated = $this->dbh->affected_rows;
     $stmt->close();

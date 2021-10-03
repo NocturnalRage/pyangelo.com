@@ -40,6 +40,7 @@ return [
   [ 'GET','/sketch/code/[:sketchId]', 'SketchGetCodeController', 'sketchGetCode' ],
   [ 'POST','/sketch/[:sketchId]/fork', 'SketchForkController', 'sketchFork' ],
   [ 'POST','/sketch/[:sketchId]/save', 'SketchSaveController', 'sketchSave' ],
+  [ 'POST','/sketch/[:sketchId]/updateLayout', 'SketchUpdateLayoutController', 'sketchUpdateLayout' ],
   [ 'POST','/sketch/[:sketchId]/rename', 'SketchRenameController', 'sketchRename' ],
   [ 'POST','/sketch/[:sketchId]/addFile', 'SketchAddFileController', 'sketchAddFile' ],
   [ 'POST','/sketch/[:sketchId]/delete', 'SketchDeleteController', 'sketchDelete' ],

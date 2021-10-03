@@ -43,7 +43,10 @@ class SketchForkController extends Controller {
     $sketchId = $this->sketchRepository->forkSketch(
       $origSketch['sketch_id'],
       $this->auth->personId(),
-      $origSketch['title']
+      $origSketch['title'],
+      NULL,
+      NULL,
+      $origSketch['layout']
     );
 
     if (!$sketchId)

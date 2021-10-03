@@ -12,7 +12,8 @@ class CanvasOnlyHtmlTest extends BasicViewHtmlTest {
     $sketch = [
       'sketch_id' => 1,
       'person_id' => $personId,
-      'title' => 'My Great Sketch'
+      'title' => 'My Great Sketch',
+      'layout' => 'cols'
     ];
     $sketchFiles = [
       [
@@ -64,7 +65,8 @@ class CanvasOnlyHtmlTest extends BasicViewHtmlTest {
     $sketch = [
       'sketch_id' => 1,
       'person_id' => 50,
-      'title' => 'My Great Sketch'
+      'title' => 'My Great Sketch',
+      'layout' => 'cols'
     ];
     $sketchFiles = [
       [
