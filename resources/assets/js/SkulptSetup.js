@@ -1,6 +1,7 @@
 import { populateTable } from './makeTable'
 const Sk = require('skulpt')
 
+let receivingInput = false
 Sk.PyAngelo.preparePage()
 
 // Allow skulpt script to be stopped
@@ -38,6 +39,16 @@ function outf (text) {
   Sk.PyAngelo.console.scrollTop = Sk.PyAngelo.console.scrollHeight
 }
 
+function logError (message) {
+  const tc = Sk.PyAngelo.textColour
+  const hc = Sk.PyAngelo.highlightColour
+  Sk.PyAngelo.textColour = 'rgba(255, 0, 0, 1)'
+  Sk.PyAngelo.highlightColour = 'rgba(255, 255, 255, 1)'
+  outf(message)
+  Sk.PyAngelo.textColour = tc
+  Sk.PyAngelo.highlightColour = hc
+}
+
 export function debugSkulpt (event) {
   if (event.target.id === 'stepInto') {
     debugAction = debugActions.STEPINTO
@@ -50,12 +61,32 @@ export function debugSkulpt (event) {
   }
 }
 
+function hideDebuggingUI () {
+  if (Sk.debugging) {
+    const debugTableWrapper = document.getElementById('debugTableWrapper')
+    debugTableWrapper.style.display = 'none'
+    const debugButtons = document.getElementById('debugButtons')
+    debugButtons.style.display = 'none'
+  }
+}
+
 export function stopSkulpt () {
   _stopExecution = true
+  if (receivingInput) {
+    hideDebuggingUI()
+    Sk.PyAngelo.aceEditor.setReadOnly(false)
+    receivingInput = false
+    outf('\n')
+    logError('Program Stopped!\n')
+  }
+  if (Sk.debugging) {
+    debugAction = debugActions.CONTINUE
+  }
   Sk.builtin.stopAllSounds()
 }
 
 export function runSkulpt (code, debugging, stopFunction) {
+  Sk.PyAngelo.aceEditor.setReadOnly(true)
   _stopExecution = false
   if (debugging) {
     debugAction = debugActions.WAIT
@@ -69,6 +100,7 @@ export function runSkulpt (code, debugging, stopFunction) {
   Sk.PyAngelo.reset()
 
   Sk.inputfun = function (prompt) {
+    receivingInput = true
     return new Promise(function (resolve, reject) {
       const inputElement = document.createElement('span')
       inputElement.setAttribute('contenteditable', 'true')
@@ -85,6 +117,7 @@ export function runSkulpt (code, debugging, stopFunction) {
           inputElement.remove()
           outf(userResponse)
           outf('\n')
+          receivingInput = false
           resolve(userResponse)
         }
       })
@@ -115,6 +148,7 @@ export function runSkulpt (code, debugging, stopFunction) {
   async function lineStepper (susp) {
     const breakPoints = Sk.PyAngelo.aceEditor.editor.getSession().getBreakpoints()
     try {
+      checkForStop()
       let child = susp.child
       if (debugAction === debugActions.STEPINTO) {
         while (child.child.child != null) {
@@ -145,7 +179,6 @@ export function runSkulpt (code, debugging, stopFunction) {
         Sk.PyAngelo.aceEditor.setSession(Sk.PyAngelo.aceEditor.currentSession)
         Sk.PyAngelo.aceEditor.gotoLine(currentLineNo)
       }
-      checkForStop()
       const debugGlobals = {}
       const debugLocals = {}
 
@@ -223,8 +256,12 @@ export function runSkulpt (code, debugging, stopFunction) {
   }
 
   let currentLineNo = 1
-  let myPromise
+  const handlers = {}
+  handlers['*'] = checkForStop
+
   if (Sk.debugging) {
+    handlers['Sk.debug'] = lineStepper
+    handlers['Sk.delay'] = lineStepper
     if (Sk.PyAngelo.aceEditor.currentSession !== 0) {
       const editSession = document.querySelector(".editorTab[data-filename='main.py']")
       if (editSession !== null) {
@@ -237,34 +274,15 @@ export function runSkulpt (code, debugging, stopFunction) {
     }
 
     Sk.PyAngelo.aceEditor.gotoLine(currentLineNo)
-    myPromise = Sk.misceval.asyncToPromise(function () {
-      return Sk.importMainWithBody('<stdin>', true, code, true)
-    }, {
-      'Sk.debug': lineStepper,
-      'Sk.delay': lineStepper
-    })
-  } else {
-    myPromise = Sk.misceval.asyncToPromise(function () {
-      return Sk.importMainWithBody('<stdin>', true, code, true)
-    }, {
-      // handle a suspension of the executing code
-      // "*" says handle all types of suspensions
-      '*': checkForStop
-    })
   }
+  const skulptRunPromise = Sk.misceval.asyncToPromise(
+    function () {
+      return Sk.importMainWithBody('<stdin>', true, code, true)
+    },
+    handlers
+  )
 
-  myPromise.then(function (mod) {
-    if (Sk.debugging) {
-      const debugTableWrapper = document.getElementById('debugTableWrapper')
-      debugTableWrapper.style.display = 'none'
-      const debugButtons = document.getElementById('debugButtons')
-      debugButtons.style.display = 'none'
-    }
-  }, function (err) {
-    const tc = Sk.PyAngelo.textColour
-    const hc = Sk.PyAngelo.highlightColour
-    Sk.PyAngelo.textColour = 'rgba(255, 0, 0, 1)'
-    Sk.PyAngelo.highlightColour = 'rgba(255, 255, 255, 1)'
+  skulptRunPromise.then(function (mod) {}, function (err) {
     let editorErrorMessage
     let consoleErrorMessage
     if (err.name === 'ProgramStopped') {
@@ -290,9 +308,8 @@ export function runSkulpt (code, debugging, stopFunction) {
       editorErrorMessage += 'Error found in file ' + topMostFilename
       consoleErrorMessage += 'Error found in file ' + topMostFilename + '\n'
     }
-    outf(consoleErrorMessage)
-    Sk.PyAngelo.textColour = tc
-    Sk.PyAngelo.highlightColour = hc
+    logError(consoleErrorMessage)
+
     let reportedError = false
     if (err.traceback) {
       for (let i = err.traceback.length - 1; i >= 0; i--) {
@@ -337,6 +354,10 @@ export function runSkulpt (code, debugging, stopFunction) {
       }
     }
   })
-  myPromise.finally(function () { stopFunction() })
-  Sk.PyAngelo.ctx.restore()
+  skulptRunPromise.finally(function () {
+    hideDebuggingUI()
+    stopFunction()
+    Sk.PyAngelo.aceEditor.setReadOnly(false)
+    Sk.PyAngelo.ctx.restore()
+  })
 }

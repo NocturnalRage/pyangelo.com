@@ -277,6 +277,10 @@ export class Editor {
     span.remove()
   }
 
+  setReadOnly (readOnly) {
+    this.editor.setReadOnly(readOnly)
+  }
+
   resize () {
     this.editor.resize()
   }
