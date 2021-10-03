@@ -71,10 +71,11 @@
 
     <?php if ($personInfo['loggedIn']) : ?>
       <?php
-        include __DIR__ . '/../sketch/sketch-editor.html.php';
-        include __DIR__ . '/../sketch/sketch-console.html.php';
-        include __DIR__ . '/../sketch/sketch-buttons.html.php';
+        include __DIR__ . '/../sketch/sketch-file-tabs.html.php';
+        include __DIR__ . '/../sketch/sketch-split-editor-console.html.php';
+        include __DIR__ . '/../sketch/sketch-debug-table.html.php';
         include __DIR__ . '/../sketch/sketch-output.html.php';
+        include __DIR__ . '/../sketch/sketch-buttons.html.php';
         include __DIR__ . '/../sketch/sketch-upload.html.php';
       ?>
 
