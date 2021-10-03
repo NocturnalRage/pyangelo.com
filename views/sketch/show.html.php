@@ -2,7 +2,7 @@
 include __DIR__ . DIRECTORY_SEPARATOR . '../layout/header.html.php';
 include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
 ?>
-  <div class="container">
+  <div class="container-fluid">
 
 <?php
 include 'sketch-title.html.php';
