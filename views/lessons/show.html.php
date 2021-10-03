@@ -68,28 +68,34 @@
       </div><!-- row -->
       <br />
     <?php endif; ?>
+  </div><!-- container -->
 
     <?php if ($personInfo['loggedIn']) : ?>
-      <?php
-        include __DIR__ . '/../sketch/sketch-file-tabs.html.php';
-        include __DIR__ . '/../sketch/sketch-split-editor-console.html.php';
-        include __DIR__ . '/../sketch/sketch-debug-table.html.php';
-        include __DIR__ . '/../sketch/sketch-output.html.php';
-        include __DIR__ . '/../sketch/sketch-buttons.html.php';
-        include __DIR__ . '/../sketch/sketch-upload.html.php';
-      ?>
+      <div class="container-fluid">
+        <?php
+          include __DIR__ . '/../sketch/sketch-file-tabs.html.php';
+          include __DIR__ . '/../sketch/sketch-split-editor-console.html.php';
+          include __DIR__ . '/../sketch/sketch-debug-table.html.php';
+          include __DIR__ . '/../sketch/sketch-output.html.php';
+          include __DIR__ . '/../sketch/sketch-buttons.html.php';
+          include __DIR__ . '/../sketch/sketch-upload.html.php';
+        ?>
 
-      <script src="<?= mix('js/SkulptSketch.js'); ?>"></script>
+        <script src="<?= mix('js/SkulptSketch.js'); ?>"></script>
+      </div><!-- container-fluid -->
 
     <?php else : ?>
-      <div class="row">
-        <div class="col-md-12">
-          <h1 class="text-center">Write Code While Watching This Lesson</h1>
-          <p class="text-center"><a href="/Login">Login</a> or <a href="/register">create an account</a> and code along whilst you watch this lesson.</p>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1 class="text-center">Write Code While Watching This Lesson</h1>
+            <p class="text-center"><a href="/Login">Login</a> or <a href="/register">create an account</a> and code along whilst you watch this lesson.</p>
+          </div>
         </div>
-      </div>
+      </div><!-- container -->
     <?php endif; ?>
 
+  <div class="container">
     <div class="row">
       <div class="col-md-9">
         <div class="panel panel-default">
@@ -146,7 +152,7 @@
   <script src="<?= mix('js/lessonToggle.js'); ?>"></script>
   <script src="<?= mix('js/lessonComments.js'); ?>"></script>
   <script src="https://cdn.tiny.cloud/1/1fnyfp2h3lz7wu4v2qlchoping5fjj7mdbonk8ekgaczk7vh/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-  <script type="text/javascript">
+  <script>
 tinymce.init({
   selector: 'textarea.tinymce',
   toolbar_items_size: 'small',

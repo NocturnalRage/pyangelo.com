@@ -2,12 +2,6 @@
 include __DIR__ . DIRECTORY_SEPARATOR . '../layout/header.html.php';
 include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
 ?>
-  <!-- Ace Editor
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-python.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.min.js"></script>
-
   <div class="container">
     <div class="row">
       <div class="col-md-12">
@@ -19,38 +13,40 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
     <div class="row add-bottom text-center">
       <div class="col-md-3">
         <button id="snakeBtn" class="btn btn-block btn-primary">
-            <i class="fa fa-square" aria-hidden="true"></i> <strong>Snake</strong></a>
+            <i class="fa fa-square" aria-hidden="true"></i> <strong>Snake</strong>
         </button>
       </div><!-- col-md-3 -->
       <div class="col-md-3">
         <button id="breakoutBtn" class="btn btn-block btn-success">
-            <i class="fa fa-building-o" aria-hidden="true"></i> <strong>Breakout</strong></a>
+            <i class="fa fa-building-o" aria-hidden="true"></i> <strong>Breakout</strong>
         </button>
       </div><!-- col-md-3 -->
       <div class="col-md-3">
         <button id="randomCirclesBtn" class="btn btn-block btn-warning">
-            <i class="fa fa-circle" aria-hidden="true"></i> <strong>Random Circles</strong></a>
+            <i class="fa fa-circle" aria-hidden="true"></i> <strong>Random Circles</strong>
         </button>
       </div><!-- col-md-3 -->
       <div class="col-md-3">
         <button id="blankEditorBtn" class="btn btn-block btn-danger">
-            <i class="fa fa-eraser" aria-hidden="true"></i> <strong>Write Your Own</strong></a>
+            <i class="fa fa-eraser" aria-hidden="true"></i> <strong>Write Your Own</strong>
         </button>
       </div><!-- col-md-3 -->
     </div><!-- row -->
-<?php
-include 'sketch-split-editor-console.html.php';
-include 'sketch-debug-table.html.php';
-include 'sketch-output.html.php';
-include 'sketch-buttons.html.php';
-?>
-
   </div><!-- container -->
+  <div class="container-fluid">
+    <?php
+      include 'sketch-split-editor-console.html.php';
+      include 'sketch-debug-table.html.php';
+      include 'sketch-output.html.php';
+      include 'sketch-buttons.html.php';
+    ?>
+    <script src="<?= mix('js/playground.js'); ?>"></script>
+  </div><!-- container-fluid -->
 
-<script src="<?= mix('js/playground.js'); ?>"></script>
-
-<?php
-include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';
-?>
+  <div class="container">
+    <?php
+      include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';
+    ?>
+  </div><!-- container -->
 </body>
 </html>
