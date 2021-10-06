@@ -178,6 +178,8 @@ export function runSkulpt (code, debugging, stopFunction) {
         Sk.PyAngelo.aceEditor.currentFilename = editSession.getAttribute('data-filename')
         Sk.PyAngelo.aceEditor.setSession(Sk.PyAngelo.aceEditor.currentSession)
         Sk.PyAngelo.aceEditor.gotoLine(currentLineNo)
+      } else {
+        return Promise.resolve(susp.resume())
       }
       const debugGlobals = {}
       const debugLocals = {}
