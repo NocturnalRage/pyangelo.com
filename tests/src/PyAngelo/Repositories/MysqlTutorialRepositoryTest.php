@@ -242,9 +242,6 @@ class MysqlTutorialRepositoryTest extends TestCase {
     $this->assertNotNull($lessons[1]['updated_at']);
     $this->assertCount(2, $lessons);
 
-    $skills = $this->tutorialRepository->getTutorialSkills($tutorialId1, 0);
-    $this->assertCount(0, $skills);
-
     $lesson = $this->tutorialRepository->getLessonBySlugs($slug, $expectedSlugLesson3);
     $this->assertEquals($lesson['tutorial_id'], $tutorialId2);
     $this->assertEquals($lesson['tutorial_title'], 'Test Tutorial 2');

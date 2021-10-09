@@ -7,7 +7,7 @@ use PyAngelo\Controllers\Controller;
 use PyAngelo\Repositories\TutorialRepository;
 use PyAngelo\Repositories\QuizRepository;
 
-class QuizzesShowController extends Controller {
+class QuizzesSkillShowController extends Controller {
   protected $tutorialRepository;
   protected $quizRepository;
   public function __construct(
@@ -29,35 +29,44 @@ class QuizzesShowController extends Controller {
     if (!isset($this->request->get['slug']))
       return $this->redirectToPageNotFound();
 
+    if (!isset($this->request->get['skill_slug']))
+      return $this->redirectToPageNotFound();
+
     if (! $tutorial = $this->tutorialRepository->getTutorialBySlug(
       $this->request->get['slug']
     ))
       return $this->redirectToPageNotFound();
 
-    if ($quizInfo = $this->quizRepository->getIncompleteTutorialQuizInfo(
-      $tutorial['tutorial_id'],
+    if (! $skill = $this->quizRepository->getSkillBySlug(
+      $this->request->get['skill_slug']
+    ))
+      return $this->redirectToPageNotFound();
+
+    if ($quizInfo = $this->quizRepository->getIncompleteSkillQuizInfo(
+      $skill['skill_id'],
       $this->auth->personId()
     )) {
        $this->response->setView('quizzes/show.html.php');
        $this->response->setVars(array(
-         'pageTitle' => $tutorial['title'] . ' Quiz',
-         'metaDescription' => 'Take a quiz to show what you have learnt on the PyAngelo website',
+         'pageTitle' => $skill['skill_name'] . ' Quiz',
+         'metaDescription' => 'Take a skill quiz to show what you have learnt on the PyAngelo website',
          'activeLink' => 'Tutorials',
          'tutorial' => $tutorial,
+         'skill' => $skill,
          'quizInfo' => $quizInfo,
          'personInfo' => $this->auth->getPersonDetailsForViews()
        ));
        return $this->response;
     }
     else {
-        $skills = $this->quizRepository->getTutorialSkillsMastery(
-          $tutorial['tutorial_id'],
+        $skills = $this->quizRepository->getSkillMastery(
+          $skill['skill_id'],
           $this->auth->personId()
         );
        $this->response->setView('quizzes/show-quiz-not-created.html.php');
        $this->response->setVars(array(
-         'pageTitle' => $tutorial['title'] . ' Quiz',
-         'metaDescription' => 'Take a quiz to show what you have learnt on the PyAngelo website',
+         'pageTitle' => $skill['skill_name'] . ' Quiz',
+         'metaDescription' => 'Take a skill quiz to show what you have learnt on the PyAngelo website',
          'activeLink' => 'Tutorials',
          'tutorial' => $tutorial,
          'skills' => $skills,
@@ -76,5 +85,4 @@ class QuizzesShowController extends Controller {
     $this->response->header('Location: /page-not-found');
     return $this->response;
   }
-
 }

@@ -13,11 +13,13 @@ class TutorialsShowControllerTest extends TestCase {
     $this->response = new Response('views');
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
     $this->tutorialRepository = Mockery::mock('PyAngelo\Repositories\TutorialRepository');
+    $this->quizRepository = Mockery::mock('PyAngelo\Repositories\QuizRepository');
     $this->controller = new TutorialsShowController (
       $this->request,
       $this->response,
       $this->auth,
-      $this->tutorialRepository
+      $this->tutorialRepository,
+      $this->quizRepository
     );
   }
   public function tearDown(): void {
@@ -95,7 +97,7 @@ class TutorialsShowControllerTest extends TestCase {
       ->once()
       ->with($tutorial['tutorial_id'], 0)
       ->andReturn($lessons);
-    $this->tutorialRepository->shouldReceive('getTutorialSkills')
+    $this->quizRepository->shouldReceive('getTutorialSkillsMastery')
       ->once()
       ->with($tutorial['tutorial_id'], 0)
       ->andReturn($skills);

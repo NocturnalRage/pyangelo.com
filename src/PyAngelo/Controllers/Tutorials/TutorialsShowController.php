@@ -5,18 +5,22 @@ use Framework\{Request, Response};
 use PyAngelo\Auth\Auth;
 use PyAngelo\Controllers\Controller;
 use PyAngelo\Repositories\TutorialRepository;
+use PyAngelo\Repositories\QuizRepository;
 
 class TutorialsShowController extends Controller {
   protected $tutorialRepository;
+  protected $quizRepository;
 
   public function __construct(
     Request $request,
     Response $response,
     Auth $auth,
-    TutorialRepository $tutorialRepository
+    TutorialRepository $tutorialRepository,
+    QuizRepository $quizRepository
   ) {
     parent::__construct($request, $response, $auth);
     $this->tutorialRepository = $tutorialRepository;
+    $this->quizRepository = $quizRepository;
   }
 
   public function exec() {
@@ -33,7 +37,7 @@ class TutorialsShowController extends Controller {
       $tutorial['tutorial_id'],
       $this->auth->personId()
     );
-    $skills = $this->tutorialRepository->getTutorialSkills(
+    $skills = $this->quizRepository->getTutorialSkillsMastery(
       $tutorial['tutorial_id'],
       $this->auth->personId()
     );

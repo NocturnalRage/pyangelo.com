@@ -71,6 +71,10 @@ $di->set('questionRepository', function () use ($di) {
   return new PyAngelo\Repositories\MysqlQuestionRepository($di->get('dbh'));
 });
 
+$di->set('quizRepository', function () use ($di) {
+  return new PyAngelo\Repositories\MysqlQuizRepository($di->get('dbh'));
+});
+
 $di->set('sketchRepository', function () use ($di) {
   return new PyAngelo\Repositories\MysqlSketchRepository($di->get('dbh'));
 });
@@ -786,7 +790,8 @@ $di->set('TutorialsShowController', function () use ($di) {
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),
-    $di->get('tutorialRepository')
+    $di->get('tutorialRepository'),
+    $di->get('quizRepository')
   );
 });
 
@@ -945,7 +950,18 @@ $di->set('QuizzesCreateController', function () use ($di) {
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),
-    $di->get('tutorialRepository')
+    $di->get('tutorialRepository'),
+    $di->get('quizRepository')
+  );
+});
+
+$di->set('QuizzesSkillCreateController', function () use ($di) {
+  return new PyAngelo\Controllers\Quizzes\QuizzesSkillCreateController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository'),
+    $di->get('quizRepository')
   );
 });
 
@@ -954,7 +970,18 @@ $di->set('QuizzesShowController', function () use ($di) {
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),
-    $di->get('tutorialRepository')
+    $di->get('tutorialRepository'),
+    $di->get('quizRepository')
+  );
+});
+
+$di->set('QuizzesSkillShowController', function () use ($di) {
+  return new PyAngelo\Controllers\Quizzes\QuizzesSkillShowController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository'),
+    $di->get('quizRepository')
   );
 });
 
@@ -963,7 +990,7 @@ $di->set('QuizzesFetchQuestionsController', function () use ($di) {
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),
-    $di->get('tutorialRepository')
+    $di->get('quizRepository')
   );
 });
 
@@ -972,7 +999,7 @@ $di->set('QuizzesRecordResponseController', function () use ($di) {
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),
-    $di->get('tutorialRepository')
+    $di->get('quizRepository')
   );
 });
 
@@ -981,7 +1008,7 @@ $di->set('QuizzesRecordCompletionController', function () use ($di) {
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),
-    $di->get('tutorialRepository')
+    $di->get('quizRepository')
   );
 });
 

@@ -8,7 +8,7 @@ const hintContainer = document.getElementById('hint')
 const feedbackContainer = document.getElementById('feedback')
 const progressContainer = document.getElementById('progress')
 const actionButton = document.getElementById('action')
-const tutorialQuizId = quizContainer.getAttribute('data-tutorial-quiz-id')
+const quizId = quizContainer.getAttribute('data-quiz-id')
 
 const CHECK_ANSWER = 1
 const NEXT_QUESTION = 2
@@ -67,7 +67,7 @@ function fetchQuestions () {
   progressContainer.style.display = 'block'
   actionButton.style.display = 'block'
   // Fetch the quizOptions
-  fetch('/quizzes/questions/' + tutorialQuizId)
+  fetch('/quizzes/questions/' + quizId)
     .then(response => response.json())
     .then(data => {
       if (data.status !== 'success') {
@@ -208,7 +208,11 @@ function checkMultipleChoiceAnswer (currentQuestion) {
         questionEndTime
       )
       moveOn()
-      processClick()
+      if (questionNo < totalQuestions) {
+        processClick()
+      } else {
+        feedbackContainer.innerHTML = ''
+      }
     })
     radioButtons.forEach(element => { element.disabled = false })
   }
@@ -288,7 +292,7 @@ function processClick () {
 
 function recordResponse (skillQuestionId, choice, correctOrNot, questionStartTime, questionEndTime) {
   const crsfToken = quizContainer.getAttribute('data-crsf-token')
-  const data = 'tutorialQuizId=' + encodeURIComponent(tutorialQuizId) + '&skillQuestionId=' + encodeURIComponent(skillQuestionId) + '&skillQuestionOptionId=' + encodeURIComponent(choice) + '&correctUnaided=' + encodeURIComponent(correctOrNot) + '&questionStartTime=' + encodeURIComponent(questionStartTime) + '&questionEndTime=' + encodeURIComponent(questionEndTime) + '&crsfToken=' + encodeURIComponent(crsfToken)
+  const data = 'quizId=' + encodeURIComponent(quizId) + '&skillQuestionId=' + encodeURIComponent(skillQuestionId) + '&skillQuestionOptionId=' + encodeURIComponent(choice) + '&correctUnaided=' + encodeURIComponent(correctOrNot) + '&questionStartTime=' + encodeURIComponent(questionStartTime) + '&questionEndTime=' + encodeURIComponent(questionEndTime) + '&crsfToken=' + encodeURIComponent(crsfToken)
   const options = {
     method: 'POST',
     headers: {
@@ -298,13 +302,12 @@ function recordResponse (skillQuestionId, choice, correctOrNot, questionStartTim
   }
   fetch('/quizzes/questions/record', options)
     .then(response => response.json())
-    .then(data => { console.log(data) })
     .catch(error => { console.error(error) })
 }
 
 function recordQuizCompletion (quizStartTime, quizEndTime) {
   const crsfToken = quizContainer.getAttribute('data-crsf-token')
-  const data = 'tutorialQuizId=' + encodeURIComponent(tutorialQuizId) + '&quizStartTime=' + encodeURIComponent(quizStartTime) + '&quizEndTime=' + encodeURIComponent(quizEndTime) + '&crsfToken=' + encodeURIComponent(crsfToken)
+  const data = 'quizId=' + encodeURIComponent(quizId) + '&quizStartTime=' + encodeURIComponent(quizStartTime) + '&quizEndTime=' + encodeURIComponent(quizEndTime) + '&crsfToken=' + encodeURIComponent(crsfToken)
   const options = {
     method: 'POST',
     headers: {
