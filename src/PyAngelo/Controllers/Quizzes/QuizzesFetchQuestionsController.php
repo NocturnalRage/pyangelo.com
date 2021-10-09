@@ -4,19 +4,19 @@ namespace PyAngelo\Controllers\Quizzes;
 use Framework\{Request, Response};
 use PyAngelo\Auth\Auth;
 use PyAngelo\Controllers\Controller;
-use PyAngelo\Repositories\TutorialRepository;
+use PyAngelo\Repositories\QuizRepository;
 
 class QuizzesFetchQuestionsController extends Controller {
-  protected $tutorialRepository;
+  protected $quizRepository;
 
   public function __construct(
     Request $request,
     Response $response,
     Auth $auth,
-    TutorialRepository $tutorialRepository
+    QuizRepository $quizRepository
   ) {
     parent::__construct($request, $response, $auth);
-    $this->tutorialRepository = $tutorialRepository;
+    $this->quizRepository = $quizRepository;
   }
 
   public function exec() {
@@ -33,7 +33,7 @@ class QuizzesFetchQuestionsController extends Controller {
       return $this->response;
     }
 
-    if (!isset($this->request->get['tutorialQuizId'])) {
+    if (!isset($this->request->get['quizId'])) {
       $this->response->setVars(array(
         'status' => json_encode('error'),
         'options' => json_encode([]),
@@ -43,7 +43,7 @@ class QuizzesFetchQuestionsController extends Controller {
       return $this->response;
     }
 
-    if (! $options = $this->tutorialRepository->getTutorialQuizOptions($this->request->get['tutorialQuizId'])) {
+    if (! $options = $this->quizRepository->getQuizOptions($this->request->get['quizId'])) {
       $this->response->setVars(array(
         'status' => json_encode('error'),
         'options' => json_encode([]),
@@ -72,7 +72,7 @@ class QuizzesFetchQuestionsController extends Controller {
 
     foreach ($options as $option) {
       if ($option["skill_question_id"] != $currentSkillQuestionId) {
-        $hints = $this->tutorialRepository->getSkillQuestionHints(
+        $hints = $this->quizRepository->getSkillQuestionHints(
           $currentSkillQuestionId
         );
         $quizOptions[] = [
@@ -94,7 +94,7 @@ class QuizzesFetchQuestionsController extends Controller {
         "correct" => $option["correct"]
       ];
     }
-    $hints = $this->tutorialRepository->getSkillQuestionHints(
+    $hints = $this->quizRepository->getSkillQuestionHints(
       $currentSkillQuestionId
     );
     $quizOptions[] = [

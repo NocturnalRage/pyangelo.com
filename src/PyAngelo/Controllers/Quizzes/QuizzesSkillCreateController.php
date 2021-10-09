@@ -7,7 +7,7 @@ use PyAngelo\Controllers\Controller;
 use PyAngelo\Repositories\TutorialRepository;
 use PyAngelo\Repositories\QuizRepository;
 
-class QuizzesCreateController extends Controller {
+class QuizzesSkillCreateController extends Controller {
   protected $tutorialRepository;
   protected $quizRepository;
 
@@ -33,28 +33,36 @@ class QuizzesCreateController extends Controller {
     if (!isset($this->request->post['slug']))
       return $this->redirectToPageNotFound();
 
+    if (!isset($this->request->post['skill_slug']))
+      return $this->redirectToPageNotFound();
+
     if (!($tutorial = $this->tutorialRepository->getTutorialBySlug(
       $this->request->post['slug']
     )))
       return $this->redirectToPageNotFound();
 
-    $quizId = $this->getOrCreateQuiz($tutorial['tutorial_id'], $this->auth->personId());
+    if (!($skill = $this->quizRepository->getSkillBySlug(
+      $this->request->post['skill_slug']
+    )))
+      return $this->redirectToPageNotFound();
 
-    $this->response->header('Location: /tutorials/' . $this->request->post['slug'] . '/quizzes');
+    $quizId = $this->getOrCreateQuiz($skill['skill_id'], $this->auth->personId());
+
+    $this->response->header('Location: /tutorials/' . $this->request->post['slug'] . '/' . $this->request->post['skill_slug'] . '/quizzes');
     return $this->response;
   }
 
-  private function getOrCreateQuiz($tutorialId, $personId) {
-    if ($quiz = $this->quizRepository->getIncompleteTutorialQuiz($tutorialId, $personId)) {
+  private function getOrCreateQuiz($skillId, $personId) {
+    if ($quiz = $this->quizRepository->getIncompleteSkillQuiz($skillId, $personId)) {
       return $quiz['quiz_id'];
     }
-    $questionBank = $this->quizRepository->getAllTutorialQuestions(
-      $tutorialId
+    $questionBank = $this->quizRepository->getAllSkillQuestions(
+      $skillId
     );
     shuffle($questionBank);
-    $totalQuestions = 20;
-    $quizTypeId = 2; /* Tutorial Quiz */
-    $quizId = $this->quizRepository->createQuiz($quizTypeId, $tutorialId, $personId);
+    $totalQuestions = 7;
+    $quizTypeId = 1; /* Skill Quiz */
+    $quizId = $this->quizRepository->createQuiz($quizTypeId, $skillId, $personId);
     if ($totalQuestions > count($questionBank)) {
       $totalQuestions = count($questionBank);
     }

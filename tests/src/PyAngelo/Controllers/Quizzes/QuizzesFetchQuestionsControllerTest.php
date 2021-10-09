@@ -14,12 +14,12 @@ class QuizzesFetchQuestionsControllerTest extends TestCase {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
-    $this->tutorialRepository = Mockery::mock('PyAngelo\Repositories\TutorialRepository');
+    $this->quizRepository = Mockery::mock('PyAngelo\Repositories\QuizRepository');
     $this->controller = new QuizzesFetchQuestionsController (
       $this->request,
       $this->response,
       $this->auth,
-      $this->tutorialRepository
+      $this->quizRepository
     );
   }
   public function tearDown(): void {
@@ -55,10 +55,10 @@ class QuizzesFetchQuestionsControllerTest extends TestCase {
   }
 
   public function testWhenNoInvalidTutorial() {
-    $tutorialQuizId = 99;
+    $quizId = 99;
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
-    $this->tutorialRepository->shouldReceive('getTutorialQuizOptions')->once()->with($tutorialQuizId)->andReturn();
-    $this->request->get['tutorialQuizId'] = $tutorialQuizId;
+    $this->quizRepository->shouldReceive('getQuizOptions')->once()->with($quizId)->andReturn();
+    $this->request->get['quizId'] = $quizId;
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedViewName = 'quizzes/options.json.php';
@@ -70,7 +70,7 @@ class QuizzesFetchQuestionsControllerTest extends TestCase {
   }
 
   public function testWhenQuizNotForPerson() {
-    $tutorialQuizId = 99;
+    $quizId = 99;
     $personId = 199;
     $quizPersonId = 201;
     $quizOptions = [
@@ -80,8 +80,8 @@ class QuizzesFetchQuestionsControllerTest extends TestCase {
     ];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
-    $this->tutorialRepository->shouldReceive('getTutorialQuizOptions')->once()->with($tutorialQuizId)->andReturn($quizOptions);
-    $this->request->get['tutorialQuizId'] = $tutorialQuizId;
+    $this->quizRepository->shouldReceive('getQuizOptions')->once()->with($quizId)->andReturn($quizOptions);
+    $this->request->get['quizId'] = $quizId;
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedViewName = 'quizzes/options.json.php';
@@ -93,7 +93,7 @@ class QuizzesFetchQuestionsControllerTest extends TestCase {
   }
 
   public function testSuccessGetQuestions() {
-    $tutorialQuizId = 99;
+    $quizId = 99;
     $personId = 199;
     $quizPersonId = 199;
     $currentSkillQuestionId = 2;
@@ -112,9 +112,9 @@ class QuizzesFetchQuestionsControllerTest extends TestCase {
     ];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
-    $this->tutorialRepository->shouldReceive('getTutorialQuizOptions')->once()->with($tutorialQuizId)->andReturn($quizOptions);
-    $this->tutorialRepository->shouldReceive('getSkillQuestionHints')->once()->with($currentSkillQuestionId)->andReturn($quizOptions);
-    $this->request->get['tutorialQuizId'] = $tutorialQuizId;
+    $this->quizRepository->shouldReceive('getQuizOptions')->once()->with($quizId)->andReturn($quizOptions);
+    $this->quizRepository->shouldReceive('getSkillQuestionHints')->once()->with($currentSkillQuestionId)->andReturn($quizOptions);
+    $this->request->get['quizId'] = $quizId;
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedViewName = 'quizzes/options.json.php';

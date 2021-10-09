@@ -4,19 +4,19 @@ namespace PyAngelo\Controllers\Quizzes;
 use Framework\{Request, Response};
 use PyAngelo\Auth\Auth;
 use PyAngelo\Controllers\Controller;
-use PyAngelo\Repositories\TutorialRepository;
+use PyAngelo\Repositories\QuizRepository;
 
 class QuizzesRecordResponseController extends Controller {
-  protected $tutorialRepository;
+  protected $quizRepository;
 
   public function __construct(
     Request $request,
     Response $response,
     Auth $auth,
-    TutorialRepository $tutorialRepository
+    QuizRepository $quizRepository
   ) {
     parent::__construct($request, $response, $auth);
-    $this->tutorialRepository = $tutorialRepository;
+    $this->quizRepository = $quizRepository;
   }
 
   public function exec() {
@@ -39,7 +39,7 @@ class QuizzesRecordResponseController extends Controller {
       return $this->response;
     }
 
-    if (!isset($this->request->post['tutorialQuizId'])) {
+    if (!isset($this->request->post['quizId'])) {
       $this->response->setVars(array(
         'status' => json_encode('error'),
         'message' => json_encode('You must select a quiz to record a response for.')
@@ -83,7 +83,7 @@ class QuizzesRecordResponseController extends Controller {
       return $this->response;
     }
 
-    if (! $options = $this->tutorialRepository->getTutorialQuizOptions($this->request->post['tutorialQuizId'])) {
+    if (! $options = $this->quizRepository->getQuizOptions($this->request->post['quizId'])) {
       $this->response->setVars(array(
         'status' => json_encode('error'),
         'message' => json_encode('You must select a valid quiz to record a response for.')
@@ -99,8 +99,8 @@ class QuizzesRecordResponseController extends Controller {
       return $this->response;
     }
 
-    if (! $this->tutorialRepository->updateTutorialQuizQuestion(
-            $this->request->post['tutorialQuizId'],
+    if (! $this->quizRepository->updateQuizQuestion(
+            $this->request->post['quizId'],
             $this->request->post['skillQuestionId'],
             $this->request->post['skillQuestionOptionId'],
             $this->request->post['correctUnaided'],

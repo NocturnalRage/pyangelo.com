@@ -8,8 +8,18 @@
                 <td>
                     <?= $skill['skill_name']; ?>
                 </td>
+                <td>
+                  <a href="/tutorials/<?= $this->esc($tutorial['slug']); ?>/<?= $this->esc($skill['slug']); ?>/quizzes/create"
+                    onclick="event.preventDefault();
+                    document.getElementById('create-skills-quiz-form-<?= $skill['skill_id']; ?>').submit();">
+                    Take skills quiz
+                  </a>
+                  <form id="create-skills-quiz-form-<?= $skill['skill_id']; ?>" action="/tutorials/<?= $this->esc($tutorial['slug']); ?>/<?= $this->esc($skill['slug']); ?>/quizzes/create" method="POST" style="display: none;">
+                    <input type="hidden" name="crsfToken" value="<?= $personInfo['crsfToken'] ?>" />
+                  </form>
+                </td>
                 <td class="text-right">
-                    <?= $skill['mastery_level_desc']; ?>
+                  <?= $skill['mastery_level_desc']; ?>
                 </td>
               </tr>
             <?php endforeach; ?>

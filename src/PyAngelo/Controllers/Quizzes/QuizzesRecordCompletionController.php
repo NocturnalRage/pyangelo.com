@@ -4,19 +4,19 @@ namespace PyAngelo\Controllers\Quizzes;
 use Framework\{Request, Response};
 use PyAngelo\Auth\Auth;
 use PyAngelo\Controllers\Controller;
-use PyAngelo\Repositories\TutorialRepository;
+use PyAngelo\Repositories\QuizRepository;
 
 class QuizzesRecordCompletionController extends Controller {
-  protected $tutorialRepository;
+  protected $quizRepository;
 
   public function __construct(
     Request $request,
     Response $response,
     Auth $auth,
-    TutorialRepository $tutorialRepository
+    QuizRepository $quizRepository
   ) {
     parent::__construct($request, $response, $auth);
-    $this->tutorialRepository = $tutorialRepository;
+    $this->quizRepository = $quizRepository;
   }
 
   public function exec() {
@@ -41,7 +41,7 @@ class QuizzesRecordCompletionController extends Controller {
       return $this->response;
     }
 
-    if (!isset($this->request->post['tutorialQuizId'])) {
+    if (!isset($this->request->post['quizId'])) {
       $this->response->setVars(array(
         'status' => json_encode('error'),
         'skillsMatrix' => json_encode([]),
@@ -67,7 +67,7 @@ class QuizzesRecordCompletionController extends Controller {
       return $this->response;
     }
 
-    if (! $options = $this->tutorialRepository->getTutorialQuizOptions($this->request->post['tutorialQuizId'])) {
+    if (! $options = $this->quizRepository->getQuizOptions($this->request->post['quizId'])) {
       $this->response->setVars(array(
         'status' => json_encode('error'),
         'skillsMatrix' => json_encode([]),
@@ -85,8 +85,8 @@ class QuizzesRecordCompletionController extends Controller {
       return $this->response;
     }
 
-    if (! $this->tutorialRepository->updateTutorialQuiz(
-            $this->request->post['tutorialQuizId'],
+    if (! $this->quizRepository->updateQuiz(
+            $this->request->post['quizId'],
             $this->request->post['quizStartTime'],
             $this->request->post['quizEndTime']
           )
@@ -99,7 +99,7 @@ class QuizzesRecordCompletionController extends Controller {
       return $this->response;
     }
     // Update Skills
-    if (! $resultsSkillsMatrix = $this->tutorialRepository->getQuizResultsAndSkillMastery($this->request->post['tutorialQuizId'])) {
+    if (! $resultsSkillsMatrix = $this->quizRepository->getQuizResultsAndSkillMastery($this->request->post['quizId'])) {
       $this->response->setVars(array(
         'status' => json_encode('error'),
         'skillsMatrix' => json_encode([]),
@@ -112,10 +112,17 @@ class QuizzesRecordCompletionController extends Controller {
       $result["mastery_level_id"] = (int) $result["mastery_level_id"];
       $result["correct"] = (int) $result["correct"];
       $result["total"] = (int) $result["total"];
-      $previousMastery = $result["mastery_level_id"];
+      $previousMastery = (int) $result["mastery_level_id"];
       $percent = $result["correct"]/$result["total"];
+      $quizTypeId = $result["quiz_type_id"];
+      $skillQuizType = 1;
+      $tutorialQuizType = 2;
       if ($percent >= 1) {
-        if ($previousMastery >= 3) {
+        if ($previousMastery == 4) {
+          $mastery = 4;
+          $mastery_desc = "Mastered";
+        }
+        elseif ($previousMastery == 3 && $quizTypeId == $tutorialQuizType) {
           $mastery = 4;
           $mastery_desc = "Mastered";
         }
@@ -126,34 +133,21 @@ class QuizzesRecordCompletionController extends Controller {
       }
       elseif ($percent >= 0.7) {
         $mastery = 2;
-          $mastery_desc = "Familiar";
+        $mastery_desc = "Familiar";
       }
       else {
         $mastery = 1;
-          $mastery_desc = "Attempted";
+        $mastery_desc = "Attempted";
       }
       $result["new_mastery_level_id"] = $mastery;
       $result["new_mastery_level_desc"] = $mastery_desc;
       $skillsMatrix[] = $result;
 
-      if ($this->tutorialRepository->getSkillMastery(
-            $result['skill_id'],
-            $this->auth->personId()
-         )
-      ) {
-        $this->tutorialRepository->updateSkillMastery(
-          $result['skill_id'],
-          $this->auth->personId(),
-          $mastery
-        );
-      }
-      else {
-        $this->tutorialRepository->insertSkillMastery(
-          $result['skill_id'],
-          $this->auth->personId(),
-          $mastery
-        );
-      }
+      $this->quizRepository->insertOrUpdateSkillMastery(
+        $result['skill_id'],
+        $this->auth->personId(),
+        $mastery
+      );
     }
 
     $this->response->setVars(array(

@@ -6,7 +6,6 @@ use Mockery;
 use Dotenv\Dotenv;
 use Framework\Request;
 use Framework\Response;
-use PyAngelo\Repositories\TutorialRepository;
 use PyAngelo\Controllers\Quizzes\QuizzesRecordResponseController;
 
 class QuizzesRecordResponseControllerTest extends TestCase {
@@ -14,12 +13,12 @@ class QuizzesRecordResponseControllerTest extends TestCase {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
-    $this->tutorialRepository = Mockery::mock('PyAngelo\Repositories\TutorialRepository');
+    $this->quizRepository = Mockery::mock('PyAngelo\Repositories\QuizRepository');
     $this->controller = new QuizzesRecordResponseController (
       $this->request,
       $this->response,
       $this->auth,
-      $this->tutorialRepository
+      $this->quizRepository
     );
   }
   public function tearDown(): void {
@@ -55,7 +54,7 @@ class QuizzesRecordResponseControllerTest extends TestCase {
     $this->assertSame($expectedMessage, $responseVars['message']);
   }
 
-  public function testWhenNoTutorialQuizId() {
+  public function testWhenNoQuizId() {
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $response = $this->controller->exec();
@@ -71,8 +70,8 @@ class QuizzesRecordResponseControllerTest extends TestCase {
   public function testWhenNoSkillQuestionId() {
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
-    $tutorialQuizId = 99;
-    $this->request->post['tutorialQuizId'] = $tutorialQuizId;
+    $quizId = 99;
+    $this->request->post['quizId'] = $quizId;
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedViewName = 'quizzes/record.json.php';
@@ -86,9 +85,9 @@ class QuizzesRecordResponseControllerTest extends TestCase {
   public function testWhenNoSkillQuestionOptionId() {
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
-    $tutorialQuizId = 99;
+    $quizId = 99;
     $skillQuestionId = 199;
-    $this->request->post['tutorialQuizId'] = $tutorialQuizId;
+    $this->request->post['quizId'] = $quizId;
     $this->request->post['skillQuestionId'] = $skillQuestionId;
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
@@ -103,10 +102,10 @@ class QuizzesRecordResponseControllerTest extends TestCase {
   public function testWhenNoCorrectUnaided() {
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
-    $tutorialQuizId = 99;
+    $quizId = 99;
     $skillQuestionId = 199;
     $skillQuestionOptionId = 299;
-    $this->request->post['tutorialQuizId'] = $tutorialQuizId;
+    $this->request->post['quizId'] = $quizId;
     $this->request->post['skillQuestionId'] = $skillQuestionId;
     $this->request->post['skillQuestionOptionId'] = $skillQuestionOptionId;
     $response = $this->controller->exec();
@@ -122,11 +121,11 @@ class QuizzesRecordResponseControllerTest extends TestCase {
   public function testWhenNoQuestionStartTime() {
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
-    $tutorialQuizId = 99;
+    $quizId = 99;
     $skillQuestionId = 199;
     $skillQuestionOptionId = 299;
     $correctUnaided = 1;
-    $this->request->post['tutorialQuizId'] = $tutorialQuizId;
+    $this->request->post['quizId'] = $quizId;
     $this->request->post['skillQuestionId'] = $skillQuestionId;
     $this->request->post['skillQuestionOptionId'] = $skillQuestionOptionId;
     $this->request->post['correctUnaided'] = $correctUnaided;
@@ -143,12 +142,12 @@ class QuizzesRecordResponseControllerTest extends TestCase {
   public function testWhenNoQuestionEndTime() {
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
-    $tutorialQuizId = 99;
+    $quizId = 99;
     $skillQuestionId = 199;
     $skillQuestionOptionId = 299;
     $correctUnaided = 1;
     $questionStartTime = '2021-09-25 21:54:00';
-    $this->request->post['tutorialQuizId'] = $tutorialQuizId;
+    $this->request->post['quizId'] = $quizId;
     $this->request->post['skillQuestionId'] = $skillQuestionId;
     $this->request->post['skillQuestionOptionId'] = $skillQuestionOptionId;
     $this->request->post['correctUnaided'] = $correctUnaided;
@@ -164,7 +163,7 @@ class QuizzesRecordResponseControllerTest extends TestCase {
   }
 
   public function testWhenNotValidQuiz() {
-    $tutorialQuizId = 99;
+    $quizId = 99;
     $skillQuestionId = 199;
     $skillQuestionOptionId = 299;
     $correctUnaided = 1;
@@ -172,8 +171,8 @@ class QuizzesRecordResponseControllerTest extends TestCase {
     $questionEndTime = '2021-09-25 21:55:00';
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
-    $this->tutorialRepository->shouldReceive('getTutorialQuizOptions')->once()->with($tutorialQuizId)->andReturn();
-    $this->request->post['tutorialQuizId'] = $tutorialQuizId;
+    $this->quizRepository->shouldReceive('getQuizOptions')->once()->with($quizId)->andReturn();
+    $this->request->post['quizId'] = $quizId;
     $this->request->post['skillQuestionId'] = $skillQuestionId;
     $this->request->post['skillQuestionOptionId'] = $skillQuestionOptionId;
     $this->request->post['correctUnaided'] = $correctUnaided;
@@ -192,7 +191,7 @@ class QuizzesRecordResponseControllerTest extends TestCase {
   public function testWhenDifferentPeople() {
     $personId = 150;
     $quizPersonId = 151;
-    $tutorialQuizId = 99;
+    $quizId = 99;
     $skillQuestionId = 199;
     $skillQuestionOptionId = 299;
     $correctUnaided = 1;
@@ -206,8 +205,8 @@ class QuizzesRecordResponseControllerTest extends TestCase {
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
-    $this->tutorialRepository->shouldReceive('getTutorialQuizOptions')->once()->with($tutorialQuizId)->andReturn($options);
-    $this->request->post['tutorialQuizId'] = $tutorialQuizId;
+    $this->quizRepository->shouldReceive('getQuizOptions')->once()->with($quizId)->andReturn($options);
+    $this->request->post['quizId'] = $quizId;
     $this->request->post['skillQuestionId'] = $skillQuestionId;
     $this->request->post['skillQuestionOptionId'] = $skillQuestionOptionId;
     $this->request->post['correctUnaided'] = $correctUnaided;
@@ -226,7 +225,7 @@ class QuizzesRecordResponseControllerTest extends TestCase {
   public function testWhenSamePerson() {
     $personId = 150;
     $quizPersonId = 150;
-    $tutorialQuizId = 99;
+    $quizId = 99;
     $skillQuestionId = 199;
     $skillQuestionOptionId = 299;
     $correctUnaided = 1;
@@ -240,12 +239,12 @@ class QuizzesRecordResponseControllerTest extends TestCase {
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
-    $this->tutorialRepository->shouldReceive('getTutorialQuizOptions')->once()->with($tutorialQuizId)->andReturn($options);
-    $this->tutorialRepository
-         ->shouldReceive('updateTutorialQuizQuestion')
+    $this->quizRepository->shouldReceive('getQuizOptions')->once()->with($quizId)->andReturn($options);
+    $this->quizRepository
+         ->shouldReceive('updateQuizQuestion')
          ->once()
          ->with(
-           $tutorialQuizId,
+           $quizId,
            $skillQuestionId,
            $skillQuestionOptionId,
            $correctUnaided,
@@ -253,7 +252,7 @@ class QuizzesRecordResponseControllerTest extends TestCase {
            $questionEndTime,
          )
          ->andReturn($options);
-    $this->request->post['tutorialQuizId'] = $tutorialQuizId;
+    $this->request->post['quizId'] = $quizId;
     $this->request->post['skillQuestionId'] = $skillQuestionId;
     $this->request->post['skillQuestionOptionId'] = $skillQuestionOptionId;
     $this->request->post['correctUnaided'] = $correctUnaided;
