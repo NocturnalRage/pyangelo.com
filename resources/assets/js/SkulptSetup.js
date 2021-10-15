@@ -178,7 +178,11 @@ export function runSkulpt (code, debugging, stopFunction) {
         Sk.PyAngelo.aceEditor.currentFilename = editSession.getAttribute('data-filename')
         Sk.PyAngelo.aceEditor.setSession(Sk.PyAngelo.aceEditor.currentSession)
         Sk.PyAngelo.aceEditor.gotoLine(currentLineNo)
-      } else {
+      } else if (filename !== 'main.py') {
+        /* this is because the playground does not have
+         * editor tabs so if it is running the main program
+         * we still want to debug it.
+         * */
         return Promise.resolve(susp.resume())
       }
       const debugGlobals = {}
