@@ -129,7 +129,7 @@ export function runSkulpt (code, debugging, stopFunction) {
     inputfunTakesPrompt: false,
     debugging: debugging,
     killableWhile: true,
-    killableFor: false,
+    killableFor: true,
     __future__: Sk.python3
   })
 
