@@ -7,12 +7,20 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
       <div class="col-md-12">
         <h1>Asset Library</h1>
         <p>The assets below can be used in your programs without needing to upload them to your sketch. Simply copy the path from below and include it as if you had uploaded the asset.</p>
-        <h2>Images</h2>
+      </div><!-- col-md-12 -->
+    </div><!-- row -->
+    <div class="row">
+      <?php
+        include __DIR__ . DIRECTORY_SEPARATOR . 'asset-library-menu.html.php';
+      ?>
+      <div class="col-md-9">
+        <h2 id="images">Images</h2>
         <img src ="/samples/images/PyAngelo.png" alt="PyAngelo" />
         <pre>/samples/images/PyAngelo.png</pre>
         <img src ="/samples/images/blue-alien-idle.png" alt="Idle Blue Alien" />
         <pre>/samples/images/blue-alien-idle.png</pre>
-        <h2>Sounds</h2>
+        <hr />
+        <h2 id="sounds">Sounds</h2>
         <figure>
           <figcaption>Blip</figcaption>
             <audio controls preload="none" src="/samples/sounds/blip.wav">
@@ -104,7 +112,8 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
             </audio>
         </figure>
         <pre>/samples/sounds/correct.mp3</pre>
-        <h2>Music</h2>
+        <hr />
+        <h2 id="music">Music</h2>
         <figure>
           <figcaption>After Burner</figcaption>
             <audio controls preload="none" src="/samples/music/Afterburner_01.mp3">
@@ -266,7 +275,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
             </audio>
         </figure>
         <pre>/samples/music/success.mp3</pre>
-      </div><!-- col-md-12 -->
+      </div><!-- col-md-9 -->
     </div><!-- row -->
     <?php
       include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';
