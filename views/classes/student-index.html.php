@@ -18,8 +18,8 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
             include 'student-classes.html.php';
           }
         ?>
-      <div><!-- col-md-9 -->
-    <div><!-- row -->
+      </div><!-- col-md-9 -->
+    </div><!-- row -->
     <?php
       include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';
     ?>
