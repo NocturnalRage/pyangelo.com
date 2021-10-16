@@ -94,6 +94,7 @@ return [
   [ 'GET','/favourites', 'FavouritesController', 'favourites' ],
   [ 'GET','/reference', 'ReferenceController', 'reference' ],
   [ 'GET','/asset-library', 'AssetLibraryController', 'assetLibrary' ],
+  [ 'GET','/versions', 'VersionsController', 'versions' ],
   [ 'GET','/ask-the-teacher', 'AskTheTeacherIndexController', 'askTheTeacherIndex' ],
   [ 'GET','/ask-the-teacher/topic/[:slug]', 'AskTheTeacherCategoryController', 'askTheTeacherCategory' ],
   [ 'GET','/ask-the-teacher/ask', 'AskTheTeacherAskController', 'askTheTeacherAsk' ],

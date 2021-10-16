@@ -1170,6 +1170,14 @@ $di->set('AssetLibraryController', function () use ($di) {
   );
 });
 
+$di->set('VersionsController', function () use ($di) {
+  return new PyAngelo\Controllers\Reference\VersionsController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth')
+  );
+});
+
 $di->set('AskTheTeacherIndexController', function () use ($di) {
   return new PyAngelo\Controllers\AskTheTeacher\AskTheTeacherIndexController (
     $di->get('request'),
