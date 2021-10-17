@@ -19,6 +19,17 @@
 #canvas:focus, #canvas:hover {
   outline: none;
 }
+#editorImagePreview {
+    display: none;
+}
+#editorImagePreview img {
+    max-width: 100%;
+    padding: 20px;
+}
+#editorAudioPreview {
+    display: none;
+    padding: 20px;
+}
 #editor {
     border: 2px solid lightgray;
     margin: auto;
