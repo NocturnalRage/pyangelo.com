@@ -28,7 +28,8 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
           <ul>
             <li>split windows - the code and console output are now displayed in a split window. You can toggle whether this should be displayed vertically or horizontally.</li>
             <li>syntax error detection - the editor now checks for syntax errors in real time and displays a cross in the gutter of the editor if an error is detected. By holding your mouse over the cross you can see the error message.</li>
-            <li>improved error messages - If your program contains a run-time error, this will be displayed in the console and the offending line of code will be displayed in the editor.</li>
+            <li>improved error messages - if your program contains a run-time error, this will be displayed in the console and the offending line of code will be displayed in the editor.</li>
+            <li>image and sound preview - you can now preview images and sounds you have uploaded by clicking on the relevant tab.</li>
           </ul>
         </div>
         <div class="well">
