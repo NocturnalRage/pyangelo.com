@@ -46,6 +46,12 @@ class ShowHtmlTest extends BasicViewHtmlTest {
     $expect = '<div id="editor"';
     $this->assertStringContainsString($expect, $output);
 
+    $expect = '<div id="editorImagePreview"></div>';
+    $this->assertStringContainsString($expect, $output);
+
+    $expect = '<div id="editorAudioPreview"></div>';
+    $this->assertStringContainsString($expect, $output);
+
     $expect = '<pre id="console">';
     $this->assertStringContainsString($expect, $output);
 
@@ -87,6 +93,12 @@ class ShowHtmlTest extends BasicViewHtmlTest {
     $this->assertStringContainsString($expect, $output);
 
     $expect = '<div id="editor"';
+    $this->assertStringContainsString($expect, $output);
+
+    $expect = '<div id="editorImagePreview"></div>';
+    $this->assertStringContainsString($expect, $output);
+
+    $expect = '<div id="editorAudioPreview"></div>';
     $this->assertStringContainsString($expect, $output);
 
     $expect = '<pre id="console">';

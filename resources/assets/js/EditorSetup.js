@@ -209,12 +209,46 @@ export class Editor {
       span.setAttribute('data-editor-session', sessionIndex)
       span.setAttribute('data-filename', file.filename)
       span.onclick = function (ev) {
+        const editor = document.getElementById('editor')
+        const editorImagePreview = document.getElementById('editorImagePreview')
+        const editorAudioPreview = document.getElementById('editorAudioPreview')
+        editorImagePreview.style.display = 'none'
+        editorAudioPreview.style.display = 'none'
+        editor.style.display = 'block'
         if (!closureEditor.isReadOnly) {
           closureEditor.saveCode(closureEditor.currentFilename)
         }
         closureEditor.currentFilename = ev.target.getAttribute('data-filename')
         closureEditor.currentSession = ev.target.getAttribute('data-editor-session')
         closureEditor.setSession(closureEditor.currentSession)
+        document.querySelector('.editorTab.current').classList.remove('current')
+        ev.target.classList.add('current')
+      }
+    } else if (file.filename.toLowerCase().endsWith('.png') ||
+             file.filename.toLowerCase().endsWith('.jpg') ||
+             file.filename.toLowerCase().endsWith('.jpeg') ||
+             file.filename.toLowerCase().endsWith('.gif')) {
+      span.onclick = function (ev) {
+        const editor = document.getElementById('editor')
+        const editorImagePreview = document.getElementById('editorImagePreview')
+        const editorAudioPreview = document.getElementById('editorAudioPreview')
+        editor.style.display = 'none'
+        editorAudioPreview.style.display = 'none'
+        editorImagePreview.style.display = 'block'
+        document.getElementById('editorImagePreview').innerHTML = '<img src="' + ev.target.getAttribute('data-filename') + '" />'
+        document.querySelector('.editorTab.current').classList.remove('current')
+        ev.target.classList.add('current')
+      }
+    } else if (file.filename.toLowerCase().endsWith('.mp3') ||
+             file.filename.toLowerCase().endsWith('.wav')) {
+      span.onclick = function (ev) {
+        const editor = document.getElementById('editor')
+        const editorImagePreview = document.getElementById('editorImagePreview')
+        const editorAudioPreview = document.getElementById('editorAudioPreview')
+        editor.style.display = 'none'
+        editorImagePreview.style.display = 'none'
+        editorAudioPreview.style.display = 'block'
+        document.getElementById('editorAudioPreview').innerHTML = '<figure><figcaption>' + ev.target.getAttribute('data-filename') + '</figcaption><audio controls preload="none" src="' + ev.target.getAttribute('data-filename') + '">Your browser does not support the <code>audio</code> element.</audio></figure>'
         document.querySelector('.editorTab.current').classList.remove('current')
         ev.target.classList.add('current')
       }
