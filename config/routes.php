@@ -35,6 +35,7 @@ return [
   [ 'POST','/collection/create', 'CollectionsCreateController', 'collectionsCreate' ],
   [ 'POST','/collection/add-sketch', 'CollectionsAddSketchController', 'collectionsAddSketch' ],
   [ 'GET','/collection/[:collectionId]', 'CollectionsShowController', 'collectionsShow' ],
+  [ 'POST','/collection/[:collectionId]/rename', 'CollectionsRenameController', 'collectionsRename' ],
   [ 'GET','/playground', 'SketchPlaygroundController', 'sketchPlayground' ],
   [ 'GET','/sketch', 'SketchIndexController', 'sketchIndex' ],
   [ 'POST','/sketch/create', 'SketchCreateController', 'sketchCreate' ],

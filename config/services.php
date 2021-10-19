@@ -600,6 +600,15 @@ $di->set('CollectionsShowController', function () use ($di) {
   );
 });
 
+$di->set('CollectionsRenameController', function () use ($di) {
+  return new PyAngelo\Controllers\Collections\CollectionsRenameController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('sketchRepository')
+  );
+});
+
 $di->set('SketchIndexController', function () use ($di) {
   return new PyAngelo\Controllers\Sketch\SketchIndexController (
     $di->get('request'),
