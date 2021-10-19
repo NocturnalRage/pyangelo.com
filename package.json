@@ -34,6 +34,7 @@
     "sass-loader": "^12.1.0",
     "skulpt": "github:pingskills/skulpt#pyangelo",
     "split-grid": "^1.0.11",
+    "toastify-js": "^1.11.2",
     "vue-template-compiler": "^2.6.12"
   }
 }

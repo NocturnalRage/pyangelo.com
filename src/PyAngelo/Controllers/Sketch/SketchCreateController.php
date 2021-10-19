@@ -26,9 +26,31 @@ class SketchCreateController extends Controller {
     if (! $this->auth->loggedIn())
       return $this->redirectToLoginPage();
 
+    if (! $this->auth->crsfTokenIsValid()) {
+      $this->flash('Please create sketches from the PyAngelo website!', 'danger');
+      $this->response->header('Location: /sketch');
+      return $this->response;
+    }
+
+    if (!isset($this->request->post['collectionId'])) {
+      $collectionId = null;
+    }
+    elseif (!($collection = $this->sketchRepository->getCollectionById(
+      $this->request->post['collectionId']
+    ))) {
+      $collectionId = null;
+    }
+    elseif ($collection['person_id'] != $this->auth->personId()) {
+      $collectionId = null;
+    }
+    else {
+      $collectionId = $this->request->post['collectionId'];
+    }
+
     $sketchId = $this->sketchRepository->createNewSketch(
       $this->auth->personId(),
-      $this->selectRandomTitle()
+      $this->selectRandomTitle(),
+      $collectionId
     );
 
     if (!$sketchId)

@@ -58,7 +58,12 @@ class SketchDeleteController extends Controller {
       $this->flash('Sorry, we could not delete the sketch.', 'danger');
     }
 
-    $this->response->header('Location: /sketch');
+    if (empty($sketch['collection_id'])) {
+      $this->response->header('Location: /sketch');
+    }
+    else {
+      $this->response->header('Location: /collection/' . $sketch['collection_id']);
+    }
     return $this->response;
   }
 }

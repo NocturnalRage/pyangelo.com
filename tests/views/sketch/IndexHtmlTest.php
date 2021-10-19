@@ -7,12 +7,15 @@ use Tests\views\BasicViewHtmlTest;
 
 class IndexHtmlTest extends BasicViewHtmlTest {
 
-  public function testBasicViewHtml() {
+  public function testBasicViewNoCollectionHtml() {
+    $collections = [];
+    $activeCollectionId = 0;
     $sketches = [
       [
         'sketch_id' => 1,
         'title' => 'funny-name',
-        'updated_at' => '2021-07-13 18:51:30'
+        'updated_at' => '2021-07-13 18:51:30',
+        'collection_id' => NULL
       ]
     ];
     $deletedSketches = [
@@ -33,13 +36,24 @@ class IndexHtmlTest extends BasicViewHtmlTest {
       'activeLink' => 'Home',
       'personInfo' => $this->setPersonInfoLoggedIn(),
       'sketches' => $sketches,
-      'deletedSketches' => $deletedSketches
+      'deletedSketches' => $deletedSketches,
+      'collections' => $collections,
+      'activeCollectionId' => $activeCollectionId
     ));
     $output = $response->requireView();
     $this->assertStringContainsString($pageTitle, $output);
     $this->assertStringContainsString($metaDescription, $output);
 
     $expect = '<form id="create-sketch-form" action="/sketch/create" method="POST" style="display: none;">';
+    $this->assertStringContainsString($expect, $output);
+
+    $expect = '<input type="hidden" name="collectionId" value="0" />';
+    $this->assertStringContainsString($expect, $output);
+
+    $expect = '<form id="new-collection-form" class="form-horizontal" action="/collection/create" method="POST" style="display: none;">';
+    $this->assertStringContainsString($expect, $output);
+
+    $expect = '<a href="/sketch" class="collection active">All Sketches</a>';
     $this->assertStringContainsString($expect, $output);
 
     $expect = '<h3><a href="/sketch/' . $sketches[0]['sketch_id'] . '">' . $sketches[0]['title'] . '</a></h3>';

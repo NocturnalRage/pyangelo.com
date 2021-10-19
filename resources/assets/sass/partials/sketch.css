@@ -172,3 +172,26 @@ input.visually-hidden:focus-within + label {
     cursor: row-resize;
     background-color: lightgray;
 }
+.collections a {
+  padding: 10px;
+  cursor: pointer;
+  display: block;
+  background-color: #50394c;
+  color: white;
+  text-decoration: none;
+  border: 2px #614A5D solid;
+}
+.collections a:hover {
+  background-color: #453439;
+  text-decoration: underline;
+}
+.collections a.active {
+  background-color: #FEEF96;
+  border: 2px #EDDE85 solid;
+  color: #50394C;
+}
+.collections a.active:hover {
+  background-color: #F9E990;
+  border: 2px #E0D080 solid;
+  color: #453448;
+}

@@ -27,5 +27,5 @@
         </tbody>
       </table>
     </div><!-- table-responsive -->
-  <div><!-- twelve columns -->
-<div><!-- row -->
+  </div><!-- twelve columns -->
+</div><!-- row -->

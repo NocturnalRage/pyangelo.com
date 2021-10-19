@@ -28,7 +28,10 @@ class SketchShowController extends Controller {
     )))
       return $this->redirectToPageNotFound();
 
-    $this->response->setView('sketch/show.html.php'); $this->response->setVars(array( 'pageTitle' => $sketch['title'] . ' | PyAngelo', 'metaDescription' => 'Another Wonderful PyAngelo Sketch',
+    $this->response->setView('sketch/show.html.php');
+    $this->response->setVars(array(
+      'pageTitle' => $sketch['title'] . ' | PyAngelo',
+      'metaDescription' => 'Another Wonderful PyAngelo Sketch',
       'personInfo' => $this->auth->getPersonDetailsForViews(),
       'activeLink' => 'My Sketches',
       'sketch' => $sketch

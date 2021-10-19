@@ -52,7 +52,7 @@ class SketchRenameController extends Controller {
       return $this->response;
     }
 
-    if (!isset($this->request->post['newTitle'])) {
+    if (!isset($this->request->post['newTitle']) || empty(trim($this->request->post['newTitle']))) {
       $this->response->setVars(array(
         'status' => 'error',
         'message' => 'You must give your sketch a title.',

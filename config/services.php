@@ -573,6 +573,33 @@ $di->set('PremiumMembershipController', function () use ($di) {
   );
 });
 
+$di->set('CollectionsCreateController', function () use ($di) {
+  return new PyAngelo\Controllers\Collections\CollectionsCreateController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('sketchRepository')
+  );
+});
+
+$di->set('CollectionsAddSketchController', function () use ($di) {
+  return new PyAngelo\Controllers\Collections\CollectionsAddSketchController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('sketchRepository')
+  );
+});
+
+$di->set('CollectionsShowController', function () use ($di) {
+  return new PyAngelo\Controllers\Collections\CollectionsShowController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('sketchRepository')
+  );
+});
+
 $di->set('SketchIndexController', function () use ($di) {
   return new PyAngelo\Controllers\Sketch\SketchIndexController (
     $di->get('request'),

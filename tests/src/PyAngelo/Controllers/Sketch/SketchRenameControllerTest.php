@@ -85,6 +85,25 @@ class SketchRenameControllerTest extends TestCase {
     $this->assertSame($expectedMessage, $responseVars['message']);
   }
 
+  public function testWhenTitleOnlyWhitespace() {
+    $sketchId = 101;
+    $this->request->post = [
+      'sketchId' => $sketchId,
+      'newTitle' => '   '
+    ];
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedViewName = 'sketch/rename.json.php';
+    $expectedStatus = 'error';
+    $expectedMessage = 'You must give your sketch a title.';
+    $this->assertSame($expectedViewName, $response->getView());
+    $this->assertSame($expectedStatus, $responseVars['status']);
+    $this->assertSame($expectedMessage, $responseVars['message']);
+  }
+
   public function testSketchNotInDatabase() {
     $sketchId = 101;
     $this->request->post = [

@@ -31,6 +31,8 @@ class SketchIndexController extends Controller {
       return $sketch['deleted'];
     });
 
+    $collections = $this->sketchRepository->getCollections($this->auth->personId());
+
     $this->response->setView('sketch/index.html.php');
     $this->response->setVars(array(
       'pageTitle' => 'My PyAngelo Sketches',
@@ -38,7 +40,9 @@ class SketchIndexController extends Controller {
       'activeLink' => 'My Sketches',
       'personInfo' => $this->auth->getPersonDetailsForViews(),
       'sketches' => $sketches,
-      'deletedSketches' => $deletedSketches
+      'deletedSketches' => $deletedSketches,
+      'collections' => $collections,
+      'activeCollectionId' => 0
     ));
     $this->addVar('flash');
     return $this->response;

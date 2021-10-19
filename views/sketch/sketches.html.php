@@ -1,5 +1,4 @@
-<div class="row">
-  <div class="col-md-12">
+  <div class="col-md-9">
     <div class="table-responsive">
       <table class="table table-striped table-hover">
         <tbody>
@@ -11,6 +10,14 @@
             <tr>
               <td>
                   <h3><a href="/sketch/<?= $this->esc($sketch['sketch_id']) ?>"><?= $this->esc($sketch['title']) ?></a></h3>
+              </td>
+              <td>
+                 <select name="collection" class="collectionSelect form-control" data-sketch-id="<?= $this->esc($sketch['sketch_id']); ?>" data-crsf-token="<?= $personInfo['crsfToken']; ?>">
+                 <option value="0">No collection</option>
+                 <?php foreach($collections as $collection) : ?>
+                    <option <?php if ($sketch['collection_id'] == $collection['collection_id']) echo ' selected '; ?> value="<?= $this->esc($collection['collection_id']); ?>"><?= $this->esc($collection['collection_name']); ?></option>
+                 <?php endforeach; ?>
+                 </select>
               </td>
               <td>
                  <p class="sketchCell">Last saved: <em><?= $this->esc($lastUpdatedDate) ?></em></p>
@@ -28,5 +35,4 @@
         </tbody>
       </table>
     </div><!-- table-responsive -->
-  <div><!-- twelve columns -->
-<div><!-- row -->
+  </div><!-- nine columns -->

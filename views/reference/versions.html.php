@@ -41,6 +41,16 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
             <li>Students can <a href="/classes/student">see which classes</a> they belong to</li>
           </ul>
         </div>
+        <div class="well">
+          <h4>Create Collections for your Sketches</h4>
+          <ul>
+            <li>A collection can be created as a way of organising your sketches.</a></li>
+            <li>Each sketch can belong to a single collection.</li>
+            <li>You can view all the sketches belonging to a collection.</li>
+            <li>You can also still view all sketches.</li>
+            <li>If you are looking at a collection and create a new sketch from that page, the new sketch will automatically be put into that collection.</li>
+          </ul>
+        </div>
         <h3 id="minor1.1">1.1 Minor Changes</h3>
         <ul>
           <li>Dracula colour theme used for the editor</li>
@@ -51,7 +61,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
         <p>PyAngelo was updated to use <a href="https://skulpt.org/">Skulpt</a> which is an entirely in-browser implementation of Python.</p>
         <div class="well">
           <h3 id="breaking1.0">1.0 Breaking Changes</h3>
-          <p>@loop_animation removed</p>
+          <h4>@loop_animation removed</h4>
           <p>This command was used to create a game loop. Any code underneath the @loop_animation would have been repeated forever. Any programs using this command need to be updated by changing the @loop_animation to a forever loop. Here is an example:</p>
           <pre>
 setCanvasSize(640, 360)
@@ -67,6 +77,11 @@ fill(255, 255, 0)
 forever:
     background(0, 0, 0)
     circle(mouseX, mouseY, 15)
+          </pre>
+          <h4>Sprites have been moved to their own library</h4>
+          <p>If you were using Sprite, TextSprite, RectangleSprite, CircleSprite, or EllipseSprite, these are now in their own library and hence to make your program work again you need to include the following import statement at the top of your program.</p>
+          <pre>
+from sprite import *
           </pre>
         </div>
         <h3 id="major1.0">1.0 Major Changes</h3>
