@@ -17,7 +17,7 @@ interface SketchRepository {
 
   public function getSketchFiles($sketchId);
 
-  public function createNewSketch($personId, $title, $lessonId = NULL);
+  public function createNewSketch($personId, $title, $collectionId, $lessonId = NULL);
 
   public function deleteSketch($sketchId);
 
@@ -34,5 +34,17 @@ interface SketchRepository {
   public function updateSketchUpdatedAt($sketchId);
 
   public function updateSketchLayout($sketchId, $layout);
+
+  public function createNewCollection($personId, $title);
+
+  public function getCollections($personId);
+
+  public function addSketchToCollection($sketchId, $collectionId);
+
+  public function removeSketchFromAllCollections($sketchId);
+
+  public function getCollectionById($collectionId);
+
+  public function getCollectionSketches($collectionId);
 }
 ?>

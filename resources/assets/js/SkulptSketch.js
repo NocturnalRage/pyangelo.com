@@ -338,7 +338,12 @@ function showRename (event) {
 
 function submitRename (event) {
   event.preventDefault()
-  const data = 'newTitle=' + document.getElementById('newTitle').value + '&sketchId=' + encodeURIComponent(sketchId) + '&crsfToken=' + encodeURIComponent(crsfToken)
+  const newTitle = document.getElementById('newTitle').value
+  if (!newTitle || /^\s*$/.test(newTitle)) {
+    alert('You must provide a sketch name!')
+    return
+  }
+  const data = 'newTitle=' + newTitle + '&sketchId=' + encodeURIComponent(sketchId) + '&crsfToken=' + encodeURIComponent(crsfToken)
   const options = {
     method: 'POST',
     headers: {
@@ -367,7 +372,7 @@ function updateTitle (data) {
 function cancelRename (event) {
   event.preventDefault()
   document.getElementById('rename-form').style.display = 'none'
-  document.getElementById('title').style.display = 'block'
+  document.getElementById('titleWithEdit').style.display = 'block'
 }
 
 window.addEventListener('drop', function (e) { e.preventDefault() })

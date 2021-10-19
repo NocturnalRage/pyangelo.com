@@ -42,15 +42,26 @@ class SketchCreateControllerTest extends TestCase {
     $this->assertSame('You must be logged in to create a new sketch', $this->request->session['flash']['message']);
   }
 
-  public function testInvalidPostData() {
+  public function testWhenNoCrsfToken() {
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(false);
+
+    $response = $this->controller ->exec();
+    $responseVars = $response->getVars();
+    $expectedHeaders = array(array('header', 'Location: /sketch'));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+    $this->assertSame('Please create sketches from the PyAngelo website!', $this->request->session['flash']['message']);
+  }
+
+  public function testNoSketchIdReturned() {
     $personId = 101;
     $title = 'funny-name';
     $errors = ['foo' => 'bar' ];
     $flashMessage = 'Error! We could not create a new sketch for you :(';
-    $this->request->post = ['data' => 'invalid'];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
-    $this->sketchRepository->shouldReceive('createNewSketch')->once()->with($personId, \Mockery::any())->andReturn(false);
+    $this->sketchRepository->shouldReceive('createNewSketch')->once()->with($personId, \Mockery::any(), null)->andReturn();
 
     $response = $this->controller ->exec();
     $responseVars = $response->getVars();
@@ -59,14 +70,82 @@ class SketchCreateControllerTest extends TestCase {
     $this->assertSame($flashMessage, $this->request->session['flash']['message']);
   }
 
-  public function testSuccess() {
+  public function testSuccessWithNoCollectionId() {
     $personId = 101;
     $sketchId = 10;
     $sketch = ['sketch_id' => $sketchId];
     $this->request->post = ['data' => 'invalid'];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('personId')->twice()->with()->andReturn($personId);
-    $this->sketchRepository->shouldReceive('createNewSketch')->once()->with($personId, \Mockery::any())->andReturn($sketchId);
+    $this->sketchRepository->shouldReceive('createNewSketch')->once()->with($personId, \Mockery::any(), null)->andReturn($sketchId);
+    $this->sketchFiles->shouldReceive('createNewMain')->once()->with($personId, $sketchId)->andReturn();
+
+    $response = $this->controller ->exec();
+    $responseVars = $response->getVars();
+    $expectedHeaders = array(array('header', 'Location: /sketch/' . $sketch['sketch_id']));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+  }
+
+  public function testSuccessWithInvalidCollectionId() {
+    $collectionId = 5;
+    $personId = 101;
+    $sketchId = 10;
+    $sketch = ['sketch_id' => $sketchId];
+    $this->request->post = ['collectionId' => $collectionId];
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('personId')->twice()->with()->andReturn($personId);
+    $this->sketchRepository->shouldReceive('createNewSketch')->once()->with($personId, \Mockery::any(), null)->andReturn($sketchId);
+    $this->sketchRepository->shouldReceive('getCollectionById')->once()->with($collectionId)->andReturn();
+    $this->sketchFiles->shouldReceive('createNewMain')->once()->with($personId, $sketchId)->andReturn();
+
+    $response = $this->controller ->exec();
+    $responseVars = $response->getVars();
+    $expectedHeaders = array(array('header', 'Location: /sketch/' . $sketch['sketch_id']));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+  }
+
+  public function testSuccessWhenNotOwnerOfCollection() {
+    $collectionId = 5;
+    $ownerId = 10;
+    $personId = 11;
+    $collection = [
+      'collection_id' => $collectionId,
+      'person_id' => $ownerId
+    ];
+    $sketchId = 10;
+    $sketch = ['sketch_id' => $sketchId];
+    $this->request->post = ['collectionId' => $collectionId];
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('personId')->times(3)->with()->andReturn($personId);
+    $this->sketchRepository->shouldReceive('createNewSketch')->once()->with($personId, \Mockery::any(), null)->andReturn($sketchId);
+    $this->sketchRepository->shouldReceive('getCollectionById')->once()->with($collectionId)->andReturn($collection);
+    $this->sketchFiles->shouldReceive('createNewMain')->once()->with($personId, $sketchId)->andReturn();
+
+    $response = $this->controller ->exec();
+    $responseVars = $response->getVars();
+    $expectedHeaders = array(array('header', 'Location: /sketch/' . $sketch['sketch_id']));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+  }
+
+  public function testSuccessWhenOwnerOfCollection() {
+    $collectionId = 5;
+    $ownerId = 11;
+    $personId = 11;
+    $collection = [
+      'collection_id' => $collectionId,
+      'person_id' => $ownerId
+    ];
+    $sketchId = 10;
+    $sketch = ['sketch_id' => $sketchId];
+    $this->request->post = ['collectionId' => $collectionId];
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('personId')->times(3)->with()->andReturn($personId);
+    $this->sketchRepository->shouldReceive('createNewSketch')->once()->with($personId, \Mockery::any(), $collectionId)->andReturn($sketchId);
+    $this->sketchRepository->shouldReceive('getCollectionById')->once()->with($collectionId)->andReturn($collection);
     $this->sketchFiles->shouldReceive('createNewMain')->once()->with($personId, $sketchId)->andReturn();
 
     $response = $this->controller ->exec();

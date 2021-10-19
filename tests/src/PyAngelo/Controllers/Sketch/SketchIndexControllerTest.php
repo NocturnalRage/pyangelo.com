@@ -54,9 +54,10 @@ class SketchIndexControllerTest extends TestCase {
     ];
     $personId = 101;
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
-    $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
+    $this->auth->shouldReceive('personId')->twice()->with()->andReturn($personId);
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
     $this->sketchRepository->shouldReceive('getSketches')->once()->with($personId)->andReturn($sketches);
+    $this->sketchRepository->shouldReceive('getCollections')->once()->with($personId)->andReturn();
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedViewName = 'sketch/index.html.php';
