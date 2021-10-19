@@ -6,7 +6,22 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
     <?php include __DIR__ . '/../layout/flash.html.php'; ?>
     <div class="row">
       <div class="col-md-12 text-center add-bottom">
-        <h1>My Sketches</h1>
+        <?php if (isset($collection)): ?>
+          <h1 id="titleWithEdit" class="text-center" data-crsf-token="<?= $personInfo['crsfToken']; ?>" data-collection-id="<?= $collection['collection_id']; ?>">
+            <span id="title"><?= $this->esc($collection['collection_name']) ?></span>
+            <a id="rename" href="/collection/<?= $this->esc($collection['collection_id']); ?>/rename">
+              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+            </a>
+          </h1>
+          <form id="rename-form" class="form-horizontal" action="/collection/<?= $this->esc($collection['collection_id']); ?>/rename" method="POST" style="display: none;">
+            <input type="hidden" name="crsfToken" value="<?= $personInfo['crsfToken'] ?>" />
+            <input type="text" name="newTitle" id="newTitle" class="form-control" value="<?= $this->esc($collection['collection_name']); ?>" maxlength="100" required autofocus />
+            <button id="renameSubmit" class="btn btn-success renameSubmit"><i class="fa fa-paper-plane" aria-hidden="true"></i> Update Title</button>
+            <button id="renameCancel" class="btn btn-danger renameCancel"><i class="fa fa-window-close" aria-hidden="true"></i> Cancel</button>
+          </form>
+        <?php else: ?>
+          <h1>My Sketches</h1>
+        <?php endif; ?>
           <a href="/sketch/create" class="btn btn-lg btn-primary text-center"
             onclick="event.preventDefault();
             document.getElementById('create-sketch-form').submit();">
@@ -37,7 +52,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
           <div class="collections">
             <a href="/sketch" class="collection<?php if ($activeCollectionId == 0) echo(' active'); ?>">All Sketches</a>
             <?php foreach($collections as $collection) : ?>
-              <a href="/collection/<?= $this->esc($collection['collection_id']) ?>" class="collection<?php if ($activeCollectionId == $collection['collection_id']) echo(' active'); ?>"><?= $this->esc($collection['collection_name']) ?></a>
+              <a href="/collection/<?= $this->esc($collection['collection_id']) ?>" class="collection<?php if ($activeCollectionId == $collection['collection_id']) echo(' active'); ?>" id="collection<?= $collection['collection_id']; ?>"><?= $this->esc($collection['collection_name']) ?></a>
             <?php endforeach; ?>
           </div>
         </div>

@@ -1,12 +1,12 @@
 <?php
-namespace PyAngelo\Controllers\Sketch;
+namespace PyAngelo\Controllers\Collections;
 
 use PyAngelo\Auth\Auth;
 use PyAngelo\Controllers\Controller;
 use PyAngelo\Repositories\SketchRepository;
 use Framework\{Request, Response};
 
-class SketchRenameController extends Controller {
+class CollectionsRenameController extends Controller {
   protected $sketchRepository;
 
   public function __construct(
@@ -20,14 +20,15 @@ class SketchRenameController extends Controller {
   }
 
   public function exec() {
-    $this->response->setView('sketch/rename.json.php');
+    $this->response->setView('collections/rename.json.php');
     $this->response->header('Content-Type: application/json');
 
     if (! $this->auth->loggedIn()) {
       $this->response->setVars(array(
         'status' => 'info',
-        'message' => 'Log in to rename a sketch.',
-        'title' => 'Unchanged.'
+        'message' => 'Log in to rename a collection.',
+        'title' => 'Unchanged.',
+        'collectionId' => '0.'
       ));
       return $this->response;
     }
@@ -36,17 +37,19 @@ class SketchRenameController extends Controller {
     if (!$this->auth->crsfTokenIsValid()) {
       $this->response->setVars(array(
         'status' => 'error',
-        'message' => 'You must rename your sketch from the PyAngelo website.',
-        'title' => 'Unchanged.'
+        'message' => 'You must rename your collection from the PyAngelo website.',
+        'title' => 'Unchanged.',
+        'collectionId' => '0.'
       ));
       return $this->response;
     }
 
-    if (!isset($this->request->post['sketchId'])) {
+    if (!isset($this->request->post['collectionId'])) {
       $this->response->setVars(array(
         'status' => 'error',
-        'message' => 'You must select a sketch to rename.',
-        'title' => 'Unchanged.'
+        'message' => 'You must select a collection to rename.',
+        'title' => 'Unchanged.',
+        'collectionId' => '0.'
       ));
       return $this->response;
     }
@@ -54,38 +57,42 @@ class SketchRenameController extends Controller {
     if (!isset($this->request->post['newTitle']) || empty(trim($this->request->post['newTitle']))) {
       $this->response->setVars(array(
         'status' => 'error',
-        'message' => 'You must give your sketch a title.',
-        'title' => 'Unchanged.'
+        'message' => 'You must give your collection a title.',
+        'title' => 'Unchanged.',
+        'collectionId' => '0.'
       ));
       return $this->response;
     }
 
-    if (! $sketch = $this->sketchRepository->getSketchById($this->request->post['sketchId'])) {
+    if (! $collection = $this->sketchRepository->getCollectionById($this->request->post['collectionId'])) {
       $this->response->setVars(array(
         'status' => 'error',
-        'message' => 'You must select a valid sketch to rename.',
-        'title' => 'Unchanged.'
+        'message' => 'You must select a valid collection to rename.',
+        'title' => 'Unchanged.',
+        'collectionId' => '0.'
       ));
       return $this->response;
     }
 
-    if ($sketch['person_id'] != $this->auth->personId()) {
+    if ($collection['person_id'] != $this->auth->personId()) {
       $this->response->setVars(array(
         'status' => 'error',
-        'message' => 'You must be the owner of the sketch to rename it.',
-        'title' => 'Unchanged.'
+        'message' => 'You must be the owner of the collection to rename it.',
+        'title' => 'Unchanged.',
+        'collectionId' => $this->request->post['collectionId']
       ));
       return $this->response;
     }
-    $this->sketchRepository->renameSketch(
-      $sketch['sketch_id'],
+    $this->sketchRepository->renameCollection(
+      $collection['collection_id'],
       $this->request->post['newTitle']
     );
 
     $this->response->setVars(array(
         'status' => 'success',
-        'message' => 'File renamed.',
-        'title' => $this->request->post['newTitle']
+        'message' => 'Collection renamed.',
+        'title' => $this->request->post['newTitle'],
+        'collectionId' => $this->request->post['collectionId']
       ));
     return $this->response;
   }

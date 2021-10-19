@@ -372,5 +372,17 @@ class MysqlSketchRepository implements SketchRepository {
     $stmt->close();
     return $result->fetch_all(MYSQLI_ASSOC);
   }
+
+  public function renameCollection($collectionId, $title) {
+    $sql = "UPDATE sketch_collection
+            SET    collection_name = ?
+            WHERE  collection_id = ?";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->bind_param('si', $title, $collectionId);
+    $stmt->execute();
+    $rowsUpdated = $this->dbh->affected_rows;
+    $stmt->close();
+    return $rowsUpdated;
+  }
 }
 ?>

@@ -46,5 +46,7 @@ interface SketchRepository {
   public function getCollectionById($collectionId);
 
   public function getCollectionSketches($collectionId);
+
+  public function renameCollection($collectionId, $title);
 }
 ?>
