@@ -29,7 +29,9 @@ if (!isReadOnly) {
 const aceEditor = new Editor(sketchId, crsfToken, Sk, fileTabs, isReadOnly)
 Sk.PyAngelo.aceEditor = aceEditor
 aceEditor.loadCode()
-aceEditor.monitorErrorsOnChange()
+const listenForErrors = true
+const autosave = true
+aceEditor.onChange(listenForErrors, autosave)
 aceEditor.listenForBreakPoints()
 
 const startStopButton = document.getElementById('startStop')

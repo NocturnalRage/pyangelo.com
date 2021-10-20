@@ -1,3 +1,4 @@
+import { notify } from './pyangelo-notify'
 import ace from 'ace'
 import { staticWordCompleter } from './editorWordCompletion'
 
@@ -11,6 +12,8 @@ export class Editor {
 
     this.currentSession = 0
     this.currentFilename = 'main.py'
+    this.lastSaved = Date.now()
+    this.saveEveryXMillis = 10000
     ace.config.set('basePath', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/')
     this.editor = ace.edit('editor')
     this.editor.$blockScrolling = Infinity
@@ -38,38 +41,49 @@ export class Editor {
     }
   }
 
-  monitorErrorsOnChange () {
+  onChange (listenForErrors, autosave) {
     const closureEditor = this
+    const listenForErrorsOn = listenForErrors
+    const autosaveOn = autosave
     this.editor.on('change', function (delta) {
-      closureEditor.editSessions[closureEditor.currentSession].clearAnnotations()
-      closureEditor.Sk.configure({
-        __future__: closureEditor.Sk.python3
-      })
-      try {
-        closureEditor.Sk.compile(
-          closureEditor.getCode(closureEditor.currentSession),
-          closureEditor.currentFilename,
-          'exec',
-          true
-        )
-      } catch (err) {
-        if (err.traceback) {
-          const lineno = err.traceback[0].lineno
-          const colno = err.traceback[0].colno
-          let errorMessage
-          if (err.message) {
-            errorMessage = err.message
-          } else if (err.nativeError) {
-            errorMessage = err.nativeError.message
-          } else {
-            errorMessage = err.toString()
+      if (listenForErrorsOn) {
+        closureEditor.editSessions[closureEditor.currentSession].clearAnnotations()
+        closureEditor.Sk.configure({
+          __future__: closureEditor.Sk.python3
+        })
+        try {
+          closureEditor.Sk.compile(
+            closureEditor.getCode(closureEditor.currentSession),
+            closureEditor.currentFilename,
+            'exec',
+            true
+          )
+        } catch (err) {
+          if (err.traceback) {
+            const lineno = err.traceback[0].lineno
+            const colno = err.traceback[0].colno
+            let errorMessage
+            if (err.message) {
+              errorMessage = err.message
+            } else if (err.nativeError) {
+              errorMessage = err.nativeError.message
+            } else {
+              errorMessage = err.toString()
+            }
+            closureEditor.editSessions[closureEditor.currentSession].setAnnotations([{
+              row: lineno - 1,
+              column: colno,
+              text: errorMessage,
+              type: 'error'
+            }])
           }
-          closureEditor.editSessions[closureEditor.currentSession].setAnnotations([{
-            row: lineno - 1,
-            column: colno,
-            text: errorMessage,
-            type: 'error'
-          }])
+        }
+      }
+      if (autosaveOn) {
+        const currentTime = Date.now()
+        if (currentTime - closureEditor.lastSaved > closureEditor.saveEveryXMillis) {
+          closureEditor.saveCurrentFile()
+          closureEditor.lastSaved = currentTime
         }
       }
     })
@@ -147,7 +161,15 @@ export class Editor {
     }
     fetch('/sketch/' + this.sketchId + '/save', options)
       .then(response => response.json())
-      .catch(error => { console.error(error) })
+      .then(data => {
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+      })
+      .catch(error => {
+        notify('We could not save your sketch! Please refresh the page and try again.', 'error')
+        console.error(error)
+      })
   }
 
   loadCode () {
