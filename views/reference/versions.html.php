@@ -30,6 +30,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
             <li>syntax error detection - the editor now checks for syntax errors in real time and displays a cross in the gutter of the editor if an error is detected. By holding your mouse over the cross you can see the error message.</li>
             <li>improved error messages - if your program contains a run-time error, this will be displayed in the console and the offending line of code will be displayed in the editor.</li>
             <li>image and sound preview - you can now preview images and sounds you have uploaded by clicking on the relevant tab.</li>
+            <li>saving - The start and stop button will still save files and should be used. However, if a change is made and it has been more than 10 seconds since the last time the file was changed, it will be saved again. This means that after a change there will be at most 10 seconds of unsaved work. If the editor cannot save your file for any reason, an error notification will be displayed for 3 seconds.</li>
           </ul>
         </div>
         <div class="well">

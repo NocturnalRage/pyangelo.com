@@ -14,7 +14,9 @@ const fileTabs = null
 
 const aceEditor = new Editor(sketchId, crsfToken, Sk, fileTabs, isReadOnly)
 Sk.PyAngelo.aceEditor = aceEditor
-aceEditor.monitorErrorsOnChange()
+const listenForErrors = true
+const autosave = false
+aceEditor.onChange(listenForErrors, autosave)
 aceEditor.listenForBreakPoints()
 
 const startStopButton = document.getElementById('startStop')

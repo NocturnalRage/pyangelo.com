@@ -59,7 +59,7 @@ class SketchSaveController extends Controller {
       return $this->response;
     }
 
-    if (empty($this->request->post['program'])) {
+    if (!isset($this->request->post['program'])) {
       $this->response->setVars(array(
         'status' => 'error',
         'message' => 'You must have code to save.'
