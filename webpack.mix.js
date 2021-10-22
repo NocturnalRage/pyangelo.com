@@ -10,7 +10,8 @@ mix.webpackConfig({
 
 mix
   .sass('resources/assets/sass/app.scss', './public/css/pyangelo.css', {sassOptions: { quietDeps: true }})
-  .js('resources/assets/js/app.js', './public/js/app.js')
+  .js('resources/assets/js/app.js', './public/js/')
+  .js('resources/assets/js/backToTop.js', './public/js/')
   .js('resources/assets/js/collection.js', './public/js/')
   .js('resources/assets/js/playground.js', './public/js/')
   .js('resources/assets/js/quiz.js', './public/js/')
