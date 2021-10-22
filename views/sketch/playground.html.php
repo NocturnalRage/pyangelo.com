@@ -38,6 +38,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
       include 'sketch-split-editor-console.html.php';
       include 'sketch-debug-table.html.php';
       include 'sketch-output.html.php';
+      include 'sketch-turtle.html.php';
       include 'sketch-buttons.html.php';
     ?>
     <script src="<?= mix('js/playground.js'); ?>"></script>
