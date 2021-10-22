@@ -10,6 +10,7 @@ include 'sketch-file-tabs.html.php';
 include 'sketch-split-editor-console.html.php';
 include 'sketch-debug-table.html.php';
 include 'sketch-output.html.php';
+include 'sketch-turtle.html.php';
 include 'sketch-buttons.html.php';
 include 'sketch-upload.html.php';
 ?>

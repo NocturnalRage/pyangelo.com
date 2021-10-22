@@ -86,6 +86,7 @@ export function stopSkulpt () {
 }
 
 export function runSkulpt (code, debugging, stopFunction) {
+  (Sk.TurtleGraphics || (Sk.TurtleGraphics = {})).target = 'turtleDiv'
   Sk.PyAngelo.aceEditor.setReadOnly(true)
   _stopExecution = false
   if (debugging) {
