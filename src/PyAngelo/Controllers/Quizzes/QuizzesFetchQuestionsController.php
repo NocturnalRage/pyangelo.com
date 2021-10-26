@@ -27,7 +27,6 @@ class QuizzesFetchQuestionsController extends Controller {
       $this->response->setVars(array(
         'status' => json_encode('error'),
         'options' => json_encode([]),
-        'tutorial_slug' => json_encode('NA'),
         'message' => json_encode('You must be logged in to fetch your quiz options.')
       ));
       return $this->response;
@@ -37,7 +36,6 @@ class QuizzesFetchQuestionsController extends Controller {
       $this->response->setVars(array(
         'status' => json_encode('error'),
         'options' => json_encode([]),
-        'tutorial_slug' => json_encode('NA'),
         'message' => json_encode('You must select a quiz to fetch options for.')
       ));
       return $this->response;
@@ -47,7 +45,6 @@ class QuizzesFetchQuestionsController extends Controller {
       $this->response->setVars(array(
         'status' => json_encode('error'),
         'options' => json_encode([]),
-        'tutorial_slug' => json_encode('NA'),
         'message' => json_encode('You must select a valid quiz to fetch options for.')
       ));
       return $this->response;
@@ -57,7 +54,6 @@ class QuizzesFetchQuestionsController extends Controller {
       $this->response->setVars(array(
         'status' => json_encode('error'),
         'options' => json_encode([]),
-        'tutorial_slug' => json_encode('NA'),
         'message' => json_encode('You must select your own quiz.')
       ));
       return $this->response;
@@ -65,7 +61,6 @@ class QuizzesFetchQuestionsController extends Controller {
 
     $answers = [];
     $quizOption = [];
-    $tutorialSlug = $options[0]["slug"];
     $currentQuestion = $options[0]["question"];
     $currentSkillQuestionId = $options[0]["skill_question_id"];
     $currentSkillQuestionTypeId = $options[0]["skill_question_type_id"];
@@ -110,7 +105,6 @@ class QuizzesFetchQuestionsController extends Controller {
     $this->response->setVars(array(
         'status' => json_encode('success'),
         'options' => json_encode($quizOptions),
-        'tutorial_slug' => json_encode($tutorialSlug),
         'message' => json_encode('Questions retrieved')
       ));
     return $this->response;
