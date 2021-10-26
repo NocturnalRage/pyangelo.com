@@ -8,7 +8,9 @@ const hintContainer = document.getElementById('hint')
 const feedbackContainer = document.getElementById('feedback')
 const progressContainer = document.getElementById('progress')
 const actionButton = document.getElementById('action')
+const crsfToken = quizContainer.getAttribute('data-crsf-token')
 const quizId = quizContainer.getAttribute('data-quiz-id')
+const tutorialSlug = quizContainer.getAttribute('data-tutorial-slug')
 
 const CHECK_ANSWER = 1
 const NEXT_QUESTION = 2
@@ -22,7 +24,6 @@ let totalQuestions = 0
 let incorrectAttempts = 0
 let hintUsed = false
 let correctUnaidedTotal = 0
-let tutorialSlug
 const quizStartTime = new Date().toISOString().slice(0, 19).replace('T', ' ')
 let quizEndTime
 let questionStartTime
@@ -74,7 +75,6 @@ function fetchQuestions () {
         throw new Error(data.message)
       }
       quizOptions = data.options
-      tutorialSlug = data.tutorial_slug
       totalQuestions = quizOptions.length
       askQuestion(quizOptions[questionNo])
     })
@@ -291,7 +291,6 @@ function processClick () {
 }
 
 function recordResponse (skillQuestionId, choice, correctOrNot, questionStartTime, questionEndTime) {
-  const crsfToken = quizContainer.getAttribute('data-crsf-token')
   const data = 'quizId=' + encodeURIComponent(quizId) + '&skillQuestionId=' + encodeURIComponent(skillQuestionId) + '&skillQuestionOptionId=' + encodeURIComponent(choice) + '&correctUnaided=' + encodeURIComponent(correctOrNot) + '&questionStartTime=' + encodeURIComponent(questionStartTime) + '&questionEndTime=' + encodeURIComponent(questionEndTime) + '&crsfToken=' + encodeURIComponent(crsfToken)
   const options = {
     method: 'POST',
@@ -306,7 +305,6 @@ function recordResponse (skillQuestionId, choice, correctOrNot, questionStartTim
 }
 
 function recordQuizCompletion (quizStartTime, quizEndTime) {
-  const crsfToken = quizContainer.getAttribute('data-crsf-token')
   const data = 'quizId=' + encodeURIComponent(quizId) + '&quizStartTime=' + encodeURIComponent(quizStartTime) + '&quizEndTime=' + encodeURIComponent(quizEndTime) + '&crsfToken=' + encodeURIComponent(crsfToken)
   const options = {
     method: 'POST',

@@ -24,10 +24,10 @@ class MysqlQuizRepository implements QuizRepository {
     $sql = "SELECT s.*,
                    ifnull(ml.mastery_level_desc, 'Not started') as mastery_level_desc
 	          FROM   skill s
-            JOIN   tutorial t ON s.tutorial_id = t.tutorial_id
+            JOIN   tutorial_skill ts ON s.skill_id = ts.skill_id
             LEFT JOIN skill_mastery sm ON sm.skill_id = s.skill_id AND sm.person_id = ?
             LEFT JOIN mastery_level ml on ml.mastery_level_id = sm.mastery_level_id
-            WHERE  t.tutorial_id = ?
+            WHERE  ts.tutorial_id = ?
             ORDER BY s.skill_id";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('ii', $personId, $tutorialId);
@@ -70,8 +70,8 @@ class MysqlQuizRepository implements QuizRepository {
                    sq.skill_id
             FROM   skill_question sq
             JOIN   skill s on s.skill_id = sq.skill_id
-            JOIN   tutorial t on t.tutorial_id = s.tutorial_id
-            WHERE  t.tutorial_id = ?";
+            JOIN   tutorial_skill ts on ts.skill_id = s.skill_id
+            WHERE  ts.tutorial_id = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('i', $tutorialId);
     $stmt->execute();
@@ -79,7 +79,6 @@ class MysqlQuizRepository implements QuizRepository {
     $stmt->close();
     return $result->fetch_all(MYSQLI_ASSOC);
   }
-
 
   public function createQuiz($quizTypeId, $keyId, $personId) {
     if ($quizTypeId == 1) {
@@ -208,7 +207,6 @@ class MysqlQuizRepository implements QuizRepository {
 
   public function getQuizOptions($quizId) {
     $sql = "SELECT q.quiz_id,
-                   t.slug,
                    q.person_id,
                    sq.skill_question_id,
                    sq.skill_question_type_id,
@@ -222,7 +220,6 @@ class MysqlQuizRepository implements QuizRepository {
             JOIN   skill_question sq on sq.skill_question_id = qq.skill_question_id
             JOIN   skill_question_option sqo on sqo.skill_question_id = sq.skill_question_id
             JOIN   skill s on s.skill_id = sq.skill_id
-            JOIN   tutorial t on t.tutorial_id = s.tutorial_id
             WHERE  q.quiz_id = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('i', $quizId);

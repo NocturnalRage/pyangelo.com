@@ -5,7 +5,11 @@
   <div class="container">
     <div class="row">
       <div id="instructions" class="col-md-12 text-center">
-        <h1>Ready for the <?= $this->esc($tutorial['title']); ?> Quiz?</h1>
+        <?php if (isset($skill)) : ?>
+          <h1>Ready for the <?= $this->esc($skill['skill_name']); ?> Quiz?</h1>
+        <?php else : ?>
+          <h1>Ready for the <?= $this->esc($tutorial['title']); ?> Quiz?</h1>
+        <?php endif ?>
         <p>Show us what you can do!</p>
         <h2><?= $quizInfo['question_count']; ?> questions</h2>
         <button id="startBtn" class="btn btn-success">Let's go</button>
@@ -13,7 +17,7 @@
     </div><!-- row -->
 
     <div class="row">
-      <div id="quiz" data-quiz-id="<?= $this->esc($quizInfo['quiz_id']); ?>" data-crsf-token="<?= $personInfo['crsfToken'] ?>" class="col-md-12">
+      <div id="quiz" data-quiz-id="<?= $this->esc($quizInfo['quiz_id']); ?>" data-crsf-token="<?= $personInfo['crsfToken'] ?>" data-tutorial-slug="<?= $tutorial['slug'] ?>" class="col-md-12">
       </div>
     </div><!-- row -->
 
