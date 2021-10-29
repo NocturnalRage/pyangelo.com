@@ -151,7 +151,9 @@
             <h3><i class="fa fa-calculator fa-fw"></i> Maths</h3>
           </a>
           <div class="list-group">
+            <a href="#constrain" class="list-group-item">constrain</a>
             <a href="#dist" class="list-group-item">dist</a>
+            <a href="#mapToRange" class="list-group-item">mapToRange</a>
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
