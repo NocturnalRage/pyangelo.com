@@ -1,4 +1,46 @@
 <h2 id="maths">Maths</h2>
+<h3 id="constrain">constrain()</h3>
+<h4>Examples</h4>
+<pre>
+setCanvasSize(100, 100)
+
+forever:
+    background(200)
+
+    leftWall = 25
+    rightWall = 75
+
+    # xm is just the mouseX, while
+    # xc is the mouseX, but constrained
+    # between the leftWall and rightWall!
+    xm = mouseX
+    xc = constrain(mouseX, leftWall, rightWall)
+
+    # Draw the walls.
+    stroke(150, 150, 150)
+    line(leftWall, 0, leftWall, height)
+    line(rightWall, 0, rightWall, height)
+
+    # Draw xm and xc as circles.
+    noStroke()
+    fill(150, 150, 150)
+    ellipse(xm, 33, 9, 9) # Not Constrained
+    fill(0, 0, 0)
+    ellipse(xc, 66, 9, 9) # Constrained
+</pre>
+<h4>Description</h4>
+<p>
+Constrains a value between a minimum and maximum value.
+</p>
+<h4>Syntax</h4>
+<p>constrain(n, low, high)</p>
+<h4>Parameters</h4>
+<p>n - The number to constrain</p>
+<p>low - The minimum limit</p>
+<p>high - The maximum limit</p>
+<h4>Returns</h4>
+The constrained number
+<hr />
 <h3 id="dist">dist()</h3>
 <h4>Examples</h4>
 <pre>
@@ -41,4 +83,32 @@ Calculates the distance between two points.
 <p>y2 - The y coordinate of the second point.</p>
 <h4>Returns</h4>
 The distance between two points as a floating point number.
+<hr />
+<h3 id="mapToRange">mapToRange()</h3>
+<h4>Examples</h4>
+<pre>
+from math import *
+setCanvasSize(500, 400)
+
+while True:
+    r = mapToRange(mouseX, 0, width, 0, 255)
+    fill(int(r), 0, 0)
+    circle(width/2, height/2, 50)
+    sleep(0.005)
+</pre>
+<h4>Description</h4>
+<p>
+Re-maps a number from one range to another.
+</p>
+<h4>Syntax</h4>
+<p>mapToRange(value, start1, stop1, start2, stop2, withinBounds)</p>
+<h4>Parameters</h4>
+<p>value - The incoming value to be converted.</p>
+<p>start1 - The lower bound of the current range.</p>
+<p>stop1 - The upper bound of the current range.</p>
+<p>start2 - The lower bound of the target range.</p>
+<p>stop2 - The upper bound of the target range.</p>
+<p>withinBounds - Should the value be constrained to the target range.</p>
+<h4>Returns</h4>
+The converted number.
 <hr />
