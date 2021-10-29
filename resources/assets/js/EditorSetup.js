@@ -206,7 +206,7 @@ export class Editor {
           if (closureEditor.currentFilename === file.filename) {
             closureEditor.currentSession = 0
             closureEditor.setSession(closureEditor.currentSession)
-            document.querySelector(".editorTab[data-filename='main.py']").classList.add('current')
+            document.querySelector(".editorTab[data-filename='main.py']").click()
           }
           closureEditor.deleteFile(file.filename)
           delete closureEditor.Sk.builtinFiles.files['./' + file.filename]
@@ -260,6 +260,7 @@ export class Editor {
         document.getElementById('editorImagePreview').innerHTML = '<img src="' + ev.target.getAttribute('data-filename') + '" />'
         document.querySelector('.editorTab.current').classList.remove('current')
         ev.target.classList.add('current')
+        closureEditor.currentFilename = ev.target.getAttribute('data-filename')
       }
     } else if (file.filename.toLowerCase().endsWith('.mp3') ||
              file.filename.toLowerCase().endsWith('.wav')) {
@@ -273,6 +274,7 @@ export class Editor {
         document.getElementById('editorAudioPreview').innerHTML = '<figure><figcaption>' + ev.target.getAttribute('data-filename') + '</figcaption><audio controls preload="none" src="' + ev.target.getAttribute('data-filename') + '">Your browser does not support the <code>audio</code> element.</audio></figure>'
         document.querySelector('.editorTab.current').classList.remove('current')
         ev.target.classList.add('current')
+        closureEditor.currentFilename = ev.target.getAttribute('data-filename')
       }
     }
     this.fileTabs.appendChild(span)
