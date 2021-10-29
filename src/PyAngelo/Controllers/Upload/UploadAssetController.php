@@ -17,6 +17,7 @@ class UploadAssetController extends Controller {
   ) {
     parent::__construct($request, $response, $auth);
     $this->sketchRepository = $sketchRepository;
+    $this->maxSize = 8388608;
   }
 
   public function exec() {
@@ -59,9 +60,17 @@ class UploadAssetController extends Controller {
       $status = 'error';
       $message = 'No file was received!';
     }
-    else if (! $this->isAssetValid($this->request->files['file'])) {
+    else if ($this->isAssetSizeZero($this->request->files['file'])) {
       $status = 'error';
-      $message = 'File of type ' . $this->request->files['file']['type'] . ' was not valid!';
+      $message = 'File of type ' . $this->request->files['file']['type'] . ' was of size zero!';
+    }
+    else if ($this->isAssetTooLarge($this->request->files['file'])) {
+      $status = 'error';
+      $message = 'File too large. The file must be at most ' . $this->maxSize . ' bytes.';
+    }
+    else if (! $this->isAssetValidType($this->request->files['file'])) {
+      $status = 'error';
+      $message = 'Invalid file type (' . $this->request->files['file']['type'] . ').  File must be jpg, png, gif, wav, or mp3!';
     }
     if ($status == 'error') {
       $this->response->setVars(array(
@@ -112,14 +121,22 @@ class UploadAssetController extends Controller {
     return $this->response;
   }
 
-  private function isAssetValid($assetInfo) {
+  private function isAssetSizeZero($assetInfo) {
     if ($assetInfo["size"] == 0) {
-      return false;
+      return true;
     }
-    if ($assetInfo['size'] > 8388608) {
-      return false;
+    return false;
+  }
+
+  private function isAssetTooLarge($assetInfo) {
+    if ($assetInfo['size'] > $this->maxSize) {
+      return true;
     }
-    elseif ($assetInfo['type'] != 'image/jpeg' && $assetInfo['type'] != 'image/png' && $assetInfo['type'] != 'image/gif' && $assetInfo['type'] != 'audio/mpeg' && $assetInfo['type'] != 'audio/wav') {
+    return false;
+  }
+
+  private function isAssetValidType($assetInfo) {
+    if ($assetInfo['type'] != 'image/jpeg' && $assetInfo['type'] != 'image/png' && $assetInfo['type'] != 'image/gif' && $assetInfo['type'] != 'audio/mpeg' && $assetInfo['type'] != 'audio/wav') {
       return false;
     }
     return true;

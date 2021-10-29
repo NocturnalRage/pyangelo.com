@@ -109,7 +109,7 @@ class UploadAssetControllerTest extends TestCase {
     $this->assertSame('No file was received!', $responseVars['message']);
   }
 
-  public function testUploadAssetControllerAssetInvalid() {
+  public function testUploadAssetControllerAssetTooLarge() {
     $sketchId = 101;
     $personId = 11;
     $sketch = [
@@ -134,7 +134,63 @@ class UploadAssetControllerTest extends TestCase {
     );
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $this->assertSame('error', $responseVars['status']);
-    $this->assertSame('File of type image/jpeg was not valid!', $responseVars['message']);
+    $this->assertSame('File too large. The file must be at most 8388608 bytes.', $responseVars['message']);
+  }
+
+  public function testUploadAssetControllerAssetSizeZero() {
+    $sketchId = 101;
+    $personId = 11;
+    $sketch = [
+      'sketch_id' => $sketchId,
+      'person_id' => $personId
+    ];
+    $fileAsset = [
+      'size' => 0,
+      'type' => 'image/jpeg'
+    ];
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
+    $this->sketchRepository->shouldReceive('getSketchById')->once()->with($sketchId)->andReturn($sketch);
+    $this->request->post['sketchId'] = $sketchId;
+    $this->request->files['file'] = $fileAsset;
+
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedHeaders = array(
+      array('header', 'Content-Type: application/json'),
+    );
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+    $this->assertSame('error', $responseVars['status']);
+    $this->assertSame('File of type image/jpeg was of size zero!', $responseVars['message']);
+  }
+
+  public function testUploadAssetControllerAssetInvalidType() {
+    $sketchId = 101;
+    $personId = 11;
+    $sketch = [
+      'sketch_id' => $sketchId,
+      'person_id' => $personId
+    ];
+    $fileAsset = [
+      'size' => 8388608,
+      'type' => 'image/mp4'
+    ];
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
+    $this->sketchRepository->shouldReceive('getSketchById')->once()->with($sketchId)->andReturn($sketch);
+    $this->request->post['sketchId'] = $sketchId;
+    $this->request->files['file'] = $fileAsset;
+
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedHeaders = array(
+      array('header', 'Content-Type: application/json'),
+    );
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+    $this->assertSame('error', $responseVars['status']);
+    $this->assertSame('Invalid file type (image/mp4).  File must be jpg, png, gif, wav, or mp3!', $responseVars['message']);
   }
 
   public function testUploadAssetControllerCouldNotMove() {
