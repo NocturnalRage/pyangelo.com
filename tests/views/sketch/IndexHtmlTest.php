@@ -15,6 +15,7 @@ class IndexHtmlTest extends BasicViewHtmlTest {
         'sketch_id' => 1,
         'title' => 'funny-name',
         'updated_at' => '2021-07-13 18:51:30',
+        'created_at' => '2021-07-10 12:00:00',
         'collection_id' => NULL
       ]
     ];

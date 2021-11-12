@@ -59,15 +59,19 @@ class CollectionsShowControllerTest extends TestCase {
       'collection_name' => 'My Great Collection'
     ];
     $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
+    $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
     $this->sketchRepository->shouldReceive('getCollectionById')->once()->with($collectionId)->andReturn($collection);
+    $this->sketchRepository->shouldReceive('getCollectionSketches')->once()->with($collectionId)->andReturn();
     $this->request->get['collectionId'] = $collectionId;
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
-    $expectedHeaders = array(array('header', 'Location: /'));
-    $expectedFlashMessage = "You can only view your own collections!";
-    $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $expectedViewName = 'sketch/collection-not-owner.html.php';
+    $expectedPageTitle = $collection['collection_name'] . ' | PyAngelo';
+    $expectedMetaDescription = "View the sketches that are part of the " . $collection['collection_name'] . " collection.";
+    $this->assertSame($expectedViewName, $response->getView());
+    $this->assertSame($expectedPageTitle, $responseVars['pageTitle']);
+    $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
   }
 
   public function testWhenOwnerOfCollection() {

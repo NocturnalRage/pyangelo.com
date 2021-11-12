@@ -1,10 +1,20 @@
   <div class="col-md-9">
     <div class="table-responsive">
       <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Sketch Name</th>
+            <th>Collection</th>
+            <th>Last Saved</th>
+            <th>Created</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
         <tbody>
           <?php foreach($sketches as $sketch) : ?>
           <?php
             $lastUpdatedDate = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $sketch['updated_at'])->diffForHumans();
+            $createdDate = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $sketch['created_at'])->diffForHumans();
           ?>
 
             <tr>
@@ -20,7 +30,10 @@
                  </select>
               </td>
               <td>
-                 <p class="sketchCell">Last saved: <em><?= $this->esc($lastUpdatedDate) ?></em></p>
+                 <p class="sketchCell"><em><?= $this->esc($lastUpdatedDate) ?></em></p>
+              </td>
+              <td>
+                 <p class="sketchCell"><em><?= $this->esc($createdDate) ?></em></p>
               </td>
               <td class="text-right">
                   <form action="/sketch/<?= $this->esc($sketch['sketch_id']); ?>/delete" method="post">

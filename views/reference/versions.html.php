@@ -9,6 +9,16 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
       ?>
       <div class="col-md-9">
         <h1>PyAngelo Versions</h1>
+        <h2 id="version2.0">Version 2.0</h2>
+        <p>The defaut value for the yAxisMode parameter for the setCanvasSize() function was changed from JAVASCRIPT to CARTESIAN. The effect of this is that the bottom left corner of the canvas will by default be located at (0, 0).</p>
+        <div class="well">
+          <h3 id="breaking2.0">2.0 Breaking Changes</h3>
+          <h4>CARTESIAN is now the default value for the yAxisMode parameter of the setCanvasSize() function</h4>
+          <p>If you had previously called the setCanvasSize() function without specifying the yAxisMode parameter you will need to update your program for it to work as previously programmed.</p>
+          <pre>setCanvasSize(640, 360)</pre>
+          <p>To maintain the old functionality you need to update the code to:</p>
+          <pre>setCanvasSize(640, 360, JAVASCRIPT)</pre>
+        </div>
         <h2 id="version1.1">Version 1.1</h2>
         <h3 id="major1.1">1.1 Major Changes</h3>
         <div class="well">
