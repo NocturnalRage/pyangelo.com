@@ -6,14 +6,14 @@ setCanvasSize(640, 360)
 </pre>
 <h4>Description</h4>
 <p>
-Sets the size of the canvas that all drawings are written to. The first parameter specifies the width in pixels and the second the height. The third parameter is optional and specifies the direction of the y-axis. The constant CARTESIAN can be used to specify a y-axis that is used in maths and a constant of JAVASCRIPT can be used to specify the regular javascript y-axis which moves down the screen.
+Sets the size of the canvas that all drawings are written to. The first parameter specifies the width in pixels and the second the height. The third parameter is optional and specifies the direction of the y-axis. The constant CARTESIAN can be used to specify a y-axis that is used in maths and a constant of JAVASCRIPT can be used to specify the regular javascript y-axis which moves down the screen. If no value is provided as the third parameter, a default of CARTESIAN is used.
 </p>
 <h4>Syntax</h4>
 <p>setCanvasSize(w, h, yAxisMode)</p>
 <h4>Parameters</h4>
 <p>w - The width of the canvas in pixels.</p>
 <p>h - The height of the canvas in pixels.</p>
-<p>yAxisMode - Used to set the direction of the y-axis. Use the constants CARTESIAN or JAVASCRIPT.</p>
+<p>yAxisMode - Optionally used to set the direction of the y-axis. Use the constants CARTESIAN or JAVASCRIPT. CARTESIAN is used as the default value if this parameter is not supplied.</p>
 <hr />
 <h3 id="noCanvas">noCanvas()</h3>
 <h4>Examples</h4>

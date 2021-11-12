@@ -8,7 +8,7 @@ rect(10, 20, 50, 25)
 </pre>
 <h4>Description</h4>
 <p>
-Draws a rectangle on the canvas. By default, the first two parameters set the location of the upper-left corner, the third sets the width, and the fourth sets the height. The way these parameters are interpreted, may be changed with the <a href="#rectMode">rectMode()</a> function.
+Draws a rectangle on the canvas. By default, the first two parameters set the location of the bottom left corner, the third sets the width, and the fourth sets the height. The way these parameters are interpreted, may be changed with the <a href="#rectMode">rectMode()</a> function. If the setCanvasSize() function is called and sets the yAxisMode to JAVASCRIPT, then the first two parameters specify the top left corner of the rectangle.
 </p>
 <h4>Syntax</h4>
 <p>rect(x, y, w, h)</p>
@@ -200,8 +200,8 @@ rect(30, 30, 60, 60)
 <h4>Description</h4>
 <p>
 Changes the way the rect() function uses the paramters passed to it.</p>
-<p>The default mode is CORNER, which indicates that the first two parameters are the coordinates of the top left corner, and the third and fourth parameters specify the width and the height.</p>
-<p>The mode CORNERS indicates the first two parameters are the coordinates of the top left corner, and the third and fourth specify the bottom right coordinates.</p>
+<p>The default mode is CORNER, which indicates that the first two parameters are the coordinates of the bottom left corner, and the third and fourth parameters specify the width and the height. If the setCanvasSize() function is called specifying to set the yAxisMode to JAVASCRIPT, then the first two parameters represent the top left corner.</p>
+<p>The mode CORNERS indicates the first two parameters are the coordinates of the bottom left corner, and the third and fourth specify the top right coordinate.</p>
 <p>The mode CENTER indicates the first two parameters are the coordinates of the center of the rectangle, and the third and fourth specify the width and height.</p>
 <h4>Syntax</h4>
 <p>rectMode(mode)</p>
@@ -225,7 +225,7 @@ circle(100, 100, 50)
 <p>
 Changes the way the circle(), ellipse(), and arc() functions use the paramters passed to them.</p>
 <p>The default mode is CENTER, which indicates that the first two parameters are the coordinates of the center of the shape. The remaining parameters refer to the radius for the circle() function, and the X radius and Y radius for the ellipse() and arc() functions.</p>
-<p>The mode CORNER indicates the first two parameters are the coordinates of the top left corner of the shape. The meaning of any extra parameters remain unchanged.</p>
+<p>The mode CORNER indicates the first two parameters are the coordinates of the bottom left corner of the shape. The meaning of any extra parameters remain unchanged.</p>
 <h4>Syntax</h4>
 <p>circleMode(mode)</p>
 <h4>Parameters</h4>
