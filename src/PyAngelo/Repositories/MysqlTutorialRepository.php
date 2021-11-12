@@ -886,4 +886,12 @@ class MysqlTutorialRepository implements TutorialRepository {
     $stmt->close();
     return $result->fetch_all(MYSQLI_ASSOC);
   }
+
+  public function getAllSkills() {
+    $sql = "SELECT s.*
+            FROM   skill s
+            ORDER BY s.skill_name";
+    $result = $this->dbh->query($sql);
+    return $result->fetch_all(MYSQLI_ASSOC);
+  }
 }

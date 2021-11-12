@@ -6,6 +6,8 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
     <?php if ($personInfo['isAdmin']) : ?>
       <a href="/tutorials/new" class="btn btn-warning">
         <i class="fa fa-plus"></i> New Tutorial</a>
+      <a href="/skills" class="btn btn-info">
+        <i class="fa fa-university"></i> Skills</a>
       <hr />
     <?php endif; ?>
     <?php
