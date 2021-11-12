@@ -981,6 +981,15 @@ $di->set('LatestCommentsController', function () use ($di) {
   );
 });
 
+$di->set('SkillsIndexController', function () use ($di) {
+  return new PyAngelo\Controllers\Skills\SkillsIndexController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('tutorialRepository')
+  );
+});
+
 $di->set('QuizzesCreateController', function () use ($di) {
   return new PyAngelo\Controllers\Quizzes\QuizzesCreateController (
     $di->get('request'),

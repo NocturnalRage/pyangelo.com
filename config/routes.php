@@ -64,6 +64,7 @@ return [
   [ 'POST','/tutorials/[:slug]/quizzes/create', 'QuizzesCreateController', 'quizzesCreate' ],
   [ 'GET','/tutorials/[:slug]/[:skill_slug]/quizzes', 'QuizzesSkillShowController', 'quizzesSkillShow' ],
   [ 'POST','/tutorials/[:slug]/[:skill_slug]/quizzes/create', 'QuizzesSkillCreateController', 'quizzesSkillCreate' ],
+  [ 'GET','/skills', 'SkillsIndexController', 'SkillsIndex' ],
   [ 'POST','/quizzes/questions/record', 'QuizzesRecordResponseController', 'quizzesRecordResponse' ],
   [ 'POST','/quizzes/questions/record-completion', 'QuizzesRecordCompletionController', 'quizzesRecordComplettion' ],
   [ 'GET','/quizzes/questions/[:quizId]', 'QuizzesFetchQuestionsController', 'quizzesFetchQuestions' ],

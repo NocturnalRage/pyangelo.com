@@ -143,4 +143,6 @@ interface TutorialRepository {
   public function shouldUserReceiveAlert($lessonId, $personId);
 
   public function getFollowers($lessonId);
+
+  public function getAllSkills();
 }
