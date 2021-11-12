@@ -28,14 +28,25 @@ class CollectionsShowController extends Controller {
     )))
       return $this->redirectToPageNotFound();
 
-    if ($collection['person_id'] != $this->auth->personId()) {
-      return $this->redirectToHomePageWithWarning();
-    }
-
-    $collections = $this->sketchRepository->getCollections($this->auth->personId());
     $sketches = $this->sketchRepository->getCollectionSketches(
       $this->request->get['collectionId']
     );
+
+
+    if ($collection['person_id'] != $this->auth->personId()) {
+      $this->response->setView('sketch/collection-not-owner.html.php');
+      $this->response->setVars(array(
+        'pageTitle' => $collection['collection_name'] . ' | PyAngelo',
+        'metaDescription' => 'View the sketches that are part of the ' . $collection['collection_name'] . ' collection.',
+        'personInfo' => $this->auth->getPersonDetailsForViews(),
+        'sketches' => $sketches,
+        'activeLink' => 'My Sketches',
+        'collection' => $collection,
+      ));
+      return $this->response;
+    }
+
+    $collections = $this->sketchRepository->getCollections($this->auth->personId());
 
     $this->response->setView('sketch/index.html.php');
     $this->response->setVars(array(

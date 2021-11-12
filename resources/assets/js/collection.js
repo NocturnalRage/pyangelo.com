@@ -15,9 +15,11 @@ Array.from(collectionSelects).forEach(function (collectionSelect) {
 showNewCollectionLink.addEventListener('click', showNewCollectionForm)
 newCollectionSubmitButton.addEventListener('click', submitNewCollection)
 newCollectionCancelButton.addEventListener('click', cancelNewCollection)
-showRenameLink.addEventListener('click', showRename)
-renameSubmitButton.addEventListener('click', submitRename)
-renameCancelButton.addEventListener('click', cancelRename)
+if (showRenameLink) {
+  showRenameLink.addEventListener('click', showRename)
+  renameSubmitButton.addEventListener('click', submitRename)
+  renameCancelButton.addEventListener('click', cancelRename)
+}
 
 function setCollectionForSketch (event) {
   event.preventDefault()
