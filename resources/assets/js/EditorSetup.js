@@ -147,29 +147,31 @@ export class Editor {
   }
 
   saveCode (filename) {
-    const code = this.getCode(this.currentSession)
-    if (filename !== 'main.py') {
-      this.Sk.builtinFiles.files['./' + filename] = code
+    if (filename.endsWith('.py')) {
+      const code = this.getCode(this.currentSession)
+      if (filename !== 'main.py') {
+        this.Sk.builtinFiles.files['./' + filename] = code
+      }
+      const data = 'filename=' + encodeURIComponent(filename) + '&program=' + encodeURIComponent(code) + '&crsfToken=' + encodeURIComponent(this.crsfToken)
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: data
+      }
+      fetch('/sketch/' + this.sketchId + '/save', options)
+        .then(response => response.json())
+        .then(data => {
+          if (data.status !== 'success') {
+            throw new Error(data.message)
+          }
+        })
+        .catch(error => {
+          notify('We could not save your sketch! Please refresh the page and try again.', 'error')
+          console.error(error)
+        })
     }
-    const data = 'filename=' + encodeURIComponent(filename) + '&program=' + encodeURIComponent(code) + '&crsfToken=' + encodeURIComponent(this.crsfToken)
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: data
-    }
-    fetch('/sketch/' + this.sketchId + '/save', options)
-      .then(response => response.json())
-      .then(data => {
-        if (data.status !== 'success') {
-          throw new Error(data.message)
-        }
-      })
-      .catch(error => {
-        notify('We could not save your sketch! Please refresh the page and try again.', 'error')
-        console.error(error)
-      })
   }
 
   loadCode () {
