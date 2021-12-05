@@ -74,7 +74,7 @@ export function stopSkulpt () {
   _stopExecution = true
   if (receivingInput) {
     hideDebuggingUI()
-    Sk.PyAngelo.aceEditor.setReadOnly(false)
+    Sk.PyAngelo.aceEditor.restoreReadOnly()
     receivingInput = false
     outf('\n')
     logError('Program Stopped!\n')
@@ -365,7 +365,7 @@ export function runSkulpt (code, debugging, stopFunction) {
   skulptRunPromise.finally(function () {
     hideDebuggingUI()
     stopFunction()
-    Sk.PyAngelo.aceEditor.setReadOnly(false)
+    Sk.PyAngelo.aceEditor.restoreReadOnly()
     Sk.PyAngelo.ctx.restore()
   })
 }
