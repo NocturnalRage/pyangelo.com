@@ -63,7 +63,7 @@ from random import *
 eatSound = loadSound("/samples/sounds/powerup.wav")
 gameOverSound = loadSound("/samples/sounds/collision.wav")
 
-setCanvasSize(600, 600)
+setCanvasSize(600, 600, JAVASCRIPT)
 background(20, 20, 20)
 welcome = TextSprite("Snake!", width/2, 150, fontSize=72)
 welcome.setColour(255, 255, 0)
@@ -181,7 +181,7 @@ const breakout = `from sprite import *
 from random import *
 import time
 
-setCanvasSize(960, 540)
+setCanvasSize(960, 540, JAVASCRIPT)
 
 ORIG_PADDLE_WIDTH = 240
 PADDLE_SPEED = 500
@@ -398,7 +398,7 @@ while True:
 `
 
 const randomCircles = `from random import *
-setCanvasSize(640, 360)
+setCanvasSize(640, 360, JAVASCRIPT)
 background(0, 0, 0)
 #noStroke()
 while True:
