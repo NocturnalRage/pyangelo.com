@@ -341,6 +341,10 @@ export class Editor {
     this.editor.setReadOnly(readOnly)
   }
 
+  restoreReadOnly () {
+    this.editor.setReadOnly(this.isReadOnly)
+  }
+
   resize () {
     this.editor.resize()
   }
