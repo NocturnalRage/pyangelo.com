@@ -17,6 +17,10 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
         <h2 id="images">Images</h2>
         <img src ="/samples/images/PyAngelo.png" alt="PyAngelo" />
         <pre>/samples/images/PyAngelo.png</pre>
+        <img src ="/samples/images/car-blue.png" alt="Blue Car" />
+        <pre>/samples/images/car-blue.png</pre>
+        <img src ="/samples/images/car-pink.png" alt="Pink Car" />
+        <pre>/samples/images/car-pink.png</pre>
         <img src ="/samples/images/blue-alien-idle.png" alt="Idle Blue Alien" />
         <pre>/samples/images/blue-alien-idle.png</pre>
         <hr />
