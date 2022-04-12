@@ -34,7 +34,7 @@ class RegisterConfirmControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $flash = ['message' => 'You are already logged in!', 'type' => 'info'];
-    $this->assertSame($flash, $this->request->session['flash']);
+    $this->assertSame($flash, $_SESSION['flash']);
   }
 
   public function testViewHasBeenSet() {

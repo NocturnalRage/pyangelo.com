@@ -31,9 +31,9 @@ class BlogUpdateController extends Controller {
       $this->request->files['blog_image']
     );
     if (!$success) {
-      $this->request->session['errors'] = $this->blogFormService->getErrors();
+      $_SESSION['errors'] = $this->blogFormService->getErrors();
       $this->flash($this->blogFormService->getFlashMessage(), 'danger');
-      $this->request->session['formVars'] = $this->request->post;
+      $_SESSION['formVars'] = $this->request->post;
       $location = 'Location: /blog/' . urlencode($this->request->post['slug']) . '/edit';
       $this->response->header($location);
       return $this->response;

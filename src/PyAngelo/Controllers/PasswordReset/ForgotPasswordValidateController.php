@@ -45,9 +45,9 @@ class ForgotPasswordValidateController extends Controller {
   }
 
   private function redirectToForgotPasswordWithErrors() {
-    $this->request->session['errors'] = $this->forgotPasswordFormService->getErrors();
+    $_SESSION['errors'] = $this->forgotPasswordFormService->getErrors();
     $this->flash($this->forgotPasswordFormService->getFlashMessage(), 'danger');
-    $this->request->session['formVars'] = $this->request->post;
+    $_SESSION['formVars'] = $this->request->post;
     $this->response->header('Location: /forgot-password');
     return $this->response;
   }

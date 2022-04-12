@@ -29,18 +29,18 @@ class MysqlQuestionRepositoryTest extends TestCase {
 
   public function testQuestionRepository() {
     $this->testData->deleteAllQuestions();
-    $this->testData->deleteAllQuestionCategories();
+    $this->testData->deleteAllQuestionTypes();
     $this->testData->deleteAllPeople();
     $personId = 1;
-    $questionCategoryId = 1;
+    $questionTypeId = 1;
     $this->testData->createPerson($personId, 'coder@hotmail.com');
-    $this->testData->createQuestionCategory($questionCategoryId);
+    $this->testData->createQuestionType($questionTypeId);
     $formData = [
       'person_id' => $personId,
       'question_title' => 'A Test Question',
       'question' => 'What is the meaning of life?',
       'answer' => '42',
-      'question_type_id' => $questionCategoryId,
+      'question_type_id' => $questionTypeId,
       'teacher_id' => $personId,
       'answered_at' => date('Y-m-d H:i:s'),
       'slug' => 'a-test-question'

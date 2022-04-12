@@ -36,7 +36,7 @@ class PasswordValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'You must be logged in to change your password.';
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testRedirectsToPasswordPageWhenInvalidCrsfToken() {
@@ -48,7 +48,7 @@ class PasswordValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', $expectedLocation));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'Please update your password from the PyAngelo website.';
-    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -66,7 +66,7 @@ class PasswordValidateControllerTest extends TestCase {
     $expectedErrors = [
       'loginPassword' => 'You must supply a password in order to change it.'
     ];
-    $this->assertEquals($expectedErrors, $this->request->session['errors']);
+    $this->assertEquals($expectedErrors, $_SESSION['errors']);
   }
 
   /**
@@ -86,7 +86,7 @@ class PasswordValidateControllerTest extends TestCase {
     $expectedErrors = [
       'loginPassword' => 'The password must be between 4 characters and 30 characters long.'
     ];
-    $this->assertEquals($expectedErrors, $this->request->session['errors']);
+    $this->assertEquals($expectedErrors, $_SESSION['errors']);
   }
 
   public function testUpdatePasswordSuccess() {

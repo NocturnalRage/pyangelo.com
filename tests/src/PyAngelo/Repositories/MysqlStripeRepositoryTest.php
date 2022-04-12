@@ -62,6 +62,7 @@ class MysqlStripeRepositoryTest extends TestCase {
     $net = 674;
 
     $this->testData->deleteAllSubscriptions();
+    $this->testData->deleteAllNotifications();
     $this->testData->createPerson($personId, $email);
     $this->testData->createPrice($priceId, $productId);
     $rowsInserted = $this->stripeRepository->insertSubscription(

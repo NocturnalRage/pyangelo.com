@@ -63,7 +63,7 @@ class RegisterValidateController extends Controller {
 
   private function recaptchaInvalid() {
     if (empty($this->request->post['g-recaptcha-response'])) {
-      $this->request->session['formVars'] = $this->request->post;
+      $_SESSION['formVars'] = $this->request->post;
       return true;
     }
     $expectedRecaptchaAction = "registerwithversion3";
@@ -73,7 +73,7 @@ class RegisterValidateController extends Controller {
       $this->request->post['g-recaptcha-response'],
       $this->request->server['REMOTE_ADDR']
     )) {
-      $this->request->session['formVars'] = $this->request->post;
+      $_SESSION['formVars'] = $this->request->post;
       return true;
     }
     return false;
@@ -88,9 +88,9 @@ class RegisterValidateController extends Controller {
   }
 
   private function redirectToRegisterPageAndShowErrors() {
-      $this->request->session['errors'] = $this->registerFormService->getErrors();
+      $_SESSION['errors'] = $this->registerFormService->getErrors();
       $this->flash($this->registerFormService->getFlashMessage(), 'danger');
-      $this->request->session['formVars'] = $this->request->post;
+      $_SESSION['formVars'] = $this->request->post;
       $this->response->header('Location: /register');
       return $this->response;
   }

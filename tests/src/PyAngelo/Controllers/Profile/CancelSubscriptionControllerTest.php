@@ -44,7 +44,7 @@ class CancelSubscriptionControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $expectedFlashMessage = "You must be logged in to cancel your subscription.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -60,7 +60,7 @@ class CancelSubscriptionControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /subscription'));
     $expectedFlashMessage = "Please cancel your subscription from the PyAngelo website.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -85,7 +85,7 @@ class CancelSubscriptionControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /subscription'));
     $expectedFlashMessage = 'Sorry, we could not cancel your subscription. Please try again, or contact us. Here was the error message: You do not have an active subscription.';
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -127,7 +127,7 @@ class CancelSubscriptionControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /subscription'));
     $expectedFlashMessage = 'Your subscription has been canceled.';
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 }
 ?>

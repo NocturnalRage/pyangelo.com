@@ -26,14 +26,14 @@ class ContactValidateController extends Controller {
   public function exec() {
     if (! $this->auth->crsfTokenIsValid()) {
       $this->flash('Please contact us from the PyAngelo website!', 'danger');
-      $this->request->session['formVars'] = $this->request->post;
+      $_SESSION['formVars'] = $this->request->post;
       $this->response->header('Location: /contact');
       return $this->response;
     }
 
     if (empty($this->request->post['g-recaptcha-response'])) {
       $this->flash('Recaptcha could not verify you were a human. Please try again.', 'warning');
-      $this->request->session['formVars'] = $this->request->post;
+      $_SESSION['formVars'] = $this->request->post;
       $this->response->header('Location: /contact');
       return $this->response;
     }
@@ -45,14 +45,14 @@ class ContactValidateController extends Controller {
       $this->request->server['REMOTE_ADDR']
     )) {
       $this->flash('Recaptcha could not verify you were a human. Please try again.', 'warning');
-      $this->request->session['formVars'] = $this->request->post;
+      $_SESSION['formVars'] = $this->request->post;
       $this->response->header('Location: /contact');
       return $this->response;
     }
 
     if (!$this->formDataIsValid($this->request->post)) {
       $this->flash('There were some errors. Please fix these and resubmit your inquiry.', 'danger');
-      $this->request->session['formVars'] = $this->request->post;
+      $_SESSION['formVars'] = $this->request->post;
       $this->response->header('Location: /contact');
       return $this->response;
     }
@@ -65,26 +65,26 @@ class ContactValidateController extends Controller {
   private function formDataIsValid($formData) {
     // Validate Name
     if (empty($formData['name'])) {
-      $this->request->session['errors']['name'] = "Please enter your name.";
+      $_SESSION['errors']['name'] = "Please enter your name.";
     }
     elseif (strlen($formData['name']) > 100) {
-      $this->request->session['errors']['name'] = "Your name can be no longer than 100 characters.";
+      $_SESSION['errors']['name'] = "Your name can be no longer than 100 characters.";
     }
     // Validate Email
     if (empty($formData['email'])) {
-      $this->request->session['errors']['email'] = "You must supply an email address.";
+      $_SESSION['errors']['email'] = "You must supply an email address.";
     }
     elseif (strlen($formData['email']) > 100) {
-      $this->request->session['errors']['email'] = "The email address can be no longer than 100 characters.";
+      $_SESSION['errors']['email'] = "The email address can be no longer than 100 characters.";
     }
     elseif (filter_var($formData['email'], FILTER_VALIDATE_EMAIL) === false) {
-      $this->request->session['errors']['email'] = "The email address is not valid.";
+      $_SESSION['errors']['email'] = "The email address is not valid.";
     }
     // Validate Inquiry
     if (empty($formData['inquiry'])) {
-      $this->request->session['errors']['inquiry'] = "Please enter your inquiry.";
+      $_SESSION['errors']['inquiry'] = "Please enter your inquiry.";
     }
-    return empty($this->request->session["errors"]);
+    return empty($_SESSION["errors"]);
   }
 
   private function sendContactUsEmail($formData) {

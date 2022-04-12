@@ -40,7 +40,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /'));
     $expectedFlashMessage = "You are not authorised!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -55,7 +55,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /admin/users'));
     $expectedFlashMessage = "You must select a person in order to grant them premium member access!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -76,7 +76,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /admin/users'));
     $expectedFlashMessage = "You must select a valid person in order to grant them premium member access!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -101,7 +101,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /admin/users/' . $personId));
     $expectedFlashMessage = "You must select the number of months access you wish to grant.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -127,7 +127,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /admin/users/' . $personId));
     $expectedFlashMessage = "The number of months access must be 0, 1, 12, or 120.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -164,7 +164,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /admin/users/' . $personId));
     $expectedFlashMessage = "Access has been granted.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -207,7 +207,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /admin/users/' . $personId));
     $expectedFlashMessage = "Access has been granted.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -242,7 +242,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /admin/users/' . $personId));
     $expectedFlashMessage = "Access has been revoked.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 }
 ?>

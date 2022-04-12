@@ -35,7 +35,7 @@ class TeacherArchiveControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $expectedFlashMessage = "You must be logged in to archive a class!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherArchiveControllerWhenInvalidCrsfToken() {
@@ -46,7 +46,7 @@ class TeacherArchiveControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "Please archive classes from the PyAngelo website!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherArchiveControllerWhenNoClassId() {
@@ -57,7 +57,7 @@ class TeacherArchiveControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "You must select a class to archive";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherArchiveControllerWhenInvalidClass() {
@@ -71,7 +71,7 @@ class TeacherArchiveControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "You must select a valid class to archive!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherArchiveControllerWhenNotOwner() {
@@ -93,7 +93,7 @@ class TeacherArchiveControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "You must be the owner of the class to archive it.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherArchiveControllerFailToArchive() {
@@ -116,7 +116,7 @@ class TeacherArchiveControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "Sorry, we could not archive the class.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherArchiveControllerSuccess() {
@@ -139,7 +139,7 @@ class TeacherArchiveControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "Your class has been archived.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 }
 ?>

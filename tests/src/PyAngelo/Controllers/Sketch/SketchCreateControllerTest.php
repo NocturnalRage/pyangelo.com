@@ -39,7 +39,7 @@ class SketchCreateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /login'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('You must be logged in to create a new sketch', $this->request->session['flash']['message']);
+    $this->assertSame('You must be logged in to create a new sketch', $_SESSION['flash']['message']);
   }
 
   public function testWhenNoCrsfToken() {
@@ -50,7 +50,7 @@ class SketchCreateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('Please create sketches from the PyAngelo website!', $this->request->session['flash']['message']);
+    $this->assertSame('Please create sketches from the PyAngelo website!', $_SESSION['flash']['message']);
   }
 
   public function testNoSketchIdReturned() {
@@ -67,7 +67,7 @@ class SketchCreateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($flashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($flashMessage, $_SESSION['flash']['message']);
   }
 
   public function testSuccessWithNoCollectionId() {

@@ -36,7 +36,7 @@ class TeacherCreateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $expectedFlashMessage = "You must be logged in to create a class";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherCreateControllerWhenInvalidCrsfToken() {
@@ -48,7 +48,7 @@ class TeacherCreateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "You must create your class from the PyAngelo website.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -64,8 +64,8 @@ class TeacherCreateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher/new'));
     $expectedFlashMessage = "There were some errors. Please fix these below and then click the submit once more.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
-    $this->assertSame("You must supply a name for your class.", $this->request->session['errors']['class_name']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
+    $this->assertSame("You must supply a name for your class.", $_SESSION['errors']['class_name']);
   }
   /**
    * @runInSeparateProcess
@@ -83,8 +83,8 @@ class TeacherCreateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher/new'));
     $expectedFlashMessage = "There were some errors. Please fix these below and then click the submit once more.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
-    $this->assertSame("The class name must be no more than 100 characters.", $this->request->session['errors']['class_name']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
+    $this->assertSame("The class name must be no more than 100 characters.", $_SESSION['errors']['class_name']);
   }
   /**
    * @runInSeparateProcess
@@ -105,7 +105,7 @@ class TeacherCreateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "Something went wrong and we could not create your class.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
   /**
    * @runInSeparateProcess

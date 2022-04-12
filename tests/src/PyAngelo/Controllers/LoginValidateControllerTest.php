@@ -36,7 +36,7 @@ class LoginValidateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('You are already logged in!', $this->request->session['flash']['message']);
+    $this->assertSame('You are already logged in!', $_SESSION['flash']['message']);
   }
 
   public function testRedirectToLoginPageWhenInvalidCrsfToken() {
@@ -48,7 +48,7 @@ class LoginValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', $expectedLocation));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'Please log in from the PyAngelo website.';
-    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -69,7 +69,7 @@ class LoginValidateControllerTest extends TestCase {
       'loginPassword' => 'You must enter a password to log in.'
 
     ];
-    $this->assertEquals($expectedErrors, $this->request->session['errors']);
+    $this->assertEquals($expectedErrors, $_SESSION['errors']);
   }
 
   /**
@@ -92,7 +92,7 @@ class LoginValidateControllerTest extends TestCase {
       'loginPassword' => 'You must enter a password to log in.'
 
     ];
-    $this->assertEquals($expectedErrors, $this->request->session['errors']);
+    $this->assertEquals($expectedErrors, $_SESSION['errors']);
   }
 
   /**
@@ -113,7 +113,7 @@ class LoginValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'Login could not be validated. Please ensure you are a human!';
-    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -144,7 +144,7 @@ class LoginValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'Login could not be checked. Please ensure you are a human!';
-    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -179,7 +179,7 @@ class LoginValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'The email and password do not match. Login failed.';
-    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -214,7 +214,7 @@ class LoginValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlash = "You are now logged in";
-    $this->assertEquals($expectedFlash, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlash, $_SESSION['flash']['message']);
   }
 
   /**
@@ -228,7 +228,7 @@ class LoginValidateControllerTest extends TestCase {
     $this->request->server['REMOTE_ADDR'] = $ipAddress;
     $this->request->server['SERVER_NAME'] = $serverName;
     $redirect = '/tutorials';
-    $this->request->session['redirect'] = $redirect;
+    $_SESSION['redirect'] = $redirect;
     $email = 'fastfreddy@hotmail.com';
     $password = 'secret';
     $this->request->post = [
@@ -251,7 +251,7 @@ class LoginValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: ' . $redirect));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlash = "You are now logged in";
-    $this->assertEquals($expectedFlash, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlash, $_SESSION['flash']['message']);
   }
 
   /**
@@ -303,7 +303,7 @@ class LoginValidateControllerTest extends TestCase {
     $redirectHeader = $headers[3];
     $this->assertSame($expectedRedirectHeader, $redirectHeader);
     $expectedFlash = "You are now logged in";
-    $this->assertEquals($expectedFlash, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlash, $_SESSION['flash']['message']);
   }
 }
 ?>

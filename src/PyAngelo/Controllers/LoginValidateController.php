@@ -39,8 +39,8 @@ class LoginValidateController extends Controller {
       $this->setRememberMeCookies();
 
     $this->flash('You are now logged in', 'success');
-    if (isset($this->request->session['redirect']))
-      $this->response->header("Location: ". $this->request->session['redirect']);
+    if (isset($_SESSION['redirect']))
+      $this->response->header("Location: ". $_SESSION['redirect']);
     else 
       $this->response->header("Location: /");
 
@@ -62,16 +62,16 @@ class LoginValidateController extends Controller {
   private function invalidEmailOrPassword() {
     $invalid = false;
     if (empty($this->request->post['email'])) {
-      $this->request->session['errors']['email'] = "You must enter your email to log in.";
+      $_SESSION['errors']['email'] = "You must enter your email to log in.";
       $invalid = true;
     }
     else if (filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL) === false) {
-      $this->request->session['errors']['email'] = "You did not enter a valid email address.";
+      $_SESSION['errors']['email'] = "You did not enter a valid email address.";
       $invalid = true;
     }
     
     if (empty($this->request->post['loginPassword'])) {
-      $this->request->session['errors']['loginPassword'] = "You must enter a password to log in.";
+      $_SESSION['errors']['loginPassword'] = "You must enter a password to log in.";
       $invalid = true;
     }
     return $invalid;
@@ -96,12 +96,12 @@ class LoginValidateController extends Controller {
   }
 
   private function redirectToLoginPage() {
-    $this->request->session['formVars'] = $this->request->post;
+    $_SESSION['formVars'] = $this->request->post;
     $this->response->header("Location: /login");
     return $this->response;
   }
   private function redirectToLoginPageWithFailedLoginMessage() {
-    $this->request->session['formVars'] = $this->request->post;
+    $_SESSION['formVars'] = $this->request->post;
     $this->flash('The email and password do not match. Login failed.', 'danger');
     $this->response->header("Location: /login");
     return $this->response;

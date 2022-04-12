@@ -34,7 +34,7 @@ class SketchDeleteControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $expectedFlashMessage = "You must select a sketch to delete";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testSketchDeleteControllerWhenNotLoggedIn() {
@@ -46,7 +46,7 @@ class SketchDeleteControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $expectedFlashMessage = "You must be logged in to delete a sketch!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testSketchDeleteControllerWhenInvalidCrsfToken() {
@@ -59,7 +59,7 @@ class SketchDeleteControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $expectedFlashMessage = "Please delete sketches from the PyAngelo website!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testSketchDeleteControllerWhenNotValidSketch() {
@@ -73,7 +73,7 @@ class SketchDeleteControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $expectedFlashMessage = "You must select a valid sketch to delete!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testSketchDeleteControllerWhenNotOwnerOfSketch() {
@@ -94,7 +94,7 @@ class SketchDeleteControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $expectedFlashMessage = "You must be the owner of the sketch to delete it.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testSketchDeleteControllerWhenCannotDelete() {
@@ -116,7 +116,7 @@ class SketchDeleteControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $expectedFlashMessage = "Sorry, we could not delete the sketch.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testSketchDeleteControllerSuccess() {
@@ -138,7 +138,7 @@ class SketchDeleteControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $expectedFlashMessage = "Your sketch has been deleted.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 }
 ?>

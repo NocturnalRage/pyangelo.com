@@ -27,15 +27,15 @@ class TeacherCreateController extends Controller {
       return $this->redirectToTeacherPageCrsf();
 
     if (empty($this->request->post['class_name'])) {
-      $this->request->session['errors']['class_name'] = 'You must supply a name for your class.';
+      $_SESSION['errors']['class_name'] = 'You must supply a name for your class.';
     }
     else if (strlen($this->request->post['class_name']) > 100) {
-      $this->request->session['errors']['class_name'] = 'The class name must be no more than 100 characters.';
+      $_SESSION['errors']['class_name'] = 'The class name must be no more than 100 characters.';
     }
 
-    if (! empty($this->request->session['errors'])) {
+    if (! empty($_SESSION['errors'])) {
       $this->flash('There were some errors. Please fix these below and then click the submit once more.', 'danger');
-      $this->request->session['formVars'] = $this->request->post;
+      $_SESSION['formVars'] = $this->request->post;
       $this->response->header('Location: /classes/teacher/new');
       return $this->response;
     }

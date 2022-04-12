@@ -34,7 +34,7 @@ class SketchRestoreControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $expectedFlashMessage = "You must select a sketch to restore";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testSketchRestoreControllerWhenNotLoggedIn() {
@@ -46,7 +46,7 @@ class SketchRestoreControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $expectedFlashMessage = "You must be logged in to restore a sketch!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testSketchRestoreControllerWhenInvalidCrsfToken() {
@@ -59,7 +59,7 @@ class SketchRestoreControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $expectedFlashMessage = "Please restore sketches from the PyAngelo website!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testSketchRestoreControllerWhenNotValidSketch() {
@@ -73,7 +73,7 @@ class SketchRestoreControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $expectedFlashMessage = "You must select a valid sketch to restore!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testSketchRestoreControllerWhenNotOwnerOfSketch() {
@@ -94,7 +94,7 @@ class SketchRestoreControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $expectedFlashMessage = "You must be the owner of the sketch to restore it.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testSketchResstoreControllerWhenCannotDelete() {
@@ -116,7 +116,7 @@ class SketchRestoreControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $expectedFlashMessage = "Sorry, we could not restore the sketch.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testSketchRestoreControllerSuccess() {
@@ -138,7 +138,7 @@ class SketchRestoreControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $expectedFlashMessage = "Your sketch has been restored.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 }
 ?>

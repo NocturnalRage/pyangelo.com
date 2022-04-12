@@ -37,7 +37,7 @@ class ContactValidateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /contact'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('Please contact us from the PyAngelo website!', $this->request->session['flash']['message']);
+    $this->assertSame('Please contact us from the PyAngelo website!', $_SESSION['flash']['message']);
   }
 
   public function testNoRecaptcha() {
@@ -46,7 +46,7 @@ class ContactValidateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /contact'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('Recaptcha could not verify you were a human. Please try again.', $this->request->session['flash']['message']);
+    $this->assertSame('Recaptcha could not verify you were a human. Please try again.', $_SESSION['flash']['message']);
   }
 
   public function testRecaptchaRejected() {
@@ -73,7 +73,7 @@ class ContactValidateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /contact'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('Recaptcha could not verify you were a human. Please try again.', $this->request->session['flash']['message']);
+    $this->assertSame('Recaptcha could not verify you were a human. Please try again.', $_SESSION['flash']['message']);
   }
 
   public function testContactUsSuccessfully() {
@@ -146,8 +146,8 @@ class ContactValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', $expectedLocation));
     $expectedErrors = [ 'name' => 'Please enter your name.' ];
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('There were some errors. Please fix these and resubmit your inquiry.', $this->request->session['flash']['message']);
-    $this->assertSame($expectedErrors, $this->request->session['errors']);
+    $this->assertSame('There were some errors. Please fix these and resubmit your inquiry.', $_SESSION['flash']['message']);
+    $this->assertSame($expectedErrors, $_SESSION['errors']);
   }
 }
 ?>

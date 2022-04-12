@@ -41,15 +41,15 @@ class TeacherUpdateController extends Controller {
       return $this->redirectToNotOwnerPage();
 
     if (empty($this->request->post['class_name'])) {
-      $this->request->session['errors']['class_name'] = 'You must supply a name for your class.';
+      $_SESSION['errors']['class_name'] = 'You must supply a name for your class.';
     }
     else if (strlen($this->request->post['class_name']) > 100) {
-      $this->request->session['errors']['class_name'] = 'The class name must be no more than 100 characters.';
+      $_SESSION['errors']['class_name'] = 'The class name must be no more than 100 characters.';
     }
 
-    if (! empty($this->request->session['errors'])) {
+    if (! empty($_SESSION['errors'])) {
       $this->flash('There were some errors. Please fix these below and then submit your changes again.', 'danger');
-      $this->request->session['formVars'] = $this->request->post;
+      $_SESSION['formVars'] = $this->request->post;
       $this->response->header('Location: /classes/teacher/' . $class['class_id'] . '/edit');
       return $this->response;
     }

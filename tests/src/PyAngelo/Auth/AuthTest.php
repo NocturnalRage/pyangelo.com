@@ -55,7 +55,7 @@ class AuthTest extends TestCase {
    * @runInSeparateProcess
    */
   public function testUserIsLoggedInWithSessionVariable() {
-    $this->request->session['loginEmail'] = $this->nonAdminLoginEmail;
+    $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->personRepository->shouldReceive('getPersonByEmail');
     $auth = new Auth($this->personRepository, $this->request);
     $this->assertTrue($auth->loggedIn());
@@ -94,7 +94,7 @@ class AuthTest extends TestCase {
       ->andReturn(1);
     $auth = new Auth($this->personRepository, $this->request);
     $this->assertTrue($auth->loggedIn());
-    $this->assertSame($this->nonAdminLoginEmail, $this->request->session["loginEmail"]);
+    $this->assertSame($this->nonAdminLoginEmail, $_SESSION["loginEmail"]);
     $this->assertSame($this->nonAdminPerson['given_name'], $auth->person()["given_name"]);
   }
 
@@ -118,10 +118,10 @@ class AuthTest extends TestCase {
    * @runInSeparateProcess
    */
   public function testLoggedInUserIsNotAdminAndNotPremium() {
-    $this->request->session['loginEmail'] = $this->nonAdminLoginEmail;
+    $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->personRepository->shouldReceive('getPersonByEmail')
       ->once()
-      ->with($this->request->session['loginEmail'])
+      ->with($_SESSION['loginEmail'])
       ->andReturn($this->nonAdminPerson);
     $auth = new Auth($this->personRepository, $this->request);
     $this->assertFalse($auth->isAdmin());
@@ -132,11 +132,11 @@ class AuthTest extends TestCase {
    * @runInSeparateProcess
    */
   public function testUserIsAdminAndPremiumBecauseOfPremiumStatusBoolean() {
-    $this->request->session['loginEmail'] = $this->adminLoginEmail;
+    $_SESSION['loginEmail'] = $this->adminLoginEmail;
     $this->personRepository = Mockery::mock('PyAngelo\Repositories\PersonRepository');
     $this->personRepository->shouldReceive('getPersonByEmail')
       ->once()
-      ->with($this->request->session['loginEmail'])
+      ->with($_SESSION['loginEmail'])
       ->andReturn($this->adminPerson);
     $auth = new Auth($this->personRepository, $this->request);
     $this->assertTrue($auth->isAdmin());
@@ -157,7 +157,7 @@ class AuthTest extends TestCase {
    * @runInSeparateProcess
    */
   public function testPersonWhenLoggedIn() {
-    $this->request->session['loginEmail'] = $this->nonAdminLoginEmail;
+    $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->personRepository->shouldReceive('getPersonByEmail')
       ->once()
       ->with($this->nonAdminLoginEmail)
@@ -180,7 +180,7 @@ class AuthTest extends TestCase {
    * @runInSeparateProcess
    */
   public function testPersonIdWhenLoggedIn() {
-    $this->request->session['loginEmail'] = $this->nonAdminLoginEmail;
+    $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->personRepository->shouldReceive('getPersonByEmail')
       ->once()
       ->with($this->nonAdminLoginEmail)
@@ -210,7 +210,7 @@ class AuthTest extends TestCase {
    * @runInSeparateProcess
    */
   public function testDeleteRememberMe() {
-    $this->request->session['loginEmail'] = $this->nonAdminLoginEmail;
+    $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->personRepository->shouldReceive('getPersonByEmail')
       ->once()
       ->with($this->nonAdminLoginEmail)
@@ -232,7 +232,7 @@ class AuthTest extends TestCase {
     $auth = new Auth($this->personRepository, $this->request);
 
     $crsfToken = $auth->createCrsfToken();
-    $this->assertSame($crsfToken, $this->request->session["crsfToken"]);
+    $this->assertSame($crsfToken, $_SESSION["crsfToken"]);
     $crsfToken2 = $auth->createCrsfToken();
     $this->assertSame($crsfToken2, $crsfToken);
   }
@@ -262,7 +262,7 @@ class AuthTest extends TestCase {
    */
   public function testSetLoginStatusLoggedInThroughSessionVariable() {
     $auth = new Auth($this->personRepository, $this->request);
-    $this->request->session['loginEmail'] = $this->nonAdminLoginEmail;
+    $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->assertTrue($auth->setLoginStatus());
   }
 
@@ -361,7 +361,7 @@ class AuthTest extends TestCase {
    * @runInSeparateProcess
    */
   public function testImpersonatingTrue() {
-    $this->request->session['impersonator'] = $this->nonAdminLoginEmail;
+    $_SESSION['impersonator'] = $this->nonAdminLoginEmail;
     $auth = new Auth($this->personRepository, $this->request);
     $this->assertTrue($auth->impersonating());
   }
@@ -388,7 +388,7 @@ class AuthTest extends TestCase {
    * @runInSeparateProcess
    */
   public function testGetPersonDetailsForViewsWhenLoggedIn() {
-    $this->request->session['loginEmail'] = $this->nonAdminLoginEmail;
+    $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->personRepository
          ->shouldReceive('getPersonByEmail')
          ->once()
@@ -421,7 +421,7 @@ class AuthTest extends TestCase {
    * @runInSeparateProcess
    */
   public function testGetPersonDetailsForViewsWhenLoggedInAsAdmin() {
-    $this->request->session['loginEmail'] = $this->adminLoginEmail;
+    $_SESSION['loginEmail'] = $this->adminLoginEmail;
     $this->personRepository
          ->shouldReceive('getPersonByEmail')
          ->once()
@@ -454,8 +454,8 @@ class AuthTest extends TestCase {
    * @runInSeparateProcess
    */
   public function testGetPersonDetailsForViewsWhenLoggedInAndImpersonating() {
-    $this->request->session['loginEmail'] = $this->adminLoginEmail;
-    $this->request->session['impersonator'] = $this->nonAdminLoginEmail;
+    $_SESSION['loginEmail'] = $this->adminLoginEmail;
+    $_SESSION['impersonator'] = $this->nonAdminLoginEmail;
     $this->personRepository
          ->shouldReceive('getPersonByEmail')
          ->once()
@@ -496,7 +496,7 @@ class AuthTest extends TestCase {
    * @runInSeparateProcess
    */
   public function testUnreadNotificationCountWhenLoggedIn() {
-    $this->request->session['loginEmail'] = $this->nonAdminLoginEmail;
+    $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->personRepository->shouldReceive('getPersonByEmail')
       ->once()
       ->with($this->nonAdminLoginEmail)
@@ -520,7 +520,7 @@ class AuthTest extends TestCase {
    */
   public function testCreateNotification() {
     /* Ensure createNotification method is called on personRepository */
-    $this->request->session['loginEmail'] = $this->nonAdminLoginEmail;
+    $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->personRepository
          ->shouldReceive('getPersonByEmail')
          ->once()

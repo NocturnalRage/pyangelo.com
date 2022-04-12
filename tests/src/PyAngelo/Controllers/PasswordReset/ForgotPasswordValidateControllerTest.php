@@ -35,7 +35,7 @@ class ForgotPasswordValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /password'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'You are already logged in so you can simply change your password.';
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testRedirectToForgotPasswordWhenInvalidCrsfToken() {
@@ -47,7 +47,7 @@ class ForgotPasswordValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', $expectedLocation));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'Please request a password reset from the PyAngelo website.';
-    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -76,7 +76,7 @@ class ForgotPasswordValidateControllerTest extends TestCase {
     $expectedLocation = 'Location: /forgot-password';
     $expectedHeaders = array(array('header', $expectedLocation));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertEquals($flashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($flashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -106,8 +106,8 @@ class ForgotPasswordValidateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /forgot-password'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertEquals($errors, $this->request->session['errors']);
-    $this->assertEquals($flashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($errors, $_SESSION['errors']);
+    $this->assertEquals($flashMessage, $_SESSION['flash']['message']);
   }
 
   /**
