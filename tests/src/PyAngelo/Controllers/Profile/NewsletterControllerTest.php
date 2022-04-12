@@ -36,7 +36,7 @@ class NewsletterControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'You must be logged in to update your email newsletter settings.';
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testSuccessNewsletterController() {

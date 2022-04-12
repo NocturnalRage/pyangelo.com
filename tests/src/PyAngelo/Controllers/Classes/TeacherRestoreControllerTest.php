@@ -35,7 +35,7 @@ class TeacherRestoreControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $expectedFlashMessage = "You must be logged in to restore a class!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherRestoreControllerWhenInvalidCrsfToken() {
@@ -46,7 +46,7 @@ class TeacherRestoreControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "Please restore classes from the PyAngelo website!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherRestoreControllerWhenNoClassId() {
@@ -57,7 +57,7 @@ class TeacherRestoreControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "You must select a class to restore";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherRestoreControllerWhenInvalidClass() {
@@ -71,7 +71,7 @@ class TeacherRestoreControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "You must select a valid class to restore!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherRestoreControllerWhenNotOwner() {
@@ -93,7 +93,7 @@ class TeacherRestoreControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "You must be the owner of the class to restore it.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherRestoreControllerFailToRestore() {
@@ -116,7 +116,7 @@ class TeacherRestoreControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "Sorry, we could not restore the class.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherRestoreControllerSuccess() {
@@ -139,7 +139,7 @@ class TeacherRestoreControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "Your class has been restored.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 }
 ?>

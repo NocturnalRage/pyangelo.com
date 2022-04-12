@@ -43,48 +43,48 @@ class ProfileUpdateController extends Controller {
       $this->response->header('Location: /profile');
       return $this->response;
     }
-    $this->request->session['formVars'] = $this->request->post;
+    $_SESSION['formVars'] = $this->request->post;
 
     if (empty($this->request->post['given_name'])) {
-      $this->request->session['errors']['given_name'] = "The given name field cannot be blank.";
+      $_SESSION['errors']['given_name'] = "The given name field cannot be blank.";
     }
     else if (strlen($this->request->post['given_name']) > 100) {
-      $this->request->session['errors']["given_name"] = "The given name can be no longer than 100 characters.";
+      $_SESSION['errors']["given_name"] = "The given name can be no longer than 100 characters.";
     }
 
     if (empty($this->request->post['family_name'])) {
-      $this->request->session['errors']['family_name'] = "The family name field cannot be blank.";
+      $_SESSION['errors']['family_name'] = "The family name field cannot be blank.";
     }
     elseif (strlen($this->request->post['family_name']) > 100) {
-      $this->request->session['errors']["family_name"] = "The family name can be no longer than 100 characters.";
+      $_SESSION['errors']["family_name"] = "The family name can be no longer than 100 characters.";
     }
 
     if (empty($this->request->post['email'])) {
-      $this->request->session['errors']["email"] = "You must supply an email address.";
+      $_SESSION['errors']["email"] = "You must supply an email address.";
     }
     elseif (strlen($this->request->post['email']) > 100) {
-      $this->request->session['errors']["email"] = "The email address can be no longer than 100 characters.";
+      $_SESSION['errors']["email"] = "The email address can be no longer than 100 characters.";
     }
     elseif (filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL) === false) {
-      $this->request->session['errors']["email"] = "The email address is not valid.";
+      $_SESSION['errors']["email"] = "The email address is not valid.";
     }
     else {
       $person = $this->personRepository->getPersonActiveOrNotByEmail($this->request->post['email']);
       if ($person) {
         if ($person['person_id'] != $this->auth->personId()) {
-          $this->request->session['errors']["email"] = "This email address is already in use.";
+          $_SESSION['errors']["email"] = "This email address is already in use.";
         }
       }
     }
 
     if (empty($this->request->post['country_code'])) {
-      $this->request->session['errors']["country_code"] = "You must select the country you are from.";
+      $_SESSION['errors']["country_code"] = "You must select the country you are from.";
     }
     elseif (! $country = $this->countryRepository->getCountry($this->request->post['country_code'])) {
-      $this->request->session['errors']["country_code"] = "You must select a valid country from the list.";
+      $_SESSION['errors']["country_code"] = "You must select a valid country from the list.";
     }
 
-    if (! empty($this->request->session['errors'])) {
+    if (! empty($_SESSION['errors'])) {
       $this->flash('There were some errors. Please fix these and then we can update your profile.', 'danger');
       $this->response->header('Location: /profile/edit');
       return $this->response;
@@ -103,7 +103,7 @@ class ProfileUpdateController extends Controller {
     );
 
     // Log user in with potentially new email.
-    $this->request->session['loginEmail'] = $this->request->post['email'];
+    $_SESSION['loginEmail'] = $this->request->post['email'];
 
     // Update Stripe Email if they have a stripe customer id.
     $existingPerson = $this->auth->person();

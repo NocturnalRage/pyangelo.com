@@ -48,11 +48,10 @@ class MysqlPersonRepositoryTest extends TestCase {
     $rememberMeToken = 'remember-token';
     $resetToken = 'password-token';
 
+    $this->testData->deleteAllPeople();
     $this->testData->deleteAllCountries();
     $this->testData->createCountry('AU', 'Australia', 'AUD');
     $this->testData->createCountry('NZ', 'New Zealand', 'NZD');
-
-    $this->testData->deleteAllPeople();
 
     $personId = $this->personRepository->insertFreeMember(
       $testGivenName,

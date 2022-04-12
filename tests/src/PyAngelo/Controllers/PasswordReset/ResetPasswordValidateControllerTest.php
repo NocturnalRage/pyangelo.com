@@ -36,7 +36,7 @@ class ResetPasswordValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /password'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'You are already logged in so you can simply change your password.';
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testRedirectToForgotPasswordPageWhenInvalidCrsfToken() {
@@ -48,7 +48,7 @@ class ResetPasswordValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', $expectedLocation));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'Something seems wrong here. Can you please restart the process to reset your password.';
-    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testRedirectToForgotPasswordPageWhenNoToken() {
@@ -61,7 +61,7 @@ class ResetPasswordValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', $expectedLocation));
     $expectedFlashMessage = 'Something seems wrong here. Can you please restart the process to reset your password.';
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testRedirectToForgotPasswordPageWhenInvalidToken() {
@@ -79,7 +79,7 @@ class ResetPasswordValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', $expectedLocation));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'Something seems wrong here. Can you please restart the process to reset your password.';
-    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -105,7 +105,7 @@ class ResetPasswordValidateControllerTest extends TestCase {
     $expectedErrors = [
       'loginPassword' => 'The password must be between 4 characters and 30 characters long.'
     ];
-    $this->assertEquals($expectedErrors, $this->request->session['errors']);
+    $this->assertEquals($expectedErrors, $_SESSION['errors']);
   }
 
   public function testRedirectToLoginPageWhenPasswordSuccess() {

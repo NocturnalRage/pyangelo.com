@@ -36,7 +36,7 @@ class TeacherUpdateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $expectedFlashMessage = "You must be logged in to update your classes!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherUpdateControllerWhenInvalidCrsfToken() {
@@ -48,7 +48,7 @@ class TeacherUpdateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "Please update your classes from the PyAngelo website!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherUpdateControllerWhenNoClassId() {
@@ -94,7 +94,7 @@ class TeacherUpdateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "You must be the owner of the class to update it.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -121,8 +121,8 @@ class TeacherUpdateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher/' . $classId . '/edit'));
     $expectedFlashMessage = "There were some errors. Please fix these below and then submit your changes again.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
-    $this->assertSame("You must supply a name for your class.", $this->request->session['errors']['class_name']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
+    $this->assertSame("You must supply a name for your class.", $_SESSION['errors']['class_name']);
   }
 
   /**
@@ -150,8 +150,8 @@ class TeacherUpdateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher/' . $classId . '/edit'));
     $expectedFlashMessage = "There were some errors. Please fix these below and then submit your changes again.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
-    $this->assertSame("The class name must be no more than 100 characters.", $this->request->session['errors']['class_name']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
+    $this->assertSame("The class name must be no more than 100 characters.", $_SESSION['errors']['class_name']);
   }
 
   /**
@@ -184,7 +184,7 @@ class TeacherUpdateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher/' . $classId));
     $expectedFlashMessage = "We could not update the class name.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**

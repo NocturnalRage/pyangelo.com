@@ -32,7 +32,7 @@ class LogoutControllerTest extends TestCase {
     $responseVars = $this->response->getVars();
     $expectedHeaders = array(array('header', 'Location: /'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('You are already logged out!', $this->request->session['flash']['message']);
+    $this->assertSame('You are already logged out!', $_SESSION['flash']['message']);
   }
 
   public function testRedirectsToHomePageWhenInvalidCrsfToken() {
@@ -42,7 +42,7 @@ class LogoutControllerTest extends TestCase {
     $responseVars = $this->response->getVars();
     $expectedHeaders = array(array('header', 'Location: /'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('You need to logout from the PyAngelo website!', $this->request->session['flash']['message']);
+    $this->assertSame('You need to logout from the PyAngelo website!', $_SESSION['flash']['message']);
   }
   /**
     *    * @runInSeparateProcess

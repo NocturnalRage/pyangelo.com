@@ -116,6 +116,7 @@ class MysqlBlogRepositoryTest extends TestCase {
 
   public function testGetAllBlogCategories() {
     $blogCategoryId = 1;
+    $this->testData->deleteAllBlogs();
     $this->testData->deleteAllBlogCategories();
     $this->testData->createBlogCategory($blogCategoryId);
     $categories = $this->blogRepository->getAllBlogCategories();

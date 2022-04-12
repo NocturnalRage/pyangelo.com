@@ -38,7 +38,7 @@ class AskTheTeacherCreateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $expectedFlashMessage = "You must be logged in to ask a question!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testAskTheTeacherCreateControllerInvalidCrsfToken() {
@@ -50,7 +50,7 @@ class AskTheTeacherCreateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /'));
     $expectedFlashMessage = "Please ask a question from the PyAngelo website!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -70,8 +70,8 @@ class AskTheTeacherCreateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /ask-the-teacher/ask'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($flashMessage, $this->request->session['flash']['message']);
-    $this->assertSame($errors, $this->request->session['errors']);
+    $this->assertSame($flashMessage, $_SESSION['flash']['message']);
+    $this->assertSame($errors, $_SESSION['errors']);
   }
 
   /**

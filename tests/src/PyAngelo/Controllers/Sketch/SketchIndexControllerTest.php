@@ -36,7 +36,7 @@ class SketchIndexControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /login'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('You must be logged in to view your sketches', $this->request->session['flash']['message']);
+    $this->assertSame('You must be logged in to view your sketches', $_SESSION['flash']['message']);
   }
 
   public function testSuccessShowView() {

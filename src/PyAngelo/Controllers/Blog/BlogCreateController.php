@@ -28,9 +28,9 @@ class BlogCreateController extends Controller {
       $this->request->files['blog_image']
     );
     if (!$success) {
-      $this->request->session['errors'] = $this->blogFormService->getErrors();
+      $_SESSION['errors'] = $this->blogFormService->getErrors();
       $this->flash($this->blogFormService->getFlashMessage(), 'danger');
-      $this->request->session['formVars'] = $this->request->post;
+      $_SESSION['formVars'] = $this->request->post;
       $this->response->header('Location: /blog/new');
       return $this->response;
     }

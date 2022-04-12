@@ -36,7 +36,7 @@ class AskTheTeacherDeleteControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /'));
     $expectedFlashMessage = "You are not authorised!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testAskTheTeacherDeleteControllerInvalidCrsfToken() {
@@ -48,7 +48,7 @@ class AskTheTeacherDeleteControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /ask-the-teacher/question-list'));
     $expectedFlashMessage = "Please delete questions from the PyAngelo website!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testAskTheTeacherDeleteControllerWhenAdminWithNoFormData() {
@@ -60,7 +60,7 @@ class AskTheTeacherDeleteControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /ask-the-teacher/question-list'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($flashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($flashMessage, $_SESSION['flash']['message']);
   }
 public function testAskTheTeacherDeleteControllerWhenAdminWithValidData() {
     $flashMessage = 'The question has been deleted.';
@@ -74,7 +74,7 @@ public function testAskTheTeacherDeleteControllerWhenAdminWithValidData() {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /ask-the-teacher/question-list'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($flashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($flashMessage, $_SESSION['flash']['message']);
   }
 
   public function testAskTheTeacherDeleteControllerWhenAdminWithInvalidSlug() {
@@ -89,7 +89,7 @@ public function testAskTheTeacherDeleteControllerWhenAdminWithValidData() {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /ask-the-teacher/question-list'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($flashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($flashMessage, $_SESSION['flash']['message']);
   }
 }
 ?>

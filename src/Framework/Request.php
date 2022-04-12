@@ -66,27 +66,11 @@ class Request
     public $server = array();
 
     /**
-     * A **reference** to $GLOBALS. We keep this so we can have late access to
-     * $_SESSION.
-     *
-     * @var array
-     */
-    protected $globals;
-
-    /**
-     * A **reference** to $_SESSION. We use a reference because PHP uses
-     * $_SESSION for all its session_*() functions.
-     *
-     * @var array
-     */
-    protected $session;
-
-    /**
      * Constructor.
      *
      * @param array $globals A reference to $GLOBALS.
      */
-    public function __construct(&$globals)
+    public function __construct($globals)
     {
         // mention the superglobals by name to invoke auto_globals_jit, thereby
         // forcing them to be populated; cf. <http://php.net/auto-globals-jit>.
@@ -97,9 +81,6 @@ class Request
         $_POST;
         $_REQUEST;
         $_SERVER;
-
-        // retain a reference to the $globals param, not to $GLOBALS directly
-        $this->globals = &$globals;
 
         // copy superglobals into properties
         $properties = array(
@@ -117,66 +98,5 @@ class Request
                 $this->$property = $globals[$superglobal];
             }
         }
-    }
-
-    /**
-     * Provides a magic **reference** to $_SESSION.
-     *
-     * @param string $property The property name; must be 'session'.
-     * @return array A reference to $_SESSION.
-     * @throws InvalidArgumentException for any $name other than 'session'.
-     * @throws DomainException when $_SESSION is not set.
-     */
-    public function &__get($name)
-    {
-        if ($name != 'session') {
-            throw new InvalidArgumentException($name);
-        }
-
-        if (! isset($this->globals['_SESSION'])) {
-            throw new DomainException('$_SESSION is not set');
-        }
-
-        if (! isset($this->session)) {
-            $this->session = &$this->globals['_SESSION'];
-        }
-
-        return $this->session;
-    }
-
-    /**
-     * Provides magic isset() for $_SESSION and the related property.
-     *
-     * @param string $name The property name; must be 'session'.
-     * @return bool
-     */
-    public function __isset($name)
-    {
-        if ($name != 'session') {
-            throw new InvalidArgumentException;
-        }
-
-        if (isset($this->globals['_SESSION'])) {
-            $this->session = &$this->globals['_SESSION'];
-        }
-
-        return isset($this->session);
-    }
-
-    /**
-     * Provides magic unset() for $_SESSION; unsets both the property and the
-     * superglobal.
-     *
-     * @param string $name The property name; must be 'session'.
-     * @return null
-     */
-    public function __unset($name)
-    {
-        if ($name != 'session') {
-            throw new InvalidArgumentException;
-        }
-
-        $this->session = null;
-        unset($this->globals['_SESSION']);
     }
 }

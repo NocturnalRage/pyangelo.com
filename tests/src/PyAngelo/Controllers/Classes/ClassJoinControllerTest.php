@@ -35,7 +35,7 @@ class ClassJoinControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $expectedFlashMessage = "You must be logged in to join a class.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testClassJoinControllerWhenNoJoinCode() {
@@ -45,7 +45,7 @@ class ClassJoinControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /'));
     $expectedFlashMessage = "You need a class code to be able to join it.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testClassJoinControllerWhenInvalidJoinCode() {
@@ -58,7 +58,7 @@ class ClassJoinControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /'));
     $expectedFlashMessage = "There is no such class to join.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testClassJoinControllerWhenCannotJoin() {
@@ -78,7 +78,7 @@ class ClassJoinControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /'));
     $expectedFlashMessage = "We could not enrol you in the class.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testClassJoinControllerSuccess() {

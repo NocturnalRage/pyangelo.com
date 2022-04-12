@@ -36,7 +36,7 @@ class TeacherEditControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $expectedFlashMessage = "You must be logged in to edit a class!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherEditControllerWhenNoClassId() {
@@ -86,7 +86,7 @@ class TeacherEditControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "You must be the owner of the class to view it.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**

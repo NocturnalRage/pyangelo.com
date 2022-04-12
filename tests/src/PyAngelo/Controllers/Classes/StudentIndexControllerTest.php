@@ -36,7 +36,7 @@ class StudentIndexControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /login'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('You must be logged in to view your classes.', $this->request->session['flash']['message']);
+    $this->assertSame('You must be logged in to view your classes.', $_SESSION['flash']['message']);
   }
 
   public function testStudentClassesSuccess() {

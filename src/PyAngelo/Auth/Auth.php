@@ -19,7 +19,7 @@ class Auth {
 
     if ($this->loggedIn = $this->setLoginStatus()) {
       $this->person = $this->personRepository->getPersonByEmail(
-        $request->session['loginEmail']
+        $_SESSION["loginEmail"]
       );
     }
   }
@@ -67,12 +67,12 @@ class Auth {
   }
 
   public function createCrsfToken() {
-    if (isset($this->request->session['crsfToken'])) {
-      $crsfToken = $this->request->session['crsfToken'];
+    if (isset($_SESSION['crsfToken'])) {
+      $crsfToken = $_SESSION['crsfToken'];
     }
     else {
       $crsfToken = bin2hex(openssl_random_pseudo_bytes(32));
-      $this->request->session['crsfToken'] = $crsfToken;
+      $_SESSION['crsfToken'] = $crsfToken;
     }
     return $crsfToken;
   }
@@ -81,8 +81,8 @@ class Auth {
     // Validate the CRSF token
     if (
       empty($this->request->post['crsfToken']) ||
-      empty($this->request->session['crsfToken']) ||
-      $this->request->post['crsfToken'] != $this->request->session['crsfToken']
+      empty($_SESSION['crsfToken']) ||
+      $this->request->post['crsfToken'] != $_SESSION['crsfToken']
     ) {
       return FALSE;
     }
@@ -108,11 +108,11 @@ class Auth {
 
   private function setSessionLoginEmail($personId) {
     $this->person = $this->personRepository->getPersonById($personId);
-    $this->request->session['loginEmail'] = $this->person['email'];
+    $_SESSION['loginEmail'] = $this->person['email'];
   }
 
   private function loggedInThroughSession() {
-    return isset($this->request->session['loginEmail']);
+    return isset($_SESSION['loginEmail']);
   }
 
   private function loggedInThroughRememberMe() {
@@ -151,7 +151,7 @@ class Auth {
     }
     else if (password_verify($loginPassword, $person['password'])) {
       // Log the user in
-      $this->request->session['loginEmail'] = $person['email'];
+      $_SESSION['loginEmail'] = $person['email'];
       $personId = $person['person_id'];
       $this->personRepository->updateLastLogin($personId);
       $this->person = $this->personRepository->getPersonByEmail($loginEmail);
@@ -196,7 +196,7 @@ class Auth {
   }
 
   public function impersonating() {
-    return isset($this->request->session['impersonator']);
+    return isset($_SESSION['impersonator']);
   }
 
   public function getPersonDetailsForViews() {

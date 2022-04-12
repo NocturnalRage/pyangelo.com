@@ -34,7 +34,7 @@ class ResetPasswordControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'You are already logged in!';
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testRedirectToForgotPasswordPageWhenNoToken() {
@@ -45,7 +45,7 @@ class ResetPasswordControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /forgot-password'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'We could not reset your password. Please start the process again.';
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testRedirectToForgotPasswordPageWhenInvalidToken() {
@@ -61,7 +61,7 @@ class ResetPasswordControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /forgot-password'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'We could not reset your password. Please start the process again.';
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testSuccessWithValidToken() {

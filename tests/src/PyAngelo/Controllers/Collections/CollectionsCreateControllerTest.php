@@ -36,7 +36,7 @@ class CollectionsCreateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /login'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('You must be logged in to create a new sketch', $this->request->session['flash']['message']);
+    $this->assertSame('You must be logged in to create a new sketch', $_SESSION['flash']['message']);
   }
 
   public function testWhenNoCrsfToken() {
@@ -47,7 +47,7 @@ class CollectionsCreateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('Please create collections from the PyAngelo website!', $this->request->session['flash']['message']);
+    $this->assertSame('Please create collections from the PyAngelo website!', $_SESSION['flash']['message']);
   }
 
   public function testNoCollectionId() {
@@ -60,7 +60,7 @@ class CollectionsCreateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($flashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($flashMessage, $_SESSION['flash']['message']);
   }
 
   public function testCollectionIdNotReturned() {
@@ -77,7 +77,7 @@ class CollectionsCreateControllerTest extends TestCase {
     $expectedFlashMessage = 'Error! We could not create a new collection for you :(';
     $expectedHeaders = array(array('header', 'Location: /sketch'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testSuccessCreateCollection() {

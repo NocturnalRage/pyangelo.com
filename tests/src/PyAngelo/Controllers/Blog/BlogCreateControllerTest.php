@@ -36,7 +36,7 @@ class BlogCreateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /'));
     $expectedFlashMessage = "You are not authorised!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -68,8 +68,8 @@ class BlogCreateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /blog/new'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($flashMessage, $this->request->session['flash']['message']);
-    $this->assertSame($errors, $this->request->session['errors']);
+    $this->assertSame($flashMessage, $_SESSION['flash']['message']);
+    $this->assertSame($errors, $_SESSION['errors']);
   }
 
   /**

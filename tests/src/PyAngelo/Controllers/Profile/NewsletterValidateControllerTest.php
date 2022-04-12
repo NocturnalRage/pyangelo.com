@@ -38,7 +38,7 @@ class NewsletterValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'You must be logged in to change your email newsletter preferences.';
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testRedirectToNewsletterWhenInvalidCrsfToken() {
@@ -50,7 +50,7 @@ class NewsletterValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', $expectedLocation));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'Please update your preferences from the PyAngelo website.';
-    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testUpdateNewsletterUnsubscribe() {
@@ -86,7 +86,7 @@ class NewsletterValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', $expectedLocation));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'Your preference has been updated.';
-    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testUpdateNewsletterSubscribe() {
@@ -123,7 +123,7 @@ class NewsletterValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', $expectedLocation));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'Your preference has been updated.';
-    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 }
 ?>

@@ -36,7 +36,7 @@ class TeacherSketchControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $expectedFlashMessage = "You must be logged in to view a student's sketches";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherSketchControllerWhenNoClassId() {
@@ -90,7 +90,7 @@ class TeacherSketchControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /classes/teacher'));
     $expectedFlashMessage = "You must be the owner of a class to view the student's sketches.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testTeacherSketchControllerWhenOwner() {

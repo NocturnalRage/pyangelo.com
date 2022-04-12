@@ -48,6 +48,8 @@ class TestData {
     $result = $this->dbh->query($sql);
     $sql = "DELETE FROM subscriber";
     $result = $this->dbh->query($sql);
+    $sql = "DELETE FROM notification";
+    $result = $this->dbh->query($sql);
     $sql = "DELETE FROM person";
     $result = $this->dbh->query($sql);
   }
@@ -279,13 +281,8 @@ class TestData {
     $result = $this->dbh->query($sql);
   }
 
-  public function deleteAllLivestreams() {
-    $sql = "DELETE FROM livestream";
-    $result = $this->dbh->query($sql);
-  }
-
   public function deleteAllNotifications() {
-    $sql = "TRUNCATE TABLE notification";
+    $sql = "DELETE FROM  notification";
     $result = $this->dbh->query($sql);
   }
 
@@ -305,14 +302,13 @@ class TestData {
     $sql = "DELETE FROM question";
     $result = $this->dbh->query($sql);
   }
-
-  public function deleteAllQuestionCategories() {
-    $sql = "DELETE FROM question_category";
+  public function deleteAllQuestionTypes() {
+    $sql = "DELETE FROM question_type";
     $result = $this->dbh->query($sql);
   }
 
-  public function createQuestionCategory($questionCategoryId) {
-    $sql = "INSERT INTO question_category values ($questionCategoryId, 'PyAngelo')";
+  public function createQuestionType($questionTypeId) {
+    $sql = "INSERT INTO question_type values ($questionTypeId, 'PyAngelo', 'PyAngelo')";
     $result = $this->dbh->query($sql);
   }
 }

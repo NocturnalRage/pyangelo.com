@@ -46,7 +46,7 @@ class ProfileUpdateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /login'));
     $expectedFlashMessage = "You must be logged in to edit your profile.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -62,7 +62,7 @@ class ProfileUpdateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /profile'));
     $expectedFlashMessage = "Please update your profile from the PyAngelo website.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -84,8 +84,8 @@ class ProfileUpdateControllerTest extends TestCase {
       'country_code' => 'You must select the country you are from.'
     ];
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
-    $this->assertSame($expectedErrors, $this->request->session['errors']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
+    $this->assertSame($expectedErrors, $_SESSION['errors']);
   }
 
   /**
@@ -116,8 +116,8 @@ class ProfileUpdateControllerTest extends TestCase {
       'country_code' => 'You must select a valid country from the list.'
     ];
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
-    $this->assertSame($expectedErrors, $this->request->session['errors']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
+    $this->assertSame($expectedErrors, $_SESSION['errors']);
   }
 
   /**
@@ -162,8 +162,8 @@ class ProfileUpdateControllerTest extends TestCase {
       'email' => 'This email address is already in use.'
     ];
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
-    $this->assertSame($expectedErrors, $this->request->session['errors']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
+    $this->assertSame($expectedErrors, $_SESSION['errors']);
   }
 
   /**
@@ -216,7 +216,7 @@ class ProfileUpdateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /profile'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = "Your profile has been updated.";
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -269,7 +269,7 @@ class ProfileUpdateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /profile'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = "Your profile has been updated.";
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -327,9 +327,9 @@ class ProfileUpdateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /profile'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($newEmail, $this->request->session['loginEmail']);
+    $this->assertSame($newEmail, $_SESSION['loginEmail']);
     $expectedFlashMessage = "Your profile has been updated.";
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 }
 ?>

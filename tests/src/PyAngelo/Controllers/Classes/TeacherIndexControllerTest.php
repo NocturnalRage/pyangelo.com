@@ -36,7 +36,7 @@ class TeacherIndexControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /login'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('You must be logged in to view the classes you teach', $this->request->session['flash']['message']);
+    $this->assertSame('You must be logged in to view the classes you teach', $_SESSION['flash']['message']);
   }
 
   public function testTeacherClassesSuccess() {

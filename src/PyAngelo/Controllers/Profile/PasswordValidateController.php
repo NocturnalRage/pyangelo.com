@@ -53,12 +53,12 @@ class PasswordValidateController extends Controller {
 
   private function passwordDoesNotMeetRules() {
     if (empty($this->request->post['loginPassword'])) {
-      $this->request->session['errors']['loginPassword'] = "You must supply a password in order to change it.";
+      $_SESSION['errors']['loginPassword'] = "You must supply a password in order to change it.";
       return true;
     }
     $loginPassword = $this->request->post['loginPassword'];
     if (strlen($loginPassword) < 4 || strlen($loginPassword) > 30) {
-      $this->request->session['errors']['loginPassword'] = "The password must be between 4 characters and 30 characters long.";
+      $_SESSION['errors']['loginPassword'] = "The password must be between 4 characters and 30 characters long.";
       return true;
     }
     return false;

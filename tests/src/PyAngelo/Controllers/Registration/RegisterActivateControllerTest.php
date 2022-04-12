@@ -35,7 +35,7 @@ class RegisterActivateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('You are already logged in!', $this->request->session['flash']['message']);
+    $this->assertSame('You are already logged in!', $_SESSION['flash']['message']);
   }
 
   public function testRedirectsToRegisterPageWhenNoToken() {
@@ -45,7 +45,7 @@ class RegisterActivateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /register'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('We could not activate your free membership. Please start the registration process again. Your registration token was missing.', $this->request->session['flash']['message']);
+    $this->assertSame('We could not activate your free membership. Please start the registration process again. Your registration token was missing.', $_SESSION['flash']['message']);
   }
 
   public function testRedirectsToRegisterPageWhenInvalidToken() {
@@ -61,7 +61,7 @@ class RegisterActivateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /register'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('We could not activate your free membership. Please start the registration process again.', $this->request->session['flash']['message']);
+    $this->assertSame('We could not activate your free membership. Please start the registration process again.', $_SESSION['flash']['message']);
   }
 
   public function testRedirectsToRegisterPageWhenValidTokenButCouldNotUpdate() {
@@ -88,7 +88,7 @@ class RegisterActivateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /register'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('We could not activate your free membership. Please start the registration process again.', $this->request->session['flash']['message']);
+    $this->assertSame('We could not activate your free membership. Please start the registration process again.', $_SESSION['flash']['message']);
   }
 
   /**

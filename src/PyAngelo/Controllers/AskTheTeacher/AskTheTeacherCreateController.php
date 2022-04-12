@@ -36,18 +36,18 @@ class AskTheTeacherCreateController extends Controller {
     }
 
     if (empty($this->request->post['question_title'])) {
-      $this->request->session['errors']['question_title'] = 'You must supply a title for this question.';
+      $_SESSION['errors']['question_title'] = 'You must supply a title for this question.';
     }
     else if (strlen($this->request->post['question_title']) > 100) {
-      $this->request->session['errors']['question_title'] = 'The title must be no more than 100 characters.';
+      $_SESSION['errors']['question_title'] = 'The title must be no more than 100 characters.';
     }
     if (empty($this->request->post['question'])) {
-      $this->request->session['errors']['question'] = 'You must ask a question.';
+      $_SESSION['errors']['question'] = 'You must ask a question.';
     }
 
-    if (! empty($this->request->session['errors'])) {
+    if (! empty($_SESSION['errors'])) {
       $this->flash('There were some errors. Please fix these below and then submit your question again.', 'danger');
-      $this->request->session['formVars'] = $this->request->post;
+      $_SESSION['formVars'] = $this->request->post;
       $this->response->header('Location: /ask-the-teacher/ask');
       return $this->response;
     }

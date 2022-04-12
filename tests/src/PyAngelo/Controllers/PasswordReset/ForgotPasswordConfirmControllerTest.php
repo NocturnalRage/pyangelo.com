@@ -34,7 +34,7 @@ class ForgotPasswordConfirmControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /password'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'You are already logged in so you can simply update your password.';
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testRedirectWhenNoEmailPassedAsGetVariable() {
@@ -44,7 +44,7 @@ class ForgotPasswordConfirmControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /forgot-password'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = "Sorry, something went wrong, please enter your email address again and we'll send you instructions on how to reset your password.";
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testWhenEmailPassedAsGetVariable() {

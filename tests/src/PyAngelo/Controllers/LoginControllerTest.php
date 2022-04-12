@@ -35,7 +35,7 @@ class LoginControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('You are already logged in!', $this->request->session['flash']['message']);
+    $this->assertSame('You are already logged in!', $_SESSION['flash']['message']);
   }
 
   public function testBasicLoginView() {

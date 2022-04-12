@@ -40,7 +40,7 @@ class RegisterValidateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('You are already logged in!', $this->request->session['flash']['message']);
+    $this->assertSame('You are already logged in!', $_SESSION['flash']['message']);
   }
 
   /**
@@ -53,7 +53,7 @@ class RegisterValidateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /register'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('Please register from the PyAngelo website!', $this->request->session['flash']['message']);
+    $this->assertSame('Please register from the PyAngelo website!', $_SESSION['flash']['message']);
   }
 
   /**
@@ -80,7 +80,7 @@ class RegisterValidateControllerTest extends TestCase {
     $expectedErrors = ['foo' => 'bar'];
     $expectedFlashMessage = 'Please register from the PyAngelo website!';
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -115,7 +115,7 @@ class RegisterValidateControllerTest extends TestCase {
     $expectedErrors = ['foo' => 'bar'];
     $expectedFlashMessage = 'Please register from the PyAngelo website!';
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testRedirectsToRegisterWhenFormFilledInTooQuickly() {
@@ -136,7 +136,7 @@ class RegisterValidateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /register'));
     $expectedFlashMessage = 'Please register manually from the PyAngelo website!';
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertEquals($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -172,8 +172,8 @@ class RegisterValidateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /register'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertEquals($expectedErrors, $this->request->session['errors']);
-    $this->assertEquals($expectedFlash, $this->request->session['flash']['message']);
+    $this->assertEquals($expectedErrors, $_SESSION['errors']);
+    $this->assertEquals($expectedFlash, $_SESSION['flash']['message']);
   }
 
   /**

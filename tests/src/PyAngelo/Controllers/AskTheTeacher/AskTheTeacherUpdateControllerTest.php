@@ -38,7 +38,7 @@ class AskTheTeacherUpdateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /'));
     $expectedFlashMessage = "You are not authorised!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   public function testAskTheTeacherUpdateControllerWhenNoQuestion() {
@@ -78,7 +78,7 @@ class AskTheTeacherUpdateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /'));
     $expectedFlashMessage = "Please answer the question from the PyAngelo website!";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   /**
@@ -107,8 +107,8 @@ class AskTheTeacherUpdateControllerTest extends TestCase {
     $expectedHeaders = array(array('header', 'Location: /ask-the-teacher/'. $slug . '/edit'));
     $expectedFlashMessage = "There were some errors. Please fix these below and then submit your answer again.";
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($expectedFlashMessage, $this->request->session['flash']['message']);
-    $this->assertSame($errors, $this->request->session['errors']);
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
+    $this->assertSame($errors, $_SESSION['errors']);
   }
 
   /**
