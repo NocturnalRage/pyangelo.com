@@ -72,7 +72,7 @@ class SketchUpdateLayoutControllerTest extends TestCase {
   }
 
   public function testWhenNoLayout() {
-    $sketchId = 101;
+    $sketchId = bin2hex(random_bytes(16));
     $this->request->post = [
       'sketchId' => $sketchId
     ];
@@ -90,7 +90,7 @@ class SketchUpdateLayoutControllerTest extends TestCase {
   }
 
   public function testSketchNotInDatabase() {
-    $sketchId = 101;
+    $sketchId = bin2hex(random_bytes(16));
     $layout = 'cols';
     $this->request->post = [
       'sketchId' => $sketchId,
@@ -113,7 +113,7 @@ class SketchUpdateLayoutControllerTest extends TestCase {
   public function testSketchNotOwner() {
     $ownerId = 101;
     $personId = 102;
-    $sketchId = 10;
+    $sketchId = bin2hex(random_bytes(16));
     $layout = 'cols';
     $sketch = ['sketch_id' => $sketchId, 'person_id' => $ownerId];
     $this->request->post = [
@@ -138,7 +138,7 @@ class SketchUpdateLayoutControllerTest extends TestCase {
   public function testSuccess() {
     $ownerId = 101;
     $personId = $ownerId;
-    $sketchId = 220;
+    $sketchId = bin2hex(random_bytes(16));
     $fileId = 1000;
     $layout = 'cols';
     $sketch = [

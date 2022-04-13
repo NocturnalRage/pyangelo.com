@@ -42,7 +42,7 @@ class SketchGetCodeControllerTest extends TestCase {
   }
 
   public function testSketchNotInDatabase() {
-    $sketchId = 101;
+    $sketchId = bin2hex(random_bytes(16));
     $program = 'canvas.background()';
     $this->request->get['sketchId'] = $sketchId;
     $this->sketchRepository->shouldReceive('getSketchFiles')->once()->with($sketchId)->andReturn();
@@ -76,7 +76,7 @@ class SketchGetCodeControllerTest extends TestCase {
         'filename' => 'main.py'
       ]
     ];
-    $sketchId = 101;
+    $sketchId = bin2hex(random_bytes(16));
     $program = 'canvas.background()';
     $this->request->get['sketchId'] = $sketchId;
     $this->sketchRepository->shouldReceive('getSketchFiles')->once()->with($sketchId)->andReturn($sketchFiles);

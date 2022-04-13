@@ -1,6 +1,10 @@
       <div class="col-md-3">
         <h2>Versions</h2>
         <ul>
+          <li><a href="#version2.1">Version 2.1</a></li>
+          <ul>
+            <li><a href="#minor2.1">minor changes</a></li>
+          </ul>
           <li><a href="#version2.0">Version 2.0</a></li>
           <ul>
             <li><a href="#breaking2.0">breaking changes</a></li>

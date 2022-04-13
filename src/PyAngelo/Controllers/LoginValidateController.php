@@ -110,8 +110,8 @@ class LoginValidateController extends Controller {
   private function setRememberMeCookies() {
     if ($this->request->post['rememberme'] == 'y') {
       $personId = $this->auth->person()['person_id'];
-      $session = bin2hex(openssl_random_pseudo_bytes(32));
-      $token = bin2hex(openssl_random_pseudo_bytes(32));
+      $session = bin2hex(random_bytes(32));
+      $token = bin2hex(random_bytes(32));
       $tokenHash = password_hash($token, PASSWORD_DEFAULT);
       $this->auth->insertRememberMe($personId, $session, $tokenHash);
       $this->response->setcookie('rememberme', $personId, time()+60*60*24*365, null, null, null, TRUE);

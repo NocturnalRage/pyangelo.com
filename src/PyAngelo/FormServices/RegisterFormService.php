@@ -86,7 +86,7 @@ class RegisterFormService {
   }
 
   private function sendActivateEmail($personId, $formData) {
-    $token = bin2hex(openssl_random_pseudo_bytes(32));
+    $token = bin2hex(random_bytes(32));
     $result = $this->personRepository->insertMembershipActivate(
       $personId,
       $formData['email'],

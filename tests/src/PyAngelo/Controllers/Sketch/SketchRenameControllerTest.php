@@ -70,7 +70,7 @@ class SketchRenameControllerTest extends TestCase {
   }
 
   public function testWhenNoTitle() {
-    $sketchId = 101;
+    $sketchId = bin2hex(random_bytes(16));
     $this->request->post = ['sketchId' => $sketchId];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
@@ -86,7 +86,7 @@ class SketchRenameControllerTest extends TestCase {
   }
 
   public function testWhenTitleOnlyWhitespace() {
-    $sketchId = 101;
+    $sketchId = bin2hex(random_bytes(16));
     $this->request->post = [
       'sketchId' => $sketchId,
       'newTitle' => '   '
@@ -105,7 +105,7 @@ class SketchRenameControllerTest extends TestCase {
   }
 
   public function testSketchNotInDatabase() {
-    $sketchId = 101;
+    $sketchId = bin2hex(random_bytes(16));
     $this->request->post = [
       'sketchId' => $sketchId,
       'newTitle' => 'great-sketch'
@@ -127,7 +127,7 @@ class SketchRenameControllerTest extends TestCase {
   public function testSketchNotOwner() {
     $ownerId = 101;
     $personId = 102;
-    $sketchId = 10;
+    $sketchId = bin2hex(random_bytes(16));
     $sketch = ['sketch_id' => $sketchId, 'person_id' => $ownerId];
     $this->request->post = [
       'sketchId' => $sketchId,
@@ -151,7 +151,7 @@ class SketchRenameControllerTest extends TestCase {
   public function testRenameSuccess() {
     $ownerId = 101;
     $personId = $ownerId;
-    $sketchId = 220;
+    $sketchId = bin2hex(random_bytes(16));
     $fileId = 1000;
     $newTitle = 'new-title';
     $sketch = [

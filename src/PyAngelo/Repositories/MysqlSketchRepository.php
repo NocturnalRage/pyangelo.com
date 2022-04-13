@@ -35,7 +35,7 @@ class MysqlSketchRepository implements SketchRepository {
             WHERE  sketch_id = ?
             AND    deleted = FALSE";
     $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('i', $sketchId);
+    $stmt->bind_param('s', $sketchId);
     $stmt->execute();
     $result = $stmt->get_result();
     $stmt->close();
@@ -48,7 +48,7 @@ class MysqlSketchRepository implements SketchRepository {
             WHERE  sketch_id = ?
             AND    deleted = TRUE";
     $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('i', $sketchId);
+    $stmt->bind_param('s', $sketchId);
     $stmt->execute();
     $result = $stmt->get_result();
     $stmt->close();
@@ -95,7 +95,7 @@ class MysqlSketchRepository implements SketchRepository {
             WHERE  s.sketch_id = ?
             ORDER by file_id";
     $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('i', $sketchId);
+    $stmt->bind_param('s', $sketchId);
     $stmt->execute();
     $result = $stmt->get_result();
     $stmt->close();
@@ -103,6 +103,7 @@ class MysqlSketchRepository implements SketchRepository {
   }
 
   public function createNewSketch($personId, $title, $collectionId, $lessonId = NULL, $tutorialId = NULL, $layout = 'cols') {
+    $sketchId = bin2hex(random_bytes(16));
     $sql = "INSERT INTO sketch (
               sketch_id,
               person_id,
@@ -114,10 +115,11 @@ class MysqlSketchRepository implements SketchRepository {
               created_at,
               updated_at
             )
-            VALUES (NULL, ?, ?, ?, ?, ?, ?, now(), now())";
+            VALUES (?, ?, ?, ?, ?, ?, ?, now(), now())";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'iiiiss',
+      'siiiiss',
+      $sketchId,
       $personId,
       $collectionId,
       $lessonId,
@@ -126,7 +128,6 @@ class MysqlSketchRepository implements SketchRepository {
       $layout
     );
     $stmt->execute();
-    $sketchId = $this->dbh->insert_id;
     $stmt->close();
 
     $sql = "INSERT INTO sketch_files (
@@ -138,7 +139,7 @@ class MysqlSketchRepository implements SketchRepository {
             )
             VALUES (NULL, ?, 'main.py', now(), now())";
     $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('i', $sketchId);
+    $stmt->bind_param('s', $sketchId);
     $stmt->execute();
     $fileId = $this->dbh->insert_id;
     $stmt->close();
@@ -154,7 +155,7 @@ class MysqlSketchRepository implements SketchRepository {
                    lesson_id = NULL
             WHERE  sketch_id = ?";
     $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('i', $sketchId);
+    $stmt->bind_param('s', $sketchId);
     $stmt->execute();
     $rowsUpdated = $this->dbh->affected_rows;
     $stmt->close();
@@ -167,7 +168,7 @@ class MysqlSketchRepository implements SketchRepository {
                    deleted_at = NULL
             WHERE   sketch_id = ?";
     $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('i', $sketchId);
+    $stmt->bind_param('s', $sketchId);
     $stmt->execute();
     $rowsUpdated = $this->dbh->affected_rows;
     $stmt->close();
@@ -184,7 +185,7 @@ class MysqlSketchRepository implements SketchRepository {
             )
             VALUES (NULL, ?, ?, now(), now())";
     $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('is', $sketchId, $filename);
+    $stmt->bind_param('ss', $sketchId, $filename);
     $stmt->execute();
     $fileId = $this->dbh->insert_id;
     $stmt->close();
@@ -198,7 +199,7 @@ class MysqlSketchRepository implements SketchRepository {
             WHERE   sketch_id = ?
             AND     filename = ?";
     $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('is', $sketchId, $filename);
+    $stmt->bind_param('ss', $sketchId, $filename);
     $stmt->execute();
     $rowsDeleted = $this->dbh->affected_rows;
     $stmt->close();
@@ -206,6 +207,7 @@ class MysqlSketchRepository implements SketchRepository {
   }
 
   public function forkSketch($sketchId, $personId, $title, $lessonId = NULL, $tutorialId = NULL, $layout = 'cols') {
+    $newSketchId = bin2hex(random_bytes(16));
     $sql = "INSERT INTO sketch (
               sketch_id,
               person_id,
@@ -216,10 +218,11 @@ class MysqlSketchRepository implements SketchRepository {
               created_at,
               updated_at
             )
-            VALUES (NULL, ?, ?, ?, ?, ?, now(), now())";
+            VALUES (?, ?, ?, ?, ?, ?, now(), now())";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'iiiss',
+      'siiiss',
+      $newSketchId,
       $personId,
       $lessonId,
       $tutorialId,
@@ -227,7 +230,6 @@ class MysqlSketchRepository implements SketchRepository {
       $layout
     );
     $stmt->execute();
-    $newSketchId = $this->dbh->insert_id;
     $stmt->close();
 
     $sql = "INSERT INTO sketch_files (
@@ -242,7 +244,7 @@ class MysqlSketchRepository implements SketchRepository {
             WHERE  sketch_id = ?
             ORDER BY file_id";
     $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('ii', $newSketchId, $sketchId);
+    $stmt->bind_param('ss', $newSketchId, $sketchId);
     $stmt->execute();
     $fileId = $this->dbh->insert_id;
     $stmt->close();
@@ -255,7 +257,7 @@ class MysqlSketchRepository implements SketchRepository {
             SET    title = ?
             WHERE  sketch_id = ?";
     $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('si', $title, $sketchId);
+    $stmt->bind_param('ss', $title, $sketchId);
     $stmt->execute();
     $rowsUpdated = $this->dbh->affected_rows;
     $stmt->close();
@@ -267,7 +269,7 @@ class MysqlSketchRepository implements SketchRepository {
             SET    updated_at = now()
             WHERE  sketch_id = ?";
     $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('i', $sketchId);
+    $stmt->bind_param('s', $sketchId);
     $stmt->execute();
     $rowsUpdated = $this->dbh->affected_rows;
     $stmt->close();
@@ -280,7 +282,7 @@ class MysqlSketchRepository implements SketchRepository {
                    updated_at = now()
             WHERE  sketch_id = ?";
     $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('si', $layout, $sketchId);
+    $stmt->bind_param('ss', $layout, $sketchId);
     $stmt->execute();
     $rowsUpdated = $this->dbh->affected_rows;
     $stmt->close();
@@ -327,7 +329,7 @@ class MysqlSketchRepository implements SketchRepository {
                    updated_at = now()
             WHERE  sketch_id = ?";
     $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('ii', $collectionId, $sketchId);
+    $stmt->bind_param('is', $collectionId, $sketchId);
     $stmt->execute();
     $rowsUpdated = $this->dbh->affected_rows;
     $stmt->close();
@@ -340,7 +342,7 @@ class MysqlSketchRepository implements SketchRepository {
                    updated_at = now()
             WHERE  sketch_id = ?";
     $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('i', $sketchId);
+    $stmt->bind_param('s', $sketchId);
     $stmt->execute();
     $rowsUpdated = $this->dbh->affected_rows;
     $stmt->close();
