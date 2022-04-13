@@ -74,7 +74,7 @@ class SketchAddFileControllerTest extends TestCase {
   }
 
   public function testWhenNoFilename() {
-    $sketchId = 101;
+    $sketchId = bin2hex(random_bytes(16));
     $this->request->post = ['sketchId' => $sketchId];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
@@ -89,7 +89,7 @@ class SketchAddFileControllerTest extends TestCase {
   }
 
   public function testSketchNotInDatabase() {
-    $sketchId = 101;
+    $sketchId = bin2hex(random_bytes(16));
     $filename = 'main.py';
     $this->request->post = [
       'sketchId' => $sketchId,
@@ -112,7 +112,7 @@ class SketchAddFileControllerTest extends TestCase {
   public function testSketchNotOwner() {
     $ownerId = 101;
     $personId = 102;
-    $sketchId = 10;
+    $sketchId = bin2hex(random_bytes(16));
     $filename = 'main.py';
     $sketch = ['sketch_id' => $sketchId, 'person_id' => $ownerId];
     $this->request->post = [
@@ -137,7 +137,7 @@ class SketchAddFileControllerTest extends TestCase {
   public function testSuccess() {
     $ownerId = 101;
     $personId = $ownerId;
-    $sketchId = 220;
+    $sketchId = bin2hex(random_bytes(16));
     $fileId = 1000;
     $filename = 'main.py';
     $sketch = [

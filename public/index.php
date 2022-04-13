@@ -23,6 +23,7 @@ if (isset($match['params'])) {
 }
 
 if (!$match) {
+  $match = [];
   $match['target'] = 'PageNotFoundController';
 }
 

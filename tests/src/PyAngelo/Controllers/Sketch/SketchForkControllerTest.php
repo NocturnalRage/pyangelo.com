@@ -65,7 +65,7 @@ class SketchForkControllerTest extends TestCase {
   }
 
   public function testRedirectsToHomePageWhenSketchNotInDatabase() {
-    $anySketchId = 101;
+    $anySketchId = bin2hex(random_bytes(16));
     $this->request->post['sketchId'] = $anySketchId;
 
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);

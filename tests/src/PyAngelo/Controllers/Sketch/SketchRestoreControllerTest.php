@@ -39,7 +39,7 @@ class SketchRestoreControllerTest extends TestCase {
 
   public function testSketchRestoreControllerWhenNotLoggedIn() {
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
-    $sketchId = 999;
+    $sketchId = bin2hex(random_bytes(16));
     $this->request->post["sketchId"] = $sketchId;
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
@@ -52,7 +52,7 @@ class SketchRestoreControllerTest extends TestCase {
   public function testSketchRestoreControllerWhenInvalidCrsfToken() {
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(false);
-    $sketchId = 999;
+    $sketchId = bin2hex(random_bytes(16));
     $this->request->post["sketchId"] = $sketchId;
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
@@ -63,7 +63,7 @@ class SketchRestoreControllerTest extends TestCase {
   }
 
   public function testSketchRestoreControllerWhenNotValidSketch() {
-    $sketchId = 999;
+    $sketchId = bin2hex(random_bytes(16));
     $this->request->post["sketchId"] = $sketchId;
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
@@ -79,7 +79,7 @@ class SketchRestoreControllerTest extends TestCase {
   public function testSketchRestoreControllerWhenNotOwnerOfSketch() {
     $personId = 88;
     $sketchPersonId = 92;
-    $sketchId = 999;
+    $sketchId = bin2hex(random_bytes(16));
     $this->request->post["sketchId"] = $sketchId;
     $sketch = [
       'sketch' => $sketchId,
@@ -100,7 +100,7 @@ class SketchRestoreControllerTest extends TestCase {
   public function testSketchResstoreControllerWhenCannotDelete() {
     $personId = 88;
     $sketchPersonId = 88;
-    $sketchId = 999;
+    $sketchId = bin2hex(random_bytes(16));
     $this->request->post["sketchId"] = $sketchId;
     $sketch = [
       'sketch' => $sketchId,
@@ -122,7 +122,7 @@ class SketchRestoreControllerTest extends TestCase {
   public function testSketchRestoreControllerSuccess() {
     $personId = 88;
     $sketchPersonId = 88;
-    $sketchId = 999;
+    $sketchId = bin2hex(random_bytes(16));
     $this->request->post["sketchId"] = $sketchId;
     $sketch = [
       'sketch' => $sketchId,

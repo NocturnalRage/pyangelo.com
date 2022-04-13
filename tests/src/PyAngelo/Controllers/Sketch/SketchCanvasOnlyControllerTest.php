@@ -38,7 +38,7 @@ class SketchCanvasOnlyControllerTest extends TestCase {
   }
 
   public function testRedirectToPageNotFoundWhenSlugNotInDatabase() {
-    $sketchId = 101;
+    $sketchId = bin2hex(random_bytes(16));
     $this->request->get['sketchId'] = $sketchId;
     $this->sketchRepository->shouldReceive('getSketchById')->once()->with($sketchId)->andReturn(NULL);
 
@@ -49,7 +49,7 @@ class SketchCanvasOnlyControllerTest extends TestCase {
   }
 
   public function testWhenValidSketch() {
-    $sketchId = 0;
+    $sketchId = bin2hex(random_bytes(16));
 
     $sketch = [
       'sketch_id' => $sketchId,

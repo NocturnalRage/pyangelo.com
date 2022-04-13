@@ -71,7 +71,7 @@ class Auth {
       $crsfToken = $_SESSION['crsfToken'];
     }
     else {
-      $crsfToken = bin2hex(openssl_random_pseudo_bytes(32));
+      $crsfToken = bin2hex(random_bytes(32));
       $_SESSION['crsfToken'] = $crsfToken;
     }
     return $crsfToken;
