@@ -1414,6 +1414,24 @@ $di->set('UserController', function () use ($di) {
   );
 });
 
+$di->set('ImpersonateUserController', function () use ($di) {
+  return new PyAngelo\Controllers\Admin\ImpersonateUserController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('personRepository')
+  );
+});
+
+$di->set('StopImpersonatingController', function () use ($di) {
+  return new PyAngelo\Controllers\Admin\StopImpersonatingController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('personRepository')
+  );
+});
+
 $di->set('UpdateEndDateController', function () use ($di) {
   return new PyAngelo\Controllers\Admin\UpdateEndDateController (
     $di->get('request'),

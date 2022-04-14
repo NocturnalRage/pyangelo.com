@@ -12,6 +12,16 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
         <?php
           include __DIR__ . DIRECTORY_SEPARATOR . '/person.html.php';
         ?>
+
+        <form action="/admin/impersonate-user" method="POST">
+          <input type="hidden" name="crsfToken" value="<?= $personInfo['crsfToken']; ?>" />
+          <input type="hidden" name="email" value="<?= $this->esc($person['email']) ?>" />
+          <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to impersonate this user?')">
+            <i class="fa fa-user" aria-hidden="true"></i> Impersonate User
+          </button>
+        </form>
+        <br/>
+
         <?php if ($person['premium_status_boolean'] == 1) : ?>
           <form action="/admin/update-premium-end-date" method="POST">
             <input type="hidden" name="crsfToken" value="<?= $personInfo['crsfToken']; ?>" />
