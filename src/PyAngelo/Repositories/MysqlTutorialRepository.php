@@ -138,7 +138,7 @@ class MysqlTutorialRepository implements TutorialRepository {
             VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'ssssiiiii',
+      'ssssiiisi',
       $title,
       $description,
       $slug,
@@ -177,7 +177,7 @@ class MysqlTutorialRepository implements TutorialRepository {
             WHERE  slug = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'ssiiiiis',
+      'ssiiisis',
       $title,
       $description,
       $tutorialCategoryId,
@@ -383,7 +383,7 @@ class MysqlTutorialRepository implements TutorialRepository {
             VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'issssisiii',
+      'issssisisi',
       $lessonInfo['tutorial_id'],
       $lessonInfo['lesson_title'],
       $lessonInfo['lesson_description'],
@@ -680,7 +680,7 @@ class MysqlTutorialRepository implements TutorialRepository {
             AND    lesson_slug = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'ssssiiiiis',
+      'ssssiisiis',
       $formData['lesson_title'],
       $formData['lesson_description'],
       $formData['video_name'],
