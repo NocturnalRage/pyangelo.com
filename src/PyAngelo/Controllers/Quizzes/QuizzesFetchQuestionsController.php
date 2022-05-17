@@ -62,6 +62,7 @@ class QuizzesFetchQuestionsController extends Controller {
     $answers = [];
     $quizOption = [];
     $currentQuestion = $options[0]["question"];
+    $currentQuestionImage = $options[0]["question_image"];
     $currentSkillQuestionId = $options[0]["skill_question_id"];
     $currentSkillQuestionTypeId = $options[0]["skill_question_type_id"];
 
@@ -72,6 +73,7 @@ class QuizzesFetchQuestionsController extends Controller {
         );
         $quizOptions[] = [
             "question" => $currentQuestion,
+            "question_image" => $currentQuestionImage,
             "skill_question_id" => $currentSkillQuestionId,
             "skill_question_type_id" => $currentSkillQuestionTypeId,
             "answers" => $quizOption,
@@ -79,6 +81,7 @@ class QuizzesFetchQuestionsController extends Controller {
         ];
         $quizOption = [];
         $currentQuestion = $option["question"];
+        $currentQuestionImage = $option["question_image"];
         $currentSkillQuestionId = $option["skill_question_id"];
         $currentSkillQuestionTypeId = $option["skill_question_type_id"];
       }
@@ -94,6 +97,7 @@ class QuizzesFetchQuestionsController extends Controller {
     );
     $quizOptions[] = [
       "question" => $currentQuestion,
+      "question_image" => $currentQuestionImage,
       "skill_question_id" => $currentSkillQuestionId,
       "skill_question_type_id" => $currentSkillQuestionTypeId,
       "answers" => $quizOption,

@@ -20,7 +20,7 @@
             </a>
             <ul class="dropdown-menu" role="menu">
               <li>
-                <a href="/categories/getting-started"><i class="fa fa-handshake-o fa-fw"></i> Getting Started</a>
+                <a href="/categories/introduction-to-programming"><i class="fa fa-handshake-o fa-fw"></i> Introduction to Programming</a>
                 <a href="/categories/arcade-games"><i class="fa fa-gamepad fa-fw"></i> Arcade Games</a>
                 <a href="/categories/coding-challenges"><i class="fa fa-bolt fa-fw"></i> Coding Challenges</a>
                 <a href="/tutorials"><i class="fa fa-th fa-fw"></i> All</a>
