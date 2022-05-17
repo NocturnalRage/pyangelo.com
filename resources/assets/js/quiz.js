@@ -105,8 +105,13 @@ function askMultipleChoiceQuestion (currentQuestion) {
   output.push(
       `<p class="question_number text-right">Question ${questionNo + 1} of ${totalQuestions} </p>
        <hr />
-       <div class="question">${currentQuestion.question}</div>
-       <hr />
+       <div class="question">${currentQuestion.question}</div>`
+  )
+  if (currentQuestion.question_image != null) {
+    output.push(`<div class="question_image"><img src="/images/questions/${currentQuestion.question_image}" alt="${currentQuestion.question}"</div>`)
+  }
+  output.push(
+       `<hr />
        <div class="answers">${answers.join('')}</div>`
   )
   quizContainer.innerHTML = output.join('')

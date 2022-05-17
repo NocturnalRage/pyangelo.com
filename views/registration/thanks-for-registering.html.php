@@ -26,14 +26,14 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
     </div><!-- row -->
     <div class="row">
       <div class="col-md-6">
-        <a href="/tutorials/introduction-to-programming">
+        <a href="/tutorials/introduction-to-graphical-programming">
           <img src="/images/introduction-to-programming.png" class="img-responsive featuredThumbnail" alt="Introduction to Programming">
         </a>
         <div class="caption">
-          <h3><a href="/tutorials/introduction-to-programming">Introduction to Programming</a></h3>
+          <h3><a href="/tutorials/introduction-to-graphical-programming">Introduction to Graphical Programming</a></h3>
           <p>This is a great place to start. We teach you step by step how to start programming with Python in the Browswer. We call it PyAngelo!</p>
           <p>
-            <a href="/tutorials/introduction-to-programming" class="btn btn-lg btn-primary" role="button">
+            <a href="/tutorials/introduction-to-graphical-programming" class="btn btn-lg btn-primary" role="button">
               <strong>Start Coding!</strong>
             </a> 
          </p>

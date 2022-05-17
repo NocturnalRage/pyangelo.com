@@ -211,6 +211,7 @@ class MysqlQuizRepository implements QuizRepository {
                    sq.skill_question_id,
                    sq.skill_question_type_id,
                    sq.question,
+                   sq.question_image,
                    sqo.skill_question_option_id,
                    sqo.option_text,
                    sqo.option_order,
