@@ -102,6 +102,7 @@ class QuizzesFetchQuestionsControllerTest extends TestCase {
         "person_id" => $quizPersonId,
         "slug" => 'a-tutorial',
         "question" => 'What is it?',
+        "question_image" => 'image.png',
         "skill_question_id" => $currentSkillQuestionId,
         "skill_question_type_id" => 1,
         "skill_question_option_id" => 1,
