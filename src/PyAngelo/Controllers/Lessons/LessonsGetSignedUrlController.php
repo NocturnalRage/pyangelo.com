@@ -53,8 +53,6 @@ class LessonsGetSignedUrlController extends Controller {
       return $this->response;
     }
 
-    $lesson['youtube_url'] = ($this->auth->person()['country_code'] ?? 'ZZ') == 'CN' ? '' : $lesson['youtube_url'];
-
     if (! $lesson['youtube_url']) {
       $expires = time()+(60*60);
       $signedUrl = $this->cloudFront->generateSignedUrl (

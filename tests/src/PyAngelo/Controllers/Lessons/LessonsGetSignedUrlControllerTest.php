@@ -136,7 +136,6 @@ class LessonsGetSignedUrlControllerTest extends TestCase {
     ];
     $request->post['lessonId'] = $lessonId;
     $auth = Mockery::mock('PyAngelo\Auth\Auth');
-    $auth->shouldReceive('person')->once()->with()->andReturn(NULL);
     $cloudfront = Mockery::mock('Framework\CloudFront\CloudFront');
     $cloudfront->shouldReceive('generateSignedUrl')
       ->once()
