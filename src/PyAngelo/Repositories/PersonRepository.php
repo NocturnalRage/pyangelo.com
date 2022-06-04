@@ -92,5 +92,7 @@ interface PersonRepository {
   public function markAllNotificationsAsRead($personId);
  
   public function getPaymentHistory($personId);
+
+  public function getPoints($personId);
 }
 ?>

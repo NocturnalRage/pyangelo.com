@@ -16,6 +16,7 @@ include __DIR__ . '/../layout/navbar.html.php';
         <h1 class="media-heading"><?= $this->esc($person['given_name']) ?> <?= $this->esc($person['family_name']) ?></h1>
           <p><?= $this->esc($person['email']) ?></p>
           <p>Joined PyAngelo <?= $this->esc($person['memberSince']) ?></p>
+          <p>PyAngelo Points: <?= $this->esc($points['points']) ?></p>
           <p><?= $this->esc($person['country_name']) ?></p>
         </div>
         <div>

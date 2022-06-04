@@ -32,6 +32,8 @@ class ProfileController extends Controller {
 
     $person['memberSince'] = Carbon::createFromFormat('Y-m-d H:i:s', $person['created_at'])->diffForHumans();
 
+    $points = $this->personRepository->getPoints($person['person_id']);
+
     $this->response->setView('profile/profile.html.php');
     $this->response->setVars(array(
       'pageTitle' => 'Profile of ' . $person['given_name'] . ' ' . $person['family_name'],
@@ -39,6 +41,7 @@ class ProfileController extends Controller {
       'activeLink' => 'profile',
       'personInfo' => $this->auth->getPersonDetailsForViews(),
       'person' => $person,
+      'points' => $points,
       'avatar' => $this->avatar
     ));
     $this->addVar('flash');

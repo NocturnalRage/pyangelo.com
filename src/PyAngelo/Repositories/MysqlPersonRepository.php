@@ -611,5 +611,18 @@ class MysqlPersonRepository implements PersonRepository {
     $stmt->close();
     return $result->fetch_all(MYSQLI_ASSOC);
   }
+
+  public function getPoints($personId) {
+    $sql = "SELECT sum(ml.points) points
+            FROM   skill_mastery sm
+            JOIN   mastery_level ml on sm.mastery_level_id = ml.mastery_level_id
+            WHERE  sm.person_id = ?";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->bind_param('i', $personId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    return $result->fetch_assoc();
+  }
 }
 ?>

@@ -44,14 +44,18 @@ class ProfileControllerTest extends TestCase {
   public function testProfileControllerWhenLoggedIn() {
     $personId = 99;
     $person = [
+      'person_id' => $personId,
       'given_name' => 'Fred',
       'family_name' => 'Fearless',
       'email' => 'Fearless',
       'created_at' => '2016-01-01 10:00:00',
     ];
+    $points = ['points' => 100];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('person')->once()->with()->andReturn($person);
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
+
+    $this->personRepository->shouldReceive('getPoints')->once()->with($personId)->andReturn();
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
