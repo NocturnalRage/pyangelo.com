@@ -55,7 +55,7 @@ class ProfileControllerTest extends TestCase {
     $this->auth->shouldReceive('person')->once()->with()->andReturn($person);
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
 
-    $this->personRepository->shouldReceive('getPoints')->once()->with($personId)->andReturn();
+    $this->personRepository->shouldReceive('getPoints')->once()->with($personId)->andReturn($points);
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();

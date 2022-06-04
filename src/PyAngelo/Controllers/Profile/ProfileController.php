@@ -33,6 +33,9 @@ class ProfileController extends Controller {
     $person['memberSince'] = Carbon::createFromFormat('Y-m-d H:i:s', $person['created_at'])->diffForHumans();
 
     $points = $this->personRepository->getPoints($person['person_id']);
+    if (is_null($points['points'])) {
+      $points['points'] = 0;
+    }
 
     $this->response->setView('profile/profile.html.php');
     $this->response->setVars(array(
