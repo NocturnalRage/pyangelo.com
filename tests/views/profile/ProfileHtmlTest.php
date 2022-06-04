@@ -19,6 +19,7 @@ class ProfileHtmlTest extends BasicViewHtmlTest {
       'country_name' => 'Australia',
       'email' => 'fred@hotmail.com'
     ];
+    $points = ['points' => 100];
     $avatarUrl = 'https://myimage.com';
     $avatar = \Mockery::mock('Framework\Contracts\AvatarContract');
     $avatar->shouldReceive('getAvatarUrl')
@@ -33,6 +34,7 @@ class ProfileHtmlTest extends BasicViewHtmlTest {
       'activeLink' => 'profile',
       'personInfo' => $this->setPersonInfoLoggedIn(),
       'person' => $person,
+      'points' => $points,
       'avatar' => $avatar
     ));
     $output = $response->requireView();
@@ -49,6 +51,8 @@ class ProfileHtmlTest extends BasicViewHtmlTest {
     $expect = '<p>fred@hotmail.com</p>';
     $this->assertStringContainsString($expect, $output);
     $expect = '<p>Joined PyAngelo 2 weeks ago</p>';
+    $this->assertStringContainsString($expect, $output);
+    $expect = '<p>PyAngelo Points: ' . $points['points'] . '</p>';
     $this->assertStringContainsString($expect, $output);
     $expect = '<p>Australia</p>';
     $this->assertStringContainsString($expect, $output);
