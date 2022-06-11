@@ -43,7 +43,7 @@
             <h3 class="text-center">What next?</h3>
             <a id="nextLessonButton" href="#" class="btn btn-primary btn-block">Next lesson</a>
             <?php if ($personInfo['loggedIn']) : ?>
-              <a href="#comment-anchor" class="btn btn-primary btn-block"><i class="fa fa-comments-o" aria-hidden="true"></i> Discuss this lesson</a>
+              <a href="/tutorials/<?= $this->esc($lesson['tutorial_slug']); ?>/<?= $this->esc($lesson['lesson_slug']); ?>#comment-anchor" class="btn btn-primary btn-block"><i class="fa fa-comments-o" aria-hidden="true"></i> Discuss this lesson</a>
             <?php endif; ?>
             <a id="replayVideo" href="#" class="btn btn-success btn-block"><i class="fa fa-repeat" aria-hidden="true"></i> Replay Video</a>
           </div>
