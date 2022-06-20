@@ -27,8 +27,8 @@ while True:
 The Sprite class loads an image specified as the first parameter at a starting position specified by the second and third parameters. You can also specify the optional parameters of width, height, and opacity for the image.
 </p>
 <h4>Methods</h4>
-<h5>Sprite(image, x, y, width, height, opacity)</h5>
-<p>The image specifies the location on the Internet of the image to use. This is the only mandatory parameter, the rest are optional. The x and y parameters specify the starting position of the Sprite. The width and height parameters can adjust the size of the image and the opacity will change the transparency of the image.</p>
+<h5>Sprite(image, x, y, width, height, opacity, angle)</h5>
+<p>The image specifies the location on the Internet of the image to use. This is the only mandatory parameter, the rest are optional. The x and y parameters specify the starting position of the Sprite. The width and height parameters can adjust the size of the image and the opacity will change the transparency of the image. The angle will rotate the sprite with a positive angle indicating a clockwise rotation and a negative number an anti-clockwise rotation.</p>
 <h5>draw()</h5>
 <p>Draws the Sprite's image to the canvas at the Sprite's X and Y position.</p>
 <h5>moveBy(x, y)</h5>
@@ -39,6 +39,8 @@ The Sprite class loads an image specified as the first parameter at a starting p
 <p>Returns True if this Sprite overlaps with the "other" Sprite passed in as the first parameter. If the two Sprites do not overlap then False is returned. The overlap method uses the bounding rectangle principle to check if the Sprites are overlapping.</p>
 <h5>contains(point)</h5>
 <p>Returns True if the point passed in as the first parameter is inside the area occupied by this Sprite, otherwise it returns False.</p>
+<h5>rotate(angle)</h5>
+<p>Rotates the sprite around its centre by the angle specified. By default the angle is specified in degrees. This can be changed to radians with the <a href="#angleMode">angleMode()</a> function. </p>
 <hr />
 <h3 id="TextSprite">TextSprite()</h3>
 <h4>Examples</h4>
@@ -62,10 +64,10 @@ while True:
 </pre>
 <h4>Description</h4>
 <p>
-The TextSprite class inherits from the Sprite class and so it has the same methods draw(), moveBy(), moveTo(), contains(), and overlaps(). However the first parameter passed to a TextSprite is the text to display. This text can also be an emoji. 
+The TextSprite class inherits from the Sprite class and so it has the same methods draw(), moveBy(), moveTo(), contains(), overlaps(), and rotate(). However the first parameter passed to a TextSprite is the text to display. This text can also be an emoji.
 </p>
-<h5>TextSprite(text, x, y, fontSize, fontName, r, g, b, a)</h5>
-<p>The text parameter specifies what text will be displayed by the draw() method. This is the only mandatory parameter, the rest are optional. The x and y parameters specify the starting position of the Sprite. The fontSize specified the size of the text, the fontName specifies the type of font to use, and the r, g, b, and a parameters specify the colour and transparency of the text.</p>
+<h5>TextSprite(text, x, y, fontSize, fontName, r, g, b, a, angle)</h5>
+<p>The text parameter specifies what text will be displayed by the draw() method. This is the only mandatory parameter, the rest are optional. The x and y parameters specify the starting position of the Sprite. The fontSize specified the size of the text, the fontName specifies the type of font to use, and the r, g, b, and a parameters specify the colour and transparency of the text. The angle will rotate the text with a positive angle indicating a clockwise rotation and a negative number an anti-clockwise rotation.</p>
 <h4>Extra Methods</h4>
 <h5>setColour(r, g, b, a)</h5>
 <p>This method sets the colour and transparency of the text.</p>
@@ -101,10 +103,10 @@ while True:
 </pre>
 <h4>Description</h4>
 <p>
-The RectangleSprite class inherits from the TextSprite class and so it has the same methods draw(), setColour(), moveBy(), moveTo(), contains(), and overlaps(). However the first four parameter passed to a RectangleSprite are the x and y coordinates and the width and height of the rectangle.
+The RectangleSprite class inherits from the TextSprite class and so it has the same methods draw(), setColour(), moveBy(), moveTo(), contains(), overlaps(), and rotate(). However the first four parameter passed to a RectangleSprite are the x and y coordinates and the width and height of the rectangle.
 </p>
-<h5>RectangleSprite(x, y, width, height, r, g, b, a)</h5>
-<p>The first four parameter specify the x and y coordinates and the width and height of the rectangle. The first four parameters are mandatory, the rest are optional. The r, g, b, and a parameters specify the colour and transparency of the rectangle.</p>
+<h5>RectangleSprite(x, y, width, height, r, g, b, a, angle)</h5>
+<p>The first four parameter specify the x and y coordinates and the width and height of the rectangle. The first four parameters are mandatory, the rest are optional. The r, g, b, and a parameters specify the colour and transparency of the rectangle. The angle will rotate the rectangle with a positive angle indicating a clockwise rotation and a negative number an anti-clockwise rotation.</p>
 <h4>Extra Methods</h4>
 <h5>noStroke()</h5>
 <p>This updates the rectangle so no border will be drawn when the draw() method is called.</p>
@@ -146,8 +148,8 @@ while True:
 <p>
 The CircleSprite class inherits from the RectangleSprite class and so it has the same methods draw(), stroke(), noStroke(), strokeWeight(), setColour(), moveBy(), moveTo(), contains(), and overlaps(). However the first three parameter passed to a CircleSprite are the x and y coordinates of the center of the circle, and the radius of the circle.
 </p>
-<h5>CircleSprite(x, y, radius, r, g, b, a)</h5>
-<p>The first three parameter specify the x and y coordinates of the center of the circle and the radius of the circle. The first three parameters are mandatory, the rest are optional. The r, g, b, and a parameters specify the colour and transparency of the rectangle.</p>
+<h5>CircleSprite(x, y, radius, r, g, b, a, angle)</h5>
+<p>The first three parameter specify the x and y coordinates of the center of the circle and the radius of the circle. The first three parameters are mandatory, the rest are optional. The r, g, b, and a parameters specify the colour and transparency of the circle.</p>
 <hr />
 <h3 id="EllipseSprite">EllipseSprite()</h3>
 <h4>Examples</h4>
@@ -180,8 +182,8 @@ while True:
 </pre>
 <h4>Description</h4>
 <p>
-The EllipseSprite class inherits from the RectangleSprite class and so it has the same methods draw(), stroke(), noStroke(), strokeWeight(), setColour(), moveBy(), moveTo(), contains(), and overlaps(). However the first four parameter passed to a EllipseSprite are the x and y cooridinates of the center of the circle, and the X radius and Y radius of the ellipse.
+The EllipseSprite class inherits from the RectangleSprite class and so it has the same methods draw(), stroke(), noStroke(), strokeWeight(), setColour(), moveBy(), moveTo(), contains(), overlaps(), and rotate(). However the first four parameter passed to a EllipseSprite are the x and y cooridinates of the center of the circle, and the X radius and Y radius of the ellipse.
 </p>
-<h5>EllipseSprite(x, y, radiusX, radiusY, r, g, b, a)</h5>
-<p>The first four parameter specify the x and y coordinates of the center of the ellipse and the X radius and Y radius of the ellipse. The first four parameters are mandatory, the rest are optional. The r, g, b, and a parameters specify the colour and transparency of the rectangle.</p>
+<h5>EllipseSprite(x, y, radiusX, radiusY, r, g, b, a, angle)</h5>
+<p>The first four parameter specify the x and y coordinates of the center of the ellipse and the X radius and Y radius of the ellipse. The first four parameters are mandatory, the rest are optional. The r, g, b, and a parameters specify the colour and transparency of the ellipse. The angle will rotate the ellipse with a positive angle indicating a clockwise rotation and a negative number an anti-clockwise rotation.</p>
 <hr />
