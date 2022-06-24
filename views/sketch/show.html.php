@@ -14,7 +14,7 @@ include 'sketch-turtle.html.php';
 include 'sketch-buttons.html.php';
 include 'sketch-upload.html.php';
 ?>
-  </div><!-- container -->
+  </div><!-- container-fluid -->
 
 <script src="<?= mix('js/SkulptSketch.js'); ?>"></script>
 
