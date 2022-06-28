@@ -13,17 +13,17 @@ This variable holds the height of the canvas. The default height of the canvas i
 </p>
 <h4>Syntax</h4>
 <p>height</p>
-<h3 id="mouseX">mouseX</h3>
+<h3 id="windowWidth">windowWidth</h3>
 <h4>Description</h4>
 <p>
-This variable holds the current horizontal position of the mouse. The value is the number of pixels from the origin (0, 0) of the canvas.
+This variable holds the width of the web browser's window minus 15 pixels.
 </p>
 <h4>Syntax</h4>
-<p>mouseX</p>
-<h3 id="mouseY">mouseY</h3>
+<p>windowWidth</p>
+<h3 id="windowHeight">windowHeight</h3>
 <h4>Description</h4>
 <p>
-This variable holds the current vertical position of the mouse. The value is the number of pixels from the origin (0, 0) of the canvas.
+This variable holds the height of the web browser's window minus 15 pixels.
 </p>
 <h4>Syntax</h4>
-<p>mouseY</p>
+<p>windowHeight</p>
