@@ -60,6 +60,17 @@
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
+          <a href="#mouse">
+            <h3><i class="fa fa-mouse-pointer fa-fw"></i> Mouse</h3>
+          </a>
+          <div class="list-group">
+            <a href="#mouseX" class="list-group-item">mouseX</a>
+            <a href="#mouseY" class="list-group-item">mouseY</a>
+            <a href="#mouseIsPressed" class="list-group-item">mouseIsPressed</a>
+            <a href="#wasMousePressed" class="list-group-item">wasMousePressed()</a>
+          </div><!-- list-group -->
+        </div><!-- well -->
+        <div class="well">
           <a href="#typography">
             <h3><i class="fa fa-pencil fa-fw"></i> Typography</h3>
           </a>
@@ -142,8 +153,8 @@
           <div class="list-group">
             <a href="#width" class="list-group-item">width</a>
             <a href="#height" class="list-group-item">height</a>
-            <a href="#mouseX" class="list-group-item">mouseX</a>
-            <a href="#mouseY" class="list-group-item">mouseY</a>
+            <a href="#windowWidth" class="list-group-item">windowWidth</a>
+            <a href="#windowHeight" class="list-group-item">windowHeight</a>
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
