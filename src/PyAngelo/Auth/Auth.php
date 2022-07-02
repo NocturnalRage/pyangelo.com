@@ -136,12 +136,11 @@ class Auth {
 
   private function authenticateRememberMeCookie($personId, $sessionId, $token) {
     $rememberMeCookie = $this->personRepository->getRememberMe($personId, $sessionId);
-    if (password_verify($token, $rememberMeCookie['token'])) {
-      return TRUE;
-    }
-    else {
+    if (is_null($rememberMeCookie))
       return FALSE;
-    }
+    if (password_verify($token, $rememberMeCookie['token']))
+      return TRUE;
+    return FALSE;
   }
 
   public function authenticateLogin($loginEmail, $loginPassword) {
