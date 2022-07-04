@@ -29,10 +29,19 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-python.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.min.js"></script>
-
   <?php endif; ?>
 
   <script src="<?= mix('js/app.js'); ?>"></script>
+  <?php if (isset($_ENV['GA4_MEASUREMENT_ID'])) :?>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=<?= $_ENV['GA4_MEASUREMENT_ID']; ?>"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
+    gtag('config', '<?= $_ENV['GA4_MEASUREMENT_ID']; ?>');
+  </script>
+  <?php endif; ?>
 </head>
 <body>
