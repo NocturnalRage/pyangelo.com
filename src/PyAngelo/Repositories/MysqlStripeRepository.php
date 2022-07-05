@@ -406,7 +406,7 @@ class MysqlStripeRepository implements StripeRepository {
             JOIN   stripe_product sprod on sprod.stripe_product_id = sp.stripe_product_id
             JOIN   currency c on sp.currency_code = c.currency_code
             WHERE  ss.person_id = ?
-            AND    ss.status not in ('active', 'past_due')
+            AND    ss.status = 'canceled'
             ORDER BY ss.start_date DESC";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('i', $personId);
