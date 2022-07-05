@@ -94,6 +94,9 @@ class StripeWebhookController extends Controller {
     else if ($event->type == 'customer.subscription.deleted') {
       $this->handleCustomerSubscriptionDeleted($event);
     }
+    else if ($event->type == 'customer.subscription.updated') {
+      $this->handleCustomerSubscriptionUpdated($event);
+    }
     else if ($event->type == 'setup_intent.succeeded') {
       $this->handleSetupIntentSucceeded($event);
     }
@@ -223,6 +226,12 @@ class StripeWebhookController extends Controller {
       );
       $this->logMessage('Stripe Webhook: Payment failed for person ' . $person["person_id"], 'INFO');
     }
+  }
+
+  private function handleCustomerSubscriptionUpdated($event) {
+    $subscription = $event->data->object;
+    $this->stripeRepository->updateSubscriptionStatus($subscription->id, $subscription->status);
+    $this->logMessage('Stripe Subscription ' . $subscription->id . " updated to a status of " . $subscription->status, 'INFO');
   }
 
   private function handleCustomerSubscriptionDeleted($event) {
