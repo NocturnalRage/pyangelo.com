@@ -138,7 +138,7 @@ class Auth {
     $rememberMeCookie = $this->personRepository->getRememberMe($personId, $sessionId);
     if (is_null($rememberMeCookie))
       return FALSE;
-    if (password_verify($token, $rememberMeCookie['token']))
+    else if (password_verify($token, $rememberMeCookie['token']))
       return TRUE;
     return FALSE;
   }
