@@ -241,6 +241,39 @@ class TestData {
       now()
     )";
     $result = $this->dbh->query($sql);
+    $sql = "INSERT INTO stripe_subscription values (
+      'SUB-4',
+      1,
+      0,
+      NULl,
+      '2016-12-16',
+      '2017-01-16',
+      'CUS-4',
+      'Price1',
+      'SECRET',
+      '2016-12-16',
+      'incomplete',
+      0,
+      now(),
+      now()
+    )";
+    $sql = "INSERT INTO stripe_subscription values (
+      'SUB-5',
+      1,
+      0,
+      NULl,
+      '2016-12-16',
+      '2017-01-16',
+      'CUS-4',
+      'Price1',
+      'SECRET',
+      '2016-12-16',
+      'incomplete_expired',
+      0,
+      now(),
+      now()
+    )";
+    $result = $this->dbh->query($sql);
   }
 
   public function createSubscriberPayments() {

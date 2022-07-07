@@ -19,7 +19,7 @@ class MysqlMetricRepository implements MetricRepository {
                      1 as subscribed,
                      0 as cancelled
               FROM   stripe_subscription s
-              WHERE  status != 'incomplete'
+              WHERE  status not in ('incomplete', 'incomplete_expired')
               UNION ALL
               SELECT DATE_FORMAT(s.canceled_at, '%b %Y') startmonth,
                      DATE_FORMAT(s.canceled_at, '%Y%m') ordermonth,
@@ -27,7 +27,7 @@ class MysqlMetricRepository implements MetricRepository {
                      1 as cancelled
               FROM   stripe_subscription s
               WHERE  canceled_at is not null
-              AND    status != 'incomplete'
+              AND    status not in ('incomplete', 'incomplete_expired')
             ) stats
             GROUP BY startmonth, ordermonth
             ORDER BY ordermonth";
