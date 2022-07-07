@@ -17,25 +17,25 @@ class AskTheTeacherAskController extends Controller {
       'activeLink' => 'Ask the Teacher',
       'personInfo' => $this->auth->getPersonDetailsForViews()
     ));
-    if (isset($this->request->session["errors"])) {
+    if (isset($_SESSION["errors"])) {
       $this->response->addVars(array(
-        'errors' => $this->request->session["errors"]
+        'errors' => $_SESSION["errors"]
       ));
-      unset($this->request->session["errors"]);
+      unset($_SESSION["errors"]);
     }
 
-    if (isset($this->request->session["formVars"])) {
+    if (isset($_SESSION["formVars"])) {
       $this->response->addVars(array(
-        'formVars' => $this->request->session["formVars"]
+        'formVars' => $_SESSION["formVars"]
       ));
-      unset($this->request->session["formVars"]);
+      unset($_SESSION["formVars"]);
     }
     $this->addVar('flash');
     return $this->response;
   }
 
   private function redirectToLoginPage() {
-    $this->request->session['redirect'] = $this->request->server['REQUEST_URI'];
+    $_SESSION['redirect'] = $this->request->server['REQUEST_URI'];
     $this->flash('You must be logged in to ask a question!', 'info');
     $this->response->header('Location: /login');
     return $this->response;

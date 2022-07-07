@@ -180,6 +180,7 @@ class LoginValidateControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedFlashMessage = 'The email and password do not match. Login failed.';
     $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
+    $this->assertEquals($this->request->post, $_SESSION['formVars']);
   }
 
   /**

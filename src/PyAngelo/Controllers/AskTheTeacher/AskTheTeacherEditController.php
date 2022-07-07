@@ -31,8 +31,8 @@ class AskTheTeacherEditController extends Controller {
       return $this->response;
     }
 
-    $formVars = $this->request->session['formVars'] ?? $question;
-    unset($this->request->session['formVars']);
+    $formVars = $_SESSION['formVars'] ?? $question;
+    unset($_SESSION['formVars']);
 
     $this->response->setView('ask-the-teacher/edit.html.php');
     $this->response->setVars(array(

@@ -23,7 +23,7 @@ class AskTheTeacherIndexController extends Controller {
   }
 
   public function exec() {
-    $this->request->session['redirect'] = $this->request->server['REQUEST_URI'];
+    $_SESSION['redirect'] = $this->request->server['REQUEST_URI'];
     $pageNo = $this->getPageNo();
     $offset = ($pageNo-1) * $this->questionsPerPage;
 

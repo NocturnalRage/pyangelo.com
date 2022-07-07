@@ -49,7 +49,7 @@ class RegisterActivateController extends Controller {
     }
     $this->personRepository->makeActive($membershipActivate['person_id']);
 
-    $this->request->session['loginEmail'] = $membershipActivate['email'];
+    $_SESSION['loginEmail'] = $membershipActivate['email'];
     $this->auth->setLoginStatus();
 
     $this->subscribeToNewsletter($membershipActivate['person_id']);

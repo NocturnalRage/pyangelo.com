@@ -25,7 +25,7 @@ class BlogIndexController extends Controller {
   }
 
   public function exec() {
-    $this->request->session['redirect'] = $this->request->server['REQUEST_URI'];
+    $_SESSION['redirect'] = $this->request->server['REQUEST_URI'];
     $this->response->setView('blog/index.html.php');
     $this->response->setVars(array(
       'pageTitle' => 'PyAngelo Blog',

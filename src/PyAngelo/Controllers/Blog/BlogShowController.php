@@ -46,7 +46,7 @@ class BlogShowController extends Controller {
       ) ? true : false;
     }
     else {
-      $this->request->session['redirect'] = $this->request->server['REQUEST_URI'];
+      $_SESSION['redirect'] = $this->request->server['REQUEST_URI'];
     }
 
     $comments = $this->blogRepository->getPublishedBlogComments($blog['blog_id']);

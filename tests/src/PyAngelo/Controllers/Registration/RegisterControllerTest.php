@@ -67,7 +67,7 @@ class RegisterControllerTest extends TestCase {
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
     $expectedErrors = ['error1' => 'error'];
-    $this->request->session['errors'] = $expectedErrors;
+    $_SESSION['errors'] = $expectedErrors;
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $this->assertSame($expectedErrors, $responseVars['errors']);
@@ -81,7 +81,7 @@ class RegisterControllerTest extends TestCase {
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
     $expectedFormVars = ['givenName' => 'Fred'];
-    $this->request->session['formVars'] = $expectedFormVars;
+    $_SESSION['formVars'] = $expectedFormVars;
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $this->assertSame($expectedFormVars, $responseVars['formVars']);
@@ -95,7 +95,7 @@ class RegisterControllerTest extends TestCase {
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
     $expectedFlash = 'This is a flash message';
-    $this->request->session['flash'] = $expectedFlash;
+    $_SESSION['flash'] = $expectedFlash;
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $this->assertSame($expectedFlash, $responseVars['flash']);

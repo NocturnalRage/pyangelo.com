@@ -77,7 +77,7 @@ class LogoutControllerTest extends TestCase {
     ];
     session_start();
     $request = new Request($GLOBALS);
-    $request->session['loginEmail'] = 'fastfred@hotmail.com';
+    $_SESSION['loginEmail'] = 'fastfred@hotmail.com';
     $auth = Mockery::mock('PyAngelo\Auth\Auth');
     $auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
@@ -106,7 +106,7 @@ class LogoutControllerTest extends TestCase {
     $this->assertSame('remembermetoken', $actualHeaders[2][1]);
     $this->assertSame('', $actualHeaders[2][2]);
     $this->assertTrue($actualHeaders[2][7]);
-    $this->assertEmpty($request->session);
+    $this->assertEmpty($_SESSION);
   }
 }
 ?>
