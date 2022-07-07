@@ -32,8 +32,8 @@ class TeacherEditController extends Controller {
     if ($this->auth->personId() != $class['person_id'])
       return $this->redirectToNotOwnerPage();
 
-    $formVars = $this->request->session['formVars'] ?? $class;
-    unset($this->request->session['formVars']);
+    $formVars = $_SESSION['formVars'] ?? $class;
+    unset($_SESSION['formVars']);
 
     $this->response->setView('classes/edit.html.php');
     $this->response->setVars(array(

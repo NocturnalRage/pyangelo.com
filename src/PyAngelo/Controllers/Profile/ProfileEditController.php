@@ -26,8 +26,8 @@ class ProfileEditController extends Controller {
       return $this->response;
     }
 
-    $formVars = $this->request->session['formVars'] ?? $this->auth->person();
-    unset($this->request->session['formVars']);
+    $formVars = $_SESSION['formVars'] ?? $this->auth->person();
+    unset($_SESSION['formVars']);
 
     $this->response->setView('profile/edit.html.php');
     $this->response->setVars(array(

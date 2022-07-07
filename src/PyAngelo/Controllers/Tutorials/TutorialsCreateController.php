@@ -29,9 +29,9 @@ class TutorialsCreateController extends Controller {
       $this->request->files['pdf']
     );
     if (!$success) {
-      $this->request->session['errors'] = $this->tutorialFormService->getErrors();
+      $_SESSION['errors'] = $this->tutorialFormService->getErrors();
       $this->flash($this->tutorialFormService->getFlashMessage(), 'danger');
-      $this->request->session['formVars'] = $this->request->post;
+      $_SESSION['formVars'] = $this->request->post;
       $this->response->header('Location: /tutorials/new');
       return $this->response;
     }

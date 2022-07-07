@@ -49,7 +49,7 @@ class TeacherShowController extends Controller {
 
   private function redirectToLoginPage() {
     $this->flash("You must be logged in to view a class", "danger");
-    $this->request->session['redirect'] = $this->request->server['REQUEST_URI'];
+    $_SESSION['redirect'] = $this->request->server['REQUEST_URI'];
     $this->response->header('Location: /login');
     return $this->response;
   }

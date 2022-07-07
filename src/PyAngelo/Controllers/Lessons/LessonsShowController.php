@@ -47,7 +47,7 @@ class LessonsShowController extends Controller {
       return $this->redirectToPageNotFound();
 
     // Set for redirect after login
-    $this->request->session['redirect'] = $this->request->server['REQUEST_URI'];
+    $_SESSION['redirect'] = $this->request->server['REQUEST_URI'];
 
     if ($this->premiumLessonAndNotAuthorised($lesson))
       return $this->displayBecomeAPremiumMemberPage($lesson);

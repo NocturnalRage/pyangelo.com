@@ -34,8 +34,8 @@ class TutorialsEditController extends Controller {
     if (!($tutorial = $this->tutorialRepository->getTutorialBySlug($this->request->get['slug'])))
       return $this->redirectToPageNotFound();
 
-    $formVars = $this->request->session['formVars'] ?? $tutorial;
-    unset($this->request->session['formVars']);
+    $formVars = $_SESSION['formVars'] ?? $tutorial;
+    unset($_SESSION['formVars']);
 
     $this->response->setView('tutorials/edit.html.php');
     $this->response->setVars(array(

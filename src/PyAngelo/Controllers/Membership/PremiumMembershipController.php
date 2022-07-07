@@ -35,7 +35,7 @@ class PremiumMembershipController extends Controller {
     $currency = $this->getCurrency();
     $membershipPrices = $this->stripeRepository->getMembershipPrices($currency['currency_code']);
 
-    $this->request->session['redirect'] = $this->request->server['REQUEST_URI'];
+    $_SESSION['redirect'] = $this->request->server['REQUEST_URI'];
     $this->response->setView('membership/premium-membership.html.php');
     $this->response->setVars(array(
       'pageTitle' => 'Become a PyAngelo Premium Member',

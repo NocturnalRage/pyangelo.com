@@ -32,9 +32,9 @@ class TutorialsUpdateController extends Controller {
       $this->request->files['pdf']
     );
     if (!$success) {
-      $this->request->session['errors'] = $this->tutorialFormService->getErrors();
+      $_SESSION['errors'] = $this->tutorialFormService->getErrors();
       $this->flash($this->tutorialFormService->getFlashMessage(), 'danger');
-      $this->request->session['formVars'] = $this->request->post;
+      $_SESSION['formVars'] = $this->request->post;
       $location = 'Location: /tutorials/' . urlencode($this->request->post['slug']) . '/edit';
       $this->response->header($location);
       return $this->response;

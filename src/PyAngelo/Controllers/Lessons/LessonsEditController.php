@@ -31,8 +31,8 @@ class LessonsEditController extends Controller {
     if (! $lesson = $this->getLessonFromSlugs())
       return $this->redirectToPageNotFound();
 
-    $formVars = $this->request->session['formVars'] ?? $lesson;
-    unset($this->request->session['formVars']);
+    $formVars = $_SESSION['formVars'] ?? $lesson;
+    unset($_SESSION['formVars']);
 
     $this->response->setView('lessons/edit.html.php');
     $this->response->setVars(array(

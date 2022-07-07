@@ -23,11 +23,11 @@ abstract class Controller {
   abstract public function exec();
 
   public function addVar($varName) {
-    if (isset($this->request->session[$varName])) {
+    if (isset($_SESSION[$varName])) {
       $this->response->addVars(array(
-        $varName => $this->request->session[$varName]
+        $varName => $_SESSION[$varName]
       ));
-      unset($this->request->session[$varName]);
+      unset($_SESSION[$varName]);
     }
   }
 

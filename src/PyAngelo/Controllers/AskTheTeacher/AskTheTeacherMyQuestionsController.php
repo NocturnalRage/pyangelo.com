@@ -21,7 +21,7 @@ class AskTheTeacherMyQuestionsController extends Controller {
 
   public function exec() {
     if (!$this->auth->loggedIn()) {
-      $this->request->session['redirect'] = $this->request->server['REQUEST_URI'];
+      $_SESSION['redirect'] = $this->request->server['REQUEST_URI'];
       $this->flash('You must be logged in to view your questions!', 'danger');
       $this->response->header('Location: /login');
       return $this->response;

@@ -44,18 +44,18 @@ class RegisterController extends Controller {
   }
 
   private function includeAnyErrorsFormVarsAndFlash() {
-    if (isset($this->request->session["errors"])) {
+    if (isset($_SESSION["errors"])) {
       $this->response->addVars(array(
-        'errors' => $this->request->session["errors"]
+        'errors' => $_SESSION["errors"]
       ));
-      unset($this->request->session["errors"]);
+      unset($_SESSION["errors"]);
     }
 
-    if (isset($this->request->session["formVars"])) {
+    if (isset($_SESSION["formVars"])) {
       $this->response->addVars(array(
-        'formVars' => $this->request->session["formVars"]
+        'formVars' => $_SESSION["formVars"]
       ));
-      unset($this->request->session["formVars"]);
+      unset($_SESSION["formVars"]);
     }
     $this->addVar('flash');
   }

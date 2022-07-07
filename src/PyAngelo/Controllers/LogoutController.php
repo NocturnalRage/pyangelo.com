@@ -23,7 +23,7 @@ class LogoutController extends Controller {
   private function logoutUser() {
     $this->auth->deleteRememberMe($this->auth->person()['person_id']);
     $this->deleteCookies();
-    unset($this->request->session['loginEmail']);
+    unset($_SESSION['loginEmail']);
     session_destroy();
   }
 

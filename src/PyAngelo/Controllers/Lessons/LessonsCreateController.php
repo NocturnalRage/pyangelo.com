@@ -50,9 +50,9 @@ class LessonsCreateController extends Controller {
   }
 
   private function redirectBackToForm() {
-    $this->request->session['errors'] = $this->lessonFormService->getErrors();
+    $_SESSION['errors'] = $this->lessonFormService->getErrors();
     $this->flash($this->lessonFormService->getFlashMessage(), 'danger');
-    $this->request->session['formVars'] = $this->request->post;
+    $_SESSION['formVars'] = $this->request->post;
     $location = 'Location: /tutorials/' .
       ($this->request->post['slug'] ?? 'no-lesson') .
       '/lessons/new';

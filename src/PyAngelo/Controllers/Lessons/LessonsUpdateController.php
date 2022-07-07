@@ -44,9 +44,9 @@ class LessonsUpdateController extends Controller {
       $this->request->files['poster']
     );
     if (!$success) {
-      $this->request->session['errors'] = $this->lessonFormService->getErrors();
+      $_SESSION['errors'] = $this->lessonFormService->getErrors();
       $this->flash($this->lessonFormService->getFlashMessage(), 'danger');
-      $this->request->session['formVars'] = $this->request->post;
+      $_SESSION['formVars'] = $this->request->post;
       $location = 'Location: /tutorials/' . urlencode($this->request->post['slug']) . '/lessons/' . urlencode($this->request->post['lesson_slug']) . '/edit';
       $this->response->header($location);
       return $this->response;

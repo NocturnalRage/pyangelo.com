@@ -29,8 +29,8 @@ class BlogEditController extends Controller {
     if (!($blog = $this->blogRepository->getBlogBySlug($this->request->get['slug'])))
       return $this->redirectToPageNotFound();
 
-    $formVars = $this->request->session['formVars'] ?? $blog;
-    unset($this->request->session['formVars']);
+    $formVars = $_SESSION['formVars'] ?? $blog;
+    unset($_SESSION['formVars']);
 
     $this->response->setView('blog/edit.html.php');
     $this->response->setVars(array(

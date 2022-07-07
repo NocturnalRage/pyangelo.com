@@ -35,7 +35,7 @@ class TeacherShowControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /login'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame($this->request->server['REQUEST_URI'], $this->request->session['redirect']);
+    $this->assertSame($this->request->server['REQUEST_URI'], $_SESSION['redirect']);
   }
 
   public function testTeacherShowControllerWhenNoClassId() {
