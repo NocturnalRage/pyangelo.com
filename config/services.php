@@ -561,8 +561,8 @@ $di->set('FavouritesController', function () use ($di) {
   );
 });
 
-$di->set('PremiumMembershipController', function () use ($di) {
-  return new PyAngelo\Controllers\Membership\PremiumMembershipController (
+$di->set('ChoosePlanController', function () use ($di) {
+  return new PyAngelo\Controllers\Membership\ChoosePlanController (
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),
@@ -570,6 +570,27 @@ $di->set('PremiumMembershipController', function () use ($di) {
     $di->get('countryRepository'),
     $di->get('countryDetector'),
     $di->get('numberFormatter')
+  );
+});
+
+$di->set('SubscriptionPaymentFormController', function () use ($di) {
+  return new PyAngelo\Controllers\Membership\SubscriptionPaymentFormController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('stripeWrapper'),
+    $di->get('stripeRepository'),
+    $di->get('numberFormatter')
+  );
+});
+
+$di->set('ProcessSubscriptionController', function () use ($di) {
+  return new PyAngelo\Controllers\Membership\ProcessSubscriptionController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('stripeWrapper'),
+    $di->get('stripeRepository')
   );
 });
 
@@ -1451,16 +1472,6 @@ $di->set('PremiumUsersController', function () use ($di) {
   );
 });
 
-$di->set('ProcessSubscriptionController', function () use ($di) {
-  return new PyAngelo\Controllers\Membership\ProcessSubscriptionController (
-    $di->get('request'),
-    $di->get('response'),
-    $di->get('auth'),
-    $di->get('stripeWrapper'),
-    $di->get('stripeRepository')
-  );
-});
-
 $di->set('stripeWebhookEmails', function () use ($di) {
   return new PyAngelo\Email\StripeWebhookEmails (
     $di->get('emailTemplate'),
@@ -1519,7 +1530,8 @@ $di->set('PremiumWelcomeController', function () use ($di) {
   return new PyAngelo\Controllers\Membership\PremiumWelcomeController (
     $di->get('request'),
     $di->get('response'),
-    $di->get('auth')
+    $di->get('auth'),
+    $di->get('stripeWrapper')
   );
 });
 

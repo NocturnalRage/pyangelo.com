@@ -51,8 +51,8 @@
             <h4>If I cancel, will I still have access for the period I paid for?</h4>
             <p>
             Yes, you will! If you cancel a monthly membership, you will still
-            have premium member access until the date at which you were
-            scheduled to make your next payment.
+            have full access until the date at which you were scheduled to
+            make your next payment.
             </p>
           </div>
           <hr />

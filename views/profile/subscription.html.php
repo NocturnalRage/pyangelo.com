@@ -11,7 +11,7 @@ include __DIR__ . '/../layout/navbar.html.php';
       <div class="col-md-9">
         <?php if (empty($subscription)) : ?>
           <h1>You Don't Have an Active Subscription</h1>
-          <p>If you <a href="/premium-membership">join our monthly premium membership</a>, your subscription details will be shown here, plus you'll start learning amazing ways to solve problems using coding!</p>
+          <p>If you <a href="/choose-plan">subscribe to one of our monthly plans</a>, your subscription details will be shown here, plus you'll start learning amazing ways to solve problems using coding!</p>
         <?php else : ?>
           <h1>You are a PyAngelo Premium Member</h1>
           <?php if ($subscription['percent_off'] > 0) : ?>

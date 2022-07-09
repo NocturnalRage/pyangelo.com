@@ -8,17 +8,17 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
     <hr />
     <div class="row">
       <div class="col-md-8 col-md-offset-2 text-center">
-        <a href="/premium-membership">
+        <a href="/choose-plan">
           <img src="/uploads/images/tutorials/<?= $this->esc($lesson['tutorial_thumbnail']); ?>" class="img-responsive center-block featuredThumbnail">
         </a>
         <p>
-        To watch this video you need to be a premium member. By becoming a
-        premium member you'll get online access to every PyAngelo video
-        we've ever made and learn the coding strategies taught by our teachers. 
+        To watch this video you need to sign up to one of our monthly
+        subscriptions. By subscribing you'll get full access to every
+        PyAngelo tutorial and learn important coding techniques.
         </p>
         <p>
-          <a href="/premium-membership" class="btn btn-large btn-primary btn-responsive">
-          <i class="fa fa-cube"></i> FIND OUT MORE ABOUT THE PREMIUM MEMBERSHIP</a>
+          <a href="/choose-plan" class="btn btn-large btn-primary btn-responsive">
+          <i class="fa fa-cube"></i> FIND OUT MORE ABOUT OUR MONTHLY SUBSCRIPTIONS</a>
         </p>
       </div><!-- col-md-8 -->
     </div><!-- row -->

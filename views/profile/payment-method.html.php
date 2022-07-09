@@ -37,8 +37,8 @@ include __DIR__ . '/../layout/navbar.html.php';
           </div><!-- col-md-9 -->
         <?php else : ?>
           <div class="col-md-9">
-            <h1>You Don't Have an Active Subscription Yet</h1>
-            <p>If you <a href="/premium-membership">become a premium member on our monthly plan</a>, your credit card details will be stored with our payment provider, Stripe. Once you've done that you'll be able to update your credit card details via this page.</p>
+            <h1>You Don't Have an Active Subscription</h1>
+            <p>If you <a href="/choose-plan">subscribe to one of our monthly plans</a>, your credit card details will be securely stored with our payment provider, Stripe. Once you've done that you'll be able to update your credit card details via this page.</p>
           </div><!-- col-md-9 -->
         <?php endif ?>
     </div><!-- row -->

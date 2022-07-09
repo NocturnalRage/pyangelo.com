@@ -86,5 +86,7 @@ interface StripeRepository {
   public function getIncompleteSubscription($personId, $stripePriceId);
 
   public function updatePersonLast4($personId, $last4);
+
+  public function getStripePriceById($priceId);
 }
 ?>

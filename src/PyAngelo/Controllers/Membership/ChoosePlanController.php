@@ -9,7 +9,7 @@ use PyAngelo\Utilities\CountryDetector;
 use PyAngelo\Repositories\StripeRepository;
 use PyAngelo\Repositories\CountryRepository;
 
-class PremiumMembershipController extends Controller {
+class ChoosePlanController extends Controller {
   protected $stripeRepository;
   protected $countryRepository;
   protected $countryDetector;
@@ -32,23 +32,48 @@ class PremiumMembershipController extends Controller {
   }
 
   public function exec() {
+    if (! $this->auth->loggedIn())
+      return $this->showLoginOptions();
+
+    $_SESSION['redirect'] = $this->request->server['REQUEST_URI'];
     $currency = $this->getCurrency();
     $membershipPrices = $this->stripeRepository->getMembershipPrices($currency['currency_code']);
 
-    $_SESSION['redirect'] = $this->request->server['REQUEST_URI'];
-    $this->response->setView('membership/premium-membership.html.php');
+    $hasActiveSubscription = $this->auth->hasActiveSubscription();
+    if ($hasActiveSubscription)
+      return $this->redirectToSubscriptionPage();
+
+    $this->response->setView('membership/choose-plan.html.php');
+
     $this->response->setVars(array(
-      'pageTitle' => 'Become a PyAngelo Premium Member',
-      'metaDescription' => 'Sign up to a subscription to become a premium member of the PyAngelo website. This will give you full access to every tutorial on the website.',
-      'activeLink' => 'Premium Membership',
+      'pageTitle' => 'Get Full Access to all PyAngelo Tutorials',
+      'metaDescription' => 'A monthly subscription will give you full access to every tutorial on the PyAngelo website.',
+      'activeLink' => 'Choose Plan',
       'personInfo' => $this->auth->getPersonDetailsForViews(),
-      'hasActiveSubscription' => $this->auth->hasActiveSubscription(),
       'currency' => $currency,
       'membershipPrices' => $membershipPrices,
       'stripePublishableKey' => $this->request->env['STRIPE_PUBLISHABLE_KEY'],
       'numberFormatter' => $this->numberFormatter
     ));
     $this->addVar('flash');
+    return $this->response;
+  }
+
+  private function showLoginOptions() {
+    $this->response->setView('membership/choose-plan-not-logged-in.html.php');
+    $this->response->setVars(array(
+      'pageTitle' => 'Get Full Access to all PyAngelo Tutorials',
+      'metaDescription' => 'A monthly subscription will give you full access to every tutorial on the PyAngelo website.',
+      'activeLink' => 'Choose Plan',
+      'personInfo' => $this->auth->getPersonDetailsForViews(),
+    ));
+    $this->addVar('flash');
+    return $this->response;
+  }
+
+  private function redirectToSubscriptionPage() {
+    $this->flash('You already have full access with your current subscription!', 'warning');
+    $this->response->header('Location: /subscription');
     return $this->response;
   }
 
