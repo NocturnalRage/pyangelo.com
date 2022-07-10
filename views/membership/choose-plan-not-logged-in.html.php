@@ -6,9 +6,6 @@
     <?php include __DIR__ . '/../layout/flash.html.php'; ?>
     <div class="row">
       <div class="col-md-12 text-center add-bottom">
-        <?php
-          include __DIR__ . DIRECTORY_SEPARATOR . '../layout/flash.html.php';
-        ?>
         <h3>Do you already have a free PyAngelo account?</h3>
         <p>
           You need a free account before you can subscribe to one of our
