@@ -36,8 +36,22 @@ class ProcessSubscriptionControllerTest extends TestCase {
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedViewName = 'membership/create-subscription.json.php';
-    $expectedStatus = 'danger';
-    $expectedMessage = 'You must be logged in to become a premium member.';
+    $expectedStatus = 'login-error';
+    $expectedMessage = 'You must be logged in to start a subscription';
+    $this->assertSame($expectedViewName, $response->getView());
+    $this->assertSame($expectedStatus, $responseVars['status']);
+    $this->assertSame($expectedMessage, $responseVars['message']);
+  }
+
+  public function testWhenHasActiveSubscription() {
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('hasActiveSubscription')->once()->with()->andReturn(true);
+
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedViewName = 'membership/create-subscription.json.php';
+    $expectedStatus = 'active-subscription';
+    $expectedMessage = 'You have an active subscription';
     $this->assertSame($expectedViewName, $response->getView());
     $this->assertSame($expectedStatus, $responseVars['status']);
     $this->assertSame($expectedMessage, $responseVars['message']);
@@ -45,13 +59,14 @@ class ProcessSubscriptionControllerTest extends TestCase {
 
   public function testWhenInvalidCrsfToken() {
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('hasActiveSubscription')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(false);
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedViewName = 'membership/create-subscription.json.php';
-    $expectedStatus = 'danger';
-    $expectedMessage = 'You must become a premium member from the PyAngelo website.';
+    $expectedStatus = 'crsf-error';
+    $expectedMessage = 'Please sign up from the PyAngelo website';
     $this->assertSame($expectedViewName, $response->getView());
     $this->assertSame($expectedStatus, $responseVars['status']);
     $this->assertSame($expectedMessage, $responseVars['message']);
@@ -59,48 +74,205 @@ class ProcessSubscriptionControllerTest extends TestCase {
 
   public function testWhenNoPriceId() {
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('hasActiveSubscription')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedViewName = 'membership/create-subscription.json.php';
-    $expectedStatus = 'danger';
-    $expectedMessage = 'You must select a price for the subscription.';
+    $expectedStatus = 'post-error';
+    $expectedMessage = 'Price not provided';
     $this->assertSame($expectedViewName, $response->getView());
     $this->assertSame($expectedStatus, $responseVars['status']);
     $this->assertSame($expectedMessage, $responseVars['message']);
   }
 
-  public function testWhenHasActiveSubscription() {
-    $testStripePriceId = "test-price";
+  public function testWhenInvalidStripePrice() {
+    $stripePriceId = 'STRIPE-TEST-PRICE-ID';
+    $this->request->post['priceId'] = $stripePriceId;
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('hasActiveSubscription')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
-    $this->auth->shouldReceive('hasActiveSubscription')->once()->with()->andReturn(true);
+    $this->stripeWrapper->shouldReceive('retrievePrice')
+                        ->once()
+                        ->with($stripePriceId)
+                        ->andThrow(new \Exception('Price Error'));
 
-    $this->request->post["priceId"] = $testStripePriceId;
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedViewName = 'membership/create-subscription.json.php';
-    $expectedStatus = 'danger';
-    $expectedMessage = 'You still have an active subscription.';
+    $expectedStatus = 'stripe-price-error';
+    $expectedMessage = 'Price not recognised by Stripe';
     $this->assertSame($expectedViewName, $response->getView());
     $this->assertSame($expectedStatus, $responseVars['status']);
     $this->assertSame($expectedMessage, $responseVars['message']);
   }
 
-  public function testWhenNotYetStripeCustomerAndNoSubscription() {
-    $testStripePriceId = "test-price";
-    $testCustomerId = 'TEST-CUSTOMER';
-    $clientSecret = 'TOP-SECRET';
+  public function testWhenNoPyangeloPrice() {
+    $stripePriceId = 'STRIPE-TEST-PRICE-ID';
+    $price = (object) [
+      'id' => $stripePriceId
+    ];
+    $this->request->post['priceId'] = $stripePriceId;
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('hasActiveSubscription')->once()->with()->andReturn(false);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->stripeWrapper->shouldReceive('retrievePrice')
+                        ->once()
+                        ->with($stripePriceId)
+                        ->andReturn($price);
+    $this->stripeRepository->shouldReceive('getStripePriceById')
+                           ->once()
+                           ->with($stripePriceId)
+                           ->andReturn(NULL);
+
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedViewName = 'membership/create-subscription.json.php';
+    $expectedStatus = 'pyangelo-error';
+    $expectedMessage = 'Price not recognised by PyAngelo';
+    $this->assertSame($expectedViewName, $response->getView());
+    $this->assertSame($expectedStatus, $responseVars['status']);
+    $this->assertSame($expectedMessage, $responseVars['message']);
+  }
+
+  public function testWhenStripeCustomerError() {
+    $stripePriceId = 'STRIPE-TEST-PRICE-ID';
+    $price = (object) [
+      'id' => $stripePriceId
+    ];
+    $pyangeloPrice = [
+      'stripe_price_id' => $stripePriceId
+    ];
+    $personId = 101;
+    $stripeCustId = 'STRIPE-TEST-CUST-ID';
     $person = [
-      'person_id' => 1,
+      'person_id' => $personId,
       'email' => 'joel@geelongfc.com.au',
       'given_name' => 'Joel',
-      'family_name' => 'Selwood'
+      'family_name' => 'Selwood',
+      'country_code' => 'AU',
+      'stripe_customer_id' => $stripeCustId,
+    ];
+    $this->request->post['priceId'] = $stripePriceId;
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('hasActiveSubscription')->once()->with()->andReturn(false);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->stripeWrapper->shouldReceive('retrievePrice')
+                        ->once()
+                        ->with($stripePriceId)
+                        ->andReturn($price);
+    $this->stripeRepository->shouldReceive('getStripePriceById')
+                           ->once()
+                           ->with($stripePriceId)
+                           ->andReturn($pyangeloPrice);
+    $this->auth->shouldReceive('person')->once()->with()->andReturn($person);
+    $this->auth->shouldReceive('stripeCustomerId')->once()->with()->andReturn(NULL);
+    $this->stripeWrapper->shouldReceive('createCustomer')
+                        ->once()
+                        ->with(
+                          $person['email'],
+                          $person['given_name'] . ' ' . $person['family_name']
+                        )
+                        ->andThrow(new \Exception('Stripe Customer Error'));
+
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedViewName = 'membership/create-subscription.json.php';
+    $expectedStatus = 'stripe-error';
+    $expectedMessage = 'Stripe Customer Error';
+    $this->assertSame($expectedViewName, $response->getView());
+    $this->assertSame($expectedStatus, $responseVars['status']);
+    $this->assertSame($expectedMessage, $responseVars['message']);
+  }
+
+  public function testWhenStripeCustomerNoSubStripeError() {
+    $stripePriceId = 'STRIPE-TEST-PRICE-ID';
+    $price = (object) [
+      'id' => $stripePriceId
+    ];
+    $pyangeloPrice = [
+      'stripe_price_id' => $stripePriceId
+    ];
+    $personId = 101;
+    $stripeCustId = 'STRIPE-TEST-CUST-ID';
+    $person = [
+      'person_id' => $personId,
+      'email' => 'joel@geelongfc.com.au',
+      'given_name' => 'Joel',
+      'family_name' => 'Selwood',
+      'country_code' => 'AU',
+      'stripe_customer_id' => $stripeCustId,
     ];
     $customer = (object) [
-      'id' => $testCustomerId
+      'id' => $stripeCustId
     ];
+    $this->request->post['priceId'] = $stripePriceId;
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('hasActiveSubscription')->once()->with()->andReturn(false);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->stripeWrapper->shouldReceive('retrievePrice')
+                        ->once()
+                        ->with($stripePriceId)
+                        ->andReturn($price);
+    $this->stripeRepository->shouldReceive('getStripePriceById')
+                           ->once()
+                           ->with($stripePriceId)
+                           ->andReturn($pyangeloPrice);
+    $this->auth->shouldReceive('person')->once()->with()->andReturn($person);
+    $this->auth->shouldReceive('stripeCustomerId')->once()->with()->andReturn(NULL);
+    $this->stripeWrapper->shouldReceive('createCustomer')
+                        ->once()
+                        ->with(
+                          $person['email'],
+                          $person['given_name'] . ' ' . $person['family_name']
+                        )
+                        ->andReturn($customer);
+    $this->stripeRepository->shouldReceive('updateStripeCustomerId')
+                           ->once()
+                           ->with($person['person_id'], $stripeCustId)
+                           ->andReturn(1);
+    $this->stripeRepository->shouldReceive('getIncompleteSubscription')
+                           ->once()
+                           ->with($person['person_id'], $stripePriceId)
+                           ->andReturn(NULL);
+    $this->stripeWrapper->shouldReceive('createSubscription')
+                        ->once()
+                        ->with($stripeCustId, $stripePriceId)
+                        ->andThrow(new \Exception('Stripe Subscription Error'));
+
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedViewName = 'membership/create-subscription.json.php';
+    $expectedStatus = 'stripe-error';
+    $expectedMessage = 'Stripe Subscription Error';
+    $this->assertSame($expectedViewName, $response->getView());
+    $this->assertSame($expectedStatus, $responseVars['status']);
+    $this->assertSame($expectedMessage, $responseVars['message']);
+  }
+
+  public function testWhenStripeCustomerNoSubSuccess() {
+    $stripePriceId = 'STRIPE-TEST-PRICE-ID';
+    $price = (object) [
+      'id' => $stripePriceId
+    ];
+    $pyangeloPrice = [
+      'stripe_price_id' => $stripePriceId
+    ];
+    $personId = 101;
+    $stripeCustId = 'STRIPE-TEST-CUST-ID';
+    $person = [
+      'person_id' => $personId,
+      'email' => 'joel@geelongfc.com.au',
+      'given_name' => 'Joel',
+      'family_name' => 'Selwood',
+      'country_code' => 'AU',
+      'stripe_customer_id' => $stripeCustId,
+    ];
+    $customer = (object) [
+      'id' => $stripeCustId
+    ];
+    $clientSecret = 'TOP-SECRET';
     $paymentIntent = (object) [
       'client_secret' => $clientSecret
     ];
@@ -112,52 +284,97 @@ class ProcessSubscriptionControllerTest extends TestCase {
       'id' => $testSubscriptionId,
       'current_period_start' => '2021-07-22 17:08:30',
       'current_period_end' => '2021-08-22 17:08:30',
-      'customer' => $testCustomerId,
-      'price_id' => $testStripePriceId,
+      'customer' => $stripeCustId,
+      'price_id' => $stripePriceId,
       'latest_invoice' => $latestInvoice,
       'client_secret' => $clientSecret,
       'start_date' => '2021-07-22:17:09:00',
       'status' => 'incomplete',
-      0
+      'percent_off' => 0
     ];
+    $this->request->post['priceId'] = $stripePriceId;
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
-    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
-    $this->auth->shouldReceive('person')->once()->with()->andReturn($person);
     $this->auth->shouldReceive('hasActiveSubscription')->once()->with()->andReturn(false);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->stripeWrapper->shouldReceive('retrievePrice')
+                        ->once()
+                        ->with($stripePriceId)
+                        ->andReturn($price);
+    $this->stripeRepository->shouldReceive('getStripePriceById')
+                           ->once()
+                           ->with($stripePriceId)
+                           ->andReturn($pyangeloPrice);
+    $this->auth->shouldReceive('person')->once()->with()->andReturn($person);
     $this->auth->shouldReceive('stripeCustomerId')->once()->with()->andReturn(NULL);
     $this->stripeWrapper->shouldReceive('createCustomer')
                         ->once()
-                        ->with($person['email'], $person['given_name'] . " " . $person['family_name'])
+                        ->with(
+                          $person['email'],
+                          $person['given_name'] . ' ' . $person['family_name']
+                        )
                         ->andReturn($customer);
-    $this->stripeRepository->shouldReceive('updateStripeCustomerId')->once()->with($person['person_id'], $testCustomerId)->andReturn(NULL);
-    $this->stripeRepository->shouldReceive('getIncompleteSubscription')->once()->with($person['person_id'], $testStripePriceId)->andReturn(NULL);
-    $this->stripeWrapper->shouldReceive('createSubscription')->once()->with($testCustomerId, $testStripePriceId)->andReturn($testSubscription);
-    $this->stripeRepository->shouldReceive('insertSubscription')->once()->andReturn(1);
+    $this->stripeRepository->shouldReceive('updateStripeCustomerId')
+                           ->once()
+                           ->with($person['person_id'], $stripeCustId)
+                           ->andReturn(1);
+    $this->stripeRepository->shouldReceive('getIncompleteSubscription')
+                           ->once()
+                           ->with($person['person_id'], $stripePriceId)
+                           ->andReturn(NULL);
+    $this->stripeWrapper->shouldReceive('createSubscription')
+                        ->once()
+                        ->with($stripeCustId, $stripePriceId)
+                        ->andReturn($testSubscription);
+    $this->stripeRepository->shouldReceive('insertSubscription')
+                           ->once()
+                           ->with(
+                             $testSubscription->id,
+                             $personId,
+                             $testSubscription->current_period_start,
+                             $testSubscription->current_period_end,
+                             $testSubscription->customer,
+                             $stripePriceId,
+                             $clientSecret,
+                             $testSubscription->start_date,
+                             $testSubscription->status,
+                             0
+                           )
+                           ->andReturn(1);
 
-    $this->request->post["priceId"] = $testStripePriceId;
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedViewName = 'membership/create-subscription.json.php';
     $expectedStatus = 'success';
-    $expectedMessage = 'Subscription created.';
+    $expectedMessage = 'Subscription created';
     $this->assertSame($expectedViewName, $response->getView());
     $this->assertSame($expectedStatus, $responseVars['status']);
+    $this->assertSame($stripeCustId, $responseVars['customerId']);
+    $this->assertSame($person['given_name'] . ' ' . $person['family_name'], $responseVars['customerName']);
+    $this->assertSame($testSubscriptionId, $responseVars['subscriptionId']);
+    $this->assertSame($stripePriceId, $responseVars['priceId']);
+    $this->assertSame($clientSecret, $responseVars['clientSecret']);
     $this->assertSame($expectedMessage, $responseVars['message']);
   }
 
-  public function testWhenStripeCustomerAndSubscription() {
-    $testStripePriceId = "test-price";
-    $testCustomerId = 'TEST-CUSTOMER';
-    $clientSecret = 'TOP-SECRET';
+  public function testWhenCustomerNoSubSuccess() {
+    $stripePriceId = 'STRIPE-TEST-PRICE-ID';
+    $price = (object) [
+      'id' => $stripePriceId
+    ];
+    $pyangeloPrice = [
+      'stripe_price_id' => $stripePriceId
+    ];
+    $personId = 101;
+    $stripeCustId = 'STRIPE-TEST-CUST-ID';
     $person = [
-      'person_id' => 1,
+      'person_id' => $personId,
       'email' => 'joel@geelongfc.com.au',
       'given_name' => 'Joel',
-      'family_name' => 'Selwood'
+      'family_name' => 'Selwood',
+      'country_code' => 'AU',
+      'stripe_customer_id' => $stripeCustId,
     ];
-    $customer = (object) [
-      'id' => $testCustomerId
-    ];
+    $clientSecret = 'TOP-SECRET';
     $paymentIntent = (object) [
       'client_secret' => $clientSecret
     ];
@@ -165,37 +382,133 @@ class ProcessSubscriptionControllerTest extends TestCase {
       'payment_intent' => $paymentIntent
     ];
     $testSubscriptionId = 'TEST-SUBSCRIPTION';
-    $incompleteSubscription = [
+    $testSubscription = (object) [
       'id' => $testSubscriptionId,
       'current_period_start' => '2021-07-22 17:08:30',
       'current_period_end' => '2021-08-22 17:08:30',
-      'customer' => $testCustomerId,
-      'price_id' => $testStripePriceId,
-      'stripe_client_secret' => $clientSecret,
+      'customer' => $stripeCustId,
+      'price_id' => $stripePriceId,
+      'latest_invoice' => $latestInvoice,
+      'client_secret' => $clientSecret,
       'start_date' => '2021-07-22:17:09:00',
       'status' => 'incomplete',
-      0
+      'percent_off' => 0
     ];
+    $this->request->post['priceId'] = $stripePriceId;
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
-    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
-    $this->auth->shouldReceive('person')->once()->with()->andReturn($person);
     $this->auth->shouldReceive('hasActiveSubscription')->once()->with()->andReturn(false);
-    $this->auth->shouldReceive('stripeCustomerId')->once()->with()->andReturn(NULL);
-    $this->stripeWrapper->shouldReceive('createCustomer')
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->stripeWrapper->shouldReceive('retrievePrice')
                         ->once()
-                        ->with($person['email'], $person['given_name'] . " " . $person['family_name'])
-                        ->andReturn($customer);
-    $this->stripeRepository->shouldReceive('updateStripeCustomerId')->once()->with($person['person_id'], $testCustomerId)->andReturn(NULL);
-    $this->stripeRepository->shouldReceive('getIncompleteSubscription')->once()->with($person['person_id'], $testStripePriceId)->andReturn($incompleteSubscription);
+                        ->with($stripePriceId)
+                        ->andReturn($price);
+    $this->stripeRepository->shouldReceive('getStripePriceById')
+                           ->once()
+                           ->with($stripePriceId)
+                           ->andReturn($pyangeloPrice);
+    $this->auth->shouldReceive('person')->once()->with()->andReturn($person);
+    $this->auth->shouldReceive('stripeCustomerId')->twice()->with()->andReturn($stripeCustId);
+    $this->stripeRepository->shouldReceive('getIncompleteSubscription')
+                           ->once()
+                           ->with($person['person_id'], $stripePriceId)
+                           ->andReturn(NULL);
+    $this->stripeWrapper->shouldReceive('createSubscription')
+                        ->once()
+                        ->with($stripeCustId, $stripePriceId)
+                        ->andReturn($testSubscription);
+    $this->stripeRepository->shouldReceive('insertSubscription')
+                           ->once()
+                           ->with(
+                             $testSubscription->id,
+                             $personId,
+                             $testSubscription->current_period_start,
+                             $testSubscription->current_period_end,
+                             $testSubscription->customer,
+                             $stripePriceId,
+                             $clientSecret,
+                             $testSubscription->start_date,
+                             $testSubscription->status,
+                             0
+                           )
+                           ->andReturn(1);
 
-    $this->request->post["priceId"] = $testStripePriceId;
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedViewName = 'membership/create-subscription.json.php';
     $expectedStatus = 'success';
-    $expectedMessage = 'Subscription created.';
+    $expectedMessage = 'Subscription created';
     $this->assertSame($expectedViewName, $response->getView());
     $this->assertSame($expectedStatus, $responseVars['status']);
+    $this->assertSame($stripeCustId, $responseVars['customerId']);
+    $this->assertSame($person['given_name'] . ' ' . $person['family_name'], $responseVars['customerName']);
+    $this->assertSame($testSubscriptionId, $responseVars['subscriptionId']);
+    $this->assertSame($stripePriceId, $responseVars['priceId']);
+    $this->assertSame($clientSecret, $responseVars['clientSecret']);
+    $this->assertSame($expectedMessage, $responseVars['message']);
+  }
+
+  public function testWhenCustomerAndSubSuccess() {
+    $stripePriceId = 'STRIPE-TEST-PRICE-ID';
+    $price = (object) [
+      'id' => $stripePriceId
+    ];
+    $pyangeloPrice = [
+      'stripe_price_id' => $stripePriceId
+    ];
+    $personId = 101;
+    $stripeCustId = 'STRIPE-TEST-CUST-ID';
+    $person = [
+      'person_id' => $personId,
+      'email' => 'joel@geelongfc.com.au',
+      'given_name' => 'Joel',
+      'family_name' => 'Selwood',
+      'country_code' => 'AU',
+      'stripe_customer_id' => $stripeCustId,
+    ];
+    $clientSecret = 'TOP-SECRET';
+    $testSubscriptionId = 'TEST-SUBSCRIPTION';
+    $testSubscription = [
+      'subscription_id' => $testSubscriptionId,
+      'current_period_start' => '2021-07-22 17:08:30',
+      'current_period_end' => '2021-08-22 17:08:30',
+      'stripe_customer_id' => $stripeCustId,
+      'price_id' => $stripePriceId,
+      'stripe_client_secret' => $clientSecret,
+      'start_date' => '2021-07-22:17:09:00',
+      'status' => 'incomplete',
+      'percent_off' => 0
+    ];
+    $this->request->post['priceId'] = $stripePriceId;
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('hasActiveSubscription')->once()->with()->andReturn(false);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->stripeWrapper->shouldReceive('retrievePrice')
+                        ->once()
+                        ->with($stripePriceId)
+                        ->andReturn($price);
+    $this->stripeRepository->shouldReceive('getStripePriceById')
+                           ->once()
+                           ->with($stripePriceId)
+                           ->andReturn($pyangeloPrice);
+    $this->auth->shouldReceive('person')->once()->with()->andReturn($person);
+    $this->auth->shouldReceive('stripeCustomerId')->twice()->with()->andReturn($stripeCustId);
+    $this->stripeRepository->shouldReceive('getIncompleteSubscription')
+                           ->once()
+                           ->with($person['person_id'], $stripePriceId)
+                           ->andReturn($testSubscription);
+
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedViewName = 'membership/create-subscription.json.php';
+    $expectedStatus = 'success';
+    $expectedMessage = 'Subscription created';
+    $this->assertSame($expectedViewName, $response->getView());
+    $this->assertSame($expectedStatus, $responseVars['status']);
+    $this->assertSame($stripeCustId, $responseVars['customerId']);
+    $this->assertSame($person['given_name'] . ' ' . $person['family_name'], $responseVars['customerName']);
+    $this->assertSame($testSubscriptionId, $responseVars['subscriptionId']);
+    $this->assertSame($stripePriceId, $responseVars['priceId']);
+    $this->assertSame($clientSecret, $responseVars['clientSecret']);
     $this->assertSame($expectedMessage, $responseVars['message']);
   }
 }

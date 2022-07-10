@@ -1,8 +1,19 @@
-#card-element {
-  max-width: 600px;
-  margin: 0 auto;
+#payment-container {
+  background-color: #3C4257;
+  margin: 2%;
+  padding: 2% 10%;
+  border-radius: 25px;
 }
-
-#card-element-errors {
-  display: none;
+#stripe-error-message {
+  padding: 10px;
+  font-weight: bold;
+  font-size: 24px;
+  color: #FE87A1;
+}
+#pay-btn {
+  background-color: #85D996;
+  color: #30313D;
+}
+.payment-container-text {
+  color: #b3b3b3;
 }

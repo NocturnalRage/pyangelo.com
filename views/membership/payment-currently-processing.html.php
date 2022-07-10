@@ -5,22 +5,22 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <h1 class="text-center">Welcome to the PyAngelo Premium Membership</h1>
+        <h1 class="text-center">Your Payment is Still Being Processed</h1>
         <p>
-        Thank you for joining as a PyAngelo premium member! As a premium
-        member you have online access to every video we have ever made.
-        These videos form a comprehensive guide to help fast-track your coding improvement.
+        Your payment is currently being processed by the authorities. We'll
+        update you when your payment has been received.
         </p>
         <p>
-        As a premium member, you now have priority access to comment on videos,
-        to engage in discussion, and ask questions about the tutorials.
-        Your questions and feedback will be addressed with high priority,
-        as well as requests for future content!
+        Thank you for signing up to our monthly subscription and supporting
+        the PyAngelo website. When your payment is processed you will have 
+        access to every video we have ever made. These videos form a 
+        comprehensive guide to help fast-track your coding improvement.
         </p>
         <p>
         Your support is greatly appreciated and assists the development
         and growth of the PyAngelo website.
         </p>
+        <h3 class="text-center">Whilst you wait for your payment to be processed</h3>
       </div>
     </div><!-- row -->
     <div class="row">
@@ -30,7 +30,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
         </a>
         <div class="caption">
           <h3><a href="/tutorials">All Tutorials</a></h3>
-          <p>You now have access to all of our tutorials. There is something for everyone whether you are a beginner or an expert. Each tutorial is aimed to teach you an important coding concept. What are you waiting for? Get started!</p>
+          <p>Browse through our free tutorials. There is something for everyone whether you are a beginner or an expert. Each tutorial is aimed to teach you an important coding concept. What are you waiting for? Get started!</p>
           <p>
             <a href="/tutorials" class="btn btn-lg btn-primary" role="button">
                <strong>All Tutorials!</strong>

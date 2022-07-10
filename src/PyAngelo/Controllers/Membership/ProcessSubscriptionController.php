@@ -27,81 +27,82 @@ class ProcessSubscriptionController extends Controller {
     $this->response->header('Content-Type: application/json');
 
     if (! $this->auth->loggedIn())
-      return $this->notLoggedInMessage();
-
-    if (! $this->auth->crsfTokenIsValid())
-      return $this->invalidCrsfTokenMessage();
-
-    if (! isset($this->request->post['priceId']))
-      return $this->invalidPriceIdMessage();
-
-    $priceId = $this->request->post['priceId'];
-    // TODO: Check price exists in PyAngelo database
+      return $this->invalidRequest(
+        'login-error',
+        'You must be logged in to start a subscription'
+      );
 
     if ($this->auth->hasActiveSubscription())
-      return $this->activeSubscriptionMessage();
+      return $this->invalidRequest(
+        'active-subscription',
+        'You have an active subscription'
+      );
 
-    $customerInfo = $this->getOrCreateCustomer();
-    $clientSecret = $this->getOrCreateSubscription($customerInfo, $priceId);
+    if (! $this->auth->crsfTokenIsValid())
+      return $this->invalidRequest(
+        'crsf-error',
+        'Please sign up from the PyAngelo website'
+      );
+
+    if (! isset($this->request->post['priceId']))
+      return $this->invalidRequest(
+        'post-error',
+        'Price not provided'
+      );
+    $priceId = $this->request->post['priceId'];
+
+    try {
+      $stripePrice = $this->stripeWrapper->retrievePrice($priceId);
+    } catch (\Exception $e) {
+      return $this->invalidRequest(
+        'stripe-price-error',
+        'Price not recognised by Stripe'
+      );
+    }
+    $pyangeloPrice = $this->stripeRepository->getStripePriceById($stripePrice->id);
+    if (is_null($pyangeloPrice))
+      return $this->invalidRequest(
+        'pyangelo-error',
+        'Price not recognised by PyAngelo'
+      );
+
+    try {
+      $customerInfo = $this->getOrCreateCustomer();
+      $subscriptionInfo = $this->getOrCreateSubscription($customerInfo, $priceId);
+    } catch (\Exception $e) {
+      return $this->invalidRequest(
+        'stripe-error',
+        $e->getMessage()
+      );
+    }
 
     // Success!!!!
     $this->response->setVars(array(
         'status' => 'success',
         'customerId' => $customerInfo['customerId'],
         'customerName' => $customerInfo['customerName'],
-        'clientSecret' => $clientSecret,
-        'message' => 'Subscription created.'
+        'subscriptionId' => $subscriptionInfo['subscriptionId'],
+        'priceId' => $priceId,
+        'clientSecret' => $subscriptionInfo['clientSecret'],
+        'message' => 'Subscription created'
       ));
     return $this->response;
-
   }
 
-  private function invalidCrsfTokenMessage() {
+  private function invalidRequest($status, $message) {
     $this->response->setVars(array(
-      'status' => 'danger',
+      'status' => $status,
       'customerId' => 'Error',
       'customerName' => 'Error',
+      'subscriptionId' => 'Error',
+      'priceId' => 'Error',
       'clientSecret' => 'Error',
-      'message' => 'You must become a premium member from the PyAngelo website.'
-    ));
-    return $this->response;
-  }
-
-  private function notLoggedInMessage() {
-    $this->response->setVars(array(
-      'status' => 'danger',
-      'customerId' => 'Error',
-      'customerName' => 'Error',
-      'clientSecret' => 'Error',
-      'message' => 'You must be logged in to become a premium member.'
-    ));
-    return $this->response;
-  }
-
-  private function activeSubscriptionMessage() {
-    $this->response->setVars(array(
-      'status' => 'danger',
-      'customerId' => 'Error',
-      'customerName' => 'Error',
-      'clientSecret' => 'Error',
-      'message' => 'You still have an active subscription.'
-    ));
-    return $this->response;
-  }
-
-  private function invalidPriceIdMessage() {
-    $this->response->setVars(array(
-      'status' => 'danger',
-      'customerId' => 'Error',
-      'customerName' => 'Error',
-      'clientSecret' => 'Error',
-      'message' => 'You must select a price for the subscription.'
+      'message' => $message
     ));
     return $this->response;
   }
 
   private function getOrCreateCustomer() {
-    // Get Customer Details or Create Customer
     $person = $this->auth->person();
     $customerName = $person["given_name"] . " " . $person["family_name"];
     if ($this->auth->stripeCustomerId()) {
@@ -125,6 +126,7 @@ class ProcessSubscriptionController extends Controller {
   private function getOrCreateSubscription($customerInfo, $priceId) {
     if ($subscription = $this->stripeRepository->getIncompleteSubscription($customerInfo["personId"], $priceId)) {
       $clientSecret = $subscription["stripe_client_secret"];
+      $subscriptionId = $subscription["subscription_id"];
     }
     else {
       $subscription = $this->stripeWrapper->createSubscription(
@@ -132,6 +134,7 @@ class ProcessSubscriptionController extends Controller {
         $priceId
       );
       $clientSecret = $subscription->latest_invoice->payment_intent->client_secret;
+      $subscriptionId = $subscription->id;
       $rowsInserted = $this->stripeRepository->insertSubscription(
         $subscription->id,
         $customerInfo["personId"],
@@ -145,6 +148,9 @@ class ProcessSubscriptionController extends Controller {
         0
       );
     }
-    return $clientSecret;
+    return [
+      "clientSecret" => $clientSecret,
+      "subscriptionId" => $subscriptionId
+    ];
   }
 }

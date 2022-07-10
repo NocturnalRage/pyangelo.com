@@ -23,6 +23,7 @@ class MysqlStripeRepository implements StripeRepository {
   public function getMembershipPrices($currencyCode) {
     $sql = "SELECT prod.stripe_product_id,
                    prod.product_name,
+                   prod.product_description,
                    price.stripe_price_id,
                    price.currency_code,
                    price.price_in_cents,
@@ -461,6 +462,31 @@ class MysqlStripeRepository implements StripeRepository {
     $rowsUpdated = $this->dbh->affected_rows;
     $stmt->close();
     return $rowsUpdated;
+  }
+
+  public function getStripePriceById($priceId) {
+    $sql = "SELECT price.stripe_price_id,
+                   prod.stripe_product_id,
+                   prod.product_name,
+                   prod.product_description,
+                   price.price_in_cents,
+                   price.billing_period,
+                   cur.currency_code,
+                   cur.currency_description,
+                   cur.currency_symbol,
+                   cur.stripe_divisor
+	          FROM   stripe_price price
+            JOIN   stripe_product prod ON price.stripe_product_id = prod.stripe_product_id
+            JOIN   currency cur on price.currency_code = cur.currency_code
+            WHERE  price.stripe_price_id = ?
+            AND    price.active = TRUE
+            and    prod.active = TRUE";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->bind_param('s', $priceId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    return $result->fetch_assoc();
   }
 }
 ?>
