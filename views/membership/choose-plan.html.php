@@ -7,9 +7,6 @@
     <div class="row">
       <div class="col-md-12 text-center">
         <h1>Get Full Access to Every Tutorial</h1>
-        <?php
-          include __DIR__ . DIRECTORY_SEPARATOR . '../layout/flash.html.php';
-        ?>
         <p>
           Become a PyAngelo Premium Member today by signing up to a monthly subscription and get access to all PyAngelo video tutorials including all new content that is uploaded.
         </p>
