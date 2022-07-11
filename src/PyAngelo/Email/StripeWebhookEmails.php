@@ -227,7 +227,7 @@ class StripeWebhookEmails extends EmailMessage {
       "your monthly premium membership with PyAngelo. " .
       "If you have any questions about this payment then " .
       "please reply to this email.<br /><br />" .
-      "Happy cubing!<br />" .
+      "Happy coding!<br />" .
       "The PyAngelo Team.";
 
     $bodyHtml = $this->emailTemplate->addEmailHeader($subject);

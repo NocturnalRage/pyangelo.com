@@ -5,14 +5,11 @@ use PHPUnit\Framework\TestCase;
 use Framework\Billing\StripeWrapper;
 use PyAngelo\Auth\Auth;
 use Framework\Request;
-use PyAngelo\Repositories\MysqlStripeRepository;
-use PyAngelo\Repositories\MysqlPersonRepository;
 use Tests\Factory\TestData;
 
 class StripeWrapperTest extends TestCase {
 
   protected $dbh;
-  protected $stripeRepository;
   protected $stripeWrapper;
    
   public function setUp(): void {
@@ -24,11 +21,9 @@ class StripeWrapperTest extends TestCase {
       $_ENV['DB_PASSWORD'],
       $_ENV['DB_DATABASE'] 
     );
-    $this->stripeRepository = new MysqlStripeRepository($this->dbh);
     $this->testData = new TestData($this->dbh);
     $this->stripeWrapper = new StripeWrapper(
-      $_ENV['STRIPE_SECRET_KEY'],
-      $this->stripeRepository
+      $_ENV['STRIPE_SECRET_KEY']
     );
     $this->stripePriceId = 'price_1JEUrpAkvBrl8hmb6AaEIRZN';
     $this->stripePriceInCents = 995;
