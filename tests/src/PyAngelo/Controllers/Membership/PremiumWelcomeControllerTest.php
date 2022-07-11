@@ -28,6 +28,17 @@ class PremiumWelcomeControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\Membership\PremiumWelcomeController');
   }
 
+  public function testNoSuchPaymentIntentInStripe() {
+    $testPaymentIntentParam = 'invalid payment intent';
+    $this->request->get['payment_intent'] =  $testPaymentIntentParam;
+    $this->stripeWrapper->shouldReceive('retrievePaymentIntent')->once()->with($testPaymentIntentParam)->andThrow(new \Exception('Stripe Error'));
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedHeaders = array(array('header', 'Location: /choose-plan'));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+    $this->assertSame('There was no such payment. Please try again.', $_SESSION['flash']['message']);
+  }
+
   public function testPaymentSucceeded() {
     $pi = (object) [
       'status' => 'succeeded'
