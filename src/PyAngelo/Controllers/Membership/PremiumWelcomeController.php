@@ -21,15 +21,19 @@ class PremiumWelcomeController extends controller {
 
   public function exec() {
     if (isset($this->request->get['payment_intent'])) {
-      $paymentIntent = $this->stripeWrapper->retrievePaymentIntent($this->request->get['payment_intent']);
-      if ($paymentIntent->status == 'succeeded')
-        return $this->showWelcome();
-      else if ($paymentIntent->status == 'processing')
-        return $this->showProcessing();
-      else if ($paymentIntent->status == 'requires_payment_method')
-        return $this->redirectBackToChoosePlan('Payment failed. Please try another payment method.');
-      else
-        return $this->redirectBackToChoosePlan('Something went wrong. Please try again.');
+      try {
+        $paymentIntent = $this->stripeWrapper->retrievePaymentIntent($this->request->get['payment_intent']);
+        if ($paymentIntent->status == 'succeeded')
+          return $this->showWelcome();
+        else if ($paymentIntent->status == 'processing')
+          return $this->showProcessing();
+        else if ($paymentIntent->status == 'requires_payment_method')
+          return $this->redirectBackToChoosePlan('Payment failed. Please try another payment method.');
+        else
+          return $this->redirectBackToChoosePlan('Something went wrong. Please try again.');
+      } catch (\Exception $e) {
+        return $this->redirectBackToChoosePlan('There was no such payment. Please try again.');
+      }
     }
     return $this->showWelcome();
   }
