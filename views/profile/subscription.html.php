@@ -44,26 +44,22 @@ include __DIR__ . '/../layout/navbar.html.php';
           <?php if ($subscription['cancel_at_period_end'] == 1) : ?>
             <h1>Resume Your Subscription</h1>
             <p>You can resume your subscription by clicking the button below. Doing so will put you back onto the plan specified above. Your next payment will be in <?= $this->esc($subscription['nextPaymentDate']) ?>.</p>
-            <form action="/resume-subscription" method="POST">
-              <input type="hidden" name="crsfToken" value="<?= $personInfo['crsfToken']; ?>" />
-              <button type="submit" class="btn btn-success">
-                <i class="fa fa-refresh" aria-hidden="true"></i> Resume Your Subscription
-              </button>
-            </form>
-
           <?php else : ?>
-            <div>
-              <hr />
-              <h1>Cancel Your Subscription</h1>
-              <p>If you want to cancel your subscription you can do so by clicking the button below. You'll still have access until the end of the period you paid for which is <?= $this->esc($subscription['nextPaymentDate']) ?>.</p>
-              <form action="/cancel-subscription" method="POST">
-                <input type="hidden" name="crsfToken" value="<?= $personInfo['crsfToken']; ?>" />
+            <h1>Cancel Your Subscription</h1>
+            <p>If you want to cancel your subscription you can do so by clicking the button below. You'll still have access until the end of the period you paid for which is <?= $this->esc($subscription['nextPaymentDate']) ?>.</p>
+          <?php endif ?>
+            <form action="/toggle-cancel-subscription" method="POST">
+              <input type="hidden" name="crsfToken" value="<?= $personInfo['crsfToken']; ?>" />
+              <?php if ($subscription['cancel_at_period_end'] == 1) : ?>
+                <button type="submit" class="btn btn-success">
+                  <i class="fa fa-refresh" aria-hidden="true"></i> Resume Your Subscription
+                </button>
+              <?php else : ?>
                 <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel your membership?')">
                   <i class="fa fa-times" aria-hidden="true"></i> Cancel Your Subscription
                 </button>
-              </form>
-            </div>
-          <?php endif ?>
+              <?php endif ?>
+            </form>
         <?php endif ?>
 
         <?php if (! empty($pastSubscriptions)) : ?>

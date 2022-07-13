@@ -127,7 +127,7 @@ return [
   [ 'GET','/admin/premium-users', 'PremiumUsersController', 'premiumUsers' ],
   [ 'POST','/stripe/webhook', 'StripeWebhookController', 'stripeWebhook' ],
   [ 'GET','/subscription', 'SubscriptionController', 'subscription' ],
-  [ 'POST','/cancel-subscription', 'CancelSubscriptionController', 'cancelSubscription' ],
+  [ 'POST','/toggle-cancel-subscription', 'ToggleCancelSubscriptionController', 'toggleCancelSubscription' ],
   [ 'GET','/invoices', 'InvoicesController', 'invoices' ],
   [ 'GET','/payment-method', 'PaymentMethodController', 'paymentMethod' ],
   [ 'POST','/payment-method-update', 'PaymentMethodUpdateController', 'paymentMethodUpdate' ],
