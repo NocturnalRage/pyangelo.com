@@ -1505,8 +1505,8 @@ $di->set('SubscriptionController', function () use ($di) {
   );
 });
 
-$di->set('CancelSubscriptionController', function () use ($di) {
-  return new PyAngelo\Controllers\Profile\CancelSubscriptionController (
+$di->set('ToggleCancelSubscriptionController', function () use ($di) {
+  return new PyAngelo\Controllers\Profile\ToggleCancelSubscriptionController (
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),

@@ -103,10 +103,24 @@ class StripeWrapperTest extends TestCase {
     $orderId = 'fake-order';
     $modified = $this->stripeWrapper->updateSubscription(
       $subscription->id,
-      ['metadata' => ['order_id' => $orderId]]
+      [
+        'metadata' => ['order_id' => $orderId],
+        'cancel_at_period_end' => true
+      ]
     );
     $this->assertSame($modified->id, $subscription->id);
     $this->assertSame($modified->metadata->order_id, $orderId);
+    $this->assertSame($modified->cancel_at_period_end, true);
+
+    $modified = $this->stripeWrapper->updateSubscription(
+      $subscription->id,
+      [
+        'cancel_at_period_end' => false
+      ]
+    );
+    $this->assertSame($modified->id, $subscription->id);
+    $this->assertSame($modified->cancel_at_period_end, false);
+
     $this->stripeWrapper->cancelSubscription($subscription->id);
     $canceled = $this->stripeWrapper->retrieveSubscription($subscription->id);
     $this->assertSame('incomplete_expired', $canceled->status);

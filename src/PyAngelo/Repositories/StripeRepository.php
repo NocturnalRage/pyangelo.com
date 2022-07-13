@@ -41,6 +41,7 @@ interface StripeRepository {
 
   public function updateSubscription(
     $subscriptionId,
+    $cancelAtPeriodEnd,
     $periodStart,
     $periodEnd,
     $status

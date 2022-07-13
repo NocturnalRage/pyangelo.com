@@ -45,7 +45,7 @@ class SubscriptionHtmlTest extends BasicViewHtmlTest {
     $this->assertStringContainsString($expect, $output);
     $expect = '<button type="submit" class="btn btn-danger" onclick="return confirm(\'Are you sure you want to cancel your membership?\')">';
     $this->assertStringContainsString($expect, $output);
-    $expect = '<form action="/cancel-subscription" method="POST">';
+    $expect = '<form action="/toggle-cancel-subscription" method="POST">';
     $this->assertStringContainsString($expect, $output);
     $expect = '<input type="hidden" name="crsfToken" value="dummy-crsf-token" />';
     $this->assertStringContainsString($expect, $output);
@@ -88,7 +88,7 @@ class SubscriptionHtmlTest extends BasicViewHtmlTest {
     $this->assertStringNotContainsString($expect, $output);
     $expect = '<h1>Resume Your Subscription</h1>';
     $this->assertStringContainsString($expect, $output);
-    $expect = '<form action="/resume-subscription" method="POST">';
+    $expect = '<form action="/toggle-cancel-subscription" method="POST">';
     $this->assertStringContainsString($expect, $output);
     $expect = '<i class="fa fa-refresh" aria-hidden="true"></i> Resume Your Subscription';
     $this->assertStringContainsString($expect, $output);

@@ -129,6 +129,7 @@ class MysqlStripeRepositoryTest extends TestCase {
     $this->assertEquals(1, $rowsInserted);
     $rowsUpdated = $this->stripeRepository->updateSubscription(
       $subscriptionId,
+      true,
       $periodStartUpdated,
       $periodEndUpdated,
       $status
@@ -193,7 +194,7 @@ class MysqlStripeRepositoryTest extends TestCase {
       'stripe_price_id' => 'Price1',
       'status' => 'past_due',
       'percent_off' => 0,
-      'cancel_at_period_end' => 0,
+      'cancel_at_period_end' => 1,
       'product_name' => 'Test Subscription',
       'product_description' => 'Test subscription for PyAngelo',
       'currency_code' => 'USD',

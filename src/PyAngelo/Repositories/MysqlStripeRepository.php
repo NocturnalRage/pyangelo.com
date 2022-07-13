@@ -180,19 +180,26 @@ class MysqlStripeRepository implements StripeRepository {
 
   public function updateSubscription(
     $subscriptionId,
+    $cancelAtPeriodEnd,
     $periodStart,
     $periodEnd,
     $status
   ) {
+    if ($cancelAtPeriodEnd)
+      $boolCancel = 1;
+    else
+      $boolCancel = 0;
     $sql = "UPDATE stripe_subscription
-            SET    current_period_start = from_unixtime(?),
+            SET    cancel_at_period_end = ?,
+                   current_period_start = from_unixtime(?),
                    current_period_end = from_unixtime(?),
                    status = ?,
                    updated_at = now()
             WHERE  subscription_id = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param(
-      'iiss',
+      'iiiss',
+      $boolCancel,
       $periodStart,
       $periodEnd,
       $status,
