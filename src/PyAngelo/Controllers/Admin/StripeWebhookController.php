@@ -212,8 +212,8 @@ class StripeWebhookController extends Controller {
         return $this->response;
       }
       $this->stripeRepository->updateSubscriptionStatus($subscription->id, $subscription->status);
-      $person = $this->stripeWrapper->getPersonFromSubscription($subscriptionId);
-      $currency = $this->stripeWrapper->getCurrencyFromCode($currencyCode);
+      $person = $this->stripeRepository->getPersonFromSubscription($subscriptionId);
+      $currency = $this->stripeRepository->getCurrencyFromCode($currencyCode);
       $amountDue = $invoice->amount_due / $currency['stripe_divisor'];
       $secondsInDay = 60*60*24;
       $retryPaymentDays = round(($invoice->next_payment_attempt - time()) / $secondsInDay);
