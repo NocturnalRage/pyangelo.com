@@ -26,7 +26,7 @@
           <div id="payment-element" class="add-bottom">
             <!-- Elements will create form elements here -->
           </div>
-          <button class="btn btn-lg" id="pay-btn" type="submit">
+          <button class="btn btn-lg" id="pay-btn" type="submit" disabled>
             Subscribe <?= $displayPrice ?> per Month
           </button>
           <div id="stripe-error-message">
