@@ -70,6 +70,7 @@ fetch('/process-subscription', options)
         }
         payButton.disabled = false
       })
+      payButton.disabled = false
     }
   })
   .catch((error) => { console.error('Error: ', error) })

@@ -130,6 +130,9 @@ class StripeWebhookController extends Controller {
       return $this->response;
     }
 
+    // Get the person
+    $person = $this->stripeRepository->getPersonFromSubscription($subscriptionId);
+
     // Get charge from Stripe
     try { 
       $charge = $this->stripeWrapper->retrieveCharge($chargeId);
@@ -147,6 +150,8 @@ class StripeWebhookController extends Controller {
     // update the default payment method on Stripe
     // so future invoices can be automatically paid
     if ($invoice->billing_reason == "subscription_create") {
+      $this->subscribeToPremiumNewsletter($person['person_id']);
+
       $paymentIntentId = $invoice->payment_intent;
       $paymentIntent = $this->stripeWrapper->retrievePaymentIntent(
         $paymentIntentId
@@ -158,7 +163,6 @@ class StripeWebhookController extends Controller {
     }
 
     // Update our local database to grant or extend premium membership
-    $person = $this->stripeRepository->getPersonFromSubscription($subscriptionId);
     $this->stripeRepository->updatePersonPremiumMemberDetails(
       $person["person_id"],
       $subscription->current_period_end,
@@ -361,5 +365,21 @@ class StripeWebhookController extends Controller {
       'stripeEventId' => $eventId
     ];
     $this->stripeWebhookEmails->queueEmail($mailInfo);
+  }
+
+  private function subscribeToPremiumNewsletter($personId) {
+    $premiumListId = 2;
+    $activeStatus = 1;
+    $subscriber = $this->personRepository->getSubscriber($premiumListId, $personId);
+    if (!$subscriber) {
+      $this->personRepository->insertSubscriber($premiumListId, $personId);
+    }
+    else {
+      $this->personRepository->updateSubscriber(
+        $premiumListId,
+        $personId,
+        $activeStatus
+      );
+    }
   }
 }
