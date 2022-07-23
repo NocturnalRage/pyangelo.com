@@ -19,19 +19,29 @@ class MysqlStripeRepositoryTest extends TestCase {
       $_ENV['DB_PASSWORD'],
       $_ENV['DB_DATABASE']
     );
+    $this->dbh->begin_transaction();
     $this->stripeRepository = new MysqlStripeRepository($this->dbh);
     $this->testData = new TestData($this->dbh);
+    $this->personId = 1;
+    $this->priceId = 'test-price-id';
+    $this->testData->createCurrency('USD', 'United States Dollar', '$', 100);
+    $this->testData->createCurrency('AUD', 'Australian Dollar', '$', 100);
+    $this->testData->createCountry('US', 'United States', 'USD');
+    $this->testData->createPerson($this->personId, 'coder@hotmail.com');
+    $this->testData->createPrice($this->priceId, 'Monthly');
   }
 
   public function tearDown(): void {
+    $this->dbh->rollback();
     $this->dbh->close();
   }
 
   public function testGetCurrencyFromCode() {
     $currencyCode = 'AUD';
-    $currencyDescription = 'Australian Dollars';
+    $currencyDescription = 'Australian Dollar';
     $currencySymbol = '$';
     $stripeDivisor = 100;
+
     $currency = $this->stripeRepository->getCurrencyFromCode($currencyCode);
     $this->assertEquals($currencyCode, $currency['currency_code']);
     $this->assertEquals($currencyDescription, $currency['currency_description']);
@@ -40,11 +50,7 @@ class MysqlStripeRepositoryTest extends TestCase {
   }
 
   public function testGetIncompleteSubscription() {
-    $priceId = 'Price1';
-    $productId = 'Product1';
     $clientSecret = 'SECRET';
-    $productId = 'Product1';
-    $personId = 1;
     $email = 'fastfred@hotmail.com';
     $subscriptionId = 'SUB-INCOMPLETE';
     $periodStart = 1482017003;
@@ -61,17 +67,13 @@ class MysqlStripeRepositoryTest extends TestCase {
     $taxFee = 2;
     $net = 674;
 
-    $this->testData->deleteAllSubscriptions();
-    $this->testData->deleteAllNotifications();
-    $this->testData->createPerson($personId, $email);
-    $this->testData->createPrice($priceId, $productId);
     $rowsInserted = $this->stripeRepository->insertSubscription(
       $subscriptionId,
-      $personId,
+      $this->personId,
       $periodStart,
       $periodEnd,
       $stripeCustomerId,
-      $priceId,
+      $this->priceId,
       $clientSecret,
       $start_date,
       $status,
@@ -80,8 +82,8 @@ class MysqlStripeRepositoryTest extends TestCase {
     $this->assertEquals(1, $rowsInserted);
 
     $subscription = $this->stripeRepository->getIncompleteSubscription(
-      $personId,
-      $priceId
+      $this->personId,
+      $this->priceId
     );
     $this->assertEquals($status, $subscription['status']);
     $this->assertEquals($subscriptionId, $subscription['subscription_id']);
@@ -89,8 +91,6 @@ class MysqlStripeRepositoryTest extends TestCase {
   }
 
   public function testInsertAndUpdateSubscription() {
-    $priceId = 'Price1';
-    $productId = 'Product1';
     $clientSecret = 'SECRET';
     $personId = 1;
     $email = 'fastfred@hotmail.com';
@@ -111,16 +111,13 @@ class MysqlStripeRepositoryTest extends TestCase {
     $chargeId = 'CH_00000000';
     $refundId = 'RE_00000000';
 
-    $this->testData->deleteAllSubscriptions();
-    $this->testData->createPerson($personId, $email);
-    $this->testData->createPrice($priceId, $productId);
     $rowsInserted = $this->stripeRepository->insertSubscription(
       $subscriptionId,
-      $personId,
+      $this->personId,
       $periodStart,
       $periodEnd,
       $stripeCustomerId,
-      $priceId,
+      $this->priceId,
       $clientSecret,
       $start_date,
       $status,
@@ -191,7 +188,7 @@ class MysqlStripeRepositoryTest extends TestCase {
       'current_period_start' => '2016-12-18 10:23:23',
       'current_period_end' => '2017-02-17 23:23:22',
       'stripe_customer_id' => 'CUS-1',
-      'stripe_price_id' => 'Price1',
+      'stripe_price_id' => $this->priceId,
       'status' => 'past_due',
       'percent_off' => 0,
       'cancel_at_period_end' => 1,
@@ -200,7 +197,7 @@ class MysqlStripeRepositoryTest extends TestCase {
       'currency_code' => 'USD',
       'price_in_cents' => 695,
       'billing_period' => 'month',
-      'currency_description' => 'US Dollars',
+      'currency_description' => 'United States Dollar',
       'currency_symbol' => '$',
       'stripe_divisor' => 100,
     ];
@@ -254,7 +251,6 @@ class MysqlStripeRepositoryTest extends TestCase {
   }
 
   public function testGetandSaveStripeEvents() {
-    $this->testData->deleteAllStripeEvents();
     $eventId = 'EVT_00000000';
     $apiVersion = '2016-10-07';
     $createdAt = 1482017003;

@@ -19,20 +19,20 @@ class MysqlQuestionRepositoryTest extends TestCase {
       $_ENV['DB_PASSWORD'],
       $_ENV['DB_DATABASE']
     );
+    $this->dbh->begin_transaction();
     $this->questionRepository = new MysqlQuestionRepository($this->dbh);
     $this->testData = new TestData($this->dbh);
   }
 
   public function tearDown(): void {
+    $this->dbh->rollback();
     $this->dbh->close();
   }
 
   public function testQuestionRepository() {
-    $this->testData->deleteAllQuestions();
-    $this->testData->deleteAllQuestionTypes();
-    $this->testData->deleteAllPeople();
     $personId = 1;
     $questionTypeId = 1;
+    $this->testData->createCountry('US', 'United States', 'USD');
     $this->testData->createPerson($personId, 'coder@hotmail.com');
     $this->testData->createQuestionType($questionTypeId);
     $formData = [
@@ -115,44 +115,5 @@ class MysqlQuestionRepositoryTest extends TestCase {
     $rowsDeleted = $this->questionRepository->deleteQuestion($formData2['slug']);
     $this->assertEquals(1, $rowsDeleted);
   }
-
-/*
-  public function testGetAllBlogCategories() {
-    $blogCategoryId = 1;
-    $this->testData->deleteAllBlogCategories();
-    $this->testData->createBlogCategory($blogCategoryId);
-    $categories = $this->blogRepository->getAllBlogCategories();
-    $this->assertEquals($blogCategoryId, $categories[0]['blog_category_id']);
-  }
-
-  public function testGetBlogCategoryById() {
-    $this->testData->deleteAllBlogCategories();
-    $blogCategoryId = 1;
-    $this->testData->createBlogCategory($blogCategoryId);
-    $blogCategory = $this->blogRepository->getBlogCategoryById($blogCategoryId);
-    $this->assertEquals($blogCategoryId, $blogCategory['blog_category_id']);
-    $this->assertEquals('Coding Advice', $blogCategory['description']);
-  }
-
-  public function testGetLatestImages() {
-    $this->testData->deleteAllBlogImages();
-    $blogImageId = 1;
-    $this->testData->createBlogImage($blogImageId);
-    $blogImages = $this->blogRepository->getLatestImages();
-    $this->assertEquals($blogImageId, $blogImages[0]['image_id']);
-  }
-
-  public function testSaveBlogImage() {
-    $imageName = 'test.jpg';
-    $imageWidth = 640;
-    $imageHeight = 360;
-    $this->testData->deleteAllBlogImages();
-    $blogImageId = $this->blogRepository->saveBlogImage('test.jpg', 640, 360);
-    $blogImages = $this->blogRepository->getLatestImages();
-    $this->assertEquals($imageName, $blogImages[0]['image_name']);
-    $this->assertEquals($imageWidth, $blogImages[0]['image_width']);
-    $this->assertEquals($imageHeight, $blogImages[0]['image_height']);
-  }
-  */
 }
 

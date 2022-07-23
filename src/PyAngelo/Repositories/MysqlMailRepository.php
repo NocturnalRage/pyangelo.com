@@ -67,24 +67,5 @@ class MysqlMailRepository implements MailRepository {
     $stmt->close();
     return $rowsUpdated;
   }
-
-  public function deleteTransactionalMailById($mailQueueTransactionalId) {
-    $sql = "DELETE FROM mail_queue_transactional
-            WHERE  mail_queue_transactional_id = ?";
-    $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('i', $mailQueueTransactionalId);
-    $stmt->execute();
-    $rowsDeleted = $this->dbh->affected_rows;
-    $stmt->close();
-    return $rowsDeleted;
-  }
-
-  public function deleteAllMailQueueTransactional() {
-    $sql = "DELETE FROM mail_queue_transactional";
-    if (!($result = $this->dbh->query($sql))) {
-      return false;
-    }
-    return true;
-  }
 }
 ?>

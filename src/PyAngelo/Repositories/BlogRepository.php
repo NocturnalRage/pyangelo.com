@@ -35,24 +35,6 @@ interface BlogRepository {
 
   public function unpublishCommentById($commentId);
 
-  public function getAllLivestreams();
-
-  public function insertLivestream($formData);
-
-  public function updateLivestreamById($formData);
-
-  public function getLivestreamById($livestreamId);
-
-  public function getLivestreamChat();
-
-  public function updateLivestreamChat($chatId);
-
-  public function updateLivestreamPosterById($livestreamId, $poster);
-
-  public function getHomepageContent();
-
-  public function updateHomepageContent($recentlyReleased, $comingSoon);
-
   public function addToBlogAlert($blogId, $personId);
 
   public function removeFromBlogAlert($blogId, $personId);
@@ -60,5 +42,4 @@ interface BlogRepository {
   public function shouldUserReceiveAlert($blogId, $personId);
 
   public function getFollowers($blogId);
-
 }

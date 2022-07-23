@@ -22,16 +22,24 @@ class MysqlMetricRepositoryTest extends TestCase {
       $_ENV['DB_PASSWORD'],
       $_ENV['DB_DATABASE']
     );
+    $this->dbh->begin_transaction();
     $this->metricRepository = new MysqlMetricRepository($this->dbh);
     $this->testData = new TestData($this->dbh);
+    $this->personId = 1;
+    $this->priceId = 'test-price-id';
+    $this->testData->createCurrency('USD', 'United States Dollar', '$', 100);
+    $this->testData->createCountry('US', 'United States', 'USD');
+    $this->testData->createPerson($this->personId, 'coder@hotmail.com');
+    $this->testData->createPrice($this->priceId, 'Monthly');
   }
 
   public function tearDown(): void {
+    $this->dbh->rollback();
     $this->dbh->close();
   }
 
   public function testGetSubscriberGrowth() {
-    $this->testData->createSubscribers();
+    $this->testData->createSubscriptions($this->priceId);
     $growth = $this->metricRepository->getSubscriberGrowthByMonth();
     $expectedGrowth = [
       [
@@ -53,7 +61,7 @@ class MysqlMetricRepositoryTest extends TestCase {
   }
 
   public function testGetSubscriberPayments() {
-    $this->testData->createSubscriberPayments();
+    $this->testData->createSubscriberPayments($this->priceId);
     $payments = $this->metricRepository->getSubscriberPaymentsByMonth();
     $expectedPayments = [
       [
@@ -68,7 +76,7 @@ class MysqlMetricRepositoryTest extends TestCase {
   }
 
   public function testGetPremiumMemberCount() {
-    $this->testData->createSubscribers();
+    $this->testData->createSubscriptions($this->priceId);
     $memberCount = $this->metricRepository->getPremiumMemberCountByMonth();
     $start    = new DateTime('11 months ago');
     // So you don't skip February if today is day the 29th, 30th, or 31st
@@ -97,7 +105,7 @@ class MysqlMetricRepositoryTest extends TestCase {
   }
 
   public function testGetPremiumMemberCountByPlan() {
-    $this->testData->createSubscribers();
+    $this->testData->createSubscriptions($this->priceId);
     $plans = $this->metricRepository->getPremiumMemberCountByPlan();
     $expectedPlans = [
       [
@@ -110,7 +118,6 @@ class MysqlMetricRepositoryTest extends TestCase {
   }
 
   public function testGetMemberCountByMonth() {
-    $this->testData->createPerson(1, 'fastfred@hotmail.com');
     $month = date('M Y');
     $cym = date('Ym');
     $membersMonthly = $this->metricRepository->getMemberCountByMonth();
@@ -125,7 +132,6 @@ class MysqlMetricRepositoryTest extends TestCase {
   }
 
   public function testGetMemberCountByDay() {
-    $this->testData->createPerson(1, 'fastfred@hotmail.com');
     $day = date('Y-m-d');
     $membersDaily = $this->metricRepository->getMemberCountByDay();
     $expectedMembersDaily = [

@@ -791,54 +791,6 @@ class MysqlTutorialRepository implements TutorialRepository {
     return $rowsUpdated;
   }
 
-  public function deleteAllTutorials() {
-    $sql = "DELETE FROM tutorial";
-    if (!($result = $this->dbh->query($sql))) {
-      return false;
-    }
-    return $this->dbh->affected_rows;
-  }
-
-  public function deleteAllTutorialCategories() {
-    $sql = "DELETE FROM tutorial_category";
-    if (!($result = $this->dbh->query($sql))) {
-      return false;
-    }
-    return $this->dbh->affected_rows;
-  }
-
-  public function deleteAllTutorialLevels() {
-    $sql = "DELETE FROM tutorial_level";
-    if (!($result = $this->dbh->query($sql))) {
-      return false;
-    }
-    return $this->dbh->affected_rows;
-  }
-
-  public function deleteAllLessons() {
-    $sql = "DELETE FROM lesson";
-    if (!($result = $this->dbh->query($sql))) {
-      return false;
-    }
-    return $this->dbh->affected_rows;
-  }
-
-  public function deleteAllLessonCaptions() {
-    $sql = "DELETE FROM lesson_caption";
-    if (!($result = $this->dbh->query($sql))) {
-      return false;
-    }
-    return $this->dbh->affected_rows;
-  }
-
-  public function deleteAllLessonSecurityLevels() {
-    $sql = "DELETE FROM lesson_security_level";
-    if (!($result = $this->dbh->query($sql))) {
-      return false;
-    }
-    return $this->dbh->affected_rows;
-  }
-
   public function addToLessonAlert($lessonId, $personId) {
     $sql = "INSERT INTO lesson_alert (lesson_id, person_id, created_at, updated_at)
             VALUES (?, ?, now(), now())";

@@ -20,11 +20,13 @@ class MysqlPersonRepositoryTest extends TestCase {
       $_ENV['DB_PASSWORD'],
       $_ENV['DB_DATABASE']
     );
+    $this->dbh->begin_transaction();
     $this->personRepository = new MysqlPersonRepository($this->dbh);
     $this->testData = new TestData($this->dbh);
   }
 
   public function tearDown(): void {
+    $this->dbh->rollback();
     $this->dbh->close();
   }
 
@@ -48,8 +50,6 @@ class MysqlPersonRepositoryTest extends TestCase {
     $rememberMeToken = 'remember-token';
     $resetToken = 'password-token';
 
-    $this->testData->deleteAllPeople();
-    $this->testData->deleteAllCountries();
     $this->testData->createCountry('AU', 'Australia', 'AUD');
     $this->testData->createCountry('NZ', 'New Zealand', 'NZD');
 
@@ -217,49 +217,32 @@ class MysqlPersonRepositoryTest extends TestCase {
     $this->assertCount(0, $searchPeople);
   }
 
-  public function testCreateNotification() {
+  public function testCreateNotificationAndUnreadNotifications() {
+    // Set up test
     $personId = 99;
-    $notificationId = $this->createNotification($personId);
+    $email = 'fastfred@hotmail.com';
+    $notificationTypeId = 1;
+    $notificationType = 'blog';
+    $data = 'Read me';
 
+    $this->testData->createCountry('US', 'United States', 'USD');
+    $this->testData->createPerson($personId, $email);
+
+    // Action
+    $notificationId = $this->personRepository->createNotification(
+      $personId,
+      $notificationTypeId,
+      $notificationType,
+      $data
+    );
     $this->assertGreaterThan(0, $notificationId);
-
-    // Clean up
-    $this->testData->deleteAllPeople();
-    $this->testData->deleteAllNotifications();
-  }
-  public function testUnreadCreateNotificationCount() {
-    $personId = 99;
-    $notificationId = $this->createNotification($personId);
 
     $unread = $this->personRepository->unreadNotificationCount(
       $personId
     );
-
     $this->assertEquals(1, $unread['unread']);
 
-    // Clean up
-    $this->testData->deleteAllPeople();
-    $this->testData->deleteAllNotifications();
-  }
 
-  public function testGetUnreadNotifications() {
-    $personId = 99;
-    $notificationId = $this->createNotification($personId);
-
-    $unread = $this->personRepository->getUnreadNotifications($personId);
-
-    $this->assertEquals($notificationId, $unread[0]['notification_id']);
-    $this->assertEquals($personId, $unread[0]['person_id']);
-    $this->assertEquals(0, $unread[0]['has_been_read']);
-
-    // Clean up
-    $this->testData->deleteAllPeople();
-    $this->testData->deleteAllNotifications();
-  }
-
-  public function testGetAllNotifications() {
-    $personId = 99;
-    $unreadNotificationId = $this->createNotification($personId);
     $readNotificationId = $this->personRepository->createNotification(
       $personId,
       2,
@@ -271,19 +254,14 @@ class MysqlPersonRepositoryTest extends TestCase {
       $personId, $readNotificationId
     );
 
+    $unread = $this->personRepository->getUnreadNotifications($personId);
+    $this->assertCount(1, $unread);
+    $this->assertEquals($notificationId, $unread[0]['notification_id']);
+    $this->assertEquals($personId, $unread[0]['person_id']);
+    $this->assertEquals(0, $unread[0]['has_been_read']);
+
     $all = $this->personRepository->getAllNotifications($personId);
-
-    $this->assertEquals($unreadNotificationId, $all[0]['notification_id']);
-    $this->assertEquals($personId, $all[0]['person_id']);
-    $this->assertEquals(0, $all[0]['has_been_read']);
-    $this->assertEquals($readNotificationId, $all[1]['notification_id']);
-    $this->assertEquals($personId, $all[1]['person_id']);
-    $this->assertEquals(1, $all[1]['has_been_read']);
-  }
-
-  public function testGetNotificationById() {
-    $personId = 99;
-    $notificationId = $this->createNotification($personId);
+    $this->assertCount(2, $all);
 
     $notification = $this->personRepository->getNotificationById(
       $personId,
@@ -292,73 +270,12 @@ class MysqlPersonRepositoryTest extends TestCase {
 
     $this->assertEquals($notificationId, $notification['notification_id']);
     $this->assertEquals($personId, $notification['person_id']);
-  }
-
-  public function testMarkNotificationAsRead() {
-    $personId = 99;
-    $notificationId = $this->createNotification($personId);
-
-    $unread = $this->personRepository->getUnreadNotifications(
-      $personId
-    );
-
-    $this->assertEquals($notificationId, $unread[0]['notification_id']);
-
-    $this->personRepository->markNotificationAsRead($personId, $notificationId);
-
-    $unread = $this->personRepository->getUnreadNotifications(
-      $personId
-    );
-
-    $this->assertEmpty($unread);
-
-    // Clean up
-    $this->testData->deleteAllPeople();
-    $this->testData->deleteAllNotifications();
-  }
-
-  public function testMarkAllNotificationsAsRead() {
-    $personId = 99;
-    $notificationId = $this->createNotification($personId);
-
-    $unread = $this->personRepository->getUnreadNotifications(
-      $personId
-    );
-
-    $this->assertEquals($notificationId, $unread[0]['notification_id']);
 
     $this->personRepository->markAllNotificationsAsRead($personId);
-
     $unread = $this->personRepository->getUnreadNotifications(
       $personId
     );
 
     $this->assertEmpty($unread);
-
-    // Clean up
-    $this->testData->deleteAllPeople();
-    $this->testData->deleteAllNotifications();
-  }
-
-  private function createNotification($personId) {
-    // Ensure no previous data
-    $this->testData->deleteAllPeople();
-    $this->testData->deleteAllNotifications();
-
-    // Set up test
-    $email = 'fastfred@hotmail.com';
-    $notificationTypeId = 1;
-    $notificationType = 'blog';
-    $data = 'Read me';
-
-    $this->testData->createPerson($personId, $email);
-
-    // Action
-    return $this->personRepository->createNotification(
-      $personId,
-      $notificationTypeId,
-      $notificationType,
-      $data
-    );
   }
 }
