@@ -19,25 +19,29 @@ class MysqlCountryRepositoryTest extends TestCase {
       $_ENV['DB_PASSWORD'],
       $_ENV['DB_DATABASE']
     );
+    $this->dbh->begin_transaction();
     $this->countryRepository = new MysqlCountryRepository($this->dbh);
     $this->testData = new TestData($this->dbh);
   }
 
   public function tearDown(): void {
+    $this->dbh->rollback();
     $this->dbh->close();
   }
 
   public function testInsertRetrieveDeleteCountry() {
-    $this->testData->deleteAllPeople();
-    $this->testData->deleteAllCountries();
-
     $this->testData->createCountry(
       'AU', 'Australia', 'AUD'
     );
     $this->testData->createCountry(
       'A1', 'Anonymous Proxy', 'USD'
     );
-
+    $this->testData->createCurrency(
+      'AUD',
+      'Australian Dollar',
+      '$',
+      100
+    );
     $countries = $this->countryRepository->getCountries();
     $expectedCountries = [
       [
@@ -75,5 +79,13 @@ class MysqlCountryRepositoryTest extends TestCase {
     $this->assertEquals($expectedCountryCode, $country['country_code']);
     $this->assertEquals($expectedCountryName, $country['country_name']);
     $this->assertEquals($expectedCurrencyCode, $country['currency_code']);
+
+    $currency = $this->countryRepository->getCurrencyFromCountryCode(
+      $countryCode
+    );
+    $this->assertEquals('AUD', $currency['currency_code']);
+    $this->assertEquals('Australian Dollar', $currency['currency_description']);
+    $this->assertEquals('$', $currency['currency_symbol']);
+    $this->assertEquals(100, $currency['stripe_divisor']);
   }
 }

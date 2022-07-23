@@ -126,16 +126,6 @@ interface TutorialRepository {
 
   public function unpublishCommentById($commentId);
 
-  public function deleteAllTutorials();
-
-  public function deleteAllTutorialCategories();
-
-  public function deleteAllTutorialLevels();
-
-  public function deleteAllLessons();
-
-  public function deleteAllLessonSecurityLevels();
-
   public function addToLessonAlert($lessonId, $personId);
 
   public function removeFromLessonAlert($lessonId, $personId);

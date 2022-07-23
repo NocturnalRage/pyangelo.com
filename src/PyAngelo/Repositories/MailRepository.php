@@ -12,9 +12,5 @@ interface MailRepository {
   );
 
   public function setEmailStatus($statusId, $mailQueueId);
-
-  public function deleteTransactionalMailById($mailQueueTransactionalId);
-
-  public function deleteAllMailQueueTransactional();
 }
 ?>

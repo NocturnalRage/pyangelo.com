@@ -7,6 +7,7 @@ class MysqlBlogRepository implements BlogRepository {
   public function __construct(\Mysqli $dbh) {
     $this->dbh = $dbh;
   }
+
   public function insertPublishedBlog($formData) {
     $sql = "INSERT INTO blog (
               blog_id,
@@ -257,120 +258,6 @@ class MysqlBlogRepository implements BlogRepository {
             WHERE  comment_id = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('i', $commentId);
-    $stmt->execute();
-    $rowsUpdated = $this->dbh->affected_rows;
-    $stmt->close();
-    return $rowsUpdated;
-  }
-
-  public function getAllLivestreams() {
-    $sql = "SELECT *
-            FROM   livestream
-            ORDER BY created_at desc";
-    $result = $this->dbh->query($sql);
-    return $result->fetch_all(MYSQLI_ASSOC);
-  }
-
-  public function insertLivestream($formData) {
-    $sql = "INSERT INTO livestream (
-              livestream_id,
-              livestream_title,
-              livestream_description,
-              video_name,
-              created_at,
-              updated_at
-            )
-            VALUES (NULL, ?, ?, ?, now(), now())";
-    $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param(
-      'sss',
-      $formData['livestream_title'],
-      $formData['livestream_description'],
-      $formData['video_name']
-    );
-    $stmt->execute();
-    $livestreamId = $this->dbh->insert_id;
-    $stmt->close();
-    return $livestreamId;
-  }
-
-  public function updateLivestreamById($formData) {
-    $sql = "UPDATE livestream
-            SET    livestream_title = ?,
-                   livestream_description = ?,
-                   video_name = ?,
-                   updated_at = now()
-            WHERE  livestream_id = ?";
-    $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param(
-      'sssi',
-      $formData['livestream_title'],
-      $formData['livestream_description'],
-      $formData['video_name'],
-      $formData['livestream_id']
-    );
-    $stmt->execute();
-    $rowsUpdated = $this->dbh->affected_rows;
-    $stmt->close();
-    return $rowsUpdated;
-  }
-
-  public function getLivestreamById($livestreamId) {
-    $sql = "SELECT *
-	        FROM   livestream
-            WHERE  livestream_id = ?";
-    $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('i', $livestreamId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $stmt->close();
-    return $result->fetch_assoc();
-  }
-
-  public function getLivestreamChat() {
-    $sql = "SELECT *
-            FROM   livestream_chat";
-    $result = $this->dbh->query($sql);
-    return $result->fetch_assoc();
-  }
-
-  public function updateLivestreamChat($chatId) {
-    $sql = "UPDATE livestream_chat
-            SET    livestream_chat_id = ?";
-    $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('s', $chatId);
-    $stmt->execute();
-    $rowsUpdated = $this->dbh->affected_rows;
-    $stmt->close();
-    return $rowsUpdated;
-  }
-
-  public function updateLivestreamPosterById($livestreamId, $poster) {
-    $sql = "UPDATE livestream
-            SET    poster = ?,
-                   updated_at = now()
-            WHERE  livestream_id = ?";
-    $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('si', $poster, $livestreamId);
-    $stmt->execute();
-    $rowsUpdated = $this->dbh->affected_rows;
-    $stmt->close();
-    return $rowsUpdated;
-  }
-
-  public function getHomepageContent() {
-    $sql = "SELECT *
-	        FROM   homepage_content";
-    $result = $this->dbh->query($sql);
-    return $result->fetch_assoc();
-  }
-
-  public function updateHomepageContent($recentlyReleased, $comingSoon) {
-    $sql = "UPDATE homepage_content
-            SET    recently_released = ?,
-                   coming_soon = ?";
-    $stmt = $this->dbh->prepare($sql);
-    $stmt->bind_param('ss', $recentlyReleased, $comingSoon);
     $stmt->execute();
     $rowsUpdated = $this->dbh->affected_rows;
     $stmt->close();

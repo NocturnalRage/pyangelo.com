@@ -17,24 +17,22 @@ class MysqlMailRepositoryTest extends TestCase {
       $_ENV['DB_PASSWORD'],
       $_ENV['DB_DATABASE']
     );
+    $this->dbh->begin_transaction();
     $this->mailRepository = new MysqlMailRepository($this->dbh);
   }
 
   public function tearDown(): void {
+    $this->dbh->rollback();
     $this->dbh->close();
   }
 
-  public function testInsertTransactionalMailAndGetTransactionalMailById() {
-    $deleted = $this->mailRepository->deleteAllMailQueueTransactional();
-    $this->assertTrue($deleted);
-
+  public function testMailRepositoryFunctions() {
     $fromEmail = 'admin@nocturnalrage.com';
     $replyEmail = 'admin@nocturnalrage.com';
     $toEmail = 'fred@hotmail.com';
     $subject = 'PyAngelo Website';
     $bodyText = 'It looks good';
     $bodyHtml = '<p>It looks good</p>';
-    $expectedDeletedCount = 1;
 
     // Insert, retrieve, and delete data from the table
     $mailQueueTransactionalId = $this->mailRepository->insertTransactionalMail(
@@ -43,20 +41,19 @@ class MysqlMailRepositoryTest extends TestCase {
     $mail = $this->mailRepository->getTransactionalMailById(
       $mailQueueTransactionalId
     );
+    $this->assertEquals($fromEmail, $mail['from_email']);
+    $this->assertEquals($replyEmail, $mail['reply_email']);
+    $this->assertEquals($toEmail, $mail['to_email']);
+    $this->assertEquals($subject, $mail['subject']);
+    $this->assertEquals($bodyText, $mail['body_text']);
+    $this->assertEquals($bodyHtml, $mail['body_html']);
+
     $emails = $this->mailRepository->getQueuedTransactionalMail(10);
     $this->assertCount(1, $emails);
+    $this->assertEquals($subject, $emails[0]['subject']);
+
     $this->mailRepository->setEmailStatus(2, $emails[0]['mail_queue_transactional_id']);
     $emails = $this->mailRepository->getQueuedTransactionalMail(10);
     $this->assertCount(0, $emails);
-
-    $deletedCount = $this->mailRepository->deleteTransactionalMailById($mailQueueTransactionalId);
-
-    $this->assertSame($fromEmail, $mail['from_email']);
-    $this->assertSame($toEmail, $mail['to_email']);
-    $this->assertSame($subject, $mail['subject']);
-    $this->assertSame($bodyText, $mail['body_text']);
-    $this->assertSame($bodyHtml, $mail['body_html']);
-    $this->assertSame(1, $mail['mail_queue_status_id']);
-    $this->assertSame($expectedDeletedCount, $deletedCount);
   }
 }

@@ -17,21 +17,16 @@ class MysqlTutorialRepositoryTest extends TestCase {
       $_ENV['DB_PASSWORD'],
       $_ENV['DB_DATABASE']
     );
+    $this->dbh->begin_transaction();
     $this->tutorialRepository = new MysqlTutorialRepository($this->dbh);
   }
 
   public function tearDown(): void {
+    $this->dbh->rollback();
     $this->dbh->close();
   }
 
   public function testInsertTutorialAndGetTutorials() {
-    $deleted = $this->tutorialRepository->deleteAllTutorials();
-    $deleted = $this->tutorialRepository->deleteAllTutorialCategories();
-    $deleted = $this->tutorialRepository->deleteAllTutorialLevels();
-    $deleted = $this->tutorialRepository->deleteAllLessonCaptions();
-    $deleted = $this->tutorialRepository->deleteAllLessons();
-    $deleted = $this->tutorialRepository->deleteAllLessonSecurityLevels();
-
     $rowsInserted = $this->tutorialRepository->insertTutorialLevel(1, 'Beginner');
     $this->assertSame(1, $rowsInserted);
     $rowsInserted = $this->tutorialRepository->insertTutorialLevel(2, 'Advanced');
@@ -75,7 +70,7 @@ class MysqlTutorialRepositoryTest extends TestCase {
     $thumbnail = 'test-tutorial.jpg';
     $expectedDeletedCount = 2;
 
-    // Insert, retrieve, and delete data from the table
+    // Insert and retrieve data from the table
     $tutorialId1 = $this->tutorialRepository->insertTutorial(
       $title, $description, $slug, $tutorialCategoryId, $tutorialLevelId, $singleSketch, $tutorialSketchId, $displayOrder, $thumbnail
     );
@@ -358,15 +353,5 @@ class MysqlTutorialRepositoryTest extends TestCase {
       ]
     ];
     $this->assertEquals($expectedCaptions, $lessonCaptions);
-
-
-    $deletedCount = $this->tutorialRepository->deleteAllTutorials();
-    $this->assertSame($deletedCount, $expectedDeletedCount);
-
-    $deletedCount = $this->tutorialRepository->deleteAllTutorialLevels();
-    $this->assertSame($deletedCount, $expectedDeletedCount);
-
-    $deletedCount = $this->tutorialRepository->deleteAllTutorialCategories();
-    $this->assertSame($deletedCount, $expectedDeletedCount);
   }
 }
