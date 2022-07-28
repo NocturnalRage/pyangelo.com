@@ -157,6 +157,9 @@ export function runSkulpt (code, debugging, stopFunction) {
           child = child.child
         }
       }
+      while (child.$lineno === undefined) {
+        child = child.child
+      }
       if (currentLineNo === child.$lineno) {
         return Promise.resolve(susp.resume())
       }
