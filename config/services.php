@@ -1133,6 +1133,19 @@ $di->set('LessonsOrderController', function () use ($di) {
   );
 });
 
+$di->set('BlogController', function () use ($di) {
+  return new PyAngelo\Controllers\Blog\BlogController (
+    $di->get('request'),
+    $di->get('response'),
+    $di->get('auth'),
+    $di->get('blogRepository'),
+    $di->get('blogFormService'),
+    $di->get('HtmlPurifierPurify'),
+    $di->get('avatar'),
+    $_ENV['SHOW_COMMENT_COUNT'],
+  );
+});
+
 $di->set('BlogIndexController', function () use ($di) {
   return new PyAngelo\Controllers\Blog\BlogIndexController (
     $di->get('request'),
