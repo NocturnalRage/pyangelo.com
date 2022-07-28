@@ -20,7 +20,7 @@ abstract class Controller {
     $this->auth = $auth;
   }
 
-  abstract public function exec();
+  # abstract public function exec();
 
   public function addVar($varName) {
     if (isset($_SESSION[$varName])) {

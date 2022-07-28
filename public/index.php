@@ -26,9 +26,20 @@ if (!$match) {
   $match = [];
   $match['target'] = 'PageNotFoundController';
 }
-
-$controller = $di->newInstance($match['target']);
-$response = $controller->exec();
-$response->send();
+$controllerAndAction = explode('@', $match['target']);
+$controllerName = $controllerAndAction[0];
+if (count($controllerAndAction) == 1) {
+  $action = 'exec';
+} else {
+  $action = $controllerAndAction[1];
+}
+$controller = $di->newInstance($controllerName);
+if (method_exists($controller, $action)) {
+  $response = $controller->$action();
+  $response->send();
+}
+else {
+  throw new \Exception("$controllerName does not support $action");
+}
 
 ?>

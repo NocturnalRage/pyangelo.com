@@ -368,33 +368,9 @@ class ServicesTest extends TestCase {
     $controller = $this->di->newInstance('LessonsOrderController');
     $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Lessons\LessonsOrderController');
   }
-  public function testBlogIndexController() {
-    $controller = $this->di->newInstance('BlogIndexController');
-    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogIndexController');
-  }
-  public function testBlogNewController() {
-    $controller = $this->di->newInstance('BlogNewController');
-    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogNewController');
-  }
-  public function testBlogCreateController() {
-    $controller = $this->di->newInstance('BlogCreateController');
-    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogCreateController');
-  }
-  public function testBlogShowController() {
-    $controller = $this->di->newInstance('BlogShowController');
-    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogShowController');
-  }
-  public function testBlogToggleAlertController() {
-    $controller = $this->di->newInstance('BlogToggleAlertController');
-    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogToggleAlertController');
-  }
-  public function testBlogEditController() {
-    $controller = $this->di->newInstance('BlogEditController');
-    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogEditController');
-  }
-  public function testBlogUpdateController() {
-    $controller = $this->di->newInstance('BlogUpdateController');
-    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogUpdateController');
+  public function testBlogController() {
+    $controller = $this->di->newInstance('BlogController');
+    $this->assertSame(get_class($controller), 'PyAngelo\Controllers\Blog\BlogController');
   }
   public function testReferenceController() {
     $controller = $this->di->newInstance('ReferenceController');
