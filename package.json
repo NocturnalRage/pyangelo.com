@@ -14,6 +14,7 @@
     "refreshskulpt": "npm uninstall skulpt && npm install pingskills/skulpt#pyangelo --save-dev"
   },
   "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.18.6",
     "bootstrap-sass": "^3.4.1",
     "canvas-confetti": "^1.4.0",
     "eslint": "^7.32.0",
@@ -25,6 +26,7 @@
     "eslint-webpack-plugin": "^3.0.1",
     "font-awesome": "^4.7.0",
     "howler": "^2.2.3",
+    "jest": "^28.1.3",
     "jquery": "^3.5.1",
     "laravel-mix": "^6.0.11",
     "laravel-mix-eslint": "^0.2.0",

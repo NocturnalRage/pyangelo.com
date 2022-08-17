@@ -1,6 +1,7 @@
 import { notify } from './pyangelo-notify'
 import ace from 'ace'
-import { staticWordCompleter } from './editorWordCompletion'
+import { PyAngeloWordCompleter } from './PyAngeloWordCompleter'
+import { Autocompleter } from './Autocompleter'
 
 export class Editor {
   constructor (sketchId, crsfToken, Sk, fileTabs, isReadOnly) {
@@ -29,9 +30,9 @@ export class Editor {
     this.UndoManager = ace.require('ace/undomanager').UndoManager
     this.PythonMode = ace.require('ace/mode/python').Mode
     this.langTools = ace.require('ace/ext/language_tools')
-    // which one is needed?
-    this.langTools.setCompleters([staticWordCompleter])
-    this.editor.completers = [staticWordCompleter]
+    const autocompleter = new Autocompleter(this.Sk)
+    this.pyangeloWordCompleter = new PyAngeloWordCompleter(autocompleter)
+    this.langTools.setCompleters([this.pyangeloWordCompleter])
     this.editSessions = []
   }
 
@@ -46,6 +47,9 @@ export class Editor {
     const listenForErrorsOn = listenForErrors
     const autosaveOn = autosave
     this.editor.on('change', function (delta) {
+      closureEditor.pyangeloWordCompleter.setCode(
+        closureEditor.getCode(closureEditor.currentSession)
+      )
       if (listenForErrorsOn) {
         closureEditor.editSessions[closureEditor.currentSession].clearAnnotations()
         closureEditor.Sk.configure({
