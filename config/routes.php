@@ -38,6 +38,7 @@ return [
   [ 'GET','/collection/[:collectionId]', 'CollectionsShowController', 'collectionsShow' ],
   [ 'POST','/collection/[:collectionId]/rename', 'CollectionsRenameController', 'collectionsRename' ],
   [ 'GET','/playground', 'SketchPlaygroundController', 'sketchPlayground' ],
+  [ 'GET','/editor', 'SketchEditorController', 'sketchEditor' ],
   [ 'GET','/sketch', 'SketchIndexController', 'sketchIndex' ],
   [ 'POST','/sketch/create', 'SketchCreateController', 'sketchCreate' ],
   [ 'GET','/sketch/[:sketchId]', 'SketchShowController', 'sketchShow' ],
