@@ -14,6 +14,7 @@ mix
   .js('resources/assets/js/backToTop.js', './public/js/')
   .js('resources/assets/js/collection.js', './public/js/')
   .js('resources/assets/js/playground.js', './public/js/')
+  .js('resources/assets/js/editor.js', './public/js/')
   .js('resources/assets/js/quiz.js', './public/js/')
   .js('resources/assets/js/SkulptSketch.js', './public/js/')
   .js('resources/assets/js/SkulptSketchCanvasOnly.js', './public/js/')
