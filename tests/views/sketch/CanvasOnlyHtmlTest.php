@@ -3,9 +3,9 @@ namespace Tests\views\sketch;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class CanvasOnlyHtmlTest extends BasicViewHtmlTest {
+class CanvasOnlyHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicViewOwnsSketchHtml() {
     $personId = 101;

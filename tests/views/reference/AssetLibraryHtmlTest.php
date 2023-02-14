@@ -3,9 +3,9 @@ namespace Tests\views\reference;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class AssetLibraryHtmlTest extends BasicViewHtmlTest {
+class AssetLibraryHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicViewHtml() {
     $pageTitle = "PyAngelo - Asset Library";

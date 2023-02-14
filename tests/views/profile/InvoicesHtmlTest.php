@@ -3,9 +3,9 @@ namespace Tests\views\profile;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class InvoicesHtmlTest extends BasicViewHtmlTest {
+class InvoicesHtmlTest extends BasicViewHtmlTestCase {
   public function tearDown(): void {
     \Mockery::close();
   }

@@ -8,6 +8,7 @@ use PyAngelo\Repositories\SketchRepository;
 
 class SketchGetCodeController extends Controller {
   protected $sketchRepository;
+  protected $appDir;
 
   public function __construct(
     Request $request,

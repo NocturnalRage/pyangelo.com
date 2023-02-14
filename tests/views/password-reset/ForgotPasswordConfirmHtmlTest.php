@@ -3,9 +3,9 @@ namespace Tests\views\passwordreset;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class ForgotPasswordConfirmHtmlTest extends BasicViewHtmlTest {
+class ForgotPasswordConfirmHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicForgotPasswordConfirmView() {
     $email = 'any_email@nocturnalrage.com';

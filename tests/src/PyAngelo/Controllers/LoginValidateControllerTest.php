@@ -9,6 +9,12 @@ use PyAngelo\Controllers\LoginValidateController;
 use PyAngelo\Auth\Auth;
 
 class LoginValidateControllerTest extends TestCase {
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $recaptcha;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

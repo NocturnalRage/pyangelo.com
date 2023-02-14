@@ -3,9 +3,9 @@ namespace Tests\views\passwordreset;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class ForgotPasswordHtmlTest extends BasicViewHtmlTest {
+class ForgotPasswordHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicLoginViewWhenLoggedOut() {
     $response = new Response('views');

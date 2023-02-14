@@ -8,6 +8,13 @@ use Framework\Response;
 use PyAngelo\Controllers\Profile\SubscriptionController;
 
 class SubscriptionControllerTest extends TestCase {
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $stripeRepository;
+  protected $numberFormatter;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

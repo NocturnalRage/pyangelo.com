@@ -3,9 +3,9 @@ namespace Tests\views\blog;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class NewHtmlTest extends BasicViewHtmlTest {
+class NewHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicViewNewBlog() {
     $categories = [

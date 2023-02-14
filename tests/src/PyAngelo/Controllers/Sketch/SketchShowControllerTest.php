@@ -10,6 +10,12 @@ use PyAngelo\Repositories\SketchRepository;
 use PyAngelo\Controllers\Sketch\SketchShowController;
 
 class SketchShowControllerTest extends TestCase {
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $sketchRepository;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

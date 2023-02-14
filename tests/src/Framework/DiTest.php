@@ -4,6 +4,8 @@ use Framework\Di;
 
 class DiTest extends \PHPUnit\Framework\TestCase
 {
+    protected $di;
+
     public function setUp(): void
     {
         $this->di = new Di;

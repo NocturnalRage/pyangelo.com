@@ -3,9 +3,9 @@ namespace Tests\views\passwordreset;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class ResetPasswordHtmlTest extends BasicViewHtmlTest {
+class ResetPasswordHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicResetPasswordView() {
     $token = 'secret';

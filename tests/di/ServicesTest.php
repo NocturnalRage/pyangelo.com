@@ -5,6 +5,7 @@ use PHPUnit\Framework\TestCase;
 use Framework\Response;
 
 class ServicesTest extends TestCase {
+  protected $di;
 
   public function setUp(): void {
     require(dirname(__FILE__) . '/../../vendor/autoload.php');

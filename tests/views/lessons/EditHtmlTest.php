@@ -3,9 +3,9 @@ namespace Tests\views\lessons;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class EditHtmlTest extends BasicViewHtmlTest {
+class EditHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicViewWhenAdmin() {
     $sketches = [];

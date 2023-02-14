@@ -3,9 +3,9 @@ namespace Tests\views;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class AboutHtmlTest extends BasicViewHtmlTest {
+class AboutHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicLoginViewWhenLoggedOut() {
     $response = new Response('views');

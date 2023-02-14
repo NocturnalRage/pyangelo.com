@@ -10,6 +10,7 @@ use PyAngelo\Repositories\SketchRepository;
 class TutorialsEditController extends Controller {
   protected $tutorialRepository;
   protected $sketchRepository;
+  protected $ownerOfStarterSketchesId;
 
   public function __construct(
     Request $request,

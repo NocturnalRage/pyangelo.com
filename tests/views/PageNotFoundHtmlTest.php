@@ -4,7 +4,7 @@ namespace Tests\views;
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
 
-class PageNotFoundHtmlTest extends BasicViewHtmlTest {
+class PageNotFoundHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicViewWhenLoggedOut() {
     $response = new Response('views');

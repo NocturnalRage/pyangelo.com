@@ -3,9 +3,9 @@ namespace Tests\views\registration;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\Views\BasicViewHtmlTest;
+use Tests\Views\BasicViewHtmlTestCase;
 
-class RegisterConfirmHtmlTest extends BasicViewHtmlTest {
+class RegisterConfirmHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicView() {
     $pageTitle = 'Confirm Your Email Address';

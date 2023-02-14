@@ -8,6 +8,12 @@ use Framework\Response;
 use PyAngelo\Controllers\Tutorials\TutorialsCreateController;
 
 class TutorialsCreateControllerTest extends TestCase {
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $tutorialFormService;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

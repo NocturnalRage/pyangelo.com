@@ -9,6 +9,12 @@ use Framework\Response;
 use PyAngelo\Controllers\Quizzes\QuizzesRecordResponseController;
 
 class QuizzesRecordResponseControllerTest extends TestCase {
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $quizRepository;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

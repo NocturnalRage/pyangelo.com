@@ -8,6 +8,11 @@ use PyAngelo\Controllers\Profile\PasswordController;
 use PyAngelo\Auth\Auth;
 
 class PasswordControllerTest extends TestCase {
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

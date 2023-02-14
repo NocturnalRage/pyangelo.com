@@ -10,6 +10,14 @@ use PyAngelo\Repositories\SketchRepository;
 use PyAngelo\Controllers\Sketch\SketchForkController;
 
 class SketchForkControllerTest extends TestCase {
+  protected $appDir;
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $sketchRepository;
+  protected $sketchFiles;
+  protected $controller;
+
   public function setUp(): void {
     $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../../../', '.env.test');
     $dotenv->load();

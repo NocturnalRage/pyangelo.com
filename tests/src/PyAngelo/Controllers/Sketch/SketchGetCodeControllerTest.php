@@ -10,6 +10,13 @@ use PyAngelo\Repositories\SketchRepository;
 use PyAngelo\Controllers\Sketch\SketchGetCodeController;
 
 class SketchGetCodeControllerTest extends TestCase {
+  protected $appDir;
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $sketchRepository;
+  protected $controller;
+
   public function setUp(): void {
     $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../../../', '.env.test');
     $dotenv->load();

@@ -3,9 +3,9 @@ namespace Tests\views\asktheteacher;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class CategoryHtmlTest extends BasicViewHtmlTest {
+class CategoryHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicViewCategory() {
     $category = [

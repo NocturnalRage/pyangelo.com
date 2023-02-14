@@ -8,6 +8,13 @@ use Framework\Response;
 use PyAngelo\Controllers\Profile\InvoicesController;
 
 class InvoicesControllerTest extends TestCase {
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $personRepository;
+  protected $numberFormatter;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

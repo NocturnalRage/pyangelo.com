@@ -8,6 +8,12 @@ use Framework\Response;
 use PyAngelo\Controllers\Registration\RegisterActivateController;
 
 class RegisterActivateControllerTest extends TestCase {
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $personRepository;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

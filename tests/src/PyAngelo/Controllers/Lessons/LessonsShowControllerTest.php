@@ -8,6 +8,18 @@ use Framework\Response;
 use PyAngelo\Controllers\Lessons\LessonsShowController;
 
 class LessonsShowControllerTest extends TestCase {
+  protected $tutorialRepository;
+  protected $sketchRepository;
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $purifier;
+  protected $avatar;
+  protected $showCommentCount;
+  protected $sketchFiles;
+  protected $ownerOfStarterSketchesId;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

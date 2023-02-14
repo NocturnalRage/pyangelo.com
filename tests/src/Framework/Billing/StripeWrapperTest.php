@@ -10,7 +10,10 @@ use Tests\Factory\TestData;
 class StripeWrapperTest extends TestCase {
 
   protected $dbh;
+  protected $testData;
   protected $stripeWrapper;
+  protected $stripePriceId;
+  protected $stripePriceInCents;
    
   public function setUp(): void {
     $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../../', '.env.test');

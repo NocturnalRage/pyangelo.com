@@ -8,6 +8,12 @@ use Framework\Response;
 use PyAngelo\Controllers\Classes\TeacherRestoreController;
 
 class TeacherRestoreControllerTest extends TestCase {
+  protected $classRepository;
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

@@ -3,9 +3,9 @@ namespace Tests\views\profile;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class FavouritesHtmlTest extends BasicViewHtmlTest {
+class FavouritesHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicFavouritesView() {
     $person = [

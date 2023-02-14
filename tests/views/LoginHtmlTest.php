@@ -4,7 +4,7 @@ namespace Tests\views;
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
 
-class LoginHtmlTest extends BasicViewHtmlTest {
+class LoginHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicLoginViewWhenLoggedOut() {
     $recaptchaKey = 'recaptcha';

@@ -6,6 +6,11 @@ use PHPUnit\Framework\TestCase;
 use PyAngelo\FormServices\RegisterFormService;
 
 class RegisterFormServiceTest extends TestCase {
+  protected $personRepository;
+  protected $activateMembershipEmail;
+  protected $countryDetector;
+  protected $registerFormService;
+
   public function setUp(): void {
     $this->personRepository = Mockery::mock('PyAngelo\Repositories\PersonRepository');
     $this->activateMembershipEmail = Mockery::mock('PyAngelo\Email\ActivateMembershipEmail');
