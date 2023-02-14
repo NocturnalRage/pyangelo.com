@@ -8,6 +8,15 @@ use Framework\Response;
 use PyAngelo\Controllers\AskTheTeacher\AskTheTeacherShowController;
 
 class AskTheTeacherShowControllerTest extends TestCase {
+  protected $questionRepository;
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $purifier;
+  protected $avatar;
+  protected $showCommentCount;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

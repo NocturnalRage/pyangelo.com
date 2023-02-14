@@ -3,9 +3,9 @@ namespace Tests\views\sketch;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class PlaygroundHtmlTest extends BasicViewHtmlTest {
+class PlaygroundHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicViewPlayground() {
     $sketch = [

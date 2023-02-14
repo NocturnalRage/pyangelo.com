@@ -6,6 +6,9 @@ use PHPUnit\Framework\TestCase;
 use PyAngelo\Utilities\SketchFiles;
 
 class SketchFilesTest extends TestCase {
+  protected $appdir;
+  protected $sketchFiles;
+
   public function setUp(): void {
     $dotenv = Dotenv::createImmutable(__DIR__ . '/../../../../', '.env.test');
     $dotenv->load();

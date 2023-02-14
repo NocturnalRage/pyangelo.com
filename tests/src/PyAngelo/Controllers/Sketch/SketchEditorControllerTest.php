@@ -9,6 +9,11 @@ use Framework\Response;
 use PyAngelo\Controllers\Sketch\SketchEditorController;
 
 class SketchEditorControllerTest extends TestCase {
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

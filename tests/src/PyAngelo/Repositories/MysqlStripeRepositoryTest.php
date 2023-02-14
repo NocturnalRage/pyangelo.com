@@ -9,6 +9,8 @@ class MysqlStripeRepositoryTest extends TestCase {
   protected $dbh;
   protected $stripeRepository;
   protected $testData;
+  protected $personId;
+  protected $priceId;
 
   public function setUp(): void {
     $dotenv  = \Dotenv\Dotenv::createMutable(__DIR__ . '/../../../../', '.env.test');

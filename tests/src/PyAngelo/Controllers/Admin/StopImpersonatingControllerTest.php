@@ -8,6 +8,12 @@ use Framework\Response;
 use PyAngelo\Controllers\Admin\StopImpersonatingController;
 
 class StopImpersonatingControllerTest extends TestCase {
+  protected $personRepository;
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

@@ -9,6 +9,7 @@ use Framework\{Request, Response};
 
 class SketchSaveController extends Controller {
   protected $sketchRepository;
+  protected $sketchFiles;
 
   public function __construct(
     Request $request,

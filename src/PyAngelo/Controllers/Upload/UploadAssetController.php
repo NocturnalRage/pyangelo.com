@@ -8,6 +8,7 @@ use PyAngelo\Repositories\SketchRepository;
 
 class UploadAssetController extends Controller {
   protected $sketchRepository;
+  protected $maxSize;
 
   public function __construct(
     Request $request,

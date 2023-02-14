@@ -8,6 +8,17 @@ use PyAngelo\Auth\Auth;
 use PyAngelo\Repositories\PersonRepository;
 
 class AuthTest extends TestCase {
+  protected $request;
+  protected $personRepository;
+  protected $password;
+  protected $passwordHash;
+  protected $nonAdminPersonId;
+  protected $nonAdminLoginEmail;
+  protected $nonAdminPerson;
+  protected $adminPersonId;
+  protected $adminLoginEmail;
+  protected $adminPerson;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->personRepository = Mockery::mock('PyAngelo\Repositories\PersonRepository');

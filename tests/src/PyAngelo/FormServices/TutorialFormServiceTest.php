@@ -6,6 +6,10 @@ use PHPUnit\Framework\TestCase;
 use PyAngelo\FormServices\TutorialFormService;
 
 class TutorialFormServiceTest extends TestCase {
+  protected $auth;
+  protected $tutorialRepository;
+  protected $tutorialFormService;
+
   public function setUp(): void {
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
     $this->tutorialRepository = Mockery::mock('PyAngelo\Repositories\TutorialRepository');

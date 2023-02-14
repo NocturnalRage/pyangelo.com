@@ -8,6 +8,12 @@ use Framework\Response;
 use PyAngelo\Controllers\Collections\CollectionsRenameController;
 
 class CollectionsRenameControllerTest extends TestCase {
+  protected $sketchRepository;
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

@@ -5,6 +5,7 @@ use Stripe\StripeClient;
 class StripeWrapper {
 
   protected $stripeRepository;
+  public $stripe;
 
   public function __construct($stripeSecretKey) {
     $this->stripe = new StripeClient($stripeSecretKey);

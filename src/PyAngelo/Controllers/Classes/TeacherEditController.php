@@ -7,7 +7,7 @@ use PyAngelo\Controllers\Controller;
 use PyAngelo\Repositories\ClassRepository;
 
 class TeacherEditController extends Controller {
-  protected $blogRepository;
+  protected $classRepository;
 
   public function __construct(
     Request $request,

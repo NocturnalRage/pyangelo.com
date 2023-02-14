@@ -3,9 +3,9 @@ namespace Tests\views\asktheteacher;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class AskHtmlTest extends BasicViewHtmlTest {
+class AskHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicViewAsk() {
     $response = new Response('views');

@@ -3,9 +3,9 @@ namespace Tests\views\categories;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class OrderJsonTest extends BasicViewHtmlTest {
+class OrderJsonTest extends BasicViewHtmlTestCase {
 
   public function testBasicView() {
     $response = new Response('views');

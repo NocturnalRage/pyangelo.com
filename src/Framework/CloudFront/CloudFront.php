@@ -7,6 +7,7 @@ class CloudFront {
   protected $client;
   protected $private_key_file;
   protected $access_key_id;
+  protected $streamHostUrl;
 
   public function __construct(
     $aws_cloudfront_key,

@@ -8,6 +8,15 @@ use Framework\Response;
 use PyAngelo\Controllers\Membership\ChoosePlanController;
 
 class ChoosePlanControllerTest extends TestCase {
+  protected $stripeRepository;
+  protected $countryRepository;
+  protected $countryDetector;
+  protected $numberFormatter;
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

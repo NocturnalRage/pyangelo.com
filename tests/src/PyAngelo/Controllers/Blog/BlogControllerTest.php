@@ -8,6 +8,16 @@ use Framework\Response;
 use PyAngelo\Controllers\Blog\BlogController;
 
 class BlogControllerTest extends TestCase {
+  protected $blogRepository;
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $blogFormService;
+  protected $purifier;
+  protected $avatar;
+  protected $showCommentCount;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

@@ -3,9 +3,9 @@ namespace Tests\views\categories;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class SortHtmlTest extends BasicViewHtmlTest {
+class SortHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicViewWhenLoggedIn() {
     $category = [

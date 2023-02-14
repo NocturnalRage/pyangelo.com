@@ -9,6 +9,12 @@ use PyAngelo\Repositories\SketchRepository;
 use PyAngelo\Controllers\Collections\CollectionsCreateController;
 
 class CollectionsCreateControllerTest extends TestCase {
+  protected $sketchRepository;
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

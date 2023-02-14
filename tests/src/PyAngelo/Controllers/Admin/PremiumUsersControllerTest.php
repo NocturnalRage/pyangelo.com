@@ -8,6 +8,13 @@ use Framework\Response;
 use PyAngelo\Controllers\Admin\PremiumUsersController;
 
 class PremiumUsersControllerTest extends TestCase {
+  protected $personRepository;
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $avatar;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

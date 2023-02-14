@@ -6,6 +6,10 @@ use PHPUnit\Framework\TestCase;
 use PyAngelo\FormServices\ForgotPasswordFormService;
 
 class ForgotPasswordFormServiceTest extends TestCase {
+  protected $personRepository;
+  protected $forgotPasswordEmail;
+  protected $forgotPasswordFormService;
+
   public function setUp(): void {
     $this->personRepository = Mockery::mock('PyAngelo\Repositories\PersonRepository');
     $this->forgotPasswordEmail = Mockery::mock('PyAngelo\Email\forgotPasswordEmail');

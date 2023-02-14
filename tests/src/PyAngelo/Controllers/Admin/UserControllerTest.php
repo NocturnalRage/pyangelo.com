@@ -8,6 +8,15 @@ use Framework\Response;
 use PyAngelo\Controllers\Admin\UserController;
 
 class UserControllerTest extends TestCase {
+  protected $personRepository;
+  protected $stripeRepository;
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $avatar;
+  protected $numberFormatter;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

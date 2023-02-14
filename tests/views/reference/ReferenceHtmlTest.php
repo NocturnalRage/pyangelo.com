@@ -3,9 +3,9 @@ namespace Tests\views\reference;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class ReferenceHtmlTest extends BasicViewHtmlTest {
+class ReferenceHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicViewHtml() {
     $pageTitle = "PyAngelo - Reference";

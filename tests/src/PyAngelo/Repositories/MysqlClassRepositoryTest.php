@@ -9,6 +9,7 @@ class MysqlClassRepositoryTest extends TestCase {
   protected $dbh;
   protected $classRepository;
   protected $testData;
+  protected $personId;
 
   public function setUp(): void {
     $dotenv  = \Dotenv\Dotenv::createMutable(__DIR__ . '/../../../../', '.env.test');

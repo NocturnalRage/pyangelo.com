@@ -8,6 +8,16 @@ use Framework\Response;
 use PyAngelo\Controllers\Admin\StripeWebhookController;
 
 class StripeWebhookControllerTest extends TestCase {
+  protected $personRepository;
+  protected $stripeRepository;
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $stripeWrapper;
+  protected $stripeWebhookEmails;
+  protected $numberFormatter;
+  protected $controller;
+
   public function setUp(): void {
     $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../../../', '.env.test');
     $dotenv->load();

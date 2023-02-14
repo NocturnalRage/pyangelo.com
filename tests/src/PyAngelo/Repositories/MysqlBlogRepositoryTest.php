@@ -7,8 +7,10 @@ use Tests\Factory\TestData;
 
 class MysqlBlogRepositoryTest extends TestCase {
   protected $dbh;
-  protected $stripeRepository;
+  protected $blogRepository;
   protected $testData;
+  protected $personId;
+  protected $blogCategoryId;
 
   public function setUp(): void {
     $dotenv  = \Dotenv\Dotenv::createMutable(__DIR__ . '/../../../../', '.env.test');

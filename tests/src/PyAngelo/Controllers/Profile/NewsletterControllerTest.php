@@ -8,6 +8,12 @@ use PyAngelo\Controllers\Profile\NewsletterController;
 use PyAngelo\Auth\Auth;
 
 class NewsletterControllerTest extends TestCase {
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $personRepository;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

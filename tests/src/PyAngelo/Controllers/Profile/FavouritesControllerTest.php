@@ -8,6 +8,12 @@ use Framework\Response;
 use PyAngelo\Controllers\Profile\FavouritesController;
 
 class FavouritesControllerTest extends TestCase {
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $tutorialRepository;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

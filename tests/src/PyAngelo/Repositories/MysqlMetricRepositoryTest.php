@@ -10,8 +10,10 @@ use DatePeriod;
 
 class MysqlMetricRepositoryTest extends TestCase {
   protected $dbh;
-  protected $stripeRepository;
+  protected $metricRepository;
   protected $testData;
+  protected $personId;
+  protected $priceId;
 
   public function setUp(): void {
     $dotenv  = \Dotenv\Dotenv::createMutable(__DIR__ . '/../../../../', '.env.test');

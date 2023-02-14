@@ -3,9 +3,9 @@ namespace Tests\views\profile;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class PasswordHtmlTest extends BasicViewHtmlTest {
+class PasswordHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicView() {
     $person = [

@@ -8,6 +8,15 @@ use Framework\Response;
 use PyAngelo\Controllers\Profile\ProfileUpdateController;
 
 class ProfileUpdateControllerTest extends TestCase {
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $personRepository;
+  protected $countryRepository;
+  protected $countryDetector;
+  protected $stripeWrapper;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

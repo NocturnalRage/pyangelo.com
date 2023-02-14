@@ -7,6 +7,12 @@ use PyAngelo\Email\EmailTemplate;
 use PyAngelo\Email\StripeWebhookEmails;
 
 class StripeWebhookEmailsTest extends TestCase {
+  protected $emailTemplate;
+  protected $mailRepository;
+  protected $mailer;
+  protected $webDeveloperEmail;
+  protected $stripeWebhookEmails;
+
   public function setUp(): void {
     $this->emailTemplate = Mockery::mock('PyAngelo\Email\EmailTemplate');
     $this->mailRepository = Mockery::mock('PyAngelo\Repositories\MailRepository');

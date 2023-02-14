@@ -8,6 +8,12 @@ use Framework\Response;
 use PyAngelo\Controllers\Lessons\LessonsToggleFavouritedController;
 
 class LessonsToggleFavouritedControllerTest extends TestCase {
+  protected $tutorialRepository;
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

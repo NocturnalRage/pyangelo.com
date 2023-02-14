@@ -8,6 +8,12 @@ use Framework\Response;
 use PyAngelo\Controllers\PageNotFoundController;
 
 class PageNotFoundControllerTest extends TestCase {
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $controller;
+
+
   public function tearDown(): void {
     Mockery::close();
   }

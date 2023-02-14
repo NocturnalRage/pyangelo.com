@@ -3,9 +3,9 @@ namespace Tests\views;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class ContactReceiptHtmlTest extends BasicViewHtmlTest {
+class ContactReceiptHtmlTest extends BasicViewHtmlTestCase {
 
   public function testPageTitleMetaDescription() {
     $pageTitle = 'PyAngelo - Thanks for contacting us.';

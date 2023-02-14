@@ -6,6 +6,9 @@ use PHPUnit\Framework\TestCase;
 use PyAngelo\FormServices\LessonFormService;
 
 class LessonFormServiceTest extends TestCase {
+  protected $tutorialRepository;
+  protected $lessonFormService;
+
   public function setUp(): void {
     $this->tutorialRepository = Mockery::mock('PyAngelo\Repositories\TutorialRepository');
     $this->lessonFormService = new LessonFormService($this->tutorialRepository);

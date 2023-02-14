@@ -3,9 +3,9 @@ namespace Tests\views\sketch;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class CollectionNotOwnerHtmlTest extends BasicViewHtmlTest {
+class CollectionNotOwnerHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicViewNotOwnerOfCollectionHtml() {
     $collection = [

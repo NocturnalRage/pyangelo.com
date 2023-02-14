@@ -7,7 +7,7 @@ use Tests\Factory\TestData;
 
 class MysqlQuestionRepositoryTest extends TestCase {
   protected $dbh;
-  protected $stripeRepository;
+  protected $questionRepository;
   protected $testData;
 
   public function setUp(): void {

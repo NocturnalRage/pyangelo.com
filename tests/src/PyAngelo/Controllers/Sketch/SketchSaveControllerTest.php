@@ -10,6 +10,13 @@ use PyAngelo\Utilities\SketchFiles;
 use PyAngelo\Controllers\Sketch\SketchSaveController;
 
 class SketchSaveControllerTest extends TestCase {
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $sketchRepository;
+  protected $sketchFiles;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

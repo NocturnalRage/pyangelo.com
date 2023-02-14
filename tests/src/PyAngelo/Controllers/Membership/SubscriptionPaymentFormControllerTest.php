@@ -8,6 +8,14 @@ use Framework\Response;
 use PyAngelo\Controllers\Membership\SubscriptionPaymentFormController;
 
 class SubscriptionPaymentFormControllerTest extends TestCase {
+  protected $stripeWrapper;
+  protected $stripeRepository;
+  protected $numberFormatter;
+  protected $request;
+  protected $response;
+  protected $auth;
+  protected $controller;
+
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');

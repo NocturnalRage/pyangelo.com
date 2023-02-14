@@ -3,9 +3,9 @@ namespace Tests\views\categories;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class ShowHtmlTest extends BasicViewHtmlTest {
+class ShowHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicViewWhenNotLoggedIn() {
     $pageTitle = '3x3 Tutorials';

@@ -3,9 +3,9 @@ namespace Tests\views\membership;
 
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
-use Tests\views\BasicViewHtmlTest;
+use Tests\views\BasicViewHtmlTestCase;
 
-class SubscriptionPaymentFormHtmlTest extends BasicViewHtmlTest {
+class SubscriptionPaymentFormHtmlTest extends BasicViewHtmlTestCase {
   public function tearDown(): void {
     \Mockery::close();
   }

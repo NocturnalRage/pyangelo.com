@@ -2,6 +2,7 @@
 namespace PyAngelo\Utilities;
 
 class SketchFiles {
+  protected $appDir;
   const DEFAULT_MAIN_FILE = "main.py";
   const DEFAULT_MAIN_CODE = <<<'ENDDEFAULTMAINCODE'
 ENDDEFAULTMAINCODE;

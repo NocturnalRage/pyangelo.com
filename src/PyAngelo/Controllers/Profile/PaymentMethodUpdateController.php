@@ -9,6 +9,7 @@ use Framework\Billing\StripeWrapper;
 
 class PaymentMethodUpdateController extends Controller {
   protected $stripeWrapper;
+  protected $stripeRepository;
 
   public function __construct(
     Request $request,

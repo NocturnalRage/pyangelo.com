@@ -4,7 +4,7 @@ namespace Tests\views;
 use PHPUnit\Framework\TestCase;
 use Framework\Response;
 
-abstract class BasicViewHtmlTest extends TestCase {
+abstract class BasicViewHtmlTestCase extends TestCase {
 
   public function setPersonInfoLoggedOut() {
     return [
