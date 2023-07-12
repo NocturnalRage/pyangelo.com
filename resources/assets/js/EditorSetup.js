@@ -172,6 +172,7 @@ export class Editor {
           }
         })
         .catch(error => {
+          this.setReadOnly(true)
           notify('We could not save your sketch! Please refresh the page and try again.', 'error')
           console.error(error)
         })
