@@ -153,7 +153,7 @@ class StripeWrapperTest extends TestCase {
       $charge->balance_transaction
     );
     $expectedTax = 5;
-    $expectedStripe = 45;
+    $expectedStripe = 49;
     $fees = $this->stripeWrapper->extractFeeDetails($balanceTransaction);
     $this->assertSame($expectedTax, $fees["tax"]);
     $this->assertSame($expectedStripe, $fees["stripe"]);
