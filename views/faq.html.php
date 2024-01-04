@@ -10,11 +10,11 @@ include __DIR__ . DIRECTORY_SEPARATOR . 'layout/navbar.html.php';
         <p>PyAngelo is an instructional website designed to teach people how to code using the Python programming language. It also uses a graphical environment to make learning more fun. And you can code right in the web browser meaning you don't need to install or configure any software.</p>
         <hr />
         <h3>Where do I start?</h3>
-        <p>If you don’t know how to code at all, check out our <a href="/tutorials/introdution-to-pyangelo">introduction to PyAngelo tutorial.</a></p>
+        <p>If you don’t know how to code at all, check out our <a href="https://pyangelo.com/tutorials/introduction-to-graphical-programming">Introduction to Graphical Programming tutorial.</a></p>
         <p>If you’re looking for more advanced coding content, take a look at the <a href="/tutorials">tutorial videos</a> page and learn from some of our more intermediate or advanced modules! The modules are arranged in chronological order to guide your progression most effectively.</p>
         <hr />
         <h3>How do I get better at coding?</h3>
-        <p>Check out the <a href="/blog/how-to-get-better">blog post</a> I wrote, which gives you an overview about how to become a better coder. I recommend you watch some <a href="/tutorials">tutorials</a> which correspond to your skill level, and last but not least, write lots of your own programs!</p>
+        <p>I recommend you watch our <a href="/tutorials">tutorials</a> which correspond to your skill level, and last but not least, write lots of your own programs!</p>
         <hr />
         <h3>What languages should I learn?</h3>
         <p>There are so many different programming languages these days, and it's difficult to know which one you should learn. Rest assured that the most important thing is to learn the core concepts of coding and this will have the biggest impact on your learning rather than the specific language. Having said that, Python is an excellent choice as it is used widely in industry and by Universities.</p>
