@@ -151,20 +151,6 @@
   <script src="<?= mix('js/notify.min.js'); ?>"></script>
   <script src="<?= mix('js/lessonToggle.js'); ?>"></script>
   <script src="<?= mix('js/lessonComments.js'); ?>"></script>
-  <script src="https://cdn.tiny.cloud/1/1fnyfp2h3lz7wu4v2qlchoping5fjj7mdbonk8ekgaczk7vh/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-  <script>
-tinymce.init({
-  selector: 'textarea.tinymce',
-  toolbar_items_size: 'small',
-  plugins: "link, image, hr, lists",
-  relative_urls : false,
-  browser_spellcheck: true,
-  toolbar: "undo redo | formats formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link unlink image media | hr blockquote",
-  image_class_list : [ {title: 'Responsive Image', value: 'img-responsive' } ],
-  image_caption: true,
-  menubar: false,
-  statusbar: false
-});
-  </script>
+  <script src="<?= mix('js/tinymce-comments.js'); ?>"></script>
 </body>
 </html>

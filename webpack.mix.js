@@ -19,6 +19,8 @@ mix
   .js('resources/assets/js/SkulptSketch.js', './public/js/')
   .js('resources/assets/js/SkulptSketchCanvasOnly.js', './public/js/')
   .js('resources/assets/js/subscription.js', './public/js/')
+  .js('resources/assets/js/tinymce-default-config.js', './public/js/')
+  .js('resources/assets/js/tinymce-comments.js', './public/js/')
   .copy('./resources/assets/js/notify.min.js', './public/js/')
   .copy('./resources/assets/js/lessonToggle.js', './public/js/')
   .copy('./resources/assets/js/lessonToggleTutorialPage.js', './public/js/')
