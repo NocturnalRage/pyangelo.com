@@ -41,6 +41,6 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
 include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';
 ?>
   </div><!-- container -->
-  <?php include __DIR__ . DIRECTORY_SEPARATOR . '/../blog/blog-tinymce.html.php'; ?>
+  <script src="<?= mix('js/tinymce-default-config.js'); ?>"></script>
 </body>
 </html>
