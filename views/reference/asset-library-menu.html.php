@@ -1,5 +1,15 @@
       <div class="col-md-3">
         <div class="well">
+          <a href="#arcadeGames">
+            <h3><i class="fa fa-gamepad fa-fw"></i> Arcade Games</h3>
+          </a>
+          <div class="list-group">
+            <a href="#topDownDrivingGame" class="list-group-item">
+              <i class="fa fa-car fa-fw"></i> Top Down Driving Game
+            </a>
+          </div><!-- list-group -->
+        </div><!-- well -->
+        <div class="well">
           <a href="#images">
             <h3><i class="fa fa-picture-o fa-fw"></i> Images</h3>
           </a>

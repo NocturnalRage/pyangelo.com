@@ -14,6 +14,18 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
         include __DIR__ . DIRECTORY_SEPARATOR . 'asset-library-menu.html.php';
       ?>
       <div class="col-md-9">
+        <h1 id="arcadeGames">Arcade Games</h1>
+        <h2 id="topDownDrivingGame">Top Down Driving Game</h2>
+        <img src ="/samples/top-down/race-car-blue.png" alt="Blue Racing Car" />
+        <pre>/samples/top-down/race-car-blue.png</pre>
+        <img src ="/samples/top-down/race-car-red.png" alt="Red Racing Car" />
+        <pre>/samples/top-down/race-car-red.png</pre>
+        <img src ="/samples/top-down/race-car-grey.png" alt="Grey Racing Car" />
+        <pre>/samples/top-down/race-car-grey.png</pre>
+        <img src ="/samples/top-down/police-car.png" alt="Police Car" />
+        <pre>/samples/top-down/police-car.png</pre>
+        <img src ="/samples/top-down/plant.png" alt="Plant" />
+        <pre>/samples/top-down/plant.png</pre>
         <h2 id="images">Images</h2>
         <img src ="/samples/images/PyAngelo.png" alt="PyAngelo" />
         <pre>/samples/images/PyAngelo.png</pre>
