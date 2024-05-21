@@ -291,6 +291,20 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
             </audio>
         </figure>
         <pre>/samples/music/success.mp3</pre>
+        <figure>
+          <figcaption>PyAngelo</figcaption>
+            <audio controls preload="none" src="/samples/music/PyAngelo.mp3">
+              Your browser does not support the <code>audio</code> element.
+            </audio>
+        </figure>
+        <pre>/samples/music/PyAngelo.mp3</pre>
+        <figure>
+          <figcaption>PyAngelo Dance</figcaption>
+            <audio controls preload="none" src="/samples/music/PyAngeloDance.mp3">
+              Your browser does not support the <code>audio</code> element.
+            </audio>
+        </figure>
+        <pre>/samples/music/PyAngeloDance.mp3</pre>
       </div><!-- col-md-9 -->
     </div><!-- row -->
     <?php
