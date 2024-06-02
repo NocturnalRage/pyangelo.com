@@ -194,17 +194,12 @@ export class PyAngeloWordCompleter {
           meta: 'Check if key was pressed'
         },
         {
-          caption: 'mouseIsPressed(code)',
-          value: 'mouseIsPressed()',
-          meta: 'Check if mouse is pressed'
-        },
-        {
-          caption: 'wasMousePressed(code)',
+          caption: 'wasMousePressed()',
           value: 'wasMousePressed()',
           meta: 'Check if mouse was pressed'
         },
         {
-          caption: 'text(x, y, fontSize, fontName)',
+          caption: 'text(text, x, y, fontSize, fontName)',
           value: 'text()',
           meta: 'Draw text'
         },
@@ -318,6 +313,7 @@ export class PyAngeloWordCompleter {
           value: 'dist()',
           meta: 'Distance between two points'
         },
+        // Python Keywords
         {
           caption: 'and',
           value: 'and',
@@ -532,11 +528,10 @@ export class PyAngeloWordCompleter {
           meta: 'Builtin variable'
         }
       )
-      // Python Keywords
       this.wordList.push(
         {
-          caption: 'width',
-          value: 'width',
+          caption: 'mouseIsPressed',
+          value: 'mouseIsPressed',
           meta: 'Builtin variable'
         }
       )
