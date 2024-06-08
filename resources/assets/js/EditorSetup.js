@@ -15,7 +15,7 @@ export class Editor {
     this.currentFilename = 'main.py'
     this.lastSaved = Date.now()
     this.saveEveryXMillis = 10000
-    ace.config.set('basePath', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/')
+    ace.config.set('basePath', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.9.6/')
     this.editor = ace.edit('editor')
     this.editor.$blockScrolling = Infinity
     this.editor.setTheme('ace/theme/dracula')
