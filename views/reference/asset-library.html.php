@@ -26,6 +26,10 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
         <pre>/samples/top-down/police-car.png</pre>
         <img src ="/samples/top-down/plant.png" alt="Plant" />
         <pre>/samples/top-down/plant.png</pre>
+        <img src ="/samples/images/pickup-star.png" alt="Pickup Star" />
+        <pre>/samples/images/pickup-star.png</pre>
+        <img src ="/samples/images/pickup-shield.png" alt="Pickup Shield" />
+        <pre>/samples/images/pickup-shield.png</pre>
         <h2 id="images">Images</h2>
         <img src ="/samples/images/PyAngelo.png" alt="PyAngelo" />
         <pre>/samples/images/PyAngelo.png</pre>
@@ -35,6 +39,16 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
         <pre>/samples/images/car-pink.png</pre>
         <img src ="/samples/images/blue-alien-idle.png" alt="Idle Blue Alien" />
         <pre>/samples/images/blue-alien-idle.png</pre>
+        <img src ="/samples/images/blue-alien-walking-1.png" alt="Blue Alien Walking 1" />
+        <pre>/samples/images/blue-alien-walking-1.png</pre>
+        <img src ="/samples/images/blue-alien-walking-2.png" alt="Blue Alien Walking 2" />
+        <pre>/samples/images/blue-alien-walking-2.png</pre>
+        <img src ="/samples/images/blue-alien-walking-3.png" alt="Blue Alien Walking 3" />
+        <pre>/samples/images/blue-alien-walking-3.png</pre>
+        <img src ="/samples/images/blue-alien-jumping.png" alt="Blue Alien Jumping" />
+        <pre>/samples/images/blue-alien-jumping.png</pre>
+        <img src ="/samples/images/blue-alien-falling.png" alt="Blue Alien Falling" />
+        <pre>/samples/images/blue-alien-falling.png</pre>
         <hr />
         <h2 id="sounds">Sounds</h2>
         <figure>
