@@ -128,7 +128,7 @@ export function runSkulpt (code, debugging, stopFunction) {
   Sk.configure({
     output: outf,
     inputfunTakesPrompt: false,
-    debugging: debugging,
+    debugging,
     killableWhile: true,
     killableFor: false,
     killableForever: true,
