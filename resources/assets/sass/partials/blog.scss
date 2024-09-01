@@ -5,18 +5,18 @@ a.blog-link:hover h3 {
   text-decoration: underline;
 }
 .label-pyangelo-advice {
-    @include label-variant($label-pyangelo-advice-bg);
     text-decoration:none;
+    @include label-variant($label-pyangelo-advice-bg);
 }
 .label-pyangelo-news {
-    @include label-variant($label-pyangelo-news-bg);
     text-decoration:none;
+    @include label-variant($label-pyangelo-news-bg);
 }
 .label-coding-tips {
-    @include label-variant($label-coding-tips-bg);
     text-decoration:none;
+    @include label-variant($label-coding-tips-bg);
 }
 .label-coding-ideas {
-    @include label-variant($label-coding-ideas-bg);
     text-decoration:none;
+    @include label-variant($label-coding-ideas-bg);
 }

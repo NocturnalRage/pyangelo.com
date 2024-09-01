@@ -109,7 +109,7 @@ export class Autocompleter {
               type: 'Dict',
               datatype: 'Dict',
               name: nodes[i].targets[0].id.v,
-              keys: keys,
+              keys,
               methods: this.dictMethods,
               properties: []
             }
@@ -144,7 +144,7 @@ export class Autocompleter {
                 type: 'Dict',
                 datatype: 'Dict',
                 name: nodes[i].targets[0].id.v,
-                keys: keys,
+                keys,
                 methods: this.dictMethods,
                 properties: []
               }
@@ -170,7 +170,7 @@ export class Autocompleter {
             }
             newVar = {
               type: 'Variable',
-              datatype: datatype,
+              datatype,
               name: nodes[i].targets[0].id.v
             }
             if (datatype === 'List') {
@@ -244,7 +244,7 @@ export class Autocompleter {
         }
         this.classes[className] = {
           methods: classMethods,
-          properties: properties
+          properties
         }
         if (level === 1 && (i + 1 === nodes.length || nodes[i + 1].lineno > lineNo)) {
           this.vars.self = {

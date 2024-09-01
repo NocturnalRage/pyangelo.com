@@ -12,8 +12,8 @@ a.tutorials-link:hover h3 {
   text-decoration: underline;
 }
 .label-beginner {
-    @include label-variant($label-beginner-bg);
     text-decoration:none;
+    @include label-variant($label-beginner-bg);
 }
 .label-intermediate {
     @include label-variant($label-intermediate-bg);

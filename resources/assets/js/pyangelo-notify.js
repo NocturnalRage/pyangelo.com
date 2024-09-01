@@ -31,15 +31,15 @@ export function notify (message, messageType, duration = 3000) {
     padding: '8px 15px 8px 25px',
     textShadow: '0 1px 0 rgba(255, 255, 255, 0.5)',
     backgroundColor: backgroundColour,
-    border: border,
+    border,
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'left center',
-    backgroundImage: backgroundImage
+    backgroundImage
   }
   Toastify({
     text: message,
-    duration: duration,
+    duration,
     gravity: 'bottom',
-    style: style
+    style
   }).showToast()
 }
