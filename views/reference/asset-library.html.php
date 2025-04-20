@@ -30,6 +30,29 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
         <pre>/samples/images/pickup-star.png</pre>
         <img src ="/samples/images/pickup-shield.png" alt="Pickup Shield" />
         <pre>/samples/images/pickup-shield.png</pre>
+        <h2 id="endlessRunnerGame">Endless Runner Game</h2>
+        <img src ="/samples/endless-runner/clouds.png" width="100%" alt="Clouds" />
+        <pre>/samples/endless-runner/clouds.png</pre>
+        <img src ="/samples/endless-runner/ground.png" width="100%" alt="Ground" />
+        <pre>/samples/endless-runner/ground.png</pre>
+        <img src ="/samples/endless-runner/pandaWalk1.png" alt="Panda Walking 1" />
+        <pre>/samples/endless-runner/pandaWalk1.png</pre>
+        <img src ="/samples/endless-runner/pandaWalk2.png" alt="Panda Walking 2" />
+        <pre>/samples/endless-runner/pandaWalk2.png</pre>
+        <img src ="/samples/endless-runner/pandaJump.png" alt="Panda Jumping" />
+        <pre>/samples/endless-runner/pandaJump.png</pre>
+        <img src ="/samples/endless-runner/pandaGameOver.png" alt="Panda Game Over" />
+        <pre>/samples/endless-runner/pandaGameOver.png</pre>
+        <img src ="/samples/endless-runner/pandaDuck.png" alt="Panda Duck" />
+        <pre>/samples/endless-runner/pandaDuck.png</pre>
+        <img src ="/samples/endless-runner/brickWall.png" alt="Brick Wall" />
+        <pre>/samples/endless-runner/brickWall.png</pre>
+        <img src ="/samples/endless-runner/beeFlying1.png" alt="Bee Flying 1" />
+        <pre>/samples/endless-runner/beeFlying1.png</pre>
+        <img src ="/samples/endless-runner/beeFlying2.png" alt="Bee Flying 2" />
+        <pre>/samples/endless-runner/beeFlying2.png</pre>
+        <img src ="/samples/endless-runner/gameOverBackground.png" width="100%" alt="Game Over Background for Endless Runner Game" />
+        <pre>/samples/endless-runner/gameOverBackground.png</pre>
         <h2 id="images">Images</h2>
         <img src ="/samples/images/PyAngelo.png" alt="PyAngelo" />
         <pre>/samples/images/PyAngelo.png</pre>
