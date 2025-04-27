@@ -53,6 +53,17 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
         <pre>/samples/endless-runner/beeFlying2.png</pre>
         <img src ="/samples/endless-runner/gameOverBackground.png" width="100%" alt="Game Over Background for Endless Runner Game" />
         <pre>/samples/endless-runner/gameOverBackground.png</pre>
+        <h2 id="flappyBirdGame">Flappy Bird Game</h2>
+        <img src ="/samples/flappy-bird/landscape.png" alt="Landscape" />
+        <pre>/samples/flappy-bird/landscape.png</pre>
+        <img src ="/samples/flappy-bird/ground.png" alt="Ground" />
+        <pre>/samples/flappy-bird/ground.png</pre>
+        <img src ="/samples/flappy-bird/flappy-bird.png" alt="Flappy Bird" />
+        <pre>/samples/flappy-bird/flappy-bird.png</pre>
+        <img src ="/samples/flappy-bird/pipe-up.png" alt="Pipe Up" />
+        <pre>/samples/flappy-bird/pipe-up.png</pre>
+        <img src ="/samples/flappy-bird/pipe-down.png" alt="Pipe Down" />
+        <pre>/samples/flappy-bird/pipe-down.png</pre>
         <h2 id="images">Images</h2>
         <img src ="/samples/images/PyAngelo.png" alt="PyAngelo" />
         <pre>/samples/images/PyAngelo.png</pre>
