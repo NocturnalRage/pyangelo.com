@@ -10,6 +10,9 @@
             <a href="#endlessRunnerGame" class="list-group-item">
               <i class="fa fa-gamepad fa-fw"></i> Endless Runner Game
             </a>
+            <a href="#flappyBirdGame" class="list-group-item">
+              <i class="fa fa-image fa-fw"></i> Flappy Bird Game
+            </a>
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
