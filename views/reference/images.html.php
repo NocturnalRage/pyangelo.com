@@ -4,18 +4,25 @@
 <pre>
 setCanvasSize(300, 300)
 hero = Image("/samples/images/PyAngelo.png")
-drawImage(hero, 50, 100)
+hero.draw(50, 100)
 </pre>
 <h4>Description</h4>
 <p>
-Loads an image into memory which can later be displayed with the image() function. This function does not draw anything to the canvas but is required before an image can be drawn to the canvas. It returns a variable which is used by the image() function. 
+Loads an image into memory which can later be displayed with the draw() method, or drawImage() function.
 </p>
-<h4>Syntax</h4>
-<p>Image(file)</p>
-<h4>Parameters</h4>
+<h4>Methods</h4>
+<h4>Image(file)</h4>
 <p>file - The location of the image file to load.</p>
-<h4>Class Properties</h4>
-<p>This function returns a class which has the following properties:</p>
+<h4>draw(x, y, width, height, opacity)</h4>
+<h4>Parameters</h4>
+<p>x - The x coordinate of the image.</p>
+<p>y - The y coordinate of the image.</p>
+<p>width - How wide to draw the image in pixels.</p>
+<p>height - How high to draw the image in pixels.</p>
+<p>opacity - Changes the transparency of the image from 0 (full opacity) to 1 (no opacity).</p>
+<p>Draws the image associated with this object when created. The first parameter is the x position and the second parameter is the y position of where to draw the image. The x and y position refers to the bottom left of the image. The third parameter is the width of the image and is optional. If this is not passed in the actual width of the image is used. This can be used to scale the image. The fourth parameter is the height of the image and is optional. If this is not passed in the actual height of the image is used. This can be used to scale the image. The fifth parameter is the opacity of the image specified by a number from 0 to 1 where 0 is full opacity and 1 is no opacity. If you wish to only specify the opacity without specifying a width and height you can use named parameters.</p>
+<h4>Properties</h4>
+<p>Each image object has the following public properties:</p>
 <ul>
   <li>width</li>
   <li>height</li>
