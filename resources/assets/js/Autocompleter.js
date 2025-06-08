@@ -3,38 +3,115 @@ export class Autocompleter {
     this.Sk = Sk
     this.imports = []
     this.vars = {}
+    this.builtinVars = {}
     this.functions = {}
     this.classes = {}
-    this.listMethods = [
-      'append',
-      'clear',
-      'copy',
-      'count',
-      'extend',
-      'index',
-      'insert',
-      'pop',
-      'remove',
-      'reverse',
-      'sort'
-    ]
-    this.dictMethods = [
-      'clear',
-      'copy',
-      'fromkeys',
-      'get',
-      'items',
-      'keys',
-      'pop',
-      'popitem',
-      'setdefault',
-      'update',
-      'values'
-    ]
   }
 
   setCode (code) {
     this.code = code
+  }
+
+  getPrototypeDetails (val) {
+    if (typeof val !== 'function' || !val.prototype) {
+      return { methods: [], properties: [] }
+    }
+
+    const methods = []
+    const properties = []
+
+    for (const [key, value] of Object.entries(val.prototype)) {
+      if (
+        !key.startsWith('__') &&
+        !key.startsWith('$') &&
+        !key.includes('$') &&
+        key !== 'toFixed'
+      ) {
+        if (typeof value === 'function' || (value && typeof value.tp$call === 'function')) {
+          methods.push(key)
+        } else {
+          properties.push(key)
+        }
+      }
+    }
+    return { methods, properties }
+  }
+
+  getFunctionArgsFromTextSig (func) {
+    const textsig = func?.$textsig
+    if (!textsig) return []
+
+    // Remove parentheses and split
+    return textsig
+      .replace(/^\(.*?,\s*/, '(') // remove $module if present
+      .replace(/[()]/g, '') // remove parens
+      .split(/[,/]/) // split on commas and slash
+      .map(s => s.trim())
+      .filter(name => name && name !== '$module')
+  }
+
+  getConstructorArgsFromClassDef (classDef) {
+    if (!classDef || !(classDef instanceof this.Sk.astnodes.ClassDef)) {
+      return '()'
+    }
+
+    for (const node of classDef.body) {
+      if (
+        node instanceof this.Sk.astnodes.FunctionDef &&
+        node.name?.v === '__init__'
+      ) {
+        const args = node.args.args.map(arg => arg.arg.v)
+        // Remove 'self' if it's the first argument
+        const filteredArgs = args[0] === 'self' ? args.slice(1) : args
+        return `(${filteredArgs.join(', ')})`
+      }
+    }
+
+    return '()'
+  }
+
+  inferForLoopVarType (forNode) {
+    const iter = forNode.iter
+
+    if (!iter) return 'unknown'
+
+    // Case: range(n)
+    if (iter instanceof this.Sk.astnodes.Call &&
+        iter.func instanceof this.Sk.astnodes.Name &&
+        iter.func.id.v === 'range') {
+      return 'int'
+    }
+
+    // Case: list literal
+    if (iter instanceof this.Sk.astnodes.List) {
+      const el = iter.elts[0]
+      if (el instanceof this.Sk.astnodes.Str) return 'str'
+      if (el instanceof this.Sk.astnodes.Num) {
+        return Number.isInteger(el.n.v) ? 'int' : 'float'
+      }
+      return 'list element'
+    }
+
+    // Case: string literal
+    if (iter instanceof this.Sk.astnodes.Str) return 'str'
+
+    // Case: tuple literal
+    if (iter instanceof this.Sk.astnodes.Tuple) return 'tuple element'
+
+    // Case: Name — could be anything, maybe look it up later
+    if (iter instanceof this.Sk.astnodes.Name) {
+      const name = iter.id.v
+      const varInfo = this.vars[name]
+      if (varInfo && varInfo.datatype) {
+        return varInfo.datatype
+      }
+      return name + ' element'
+    }
+
+    // Case: function call we don't recognise
+    if (iter instanceof this.Sk.astnodes.Call) return iter.func.id.v + ' element'
+
+    return 'unknown'
   }
 
   processNodes (nodes, level, lineNo) {
@@ -52,24 +129,22 @@ export class Autocompleter {
         this.processNodes(nodes[i].body, level, lineNo)
         this.processNodes(nodes[i].orelse, level, lineNo)
       } else if (nodes[i] instanceof this.Sk.astnodes.For) {
-        if (nodes[i].iter instanceof this.Sk.astnodes.Str) {
-          this.vars[nodes[i].target.id.v] = {
-            type: 'Variable',
-            datatype: 'String',
-            name: nodes[i].target.id.v
-          }
-        } else if (nodes[i].iter instanceof this.Sk.astnodes.Num) {
-          this.vars[nodes[i].target.id.v] = {
-            type: 'Variable',
-            datatype: 'Num',
-            name: nodes[i].target.id.v
-          }
-        } else if (nodes[i].iter instanceof this.Sk.astnodes.NameConstant) {
-          this.vars[nodes[i].target.id.v] = {
-            type: 'Variable',
-            datatype: 'Constant',
-            name: nodes[i].target.id.v
-          }
+        const datatype = this.inferForLoopVarType(nodes[i])
+        let lookup = 'unknown'
+        if (datatype === 'int') {
+          lookup = 'int_$rw$'
+        } else if (datatype === 'float') {
+          lookup = 'float_$rw$'
+        } else if (datatype === 'str') {
+          lookup = 'str'
+        }
+        const details = this.getPrototypeDetails(this.Sk.builtins[lookup])
+        this.vars[nodes[i].target.id.v] = {
+          type: 'Variable',
+          datatype,
+          name: nodes[i].target.id.v,
+          methods: details.methods,
+          properties: details.properties
         }
         this.processNodes(nodes[i].body, level, lineNo)
         this.processNodes(nodes[i].orelse, level, lineNo)
@@ -105,23 +180,18 @@ export class Autocompleter {
                 keys.push(key.value.v)
               }
             }
+            const details = this.getPrototypeDetails(this.Sk.builtins.dict)
             newVar = {
-              type: 'Dict',
-              datatype: 'Dict',
+              type: 'dict',
+              datatype: 'dict',
               name: nodes[i].targets[0].id.v,
               keys,
-              methods: this.dictMethods,
-              properties: []
+              methods: details.methods,
+              properties: details.properties
             }
           } else if (nodes[i].value instanceof this.Sk.astnodes.Call) {
-            if (nodes[i].value.func.id.v in this.classes) {
-              newVar = {
-                type: nodes[i].value.func.id.v,
-                datatype: 'Object',
-                methods: [...this.classes[nodes[i].value.func.id.v].methods],
-                properties: [...this.classes[nodes[i].value.func.id.v].properties]
-              }
-            } else if (nodes[i].value.func.id.v === 'dict') {
+            const calledName = nodes[i].value.func.id.v
+            if (calledName === 'dict') {
               const keys = []
               if (nodes[i].value.args.length > 0) {
                 if (nodes[i].value.args[0] instanceof this.Sk.astnodes.Dict) {
@@ -140,13 +210,22 @@ export class Autocompleter {
                   keys.push('\'' + keyword.arg.v + '\'')
                 }
               }
+              const details = this.getPrototypeDetails(this.Sk.builtins.dict)
               newVar = {
-                type: 'Dict',
-                datatype: 'Dict',
+                type: 'dict',
+                datatype: 'dict',
                 name: nodes[i].targets[0].id.v,
                 keys,
-                methods: this.dictMethods,
-                properties: []
+                methods: details.methods,
+                properties: details.properties
+              }
+            // } else if (["set", "list", "dict", "tuple", "str", "int", "float"].includes(calledName)) {
+            } else if (calledName in this.classes) {
+              newVar = {
+                type: nodes[i].value.func.id.v,
+                datatype: calledName,
+                methods: [...this.classes[nodes[i].value.func.id.v].methods],
+                properties: [...this.classes[nodes[i].value.func.id.v].properties]
               }
             } else {
               newVar = {
@@ -157,25 +236,45 @@ export class Autocompleter {
             }
           } else {
             let datatype
+            let lookup
             if (nodes[i].value instanceof this.Sk.astnodes.Num) {
-              datatype = 'Number'
+              datatype = 'float'
+              lookup = 'float_$rw$'
+              if (Number.isInteger(nodes[i].value.n.v)) {
+                datatype = 'int'
+                lookup = 'int_$rw$'
+              }
             } else if (nodes[i].value instanceof this.Sk.astnodes.Str) {
-              datatype = 'String'
+              datatype = 'str'
+              lookup = 'str'
             } else if (nodes[i].value instanceof this.Sk.astnodes.List) {
-              datatype = 'List'
+              datatype = 'list'
+              lookup = 'list'
+            } else if (nodes[i].value instanceof this.Sk.astnodes.Tuple) {
+              datatype = 'tuple'
+              lookup = 'tuple'
+            } else if (nodes[i].value instanceof this.Sk.astnodes.Set) {
+              datatype = 'set'
+              lookup = 'set'
             } else if (nodes[i].value instanceof this.Sk.astnodes.NameConstant) {
-              datatype = 'Constant'
+              if (nodes[i].value.value.v === 1 || nodes[i].value.value.v === 0) {
+                datatype = 'bool'
+                lookup = 'bool'
+              } else {
+                datatype = 'Constant'
+                lookup = ''
+              }
             } else {
               datatype = 'Unknown'
+              lookup = ''
             }
+            const details = this.getPrototypeDetails(this.Sk.builtins[lookup])
             newVar = {
               type: 'Variable',
               datatype,
-              name: nodes[i].targets[0].id.v
-            }
-            if (datatype === 'List') {
-              newVar.methods = this.listMethods
-              newVar.properties = []
+              name: nodes[i].targets[0].id.v,
+              methods: details.methods,
+              properties: details.properties
             }
           }
           this.vars[nodes[i].targets[0].id.v] = newVar
@@ -242,10 +341,6 @@ export class Autocompleter {
             // Add local variables if in scope
           }
         }
-        this.classes[className] = {
-          methods: classMethods,
-          properties
-        }
         if (level === 1 && (i + 1 === nodes.length || nodes[i + 1].lineno > lineNo)) {
           this.vars.self = {
             type: className,
@@ -255,10 +350,18 @@ export class Autocompleter {
         }
         for (const arg of methodArgs) {
           this.vars[arg] = {
-            type: 'Variable',
-            datatype: 'Parameter',
+            type: 'Parameter',
+            datatype: 'unknown',
             name: arg
           }
+        }
+        const signature = this.getConstructorArgsFromClassDef(nodes[i])
+        const isException = false
+        this.classes[className] = {
+          methods: classMethods,
+          properties,
+          signature,
+          isException
         }
       } else if (nodes[i] instanceof this.Sk.astnodes.FunctionDef) {
         if (level === 1) {
@@ -273,8 +376,8 @@ export class Autocompleter {
           for (const arg of nodes[i].args.args) {
             if (lineNo >= nodes[i].lineno && lineNo < endLineNo) {
               this.vars[arg.arg.v] = {
-                type: 'Variable',
-                datatype: 'Parameter',
+                type: 'Parameter',
+                datatype: 'unknown',
                 name: arg.arg.v
               }
             }
@@ -287,7 +390,10 @@ export class Autocompleter {
           }
           signature = signature + ')'
           if (!(lineNo >= nodes[i].lineno && lineNo < endLineNo)) {
-            this.functions[nodes[i].name.v] = signature
+            this.functions[nodes[i].name.v] = {
+              signature,
+              doc: 'Function'
+            }
           }
         }
       }
@@ -311,6 +417,63 @@ export class Autocompleter {
         'autocompleter',
         parse.flags
       )
+
+      // Get Builtins
+      for (const [name, val] of Object.entries(this.Sk.builtins)) {
+        // Skip dunder names and internal variables
+        if (name.startsWith('__') || name.startsWith('_')) {
+          continue
+        }
+        let lookup = 'basic datatype not found'
+        let datatype
+        if (val instanceof this.Sk.builtin.bool) {
+          datatype = 'bool'
+          lookup = 'bool'
+        } else if (val instanceof this.Sk.builtin.int_) {
+          datatype = 'int'
+          lookup = 'int_$rw$'
+        } else if (val instanceof this.Sk.builtin.float_) {
+          datatype = 'float'
+          lookup = 'float_$rw$'
+        } else if (val instanceof this.Sk.builtin.str) {
+          datatype = 'str'
+          lookup = 'str$rw$'
+        } else if (typeof val?.$meth === 'function') {
+          const args = this.getFunctionArgsFromTextSig(val)
+          const signature = (`(${args.join(', ')})`)
+          const doc = val?.$doc || 'Function'
+          this.functions[name] = {
+            signature,
+            doc
+          }
+        } else if (typeof val === 'function') {
+          let modName = name
+          if (name === 'int_$rw$') {
+            modName = 'int'
+          } else if (name === 'float_$rw$') {
+            modName = 'float'
+          }
+
+          const isException = val.prototype instanceof this.Sk.builtin.BaseException
+          const details = this.getPrototypeDetails(val)
+          this.classes[modName] = {
+            ...details,
+            signature: '()',
+            isException
+          }
+        }
+        if (lookup !== 'basic datatype not found') {
+          const details = this.getPrototypeDetails(this.Sk.builtins[lookup])
+          this.builtinVars[name] = {
+            type: 'Builtin Variable',
+            datatype,
+            name,
+            methods: details.methods,
+            properties: details.properties
+          }
+        }
+      }
+
       const nodes = ast.body
       // console.log(nodes)
       this.processNodes(nodes, level, lineNo)
@@ -318,8 +481,13 @@ export class Autocompleter {
       // console.log(err)
       return false
     }
+
+    const mergedVars = {
+      ...this.builtinVars,
+      ...this.vars
+    }
     return {
-      vars: this.vars,
+      vars: mergedVars,
       classes: this.classes,
       functions: this.functions
     }
