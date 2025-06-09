@@ -127,193 +127,204 @@ export class Autocompleter {
   }
 
   handleAssignment (node) {
-    let newVar
-    if (node.targets[0] instanceof this.Sk.astnodes.Name) {
-      if (node.value instanceof this.Sk.astnodes.Dict) {
-        const keys = []
-        for (const key of node.value.keys) {
-          if (key instanceof this.Sk.astnodes.Str) {
-            keys.push('\'' + key.s.v + '\'')
-          } else if (key instanceof this.Sk.astnodes.Num) {
-            keys.push(key.n.v)
-          } else if (key instanceof this.Sk.astnodes.NameConstant) {
-            keys.push(key.value.v)
-          }
-        }
-        const details = this.getPrototypeDetails(this.Sk.builtins.dict)
-        newVar = {
-          type: 'dict',
-          datatype: 'dict',
-          name: node.targets[0].id.v,
-          keys,
-          methods: details.methods,
-          properties: details.properties
-        }
-      } else if (node.value instanceof this.Sk.astnodes.Call) {
-        const calledName = node.value.func.id.v
-        if (calledName === 'dict') {
-          const keys = []
-          if (node.value.args.length > 0) {
-            if (node.value.args[0] instanceof this.Sk.astnodes.Dict) {
-              for (const key of node.value.args[0].keys) {
-                if (key instanceof this.Sk.astnodes.Str) {
-                  keys.push('\'' + key.s.v + '\'')
-                } else if (key instanceof this.Sk.astnodes.Num) {
-                  keys.push(key.n.v)
-                } else if (key instanceof this.Sk.astnodes.NameConstant) {
-                  keys.push(key.value.v)
-                }
-              }
-            }
-          } else if (node.value.keywords.length > 0) {
-            for (const keyword of node.value.keywords) {
-              keys.push('\'' + keyword.arg.v + '\'')
-            }
-          }
-          const details = this.getPrototypeDetails(this.Sk.builtins.dict)
-          newVar = {
-            type: 'dict',
-            datatype: 'dict',
-            name: node.targets[0].id.v,
-            keys,
-            methods: details.methods,
-            properties: details.properties
-          }
-        } else if (calledName === 'set') {
-          const details = this.getPrototypeDetails(this.Sk.builtins.set)
-          newVar = {
-            type: 'set',
-            datatype: 'set',
-            name: node.targets[0].id.v,
-            methods: details.methods,
-            properties: details.properties
-          }
-        } else if (calledName in this.classes) {
-          newVar = {
-            type: node.value.func.id.v,
-            datatype: calledName,
-            name: node.targets[0].id.v,
-            methods: [...this.classes[node.value.func.id.v].methods],
-            properties: [...this.classes[node.value.func.id.v].properties]
-          }
-        } else {
-          newVar = {
-            type: 'Variable',
-            datatype: 'Unknown',
-            name: node.targets[0].id.v
-          }
-        }
-      } else {
-        let datatype
-        let lookup
-        if (node.value instanceof this.Sk.astnodes.Num) {
-          datatype = 'float'
-          lookup = 'float_$rw$'
-          if (Number.isInteger(node.value.n.v)) {
-            datatype = 'int'
-            lookup = 'int_$rw$'
-          }
-        } else if (node.value instanceof this.Sk.astnodes.Str) {
-          datatype = 'str'
-          lookup = 'str'
-        } else if (node.value instanceof this.Sk.astnodes.List) {
-          datatype = 'list'
-          lookup = 'list'
-        } else if (node.value instanceof this.Sk.astnodes.Tuple) {
-          datatype = 'tuple'
-          lookup = 'tuple'
-        } else if (node.value instanceof this.Sk.astnodes.Set) {
-          datatype = 'set'
-          lookup = 'set'
-        } else if (node.value instanceof this.Sk.astnodes.NameConstant) {
-          if (node.value.value.v === 1 || node.value.value.v === 0) {
-            datatype = 'bool'
-            lookup = 'bool'
-          } else {
-            datatype = 'Constant'
-            lookup = ''
-          }
-        } else {
-          datatype = 'Unknown'
-          lookup = ''
-        }
-        const details = this.getPrototypeDetails(this.Sk.builtins[lookup])
-        newVar = {
-          type: 'Variable',
-          datatype,
-          name: node.targets[0].id.v,
-          methods: details.methods,
-          properties: details.properties,
-          source: 'user'
-        }
-      }
-      this.vars[node.targets[0].id.v] = newVar
-    } else if (node.targets[0] instanceof this.Sk.astnodes.Attribute) {
-      if (node.targets[0].attr.v.slice(0, 1) !== '_') {
-        this.vars[node.targets[0].value.id.v].properties.push(
-          node.targets[0].attr.v
-        )
-      }
-    } else if (node.targets[0] instanceof this.Sk.astnodes.Subscript) {
-      if (node.targets[0].slice.value instanceof this.Sk.astnodes.Str) {
-        this.vars[node.targets[0].value.id.v].keys.push('\'' + node.targets[0].slice.value.s.v + '\'')
-      } else if (node.targets[0].slice.value instanceof this.Sk.astnodes.Num) {
-        this.vars[node.targets[0].value.id.v].keys.push(node.targets[0].slice.value.n.v)
-      } else if (node.targets[0].slice.value instanceof this.Sk.astnodes.NameConstant) {
-        this.vars[node.targets[0].value.id.v].keys.push(node.targets[0].slice.value.value.v)
-      }
+    const target = node.targets[0]
+    if (target instanceof this.Sk.astnodes.Name) {
+      this.handleNameAssignment(target, node.value)
+    } else if (target instanceof this.Sk.astnodes.Attribute) {
+      this.handleAttributeAssignment(target)
+    } else if (target instanceof this.Sk.astnodes.Subscript) {
+      this.handleSubscriptAssignment(target)
     }
   }
 
-  handleClassDef (node, level, lineNo, nodes, i) {
+  handleNameAssignment (target, value) {
+    const name = target.id.v
+    let newVar
+
+    if (value instanceof this.Sk.astnodes.Dict) {
+      newVar = this.createDictVar(name, value)
+    } else if (value instanceof this.Sk.astnodes.Call) {
+      newVar = this.createCallVar(name, value)
+    } else {
+      newVar = this.createLiteralVar(name, value)
+    }
+
+    this.vars[name] = newVar
+  }
+
+  handleAttributeAssignment (target) {
+    if (target.attr.v.slice(0, 1) !== '_') {
+      this.vars[target.value.id.v].properties.push(target.attr.v)
+    }
+  }
+
+  handleSubscriptAssignment (target) {
+    const key = target.slice.value
+    let keyVal
+    if (key instanceof this.Sk.astnodes.Str) {
+      keyVal = `'${key.s.v}'`
+    } else if (key instanceof this.Sk.astnodes.Num) {
+      keyVal = key.n.v
+    } else if (key instanceof this.Sk.astnodes.NameConstant) {
+      keyVal = key.value.v
+    }
+    this.vars[target.value.id.v].keys.push(keyVal)
+  }
+
+  createDictVar (name, value) {
+    const keys = value.keys
+      .map(key => {
+        if (key instanceof this.Sk.astnodes.Str) return `'${key.s.v}'`
+        if (key instanceof this.Sk.astnodes.Num) return key.n.v
+        if (key instanceof this.Sk.astnodes.NameConstant) return key.value.v
+        return undefined
+      })
+      .filter(k => k !== undefined)
+    const details = this.getPrototypeDetails(this.Sk.builtins.dict)
+    return {
+      type: 'dict',
+      datatype: 'dict',
+      name,
+      keys,
+      methods: details.methods,
+      properties: details.properties,
+      source: 'user'
+    }
+  }
+
+  createCallVar (name, value) {
+    const calledName = value.func.id.v
+    if (calledName === 'dict') {
+      const keys = []
+
+      if (value.args.length > 0 && value.args[0] instanceof this.Sk.astnodes.Dict) {
+        for (const key of value.args[0].keys) {
+          if (key instanceof this.Sk.astnodes.Str) keys.push(`'${key.s.v}'`)
+          else if (key instanceof this.Sk.astnodes.Num) keys.push(key.n.v)
+          else if (key instanceof this.Sk.astnodes.NameConstant) keys.push(key.value.v)
+        }
+      } else if (value.keywords.length > 0) {
+        for (const keyword of value.keywords) {
+          keys.push(`'${keyword.arg.v}'`)
+        }
+      }
+
+      const details = this.getPrototypeDetails(this.Sk.builtins.dict)
+      return {
+        type: 'dict',
+        datatype: 'dict',
+        name,
+        keys,
+        methods: details.methods,
+        properties: details.properties,
+        source: 'user'
+      }
+    }
+    if (calledName === 'set') {
+      const details = this.getPrototypeDetails(this.Sk.builtins.set)
+      return {
+        type: 'set',
+        datatype: 'set',
+        name,
+        methods: details.methods,
+        properties: details.properties,
+        source: 'user'
+      }
+    }
+    if (calledName in this.classes) {
+      return {
+        type: calledName,
+        datatype: calledName,
+        name,
+        methods: [...this.classes[calledName].methods],
+        properties: [...this.classes[calledName].properties],
+        source: 'user'
+      }
+    }
+    return { type: 'Variable', datatype: 'Unknown', name, source: 'user' }
+  }
+
+  createLiteralVar (name, value) {
+    let datatype = 'Unknown'
+    let lookup = ''
+
+    if (value instanceof this.Sk.astnodes.Num) {
+      datatype = Number.isInteger(value.n.v) ? 'int' : 'float'
+      lookup = datatype === 'int' ? 'int_$rw$' : 'float_$rw$'
+    } else if (value instanceof this.Sk.astnodes.Str) {
+      datatype = 'str'
+      lookup = 'str'
+    } else if (value instanceof this.Sk.astnodes.List) {
+      datatype = 'list'
+      lookup = 'list'
+    } else if (value instanceof this.Sk.astnodes.Tuple) {
+      datatype = 'tuple'
+      lookup = 'tuple'
+    } else if (value instanceof this.Sk.astnodes.Set) {
+      datatype = 'set'
+      lookup = 'set'
+    } else if (value instanceof this.Sk.astnodes.NameConstant) {
+      if (value.value.v === 1 || value.value.v === 0) {
+        datatype = 'bool'
+        lookup = 'bool'
+      }
+    }
+
+    const details = this.getPrototypeDetails(this.Sk.builtins[lookup])
+    return {
+      type: 'Variable',
+      datatype,
+      name,
+      methods: details.methods,
+      properties: details.properties,
+      source: 'user'
+    }
+  }
+
+  handleClassDef (node, level, lineNo, nodes, index) {
     const methodArgs = []
     const className = node.name.v
     const classMethods = []
     const properties = []
+
     if (node.bases.length > 0) {
-      for (const method of this.classes[node.bases[0].id.v].methods) {
-        classMethods.push(method)
-      }
-      for (const prop of this.classes[node.bases[0].id.v].properties) {
-        properties.push(prop)
+      const base = this.classes[node.bases[0].id.v]
+      if (base) {
+        classMethods.push(...base.methods)
+        properties.push(...base.properties)
       }
     }
+
     const methods = node.body
     for (let j = 0; j < methods.length; j++) {
-      if (!methods[j].name.v.startsWith('__')) {
-        classMethods.push(methods[j].name.v)
+      const method = methods[j]
+
+      if (!method.name.v.startsWith('__')) {
+        classMethods.push(method.name.v)
       }
+
       if (level === 1) {
-        let endLineNo
-        if (j + 1 === methods.length) {
-          if (i + 1 === nodes.length) {
-            endLineNo = 1000000
-          } else {
-            endLineNo = nodes[i + 1].lineno
-          }
-        } else {
-          endLineNo = methods[j + 1].lineno
-        }
-        if (lineNo >= methods[j].lineno && lineNo < endLineNo) {
-          for (const arg of methods[j].args.args) {
+        const endLineNo = this.getMethodEndLine(methods, j, nodes, index)
+        if (lineNo >= method.lineno && lineNo < endLineNo) {
+          for (const arg of method.args.args) {
             if (arg.arg.v !== 'self') {
               methodArgs.push(arg.arg.v)
             }
           }
         }
       }
-      for (const node of methods[j].body) {
-        if (node instanceof this.Sk.astnodes.Assign) {
-          if (node.targets[0] instanceof this.Sk.astnodes.Attribute) {
-            if (node.targets[0].attr.v.slice(0, 1) !== '_') {
-              properties.push(node.targets[0].attr.v)
-            }
+
+      for (const stmt of method.body) {
+        if (stmt instanceof this.Sk.astnodes.Assign) {
+          const target = stmt.targets[0]
+          if (target instanceof this.Sk.astnodes.Attribute && !target.attr.v.startsWith('_')) {
+            properties.push(target.attr.v)
           }
         }
-        // Add local variables if in scope
       }
     }
-    if (level === 1 && (i + 1 === nodes.length || nodes[i + 1].lineno > lineNo)) {
+
+    if (level === 1 && (index + 1 === nodes.length || nodes[index + 1].lineno > lineNo)) {
       this.vars.self = {
         type: className,
         methods: [...classMethods],
@@ -321,6 +332,7 @@ export class Autocompleter {
         source: 'user'
       }
     }
+
     for (const arg of methodArgs) {
       this.vars[arg] = {
         type: 'Parameter',
@@ -329,6 +341,7 @@ export class Autocompleter {
         source: 'user'
       }
     }
+
     const signature = this.getConstructorArgsFromClassDef(node)
     const isException = false
     this.classes[className] = {
@@ -340,39 +353,37 @@ export class Autocompleter {
     }
   }
 
-  handleFunctionDef (node, level, lineNo, nodes, i) {
-    if (level === 1) {
-      let endLineNo
-      if (i + 1 === nodes.length) {
-        endLineNo = 1000000
-      } else {
-        endLineNo = nodes[i + 1].lineno
-      }
-      let signature = '('
-      let firstParam = true
-      for (const arg of node.args.args) {
-        if (lineNo >= node.lineno && lineNo < endLineNo) {
-          this.vars[arg.arg.v] = {
-            type: 'Parameter',
-            datatype: 'unknown',
-            name: arg.arg.v,
-            source: 'user'
-          }
-        }
-        if (firstParam) {
-          signature = signature + arg.arg.v
-          firstParam = false
-        } else {
-          signature = signature + ', ' + arg.arg.v
-        }
-      }
-      signature = signature + ')'
-      if (!(lineNo >= node.lineno && lineNo < endLineNo)) {
-        this.functions[node.name.v] = {
-          signature,
-          doc: 'Function',
+  getMethodEndLine (methods, j, nodes, index) {
+    if (j + 1 === methods.length) {
+      if (index + 1 === nodes.length) return 1000000
+      return nodes[index + 1].lineno
+    }
+    return methods[j + 1].lineno
+  }
+
+  handleFunctionDef (node, level, lineNo, nodes, index) {
+    if (level !== 1) return
+
+    const startLine = node.lineno
+    const endLine = index + 1 === nodes.length ? 1000000 : nodes[index + 1].lineno
+    const isInScope = lineNo >= startLine && lineNo < endLine
+
+    const args = node.args.args.map(arg => arg.arg.v)
+    if (isInScope) {
+      for (const argName of args) {
+        this.vars[argName] = {
+          type: 'Parameter',
+          datatype: 'unknown',
+          name: argName,
           source: 'user'
         }
+      }
+    } else {
+      const signature = `(${args.join(', ')})`
+      this.functions[node.name.v] = {
+        signature,
+        doc: 'Function',
+        source: 'user'
       }
     }
   }
