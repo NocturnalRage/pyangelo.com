@@ -246,7 +246,7 @@ export class Autocompleter {
 
   createLiteralVar (name, value) {
     let datatype = 'Unknown'
-    let lookup = ''
+    let lookup = 'object'
 
     if (value instanceof this.Sk.astnodes.Num) {
       datatype = Number.isInteger(value.n.v) ? 'int' : 'float'
@@ -254,19 +254,75 @@ export class Autocompleter {
     } else if (value instanceof this.Sk.astnodes.Str) {
       datatype = 'str'
       lookup = 'str'
-    } else if (value instanceof this.Sk.astnodes.List) {
-      datatype = 'list'
-      lookup = 'list'
-    } else if (value instanceof this.Sk.astnodes.Tuple) {
-      datatype = 'tuple'
-      lookup = 'tuple'
+    } else if (value instanceof this.Sk.astnodes.List || value instanceof this.Sk.astnodes.Tuple) {
+      datatype = value instanceof this.Sk.astnodes.List ? 'list' : 'tuple'
+      lookup = datatype
+
+      // Infer element type if all elements match
+      if (value.elts && value.elts.length > 0) {
+        const elementTypes = value.elts.map(e => this.inferTypeFromNode(e))
+        const uniqueTypes = [...new Set(elementTypes)]
+
+        if (uniqueTypes.length === 1 && uniqueTypes[0] !== 'Unknown') {
+          this.containerElementTypes = this.containerElementTypes || {}
+          this.containerElementTypes[name] = uniqueTypes[0] // e.g., a → int
+        }
+      }
     } else if (value instanceof this.Sk.astnodes.Set) {
       datatype = 'set'
       lookup = 'set'
     } else if (value instanceof this.Sk.astnodes.NameConstant) {
-      if (value.value.v === 1 || value.value.v === 0) {
+      const val = value.v.v
+      if (val === 'True' || val === 'False') {
         datatype = 'bool'
         lookup = 'bool'
+      } else {
+        datatype = 'NoneType'
+        lookup = 'NoneType'
+      }
+    // Reference to another variable: x = y
+    } else if (value instanceof this.Sk.astnodes.Name) {
+      const refName = value.id.v
+      const ref = this.vars[refName] || this.builtinVars[refName]
+      if (ref) {
+        datatype = ref.datatype || 'Unknown'
+        lookup = this.getLookupFromDatatype(datatype)
+      }
+    // Binary operation: x = y + 1
+    } else if (value instanceof this.Sk.astnodes.BinOp) {
+      const left = value.left
+      const right = value.right
+
+      const leftType = this.inferTypeFromNode(left)
+      const rightType = this.inferTypeFromNode(right)
+
+      if (leftType && leftType === rightType) {
+        datatype = leftType
+        lookup = this.getLookupFromDatatype(datatype)
+      }
+    // Subscript access: x = a[0]
+    } else if (value instanceof this.Sk.astnodes.Subscript) {
+      const listName = value.value?.id?.v
+      const varInfo = this.vars[listName]
+
+      if (varInfo?.datatype === 'list' || varInfo?.datatype === 'tuple') {
+        const elemType = this.containerElementTypes?.[listName]
+
+        if (elemType) {
+          datatype = elemType
+          lookup = this.getLookupFromDatatype(datatype)
+        } else {
+          datatype = 'Unknown'
+          lookup = 'object' // still return valid lookup
+        }
+      }
+    } else if (value instanceof this.Sk.astnodes.IfExp) {
+      const typeA = this.inferTypeFromNode(value.body)
+      const typeB = this.inferTypeFromNode(value.orelse)
+
+      if (typeA && typeA === typeB) {
+        datatype = typeA
+        lookup = this.getLookupFromDatatype(datatype)
       }
     }
 
@@ -395,6 +451,16 @@ export class Autocompleter {
       case 'str': return 'str'
       default: return 'unknown'
     }
+  }
+
+  inferTypeFromNode (node) {
+    if (node instanceof this.Sk.astnodes.Num) return 'int'
+    if (node instanceof this.Sk.astnodes.Str) return 'str'
+    if (node instanceof this.Sk.astnodes.Name) {
+      const ref = this.vars[node.id.v] || this.builtinVars[node.id.v]
+      return ref?.datatype || 'Unknown'
+    }
+    return null
   }
 
   inferForLoopVarType (forNode) {
