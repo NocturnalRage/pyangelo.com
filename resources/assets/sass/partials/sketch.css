@@ -195,3 +195,16 @@ input.visually-hidden:focus-within + label {
   border: 2px #E0D080 solid;
   color: #453448;
 }
+
+.ace_autocomplete {
+  width: auto;
+  min-width: 500px;
+  max-width: 960px;
+  white-space: nowrap;
+}
+
+.ace_autocomplete .ace_line {
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: initial;
+}

@@ -218,11 +218,11 @@ $( document ).ready(function() {
       tag.src = 'https://www.youtube.com/iframe_api';
       var firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      console.log('iframe_api added');
+      // console.log('iframe_api added');
     };
 
     window.onYouTubeIframeAPIReady = function() {
-      console.log('YouTubeIframeAPIReady');
+      // console.log('YouTubeIframeAPIReady');
       video = new YT.Player('pyangelo-video', {
           events: {
             'onReady': onPlayerReady,
@@ -232,7 +232,7 @@ $( document ).ready(function() {
     }
 
     var onPlayerReady = function(event) {
-      console.log('Player ready');
+      // console.log('Player ready');
       loadingVideoPanel.slideUp();
       videoTag.slideDown();
     }
