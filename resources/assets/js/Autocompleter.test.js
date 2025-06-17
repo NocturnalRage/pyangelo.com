@@ -91,14 +91,14 @@ boring = False
         'title',        'center',     'count',
         'expandtabs',   'find',       'partition',
         'index',        'ljust',      'lower',
-        'lstrip',       'rfind',      'rindex',
+        'lstrip',       'removeprefix', 'removesuffix', 'rfind',      'rindex',
         'rjust',        'rstrip',     'rpartition',
         'splitlines',   'strip',      'swapcase',
         'upper',        'startswith', 'endswith',
         'isascii',      'islower',    'isupper',
-        'istitle',      'isspace',    'isdigit',
+        'istitle',      'isspace',    'isdecimal', 'isdigit',
         'isnumeric',    'isalpha',    'isalnum',
-        'isidentifier', 'zfill',      'format'
+        'isidentifier', 'isprintable', 'zfill',      'format'
       ],
       properties: []
     })
@@ -145,14 +145,14 @@ cool = True
         'title',        'center',     'count',
         'expandtabs',   'find',       'partition',
         'index',        'ljust',      'lower',
-        'lstrip',       'rfind',      'rindex',
+        'lstrip',       'removeprefix', 'removesuffix', 'rfind',      'rindex',
         'rjust',        'rstrip',     'rpartition',
         'splitlines',   'strip',      'swapcase',
         'upper',        'startswith', 'endswith',
         'isascii',      'islower',    'isupper',
-        'istitle',      'isspace',    'isdigit',
+        'istitle',      'isspace',    'isdecimal', 'isdigit',
         'isnumeric',    'isalpha',    'isalnum',
-        'isidentifier', 'zfill',      'format'
+        'isidentifier', 'isprintable', 'zfill',      'format'
       ],
       properties: []
     })
@@ -564,14 +564,14 @@ print(varB)
         'title',        'center',     'count',
         'expandtabs',   'find',       'partition',
         'index',        'ljust',      'lower',
-        'lstrip',       'rfind',      'rindex',
+        'lstrip',       'removeprefix', 'removesuffix', 'rfind',      'rindex',
         'rjust',        'rstrip',     'rpartition',
         'splitlines',   'strip',      'swapcase',
         'upper',        'startswith', 'endswith',
         'isascii',      'islower',    'isupper',
-        'istitle',      'isspace',    'isdigit',
+        'istitle',      'isspace',    'isdecimal', 'isdigit',
         'isnumeric',    'isalpha',    'isalnum',
-        'isidentifier', 'zfill',      'format'
+        'isidentifier', 'isprintable', 'zfill',      'format'
       ],
       properties: []
     })
@@ -617,24 +617,37 @@ print(doubleLast)
         'title',        'center',     'count',
         'expandtabs',   'find',       'partition',
         'index',        'ljust',      'lower',
-        'lstrip',       'rfind',      'rindex',
+        'lstrip',       'removeprefix', 'removesuffix', 'rfind',      'rindex',
         'rjust',        'rstrip',     'rpartition',
         'splitlines',   'strip',      'swapcase',
         'upper',        'startswith', 'endswith',
         'isascii',      'islower',    'isupper',
-        'istitle',      'isspace',    'isdigit',
+        'istitle',      'isspace',    'isdecimal', 'isdigit',
         'isnumeric',    'isalpha',    'isalnum',
-        'isidentifier', 'zfill',      'format'
+        'isidentifier', 'isprintable', 'zfill',      'format'
       ],
       properties: []
     })
     expect(completions.vars.doubleLast).toMatchObject({
       type: 'Variable',
-      datatype: 'Unknown',
+      datatype: 'str',
       name: 'doubleLast',
-      methods: [],
+      methods: [
+        'encode',       'replace',    'split',
+        'rsplit',       'join',       'capitalize',
+        'title',        'center',     'count',
+        'expandtabs',   'find',       'partition',
+        'index',        'ljust',      'lower',
+        'lstrip',       'removeprefix', 'removesuffix', 'rfind',      'rindex',
+        'rjust',        'rstrip',     'rpartition',
+        'splitlines',   'strip',      'swapcase',
+        'upper',        'startswith', 'endswith',
+        'isascii',      'islower',    'isupper',
+        'istitle',      'isspace',    'isdecimal', 'isdigit',
+        'isnumeric',    'isalpha',    'isalnum',
+        'isidentifier', 'isprintable', 'zfill',      'format'
+      ],
       properties: []
-
     })
     expect(completions.vars.score).toMatchObject({
       type: 'Variable',
@@ -663,11 +676,10 @@ print(doubleLast)
     })
     expect(completions.vars.doubleLast).toMatchObject({
       type: 'Variable',
-      datatype: 'Unknown',
+      datatype: 'int',
       name: 'doubleLast',
-      methods: [],
-      properties: []
-
+      methods: [ 'conjugate', 'bit_length', 'to_bytes', 'from_bytes' ],
+      properties: [ 'real', 'imag', 'numerator', 'denominator' ]
     })
     expect(completions.vars.score).toMatchObject({
       type: 'Variable',
@@ -713,9 +725,23 @@ for fruit in fruits:
     })
     expect(completions.vars.fruit).toMatchObject({
       type: 'Variable',
-      datatype: 'list',
+      datatype: 'str',
       name: 'fruit',
-      methods: [],
+      methods: [
+        'encode',       'replace',    'split',
+        'rsplit',       'join',       'capitalize',
+        'title',        'center',     'count',
+        'expandtabs',   'find',       'partition',
+        'index',        'ljust',      'lower',
+        'lstrip',       'removeprefix', 'removesuffix', 'rfind',      'rindex',
+        'rjust',        'rstrip',     'rpartition',
+        'splitlines',   'strip',      'swapcase',
+        'upper',        'startswith', 'endswith',
+        'isascii',      'islower',    'isupper',
+        'istitle',      'isspace',    'isdecimal', 'isdigit',
+        'isnumeric',    'isalpha',    'isalnum',
+        'isidentifier', 'isprintable', 'zfill',      'format'
+      ],
       properties: []
     })
     expect(completions.vars.happy).toMatchObject({
@@ -773,5 +799,148 @@ for fruit in returnList():
       methods: [],
       properties: []
     })
+  });
+  it('can detect tuple variables', () => {
+    const code = `
+t = (1, 2, 3)
+`;
+    a.setCode(code);
+    const completions = a.getCompletions();
+    expect(completions.vars.t).toMatchObject({
+      type: 'Variable',
+      datatype: 'tuple',
+      name: 't',
+      properties: []
+    });
+    expect(completions.vars.t.methods).toEqual(
+      expect.arrayContaining(['count', 'index'])
+    );
+  });
+
+  it('can detect variables from subscript of homogeneous list', () => {
+    const code = `
+scores = [3, 5, 6]
+first = scores[0]
+`;
+    a.setCode(code);
+    const completions = a.getCompletions();
+    expect(completions.vars.first).toMatchObject({
+      type: 'Variable',
+      datatype: 'int',
+      name: 'first',
+      properties: ['real', 'imag', 'numerator', 'denominator']
+    });
+    expect(completions.vars.first.methods).toEqual(
+      expect.arrayContaining([
+        'conjugate', 'bit_length', 'to_bytes', 'from_bytes'
+      ])
+    );
+  });
+
+  it('can detect ternary expressions with matching types', () => {
+    const code = `
+x = 1 if True else 3
+y = "a" if False else "b"
+`;
+    a.setCode(code);
+    const completions = a.getCompletions();
+    expect(completions.vars.x.datatype).toBe('int');
+    expect(completions.vars.y.datatype).toBe('str');
+  });
+
+  it('can detect ternary expressions with mismatched types', () => {
+    const code = `
+z = 1 if True else "b"
+`;
+    a.setCode(code);
+    const completions = a.getCompletions();
+    expect(completions.vars.z.datatype).toBe('Unknown');
+  });
+
+  it('can detect alias inference for basic variables', () => {
+    const code = `
+s = "hello"
+x = s
+`;
+    a.setCode(code);
+    const completions = a.getCompletions();
+    expect(completions.vars.x.datatype).toBe('str');
+  });
+
+  it('can detect NoneType variables', () => {
+    const code = `
+a = None
+`;
+    a.setCode(code);
+    const completions = a.getCompletions();
+    expect(completions.vars.a).toMatchObject({
+      type: 'Variable',
+      datatype: 'NoneType',
+      name: 'a',
+      methods: [],
+      properties: []
+    });
+  });
+
+  it('can detect call to user-defined function returning int', () => {
+    const code = `
+def get_number():
+    return 42
+num = get_number()
+`;
+    a.setCode(code);
+    const completions = a.getCompletions();
+    expect(completions.vars.num.datatype).toBe('int');
+  });
+
+  it('can detect call to user-defined function returning dict', () => {
+    const code = `
+def get_map():
+    return {"a":1}
+m = get_map()
+`;
+    a.setCode(code);
+    const completions = a.getCompletions();
+    // it should come back as a dict with no known keys
+    expect(completions.vars.m).toMatchObject({
+      type: 'dict',
+      datatype: 'dict',
+      name: 'm',
+      keys: []
+    });
+    expect(completions.vars.m.methods).toEqual(
+      expect.arrayContaining([
+        'get','setdefault','pop','popitem',
+        'keys','items','values','update',
+        'clear','copy','fromkeys'
+      ])
+    );
+  });
+
+  it('can detect set variables from set call', () => {
+    const code = `
+a = set([1,2,3])
+`;
+    a.setCode(code);
+    const completions = a.getCompletions();
+    expect(completions.vars.a).toMatchObject({
+      type: 'set',
+      datatype: 'set',
+      name: 'a'
+    });
+    expect(completions.vars.a.methods).toEqual(
+      expect.arrayContaining(['add','clear','copy'])
+    );
+    // should not have dict-style keys
+    expect(completions.vars.a).not.toHaveProperty('keys');
+  });
+
+  it('can detect unknown call assigns Unknown datatype', () => {
+    const code = `
+x = someUndefinedFunc()
+`;
+    a.setCode(code);
+    const completions = a.getCompletions();
+    expect(completions.vars.x.datatype).toBe('Unknown');
   });
 });

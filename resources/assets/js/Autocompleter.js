@@ -11,12 +11,41 @@ export class Autocompleter {
     this.vars = {}
     this.functions = {}
     this.classes = {}
+    this.containerElementTypes = {}
   }
 
   resetBuiltinState () {
     this.builtinVars = {}
     this.builtinFunctions = {}
     this.builtinClasses = {}
+  }
+
+  // Shared factory for any simple type
+  _makeVar (name, datatype) {
+    const lookup = this.getLookupFromDatatype(datatype)
+    const details = this.getPrototypeDetails(this.Sk.builtins[lookup])
+    return {
+      type: 'Variable',
+      datatype,
+      name,
+      methods: details.methods,
+      properties: details.properties,
+      source: 'user'
+    }
+  }
+
+  // Shared dict‐factory
+  _makeDictVar (name, keys) {
+    const details = this.getPrototypeDetails(this.Sk.builtins.dict)
+    return {
+      type: 'dict',
+      datatype: 'dict',
+      name,
+      keys, // known keys or empty array
+      methods: details.methods,
+      properties: details.properties,
+      source: 'user'
+    }
   }
 
   setCode (code) {
@@ -40,7 +69,7 @@ export class Autocompleter {
       // console.log(nodes)
       this.processNodes(nodes, level, lineNo)
     } catch (err) {
-      // console.log(err)
+      // console.error('Autocompleter parse error:', err)
       return false
     }
 
@@ -92,17 +121,7 @@ export class Autocompleter {
 
   handleForNode (node, level, lineNo) {
     const datatype = this.inferForLoopVarType(node)
-    const lookup = this.getLookupFromDatatype(datatype)
-    const details = this.getPrototypeDetails(this.Sk.builtins[lookup])
-
-    this.vars[node.target.id.v] = {
-      type: 'Variable',
-      datatype,
-      name: node.target.id.v,
-      methods: details.methods,
-      properties: details.properties,
-      source: 'user'
-    }
+    this.vars[node.target.id.v] = this._makeVar(node.target.id.v, datatype)
 
     this.processNodes(node.body, level, lineNo)
     this.processNodes(node.orelse, level, lineNo)
@@ -123,7 +142,7 @@ export class Autocompleter {
         return
       }
     }
-    console.log('Did not parse module: ' + node.module.v)
+    // console.log('Did not parse module: ' + node.module.v)
   }
 
   handleAssignment (node) {
@@ -180,16 +199,7 @@ export class Autocompleter {
         return undefined
       })
       .filter(k => k !== undefined)
-    const details = this.getPrototypeDetails(this.Sk.builtins.dict)
-    return {
-      type: 'dict',
-      datatype: 'dict',
-      name,
-      keys,
-      methods: details.methods,
-      properties: details.properties,
-      source: 'user'
-    }
+    return this._makeDictVar(name, keys)
   }
 
   createCallVar (name, value) {
@@ -241,100 +251,67 @@ export class Autocompleter {
         source: 'user'
       }
     }
+    // Check if called function is user-defined and has known returnType
+    if (this.functions[calledName]?.returnType && this.functions[calledName].returnType !== 'Unknown') {
+      const returnType = this.functions[calledName].returnType
+      if (returnType === 'dict') {
+        return this._makeDictVar(name, [])
+      }
+      return this._makeVar(name, returnType)
+    }
     return { type: 'Variable', datatype: 'Unknown', name, source: 'user' }
   }
 
   createLiteralVar (name, value) {
-    let datatype = 'Unknown'
-    let lookup = 'object'
+    // 1) Base type inference
+    let datatype = this.inferTypeFromNode(value) || 'Unknown'
 
-    if (value instanceof this.Sk.astnodes.Num) {
-      datatype = Number.isInteger(value.n.v) ? 'int' : 'float'
-      lookup = datatype === 'int' ? 'int_$rw$' : 'float_$rw$'
-    } else if (value instanceof this.Sk.astnodes.Str) {
-      datatype = 'str'
-      lookup = 'str'
-    } else if (value instanceof this.Sk.astnodes.List || value instanceof this.Sk.astnodes.Tuple) {
-      datatype = value instanceof this.Sk.astnodes.List ? 'list' : 'tuple'
-      lookup = datatype
-
-      // Infer element type if all elements match
-      if (value.elts && value.elts.length > 0) {
-        const elementTypes = value.elts.map(e => this.inferTypeFromNode(e))
-        const uniqueTypes = [...new Set(elementTypes)]
-
-        if (uniqueTypes.length === 1 && uniqueTypes[0] !== 'Unknown') {
-          this.containerElementTypes = this.containerElementTypes || {}
-          this.containerElementTypes[name] = uniqueTypes[0] // e.g., a → int
+    // 2) Container element‐type inference (List/Tuple)
+    if (value instanceof this.Sk.astnodes.List || value instanceof this.Sk.astnodes.Tuple) {
+      const elementTypes = value.elts.map(e => this.inferTypeFromNode(e))
+      const unique = [...new Set(elementTypes)].filter(t => t && t !== 'Unknown')
+      if (unique.length === 1) {
+        // store homogeneous element type for later Subscript inference
+        this.containerElementTypes = this.containerElementTypes || {}
+        this.containerElementTypes[name] = unique[0]
+      }
+    // 3) Alias inference (x = y)
+    } else if (value instanceof this.Sk.astnodes.Name) {
+      const ref = this.vars[value.id.v] || this.builtinVars[value.id.v]
+      if (ref) {
+        datatype = ref.datatype || datatype
+      }
+    // 4) BinOp (x = y + 1)
+    } else if (value instanceof this.Sk.astnodes.BinOp) {
+      const op = value.op // the operator node
+      // true division always yields float
+      if (op instanceof this.Sk.astnodes.Div) {
+        datatype = 'float'
+      } else {
+        // other ops: only infer if both sides agree
+        const l = this.inferTypeFromNode(value.left)
+        const r = this.inferTypeFromNode(value.right)
+        if (l && l === r) {
+          datatype = l
         }
       }
-    } else if (value instanceof this.Sk.astnodes.Set) {
-      datatype = 'set'
-      lookup = 'set'
-    } else if (value instanceof this.Sk.astnodes.NameConstant) {
-      const val = value.v.v
-      if (val === 'True' || val === 'False') {
-        datatype = 'bool'
-        lookup = 'bool'
-      } else {
-        datatype = 'NoneType'
-        lookup = 'NoneType'
-      }
-    // Reference to another variable: x = y
-    } else if (value instanceof this.Sk.astnodes.Name) {
-      const refName = value.id.v
-      const ref = this.vars[refName] || this.builtinVars[refName]
-      if (ref) {
-        datatype = ref.datatype || 'Unknown'
-        lookup = this.getLookupFromDatatype(datatype)
-      }
-    // Binary operation: x = y + 1
-    } else if (value instanceof this.Sk.astnodes.BinOp) {
-      const left = value.left
-      const right = value.right
-
-      const leftType = this.inferTypeFromNode(left)
-      const rightType = this.inferTypeFromNode(right)
-
-      if (leftType && leftType === rightType) {
-        datatype = leftType
-        lookup = this.getLookupFromDatatype(datatype)
-      }
-    // Subscript access: x = a[0]
+    // 5) Subscript (x = a[0])
     } else if (value instanceof this.Sk.astnodes.Subscript) {
       const listName = value.value?.id?.v
-      const varInfo = this.vars[listName]
-
-      if (varInfo?.datatype === 'list' || varInfo?.datatype === 'tuple') {
-        const elemType = this.containerElementTypes?.[listName]
-
-        if (elemType) {
-          datatype = elemType
-          lookup = this.getLookupFromDatatype(datatype)
-        } else {
-          datatype = 'Unknown'
-          lookup = 'object' // still return valid lookup
-        }
+      const info = this.vars[listName]
+      if (info && ['list', 'tuple'].includes(info.datatype)) {
+        const elem = this.containerElementTypes?.[listName]
+        if (elem) datatype = elem
       }
+    // 6) Ternary (x = A if cond else B)
     } else if (value instanceof this.Sk.astnodes.IfExp) {
-      const typeA = this.inferTypeFromNode(value.body)
-      const typeB = this.inferTypeFromNode(value.orelse)
-
-      if (typeA && typeA === typeB) {
-        datatype = typeA
-        lookup = this.getLookupFromDatatype(datatype)
-      }
+      const tA = this.inferTypeFromNode(value.body)
+      const tB = this.inferTypeFromNode(value.orelse)
+      if (tA && tA === tB) datatype = tA
     }
 
-    const details = this.getPrototypeDetails(this.Sk.builtins[lookup])
-    return {
-      type: 'Variable',
-      datatype,
-      name,
-      methods: details.methods,
-      properties: details.properties,
-      source: 'user'
-    }
+    // 7) Finally, build the VarInfo using your shared factory
+    return this._makeVar(name, datatype)
   }
 
   handleClassDef (node, level, lineNo, nodes, index) {
@@ -436,9 +413,36 @@ export class Autocompleter {
       }
     } else {
       const signature = `(${args.join(', ')})`
+
+      // multi-return inference: collect all Return types
+      const returnTypes = new Set()
+      // recursive helper to walk nested bodies/orelse
+      const collectReturns = stmts => {
+        for (const stmt of stmts) {
+          if (stmt instanceof this.Sk.astnodes.Return) {
+            if (stmt.value) {
+              const t = this.inferTypeFromNode(stmt.value) || 'Unknown'
+              returnTypes.add(t)
+            }
+          }
+          // walk into nested blocks
+          if (stmt.body) collectReturns(stmt.body)
+          if (stmt.orelse) collectReturns(stmt.orelse)
+        }
+      }
+      collectReturns(node.body)
+      // ignore Unknowns when deciding
+      returnTypes.delete('Unknown')
+      // if exactly one concrete type, use it; otherwise Unknown
+      let returnType = 'Unknown'
+      if (returnTypes.size === 1) {
+        returnType = [...returnTypes][0]
+      }
+
       this.functions[node.name.v] = {
         signature,
         doc: 'Function',
+        returnType,
         source: 'user'
       }
     }
@@ -449,18 +453,49 @@ export class Autocompleter {
       case 'int': return 'int_$rw$'
       case 'float': return 'float_$rw$'
       case 'str': return 'str'
-      default: return 'unknown'
+      case 'list': return 'list'
+      case 'tuple': return 'tuple'
+      case 'set': return 'set'
+      case 'dict': return 'dict'
+      case 'bool': return 'bool'
+      case 'NoneType': return 'NoneType'
+      default: return 'object'
     }
   }
 
   inferTypeFromNode (node) {
-    if (node instanceof this.Sk.astnodes.Num) return 'int'
-    if (node instanceof this.Sk.astnodes.Str) return 'str'
-    if (node instanceof this.Sk.astnodes.Name) {
-      const ref = this.vars[node.id.v] || this.builtinVars[node.id.v]
-      return ref?.datatype || 'Unknown'
+    if (!node) return 'Unknown'
+
+    if (node instanceof this.Sk.astnodes.List) {
+      return 'list'
+    } else if (node instanceof this.Sk.astnodes.Dict) {
+      return 'dict'
+    } else if (node instanceof this.Sk.astnodes.Tuple) {
+      return 'tuple'
+    } else if (node instanceof this.Sk.astnodes.Set) {
+      return 'set'
+    } else if (node instanceof this.Sk.astnodes.Str) {
+      return 'str'
+    } else if (node instanceof this.Sk.astnodes.Num) {
+      return Number.isInteger(node.n.v) ? 'int' : 'float'
+    } else if (node instanceof this.Sk.astnodes.NameConstant) {
+      const val = node.value?.v
+      if (val === 0 || val === 1) {
+        return 'bool'
+      } else if (val === null) {
+        return 'NoneType'
+      }
+    } else if (node instanceof this.Sk.astnodes.Call) {
+      // Function call – type will be handled elsewhere
+      return 'Unknown'
+    } else if (node instanceof this.Sk.astnodes.Name) {
+      // Variable – try to use existing var info
+      const varInfo = this.vars[node.id?.v]
+      if (varInfo?.datatype) {
+        return varInfo.datatype
+      }
     }
-    return null
+    return 'Unknown'
   }
 
   inferForLoopVarType (forNode) {
@@ -492,8 +527,15 @@ export class Autocompleter {
     if (iter instanceof this.Sk.astnodes.Tuple) return 'tuple element'
 
     // Case: Name — could be anything, maybe look it up later
+    // Case: Name — first check if we know its container’s element type
     if (iter instanceof this.Sk.astnodes.Name) {
       const name = iter.id.v
+      // 1) if this was a literal list/tuple with homogeneous elements, use that
+      const elemType = this.containerElementTypes[name]
+      if (elemType) {
+        return elemType
+      }
+      // 2) otherwise fall back on the variable’s own datatype
       const varInfo = this.vars[name]
       if (varInfo && varInfo.datatype) {
         return varInfo.datatype
