@@ -7,9 +7,9 @@ export class PyAngeloWordCompleter {
       functions: {}
     }
     this.VAR_SCORE = 1000
+    this.FUNCTION_SCORE = 900
     this.METHOD_SCORE = 800
     this.ATTRIBUTE_SCORE = 700
-    this.FUNCTION_SCORE = 600
     this.CLASS_SCORE = 500
     this.KEYWORD_SCORE = 300
     this.identifierRegexps = [/[a-zA-Z_0-9]*[.[]/]
@@ -48,6 +48,8 @@ export class PyAngeloWordCompleter {
               }
             )
           }
+        }
+        if ('properties' in this.completions.vars[lastToken]) {
           for (const prop of this.completions.vars[lastToken].properties) {
             this.wordList.push(
               {

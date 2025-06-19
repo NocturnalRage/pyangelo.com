@@ -136,15 +136,25 @@
         </div><!-- well -->
         <div class="well">
           <a href="#sounds">
-            <h3><i class="fa fa-file-audio-o fa-fw"></i> Sounds</h3>
+            <h3><i class="fa fa-file-audio-o fa-fw"></i> Sound</h3>
           </a>
-          <div class="list-group">
-            <a href="#loadSound" class="list-group-item">loadSound()</a>
-            <a href="#playSound" class="list-group-item">playSound()</a>
-            <a href="#stopSound" class="list-group-item">stopSound()</a>
-            <a href="#pauseSound" class="list-group-item">pauseSound()</a>
-            <a href="#stopAllSounds" class="list-group-item">stopAllSounds()</a>
-          </div><!-- list-group -->
+            <div class="list-group">
+              <a href="#Sound"       class="list-group-item">Sound()</a>
+              <a href="#play"        class="list-group-item">play()</a>
+              <a href="#pause"       class="list-group-item">pause()</a>
+              <a href="#stop"        class="list-group-item">stop()</a>
+              <a href="#isPlaying"   class="list-group-item">isPlaying()</a>
+              <a href="#seek"        class="list-group-item">seek()</a>
+              <a href="#rate"        class="list-group-item">rate()</a>
+              <a href="#volume"      class="list-group-item">volume()</a>
+              <a href="#loop"        class="list-group-item">loop()</a>
+              <a href="#mute"        class="list-group-item">mute()</a>
+              <a href="#fade"        class="list-group-item">fade()</a>
+              <a href="#duration"    class="list-group-item">duration()</a>
+              <a href="#dispose"     class="list-group-item">dispose()</a>
+              <a href="#stopAll"     class="list-group-item">stopAll()</a>
+              <a href="#examples"    class="list-group-item">Usage Example</a>
+            </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
           <a href="#variables">

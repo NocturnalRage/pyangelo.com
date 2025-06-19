@@ -1,105 +1,150 @@
-<h2 id="sounds">Sounds</h2>
-<h3 id="loadSound">loadSound()</h3>
-<h4>Examples</h4>
-<pre>
-blip = loadSound("/samples/sounds/blip.wav")
-</pre>
-<h4>Description</h4>
-<p>
-loadSound loads a sound file that can be played with the <a href="#playSound()">playSound()</a> function.
-</p>
-<h4>Syntax</h4>
-<p>loadSound(filename)</p>
-<h4>Parameters</h4>
-<p>filename - A URL specifying the location of the sound file to load.</p>
-<h4>Return Values</h4>
-The filename is returned and can be stored in a variable. This variable can then be passed to the <a href="#playSound">playSound()</a> function in order to play the sound.
-<hr />
-<h3 id="playSound">playSound()</h3>
-<h4>Examples</h4>
-<pre>
-setCanvasSize(500, 400)
-blip = loadSound("/samples/sounds/blip.wav")
+<h2 id="sounds">Sound</h2>
 
-text("Hit W to make a 'blip' sound!", 0, 0)
-while True:
-    if isKeyPressed(KEY_W):
-        playSound(blip)
-</pre>
-<h4>Description</h4>
-<p>
-playSound() plays a sound. The sound can be loaded previously via the <a href="#loadSound">loadSound()</a> function or can be the location of a sound file. You can also specify the optional parameters of loop and volume.
-</p>
-<h4>Syntax</h4>
-<p>playSound(sound, loop, volume)</p>
-<h4>Parameters</h4>
-<p>sound - Either the name of a variable returned from the of the <a href="#loadSound">loadSound()</a> function  or the URL specifying the loaction of a sound file.</p>
-<p>loop - A boolean value specifying if the sound should loop when played.</p>
-<p>volume - The volume at which to play the sound ranging from 0 to 1.</p>
-<hr />
-<h3 id="stopSound">stopSound()</h3>
+<h3 id="Sound">Sound(filename: str) → Sound</h3>
 <h4>Examples</h4>
 <pre>
-setCanvasSize(500, 400)
-music = loadSound("/samples/music/Myth.mp3")
-playSound(music)
+# Load a sound file and keep the object
+music = Sound("/samples/music/Myth.mp3")
 
-text("Hit W to stop the music!", 0, 0)
-while True:
-    if isKeyPressed(KEY_W):
-        stopSound(music)
+# Play, pause, and stop control:
+music.play()
+music.pause()
+music.stop()
 </pre>
 <h4>Description</h4>
 <p>
-stopSound() stops a sound from playing.
+Creates a new <code>Sound</code> instance for the given file URL.  You can then call methods on that instance to control playback, volume, looping, etc.
 </p>
-<h4>Syntax</h4>
-<p>stopSound(sound)</p>
 <h4>Parameters</h4>
-<p>sound - The name of a sound that has been previously played.</p>
-<hr />
-<h3 id="pauseSound">pauseSound()</h3>
-<h4>Examples</h4>
-<pre>
-setCanvasSize(500, 400)
-music = loadSound("/samples/music/Myth.mp3")
-playSound(music)
-playing = True
+<ul>
+  <li><code>filename</code> – A string URL to the sound file.</li>
+</ul>
+<hr/>
 
-text("Hit W to pause the music!", 0, 0)
-text("Hit S to re-start the music!", 0, 30)
-while True:
-    if isKeyPressed(KEY_W):
-        playing = False
-        pauseSound(music)
-    elif isKeyPressed(KEY_S) and not playing:
-        playSound(music)
-        playing = True
-</pre>
-<h4>Description</h4>
-<p>
-pauseSound() pauses a sound from playing.
-</p>
-<h4>Syntax</h4>
-<p>pauseSound(sound)</p>
-<h4>Parameters</h4>
-<p>sound - The name of a sound that has been previously played.</p>
-<hr />
-<h3 id="stopAllSounds">stopAllSounds()</h3>
+<h3 id="play">play() → None</h3>
 <h4>Examples</h4>
 <pre>
-setCanvasSize(50, 50)
-music1 = loadSound("/samples/music/Myth.mp3")
-music2 = loadSound("/samples/music/SuperMonaco.mp3")
-playSound(music1)
-playSound(music2)
-sleep(3)
-stopAllSounds()
+sound.play()          # start or resume playback
 </pre>
 <h4>Description</h4>
 <p>
-stopAllSounds() stops all sounds from playing.
+Starts or resumes the sound.  If the sound was paused, it picks up from where it left off; otherwise it begins at the current seek position (default 0.0).
 </p>
-<h4>Syntax</h4>
-<p>stopAllSounds()</p>
-<hr />
+<hr/>
+
+<h3 id="pause">pause() → None</h3>
+<h4>Examples</h4>
+<pre>
+sound.pause()         # temporarily halt playback
+</pre>
+<h4>Description</h4>
+<p>
+Pauses the sound at its current position.  A subsequent <code>play()</code> will resume from this point.
+</p>
+<hr/>
+
+<h3 id="stop">stop() → None</h3>
+<h4>Examples</h4>
+<pre>
+sound.stop()          # halt and reset position to 0.0
+</pre>
+<h4>Description</h4>
+<p>
+Stops playback and resets the playhead to the start (0.0 seconds).  Loop and volume settings remain unchanged.
+</p>
+<hr/>
+
+<h3 id="isPlaying">isPlaying() → bool</h3>
+<h4>Description</h4>
+<p>
+Returns <code>True</code> if the sound is currently playing (not paused), otherwise <code>False</code>.
+</p>
+<hr/>
+
+<h3 id="seek">seek(position: float=None) → float or None</h3>
+<h4>Description</h4>
+<p>
+Without arguments, returns the current playhead position in seconds (0.0 before play).  With a <code>position</code> argument (in seconds), jumps to that time and returns <code>None</code>.
+</p>
+<hr/>
+
+<h3 id="rate">rate(speed: float=None) → float or None</h3>
+<h4>Description</h4>
+<p>
+When called without arguments, returns the current playback rate (a multiplier, default 1.0).  With <code>speed</code> &gt; 0, sets a new rate (e.g. 2.0 for double speed) and returns <code>None</code>.
+</p>
+<hr/>
+
+<h3 id="volume">volume(level: float=None) → float or None</h3>
+<h4>Description</h4>
+<p>
+Without arguments, returns the current volume (0.0–1.0).  With <code>level</code> between 0.0 and 1.0, sets the volume and returns <code>None</code>.
+</p>
+<hr/>
+
+<h3 id="loop">loop(state: bool=None) → bool or None</h3>
+<h4>Description</h4>
+<p>
+With no arguments, returns whether looping is currently enabled.  With <code>state</code>=<code>True</code> or <code>False</code>, toggles looping and returns <code>None</code>.
+</p>
+<hr/>
+
+<h3 id="mute">mute(state: bool=None) → bool or None</h3>
+<h4>Description</h4>
+<p>
+Without arguments, returns current mute state.  With a boolean <code>state</code>, mutes or unmutes the sound.
+</p>
+<hr/>
+
+<h3 id="fade">fade(from: float, to: float, duration: float) → None</h3>
+<h4>Description</h4>
+<p>
+Fade volume from <code>from</code>→<code>to</code> (both 0.0–1.0) over <code>duration</code> seconds.
+</p>
+<hr/>
+
+<h3 id="duration">duration() → float</h3>
+<h4>Description</h4>
+<p>
+Returns the total length of the sound in seconds.
+</p>
+<hr/>
+
+<h3 id="dispose">dispose() → None</h3>
+<h4>Description</h4>
+<p>
+Stops playback (if any), unloads the audio from memory, and removes the instance from internal registries.
+</p>
+<hr/>
+
+<h3 id="stopAll">stopAll() → None</h3>
+<h4>Examples</h4>
+<pre>
+# static call on the class:
+Sound.stopAll()
+
+# or from an instance:
+music.stopAll()
+</pre>
+<h4>Description</h4>
+<p>
+Stops every <code>Sound</code> instance currently registered, no matter what file they’re playing.
+</p>
+<hr/>
+
+<h3 id="examples">Usage Example</h3>
+<pre>
+# Create and configure a Sound
+music = Sound("/samples/music/Myth.mp3")
+music.volume(0.5)        # half volume
+music.loop(True)         # repeat forever
+music.play()
+
+# …later, pause and inspect…
+music.pause()
+print("At", music.seek(), "seconds")
+
+# and finally stop everything
+Sound.stopAll()
+</pre>
+<hr/>
