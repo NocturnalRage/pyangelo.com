@@ -57,7 +57,7 @@ export class Autocompleter {
       this.imports = []
     }
 
-    // 🆕 Lazy-load built-ins once
+    // Lazy-load built-ins once
     if (Object.keys(this.builtinVars).length === 0) {
       this.loadBuiltinVars()
     }
@@ -67,25 +67,19 @@ export class Autocompleter {
       const ast = this.Sk.astFromParse(parse.cst, 'autocompleter', parse.flags)
       const nodes = ast.body
       // console.log(nodes)
+      // this.resetState()
+      this.vars = { ...this.builtinVars }
+      this.classes = { ...this.builtinClasses }
+      this.functions = { ...this.builtinFunctions }
       this.processNodes(nodes, level, lineNo)
     } catch (err) {
       // console.error('Autocompleter parse error:', err)
       return false
     }
-
     return {
-      vars: {
-        ...this.builtinVars,
-        ...this.vars
-      },
-      classes: {
-        ...this.builtinClasses,
-        ...this.classes
-      },
-      functions: {
-        ...this.builtinFunctions,
-        ...this.functions
-      }
+      vars: { ...this.vars },
+      classes: { ...this.classes },
+      functions: { ...this.functions }
     }
   }
 
