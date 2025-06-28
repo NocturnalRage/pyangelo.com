@@ -84,7 +84,6 @@
           </a>
           <div class="list-group">
             <a href="#Image" class="list-group-item">Image()</a>
-            <a href="#drawImage" class="list-group-item">drawImage()</a>
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">

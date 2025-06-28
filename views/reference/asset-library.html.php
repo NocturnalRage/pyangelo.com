@@ -71,6 +71,8 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
         <pre>/samples/images/car-blue.png</pre>
         <img src ="/samples/images/car-pink.png" alt="Pink Car" />
         <pre>/samples/images/car-pink.png</pre>
+        <img src ="/samples/images/alien-spritesheet.png" alt="Green Alien Spritesheet" />
+        <pre>/samples/images/alien-spritesheet.png</pre>
         <img src ="/samples/images/blue-alien-idle.png" alt="Idle Blue Alien" />
         <pre>/samples/images/blue-alien-idle.png</pre>
         <img src ="/samples/images/blue-alien-walking-1.png" alt="Blue Alien Walking 1" />
