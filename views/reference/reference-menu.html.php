@@ -39,7 +39,7 @@
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
-          <a href="#colour">
+          <a href="#Colour">
             <h3><i class="fa fa-paint-brush fa-fw"></i> Colour</h3>
           </a>
           <div class="list-group">

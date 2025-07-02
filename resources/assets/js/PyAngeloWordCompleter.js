@@ -13,6 +13,16 @@ export class PyAngeloWordCompleter {
     this.CLASS_SCORE = 500
     this.KEYWORD_SCORE = 300
     this.identifierRegexps = [/[a-zA-Z_0-9]*[.[]/]
+
+    this.COLOUR_FUNCTIONS = [
+      'setTextColour',
+      'setHighlightColour',
+      'clear',
+      'background',
+      'fill',
+      'stroke',
+      'Colour'
+    ]
   }
 
   setCode (code) {
@@ -371,6 +381,41 @@ export class PyAngeloWordCompleter {
           }
         )
       }
+      // Add named colour suggestions if the line includes any target function
+      const cursor = editor.getCursorPosition()
+      const line = session.getDocument().getLine(cursor.row)
+
+      // 2) how many characters the user has already typed
+      const myPrefix = prefix || ''
+
+      // 3) index of the character just before the typed prefix begins
+      const startCol = cursor.column - myPrefix.length - 1
+      const openChar = startCol >= 0
+        ? line.charAt(startCol)
+        : null
+
+      // 4) only wrap with quotes if there isn't already ' or " there
+      const needsQuotes = openChar !== '"' && openChar !== "'"
+
+      for (const func of this.COLOUR_FUNCTIONS) {
+        if (curLine.includes(func + '(')) {
+          if (this.autocompleter.Sk?.Colour?.namedColours) {
+            const names = Object.keys(this.autocompleter.Sk.Colour.namedColours)
+            for (const name of names) {
+              const insertValue = needsQuotes
+                ? `'${name}'` // wrap if no quote pre-existing
+                : name // bare name if already inside quotes
+              this.wordList.push({
+                caption: `${name}`,
+                value: insertValue,
+                meta: 'Named Colour',
+                score: this.VAR_SCORE
+              })
+            }
+            break // Only match one function per line
+          }
+        }
+      }
     }
 
     callback(null, [...this.wordList.map(function (word) {
@@ -381,24 +426,36 @@ export class PyAngeloWordCompleter {
         score: word.score,
         completer: {
           insertMatch: function (editor, data) {
-            if (editor.completer.completions.filterText) {
-              const ranges = editor.selection.getAllRanges()
-              for (let i = 0, range; (range = ranges[i]); i++) {
-                if (editor.completer.completions.filterText.includes('[\'')) {
-                  range.end.column += 2
-                } else if (editor.completer.completions.filterText.includes('[')) {
-                  range.end.column += 1
-                }
-                range.start.column -= editor.completer.completions.filterText.length
-                editor.session.remove(range)
+            const prefix = editor.completer.completions.filterText || ''
+            const ranges = editor.selection.getAllRanges()
+
+            for (let i = 0; i < ranges.length; i++) {
+              const range = ranges[i]
+
+              // Adjust end column for dict keys with brackets
+              if (prefix.includes('[\'')) {
+                range.end.column += 2
+              } else if (prefix.includes('[')) {
+                range.end.column += 1
               }
+
+              // Always back up the start by prefix length
+              range.start.column -= prefix.length
+
+              // Remove the matched prefix
+              editor.session.remove(range)
+
+              // Insert the selected word
+              editor.session.insert(range.start, data.value || data)
             }
-            editor.execCommand('insertstring', data.value || data)
-            if (data.value.slice(-2) === '()') {
+
+            // Optional: move cursor out of ()
+            if ((data.value || data).slice(-2) === '()') {
               const curPos = editor.getCursorPosition()
               editor.gotoLine(curPos.row + 1, curPos.column - 1)
-            } else if (editor.completer.completions.filterText.slice(0, 1) === '[') {
-              editor.gotoLine(pos.row + 1, pos.column + data.value.length)
+            } else if (prefix.slice(0, 1) === '[') {
+              // Special case: keep cursor position for dict
+              editor.gotoLine(pos.row + 1, pos.column + (data.value || data).length)
             }
           }
         }
