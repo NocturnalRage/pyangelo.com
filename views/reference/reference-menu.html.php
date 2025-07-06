@@ -123,6 +123,8 @@
             <a href="#RectangleSprite" class="list-group-item">RectangleSprite()</a>
             <a href="#CircleSprite" class="list-group-item">CircleSprite()</a>
             <a href="#EllipseSprite" class="list-group-item">EllipseSprite()</a>
+            <a href="#PolygonSprite" class="list-group-item">PolygonSprite()</a>
+            <a href="#Tweening" class="list-group-item">Tweening</a>
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">

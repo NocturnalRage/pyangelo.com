@@ -66,7 +66,6 @@ export class Autocompleter {
       const parse = this.Sk.parse('autocompleter', this.code)
       const ast = this.Sk.astFromParse(parse.cst, 'autocompleter', parse.flags)
       const nodes = ast.body
-      // console.log(nodes)
       // this.resetState()
       this.vars = { ...this.builtinVars }
       this.classes = { ...this.builtinClasses }
@@ -312,24 +311,40 @@ export class Autocompleter {
     const methodArgs = []
     const className = node.name.v
     const classMethods = []
-    const properties = []
+    let properties = []
 
+    // 1) Inherit base‐class methods & properties
     if (node.bases.length > 0) {
       const base = this.classes[node.bases[0].id.v]
       if (base) {
         classMethods.push(...base.methods)
-        properties.push(...base.properties)
+        properties = properties.concat(base.properties)
       }
     }
 
-    const methods = node.body
+    // 2) Only look at FunctionDef nodes
+    const methods = node.body.filter(n => n instanceof this.Sk.astnodes.FunctionDef)
+
     for (let j = 0; j < methods.length; j++) {
       const method = methods[j]
+      const name = method.name.v
 
-      if (!method.name.v.startsWith('__')) {
-        classMethods.push(method.name.v)
+      // A) @property or @setter → attribute
+      const isProp = method.decorator_list.some(dec =>
+        (dec.id && dec.id.v === 'property') ||
+        (dec.attr && dec.attr.v === 'setter')
+      )
+      if (isProp) {
+        properties.push(name)
+        continue
       }
 
+      // B) public method (no leading single underscore)
+      if (!name.startsWith('_')) {
+        classMethods.push(name)
+      }
+
+      // C) within __init__ or any method, collect its args for in‐scope completion
       if (level === 1) {
         const endLineNo = this.getMethodEndLine(methods, j, nodes, index)
         if (lineNo >= method.lineno && lineNo < endLineNo) {
@@ -341,25 +356,73 @@ export class Autocompleter {
         }
       }
 
+      // D) scan the method body for any self.xxx = … patterns, tuples, augassign, setattr
       for (const stmt of method.body) {
+        // D1) plain or chained assignments
         if (stmt instanceof this.Sk.astnodes.Assign) {
-          const target = stmt.targets[0]
-          if (target instanceof this.Sk.astnodes.Attribute && !target.attr.v.startsWith('_')) {
-            properties.push(target.attr.v)
+          for (const target of stmt.targets) {
+            // a) simple self.attr = …
+            if (
+              target instanceof this.Sk.astnodes.Attribute &&
+              target.value.id.v === 'self' &&
+              !target.attr.v.startsWith('_')
+            ) {
+              properties.push(target.attr.v)
+            } else if (target instanceof this.Sk.astnodes.Tuple) {
+              // b) tuple‐unpack: self.a, self.b = …
+              for (const elt of target.elts) {
+                if (
+                  elt instanceof this.Sk.astnodes.Attribute &&
+                  elt.value.id.v === 'self' &&
+                  !elt.attr.v.startsWith('_')
+                ) {
+                  properties.push(elt.attr.v)
+                }
+              }
+            }
+          }
+        } else if (stmt instanceof this.Sk.astnodes.AugAssign) {
+          // D2) augmented assign (self.count += …)
+          const t = stmt.target
+          if (
+            t instanceof this.Sk.astnodes.Attribute &&
+            t.value.id.v === 'self' &&
+            !t.attr.v.startsWith('_')
+          ) {
+            properties.push(t.attr.v)
+          }
+        } else if (
+          // D3) setattr(self, 'dyn', …)
+          stmt instanceof this.Sk.astnodes.Expr &&
+          stmt.value instanceof this.Sk.astnodes.Call &&
+          stmt.value.func.id?.v === 'setattr'
+        ) {
+          const [obj, keyNode] = stmt.value.args
+          if (
+            obj instanceof this.Sk.astnodes.Name &&
+            obj.id.v === 'self' &&
+            keyNode instanceof this.Sk.astnodes.Str
+          ) {
+            properties.push(keyNode.s.v)
           }
         }
       }
     }
 
-    if (level === 1 && (index + 1 === nodes.length || nodes[index + 1].lineno > lineNo)) {
+    // 3) If we’re inside a method, expose `self` with the final lists
+    if (
+      level === 1 &&
+      (index + 1 === nodes.length || nodes[index + 1].lineno > lineNo)
+    ) {
       this.vars.self = {
         type: className,
-        methods: [...classMethods],
-        properties: [...properties],
+        methods: Array.from(new Set(classMethods)),
+        properties: Array.from(new Set(properties)),
         source: 'user'
       }
     }
 
+    // 4) Make locals for any in-scope parameters
     for (const arg of methodArgs) {
       this.vars[arg] = {
         type: 'Parameter',
@@ -369,13 +432,12 @@ export class Autocompleter {
       }
     }
 
-    const signature = this.getConstructorArgsFromClassDef(node)
-    const isException = false
+    // 5) Register the class (deduplicating properties too)
     this.classes[className] = {
-      methods: classMethods,
-      properties,
-      signature,
-      isException,
+      methods: Array.from(new Set(classMethods)),
+      properties: Array.from(new Set(properties)),
+      signature: this.getConstructorArgsFromClassDef(node),
+      isException: false,
       source: 'user'
     }
   }

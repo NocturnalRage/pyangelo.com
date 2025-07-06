@@ -1,189 +1,210 @@
-<h2 id="sprites">Sprites</h2>
-<p>To use the sprite library you need to import it using the following code:</p>
-<pre>
-from sprite import *
-</pre>
-<h3 id="Sprite">Sprite()</h3>
-<h4>Examples</h4>
-<pre>
-from sprite import *
-setCanvasSize(500, 400)
-pyangelo = Sprite("/samples/images/PyAngelo.png", 100, 75)
-imposter = Sprite("/samples/images/PyAngelo.png", 300, 75)
-while True:
-    background(220, 220, 220)
-    pyangelo.draw()
-    imposter.draw()
-    pyangelo.moveBy(1, 1)
-    imposter.moveBy(-1, 1)
-
-    if pyangelo.overlaps(imposter):
-        text("I found you imposter!", 0, 0, fontSize=30)
-
-    sleep(0.005)
-</pre>
-<h4>Description</h4>
-<p>
-The Sprite class loads an image specified as the first parameter at a starting position specified by the second and third parameters. You can also specify the optional parameters of width, height, and opacity for the image.
-</p>
-<h4>Methods</h4>
-<h5>Sprite(image, x, y, width, height, opacity, angle)</h5>
-<p>The image specifies the location on the Internet of the image to use. This is the only mandatory parameter, the rest are optional. The x and y parameters specify the starting position of the Sprite. The width and height parameters can adjust the size of the image and the opacity will change the transparency of the image. The angle will rotate the sprite with a positive angle indicating a clockwise rotation and a negative number an anti-clockwise rotation.</p>
-<h5>draw()</h5>
-<p>Draws the Sprite's image to the canvas at the Sprite's X and Y position.</p>
-<h5>moveBy(x, y)</h5>
-<p>Updates the Sprite's position by x pixels along the x axis, and y pixels along the y axis.</p>
-<h5>moveTo(x, y)</h5>
-<p>Updates the Sprite's position to the (x, y) coordinate.</p>
-<h5>overlaps(other)</h5>
-<p>Returns True if this Sprite overlaps with the "other" Sprite passed in as the first parameter. If the two Sprites do not overlap then False is returned. The overlap method uses the bounding rectangle principle to check if the Sprites are overlapping.</p>
-<h5>contains(point)</h5>
-<p>Returns True if the point passed in as the first parameter is inside the area occupied by this Sprite, otherwise it returns False.</p>
-<h5>rotate(angle)</h5>
-<p>Rotates the sprite around its centre by the angle specified. By default the angle is specified in degrees. This can be changed to radians with the <a href="#angleMode">angleMode()</a> function. </p>
+<h2 id="sprites">Sprites Reference</h2>
+<p>To use any of the following classes, import the module:</p>
+<pre><code>from sprite import *</code></pre>
 <hr />
-<h3 id="TextSprite">TextSprite()</h3>
-<h4>Examples</h4>
-<pre>
-from sprite import *
-setCanvasSize(500, 400)
-hello = TextSprite("Hello", 100, 75)
-hello.setColour(255, 100, 200)
-smiley = TextSprite("☺️", 300, 75, fontSize=50)
+
+<!-- IMAGE SPRITE -->
+<h3 id="Sprite">Sprite(imageSource, x=0, y=0, width=None, height=None)</h3>
+<p>Loads and draws an image. Pass either a URL/path <code>str</code> or a pre-loaded image object.</p>
+<h4>Key Properties</h4>
+<ul>
+  <li><code>imageFile</code> (read/write) – path or URL of the image</li>
+  <li><code>image</code> (read/write) – the loaded image object</li>
+  <li><code>x, y</code> (read/write) – position</li>
+  <li><code>width, height</code> (read/write) – dimensions (clamped ≥ 0)</li>
+  <li><code>opacity</code> (0.0–1.0)</li>
+  <li><code>angle</code> (rotation)</li>
+</ul>
+<h4>Core Methods</h4>
+<dl>
+  <dt><code>draw()</code></dt><dd>Draws the sprite at (<code>x</code>, <code>y</code>).</dd>
+  <dt><code>moveBy(dx, dy)</code></dt><dd>Translate by (<code>dx</code>, <code>dy</code>).</dd>
+  <dt><code>moveTo(x, y)</code></dt><dd>Set position.</dd>
+  <dt><code>rotateTo(angle)</code> / <code>rotateBy(d)</code></dt><dd>Set or adjust rotation.</dd>
+  <dt><code>overlaps(other)</code></dt><dd>True if bounding rectangles intersect.</dd>
+  <dt><code>contains(point)</code></dt><dd>True if <code>point</code> lies inside its bounds.</dd>
+</dl>
+<h4>Example</h4>
+<pre><code>from sprite import *
+setCanvasSize(400, 300)
+s1 = Sprite("/samples/images/PyAngelo.png", 50, 150)
+s2 = Sprite("/samples/images/blue-alien-idle.png", 200, 150)
+
 while True:
-    background(220, 220, 220)
-    hello.draw()
-    smiley.draw()
-    hello.moveBy(1, 1)
-    smiley.moveBy(-1, 1)
-
-    if hello.overlaps(smiley):
-        text("Hello there good friend", 0, 0, fontSize=30)
-
-    sleep(0.005)
-</pre>
-<h4>Description</h4>
-<p>
-The TextSprite class inherits from the Sprite class and so it has the same methods draw(), moveBy(), moveTo(), contains(), overlaps(), and rotate(). However the first parameter passed to a TextSprite is the text to display. This text can also be an emoji.
-</p>
-<h5>TextSprite(text, x, y, fontSize, fontName, r, g, b, a, angle)</h5>
-<p>The text parameter specifies what text will be displayed by the draw() method. This is the only mandatory parameter, the rest are optional. The x and y parameters specify the starting position of the Sprite. The fontSize specified the size of the text, the fontName specifies the type of font to use, and the r, g, b, and a parameters specify the colour and transparency of the text. The angle will rotate the text with a positive angle indicating a clockwise rotation and a negative number an anti-clockwise rotation.</p>
-<h4>Extra Methods</h4>
-<h5>setColour(r, g, b, a)</h5>
-<p>This method sets the colour and transparency of the text.</p>
+    background(240,240,240)
+    s1.draw();  s2.draw()
+    s1.moveBy(1, 0)
+    if s1.overlaps(s2):
+        text("Caught!", 10, 20, fontSize=24)
+    sleep(1/60)
+</code></pre>
 <hr />
-<h3 id="RectangleSprite">RectangleSprite()</h3>
-<h4>Examples</h4>
-<pre>
-from sprite import *
-setCanvasSize(500, 400)
-r = RectangleSprite(100, 100, 50, 50)
-r.setColour(255, 10, 170)
-r.noStroke()
-xSpeed = 1
-ySpeed = 1
+
+<!-- TEXT SPRITE -->
+<h3 id="TextSprite">TextSprite(text, x=0, y=0, fontSize=20, fontName="Arial")</h3>
+<p>Renders a line of text (or emoji) as a sprite. Automatically measures its size.</p>
+<h4>Key Properties</h4>
+<ul>
+  <li><code>textContent</code> (read/write) – the string to display</li>
+  <li><code>fontSize</code> (read/write)</li>
+  <li><code>fontName</code> (read/write)</li>
+  <li>Also inherits <code>x, y, opacity, angle</code></li>
+</ul>
+<h4>Core Methods</h4>
+<dl>
+  <dt><code>draw()</code></dt><dd>Draws the text at its position.</dd>
+  <dt><code>setColour(r, g, b, a=None)</code></dt><dd>Sets fill colour and optional opacity.</dd>
+</dl>
+<h4>Example</h4>
+<pre><code>from sprite import *
+setCanvasSize(400, 200)
+msg = TextSprite("Hello, 🌏!", 100, 100, fontSize=32)
+msg.setColour(20, 120, 200)
 
 while True:
-    background(220, 220, 220)
+    background(30,30,30)
+    msg.draw()
+    msg.rotateBy(1)
+    sleep(1/60)
+</code></pre>
+<hr />
+
+<!-- RECTANGLE SPRITE -->
+<h3 id="RectangleSprite">RectangleSprite(x, y, width, height)</h3>
+<p>Draws a filled (and optionally stroked) rectangle.</p>
+<h4>Key Properties</h4>
+<ul>
+  <li><code>width, height</code> (read/write)</li>
+  <li>Fill/stroke via <code>setColour</code>, <code>setStroke</code>, <code>strokeWeight</code></li>
+  <li>Also inherits <code>x, y, opacity, angle</code></li>
+</ul>
+<h4>Core Methods</h4>
+<dl>
+  <dt><code>setColour(r, g, b, a=None)</code></dt><dd>Fill colour.</dd>
+  <dt><code>setStroke(r, g, b, a=None)</code></dt><dd>Border colour & enable stroke.</dd>
+  <dt><code>strokeWeight(w)</code></dt><dd>Border thickness.</dd>
+  <dt><code>noStroke()</code></dt><dd>Disable border.</dd>
+</dl>
+<h4>Example</h4>
+<pre><code>from sprite import *
+setCanvasSize(300,300)
+r = RectangleSprite(50, 50, 80, 120)
+r.setColour(255,100,50)
+r.setStroke(0,0,0,0.8)
+r.strokeWeight(4)
+while True:
+    background(220)
     r.draw()
-    r.moveBy(xSpeed, ySpeed)
-    if r.x >= width - r.width:
-        r.x = width - r.width
-        xSpeed *= -1
-    elif r.x <= 0:
-        r.x = 0
-        xSpeed *= -1
-    if r.y >= height - r.height:
-        r.y = height - r.height
-        ySpeed *= -1
-    elif r.y <= 0:
-        r.y = 0
-        ySpeed *= -1
-    sleep(0.005)
-</pre>
-<h4>Description</h4>
-<p>
-The RectangleSprite class inherits from the TextSprite class and so it has the same methods draw(), setColour(), moveBy(), moveTo(), contains(), overlaps(), and rotate(). However the first four parameter passed to a RectangleSprite are the x and y coordinates and the width and height of the rectangle.
-</p>
-<h5>RectangleSprite(x, y, width, height, r, g, b, a, angle)</h5>
-<p>The first four parameter specify the x and y coordinates and the width and height of the rectangle. The first four parameters are mandatory, the rest are optional. The r, g, b, and a parameters specify the colour and transparency of the rectangle. The angle will rotate the rectangle with a positive angle indicating a clockwise rotation and a negative number an anti-clockwise rotation.</p>
-<h4>Extra Methods</h4>
-<h5>noStroke()</h5>
-<p>This updates the rectangle so no border will be drawn when the draw() method is called.</p>
-<h5>stroke(r, g, b, a)</h5>
-<p>This method ensures the rectangle is drawn with a border of the colour and transparency specified by the r, g, b, and a parameters.</p>
-<h5>strokeWeight(weight)</h5>
-<p>Specifies in pixels, how thick the border should be around the rectangle.</p>
+    r.moveBy(1, 1)
+    if r.x + r.width > width or r.y + r.height > height:
+        r.x = r.y = 0
+    sleep(1/60)
+</code></pre>
 <hr />
-<h3 id="CircleSprite">CircleSprite()</h3>
-<h4>Examples</h4>
-<pre>
-from sprite import *
-setCanvasSize(500, 400)
-c = CircleSprite(100, 100, 50)
-c.setColour(255, 10, 170)
+
+<!-- CIRCLE SPRITE -->
+<h3 id="CircleSprite">CircleSprite(x, y, radius)</h3>
+<p>Draws a circle around its center.</p>
+<h4>Key Properties</h4>
+<ul>
+  <li><code>radius</code> (read/write)</li>
+  <li>Also inherits styling and transform props</li>
+</ul>
+<h4>Example</h4>
+<pre><code>from sprite import *
+setCanvasSize(300,300)
+c = CircleSprite(150, 150, 40)
+c.setColour(100,200,150)
 c.noStroke()
-xSpeed = 1
-ySpeed = 1
 
 while True:
-    background(100, 100, 200)
+    background(30)
     c.draw()
-    c.moveBy(xSpeed, ySpeed)
-    if c.x >= width - c.radius:
-        c.x = width - c.radius
-        xSpeed *= -1
-    elif c.x <= c.radius:
-        c.x = c.radius
-        xSpeed *= -1
-    if c.y >= height - c.radius:
-        c.y = height - c.radius
-        ySpeed *= -1
-    elif c.y <= c.radius:
-        c.y = c.radius
-        ySpeed *= -1
-    sleep(0.005)
-</pre>
-<h4>Description</h4>
-<p>
-The CircleSprite class inherits from the RectangleSprite class and so it has the same methods draw(), stroke(), noStroke(), strokeWeight(), setColour(), moveBy(), moveTo(), contains(), and overlaps(). However the first three parameter passed to a CircleSprite are the x and y coordinates of the center of the circle, and the radius of the circle.
-</p>
-<h5>CircleSprite(x, y, radius, r, g, b, a, angle)</h5>
-<p>The first three parameter specify the x and y coordinates of the center of the circle and the radius of the circle. The first three parameters are mandatory, the rest are optional. The r, g, b, and a parameters specify the colour and transparency of the circle.</p>
+    c.moveBy(2, -1)
+    if c.x < 0 or c.x > width or c.y < 0 or c.y > height:
+        c.x = 150; c.y = 150
+    sleep(1/60)
+</code></pre>
 <hr />
-<h3 id="EllipseSprite">EllipseSprite()</h3>
-<h4>Examples</h4>
-<pre>
-from sprite import *
-setCanvasSize(500, 400)
-e = EllipseSprite(100, 100, 50, 25)
-e.setColour(255, 10, 170)
-e.stroke(255, 0, 0)
-xSpeed = 1
-ySpeed = 1
+
+<!-- ELLIPSE SPRITE -->
+<h3 id="EllipseSprite">EllipseSprite(x, y, radiusX, radiusY)</h3>
+<p>Draws an ellipse around its center.</p>
+<h4>Key Properties</h4>
+<ul>
+  <li><code>radiusX, radiusY</code> (read/write)</li>
+</ul>
+<h4>Example</h4>
+<pre><code>from sprite import *
+setCanvasSize(300,200)
+e = EllipseSprite(150,100, 80,40)
+e.setColour(200,50,200)
+e.setStroke(255,255,255)
+e.strokeWeight(2)
 
 while True:
-    background(100, 100, 200)
+    background(50)
     e.draw()
-    e.moveBy(xSpeed, ySpeed)
-    if e.x >= width - e.radiusX:
-        e.x = width - e.radiusX
-        xSpeed *= -1
-    elif e.x <= e.radiusX:
-        e.x = e.radiusX
-        xSpeed *= -1
-    if e.y >= height - e.radiusY:
-        e.y = height - e.radiusY
-        ySpeed *= -1
-    elif e.y <= e.radiusY:
-        e.y = e.radiusY
-        ySpeed *= -1
-    sleep(0.005)
-</pre>
-<h4>Description</h4>
-<p>
-The EllipseSprite class inherits from the RectangleSprite class and so it has the same methods draw(), stroke(), noStroke(), strokeWeight(), setColour(), moveBy(), moveTo(), contains(), overlaps(), and rotate(). However the first four parameter passed to a EllipseSprite are the x and y cooridinates of the center of the circle, and the X radius and Y radius of the ellipse.
-</p>
-<h5>EllipseSprite(x, y, radiusX, radiusY, r, g, b, a, angle)</h5>
-<p>The first four parameter specify the x and y coordinates of the center of the ellipse and the X radius and Y radius of the ellipse. The first four parameters are mandatory, the rest are optional. The r, g, b, and a parameters specify the colour and transparency of the ellipse. The angle will rotate the ellipse with a positive angle indicating a clockwise rotation and a negative number an anti-clockwise rotation.</p>
+    e.rotateBy(2)
+    sleep(1/60)
+</code></pre>
 <hr />
+
+<!-- POLYGON SPRITE -->
+<h3 id="PolygonSprite">PolygonSprite(x, y, numSides=3, radius=0)</h3>
+<p>Draws a regular, convex polygon.</p>
+<h4>Key Properties</h4>
+<ul>
+  <li><code>numSides</code> (read/write, ≥ 3)</li>
+  <li><code>radius</code> (read/write)</li>
+</ul>
+<h4>Core Methods</h4>
+<dl>
+  <dt><code>getVertices()</code></dt><dd>Returns a list of corner coordinates (<code>x, y</code>).</dd>
+  <dt><code>getAxes()</code></dt><dd>Returns a list of normalized axes for SAT collision.</dd>
+  <dt><code>project(axis)</code></dt><dd>Returns a tuple (<code>min, max</code>) of projections onto <code>axis</code>.</dd>
+</dl>
+<h4>Example</h4>
+<pre><code>from sprite import *
+setCanvasSize(400,400)
+p = PolygonSprite(200,200, numSides=6, radius=80)
+p.setColour(150,200,100);  p.noStroke()
+
+# retrieve geometry for collision or custom rendering
+verts = p.getVertices()
+axes  = p.getAxes()
+# project onto a test axis
+t = p.project((1,0))  # returns (min, max)
+
+while True:
+    background(10)
+    p.draw()
+    p.rotateBy(1)
+    sleep(1/60)
+</code></pre>
+<hr />
+<!-- TWEENING -->
+<h3 id="Tweening">Tweening</h3>
+<p>All sprite instances support a built-in <code>tweenTo()</code> method to animate numeric properties over time. This is the preferred way to animate sprites.</p>
+<h4>Usage</h4>
+<pre><code># animate x to 200 over 2 seconds, then y to 150 over 1.5 seconds
+from sprite import *
+from time import time
+setCanvasSize(400, 400)
+r = RectangleSprite(0, 0, 50, 50)
+r.tweenTo('x', 200, 2.0).onComplete(lambda: print("X done!"))
+r.tweenTo('y', 150, 1.5).onComplete(lambda: print("Y done!"))
+
+# In your main loop:
+lastTime = time()
+while True:
+    now = time()
+    dt = now - lastTime
+    lastTime = now
+    background(40)
+    r.update(dt)   # advances all tweens registered via tweenTo
+    r.draw()
+    sleep(max(0, 1/60 - (time() - now)))
+</code></pre>
+
+<p>If you need to use the <code>Tween</code> class directly, you can—but for most cases <code>tweenTo()</code> on the sprite is simpler and ensures the tween is managed automatically.</p>
