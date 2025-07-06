@@ -25,10 +25,10 @@ print('Test builtin variables are loaded')
 `;
     a.setCode(code);
     const completions = a.getCompletions();
-    expect(completions.vars.DRACULA_YELLOW).toMatchObject({
+    expect(completions.vars.DEGREES).toMatchObject({
       type: 'Builtin Variable',
       datatype: 'int',
-      name: 'DRACULA_YELLOW',
+      name: 'DEGREES',
       methods: [
         'conjugate',
         'bit_length',
@@ -68,7 +68,11 @@ print('Test builtin variables are loaded')
       doc: 'Sets the size of the canvas that all drawings are written to. The first parameter specifies the width in pixels and the second the height. The thrid parameter specifies the direction of the y axis. The constant CARTESIAN can be used to specify the y axis acts like a regular cartesian plane in maths, and JAVASCRIPT can be used to specify a traditional javascript y-axis that moves down the screen. The default value for yAxisMode is CARTESIAN.'
     })
     expect(completions.classes.Image).toMatchObject({
-      methods: [ 'draw' ], properties: [], isException: false
+      methods: [
+        'setOpacity', 'setRotation', 'setScale', 'setSmoothing',
+        'setFrameSize', 'setFlipX', 'setFlipY', 'setPivot',
+        'draw', 'drawRegion', 'drawFrame', 'dispose'
+      ], properties: [], isException: false
     })
   })
 
@@ -942,5 +946,76 @@ x = someUndefinedFunc()
     a.setCode(code);
     const completions = a.getCompletions();
     expect(completions.vars.x.datatype).toBe('Unknown');
+  });
+
+  it('picks up attributes from tuple-unpack in __init__', () => {
+    const code = `
+class Foo:
+    def __init__(self, a, b):
+        self.a, self.b = a, b
+`;
+    a.setCode(code);
+    const c = a.getCompletions();
+    expect(c.classes.Foo.properties).toEqual(expect.arrayContaining(['a','b']));
+  });
+
+  it('picks up attributes from chained assignment', () => {
+    const code = `
+class Counter:
+    def __init__(self):
+        self.x = self.y = 0
+`;
+    a.setCode(code);
+    const c = a.getCompletions();
+    expect(c.classes.Counter.properties).toEqual(expect.arrayContaining(['x','y']));
+  });
+
+  it('picks up attributes from augmented assignment', () => {
+    const code = `
+class Counter:
+    def __init__(self, count):
+        self.count += count
+`;
+    a.setCode(code);
+    const c = a.getCompletions();
+    expect(c.classes.Counter.properties).toEqual(expect.arrayContaining(['count']));
+  });
+
+  it('detects dynamic attributes via setattr', () => {
+    const code = `
+class Foo:
+    def __init__(self):
+        setattr(self, 'dyn', 123)
+`;
+    a.setCode(code);
+    const c = a.getCompletions();
+    expect(c.classes.Foo.properties).toEqual(expect.arrayContaining(['dyn']));
+  });
+
+  it('picks up imported classes and lets you complete their instances', () => {
+    const code = `
+from sprite import RectangleSprite
+r = RectangleSprite(0,0,10,20)
+`;
+    a.setCode(code);
+    const obj = a.getCompletions().vars.r;
+    expect(obj.methods).toContain('draw');
+    expect(obj.properties).toEqual(expect.arrayContaining(['width','height']));
+  });
+
+  it('allows subclass to shadow base-class property', () => {
+    const code = `
+class A:
+    @property
+    def x(self): return 1
+class B(A):
+    @property
+    def x(self): return 2
+`;
+    a.setCode(code);
+    expect(a.getCompletions().classes.B.properties).toContain('x');
+    // and ensure it's not duplicated
+    expect(a.getCompletions().classes.B.properties.filter(p => p==='x'))
+      .toHaveLength(1);
   });
 });
