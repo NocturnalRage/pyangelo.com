@@ -54,6 +54,8 @@ while True:
 <dl>
   <dt><code>draw()</code></dt><dd>Draws the text at its position.</dd>
   <dt><code>setColour(r, g, b, a=None)</code></dt><dd>Sets fill colour and optional opacity.</dd>
+   <dt><code>setColour(...$args)</code></dt>
++      <dd>Sets only the text‐fill colour. Accepts CSS names, hex, grey‐scale, RGB(A), array/tuple or a <code>Colour</code> object.</dd>
 </dl>
 <h4>Example</h4>
 <pre><code>from sprite import *
@@ -80,11 +82,14 @@ while True:
 </ul>
 <h4>Core Methods</h4>
 <dl>
-  <dt><code>setColour(r, g, b, a=None)</code></dt><dd>Fill colour.</dd>
-  <dt><code>setStroke(r, g, b, a=None)</code></dt><dd>Border colour & enable stroke.</dd>
+  <dt><code>setColour(...$args)</code></dt>
+    <dd>Sets the interior fill colour. Accepts CSS names, hex, grey-scale, RGB(A), array/tuple or a <code>Colour</code> object.</dd>
+  <dt><code>setStroke(...$args)</code></dt>
+    <dd>Sets the outline stroke colour and enables the stroke. Accepts the same overloads as above.</dd>
   <dt><code>strokeWeight(w)</code></dt><dd>Border thickness.</dd>
   <dt><code>noStroke()</code></dt><dd>Disable border.</dd>
 </dl>
+
 <h4>Example</h4>
 <pre><code>from sprite import *
 setCanvasSize(300,300)
