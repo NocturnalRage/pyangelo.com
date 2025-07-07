@@ -14,6 +14,7 @@
   <li><code>width, height</code> (read/write) – dimensions (clamped ≥ 0)</li>
   <li><code>opacity</code> (0.0–1.0)</li>
   <li><code>angle</code> (rotation)</li>
+  <li><code>hitboxScale</code> Fractional scale of the sprite’s AABB used for collision detection (0.0 = no box, 1.0 = full image).</li>
 </ul>
 <h4>Core Methods</h4>
 <dl>
@@ -23,6 +24,7 @@
   <dt><code>rotateTo(angle)</code> / <code>rotateBy(d)</code></dt><dd>Set or adjust rotation.</dd>
   <dt><code>overlaps(other)</code></dt><dd>True if bounding rectangles intersect.</dd>
   <dt><code>contains(point)</code></dt><dd>True if <code>point</code> lies inside its bounds.</dd>
+  <dt><code>setHitboxScale(scale: float)</code></dt><dd>Used to reduce the hitbox of the Image, the value is clamped between 0 and 1.</dd>
 </dl>
 <h4>Example</h4>
 <pre><code>from sprite import *
