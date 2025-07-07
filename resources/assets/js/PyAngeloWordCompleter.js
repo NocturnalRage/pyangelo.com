@@ -21,7 +21,9 @@ export class PyAngeloWordCompleter {
       'background',
       'fill',
       'stroke',
-      'Colour'
+      'Colour',
+      'setColour',
+      'setStroke'
     ]
   }
 
