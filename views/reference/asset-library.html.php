@@ -355,6 +355,8 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
             </audio>
         </figure>
         <pre>/samples/music/PyAngeloDance.mp3</pre>
+        <h2 id="fonts">Fonts</h2>
+        <pre>/samples/fonts/arcade.ttf</pre>
       </div><!-- col-md-9 -->
     </div><!-- row -->
     <?php

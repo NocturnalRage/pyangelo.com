@@ -76,6 +76,8 @@
           </a>
           <div class="list-group">
             <a href="#text" class="list-group-item">text()</a>
+            <a href="#loadFont" class="list-group-item">loadFont()</a>
+            <a href="#setFont" class="list-group-item">setFont()</a>
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
