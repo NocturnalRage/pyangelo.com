@@ -6,7 +6,7 @@
         <input id="crsfToken" type="hidden" name="crsfToken" value="<?= $personInfo['crsfToken'] ?>" />
         <input id="sketchId" type="hidden" name="sketchId" value="<?= $sketch['sketch_id']; ?>" />
         <p>Upload multiple image files with the file dialog or by dragging and dropping images onto the dashed region</p>
-        <input type="file" id="assetUpload" multiple accept="image/*, audio/*" class="visually-hidden">
+        <input type="file" id="assetUpload" multiple accept="image/*, audio/*, .ttf, .otf" class="visually-hidden">
         <label class="btn btn-primary" for="assetUpload">Select some files</label>
       </form>
       <div id="gallery"></div>

@@ -196,7 +196,7 @@ class UploadAssetControllerTest extends TestCase {
     );
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $this->assertSame('error', $responseVars['status']);
-    $this->assertSame('Invalid file type (image/mp4).  File must be jpg, png, gif, wav, or mp3!', $responseVars['message']);
+    $this->assertSame('Invalid file type (image/mp4).  File must be jpg, png, gif, wav, mp3, ttf, or otf!', $responseVars['message']);
   }
 
   public function testUploadAssetControllerCouldNotMove() {

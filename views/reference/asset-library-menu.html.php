@@ -27,5 +27,9 @@
           <a href="#music">
             <h3><i class="fa fa-music fa-fw"></i> Music</h3>
           </a>
+          <hr />
+          <a href="#fonts">
+            <h3><i class="fa fa-font fa-fw"></i> Fonts</h3>
+          </a>
         </div><!-- well -->
       </div><!-- col-md-3 -->

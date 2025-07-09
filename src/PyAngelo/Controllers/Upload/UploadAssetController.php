@@ -71,7 +71,7 @@ class UploadAssetController extends Controller {
     }
     else if (! $this->isAssetValidType($this->request->files['file'])) {
       $status = 'error';
-      $message = 'Invalid file type (' . $this->request->files['file']['type'] . ').  File must be jpg, png, gif, wav, or mp3!';
+      $message = 'Invalid file type (' . $this->request->files['file']['type'] . ').  File must be jpg, png, gif, wav, mp3, ttf, or otf!';
     }
     if ($status == 'error') {
       $this->response->setVars(array(
@@ -137,7 +137,7 @@ class UploadAssetController extends Controller {
   }
 
   private function isAssetValidType($assetInfo) {
-    if ($assetInfo['type'] != 'image/jpeg' && $assetInfo['type'] != 'image/png' && $assetInfo['type'] != 'image/gif' && $assetInfo['type'] != 'audio/mpeg' && $assetInfo['type'] != 'audio/wav') {
+    if ($assetInfo['type'] != 'image/jpeg' && $assetInfo['type'] != 'image/png' && $assetInfo['type'] != 'image/gif' && $assetInfo['type'] != 'audio/mpeg' && $assetInfo['type'] != 'audio/wav' && $assetInfo['type'] != 'font/ttf' && $assetInfo['type'] != 'font/otf') {
       return false;
     }
     return true;
