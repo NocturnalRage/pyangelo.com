@@ -1,194 +1,256 @@
 <h2 id="sprites">Sprites Reference</h2>
+<p>Sprites are drawable objects—images, shapes, or text—that support positioning, sizing, rotation, collision, and more. All sprite types inherit shared properties and methods, while each subclass adds its own constructor signature and behavior.</p>
 <p>To use any of the following classes, import the module:</p>
 <pre><code>from sprite import *</code></pre>
 <hr />
-
-<!-- IMAGE SPRITE -->
-<h3 id="Sprite">Sprite(imageSource, x=0, y=0, width=None, height=None)</h3>
-<p>Loads and draws an image. Pass either a URL/path <code>str</code> or a pre-loaded image object.</p>
-<h4>Key Properties</h4>
-<ul>
-  <li><code>imageFile</code> (read/write) – path or URL of the image</li>
-  <li><code>image</code> (read/write) – the loaded image object</li>
-  <li><code>x, y</code> (read/write) – position</li>
-  <li><code>width, height</code> (read/write) – dimensions (clamped ≥ 0)</li>
-  <li><code>opacity</code> (0.0–1.0)</li>
-  <li><code>angle</code> (rotation)</li>
-  <li><code>hitboxScale</code> Fractional scale of the sprite’s AABB used for collision detection (0.0 = no box, 1.0 = full image).</li>
-</ul>
-<h4>Core Methods</h4>
+<h3>Common Properties & Methods</h3>
 <dl>
-  <dt><code>draw()</code></dt><dd>Draws the sprite at (<code>x</code>, <code>y</code>).</dd>
-  <dt><code>moveBy(dx, dy)</code></dt><dd>Translate by (<code>dx</code>, <code>dy</code>).</dd>
-  <dt><code>moveTo(x, y)</code></dt><dd>Set position.</dd>
-  <dt><code>rotateTo(angle)</code> / <code>rotateBy(d)</code></dt><dd>Set or adjust rotation.</dd>
-  <dt><code>overlaps(other)</code></dt><dd>True if bounding rectangles intersect.</dd>
-  <dt><code>contains(point)</code></dt><dd>True if <code>point</code> lies inside its bounds.</dd>
-  <dt><code>setHitboxScale(scale: float)</code></dt><dd>Used to reduce the hitbox of the Image, the value is clamped between 0 and 1.</dd>
+  <dt><code>x, y</code></dt>
+  <dd>Position of the sprite (interpreted according to <code>drawMode</code>).</dd>
+
+  <dt><code>width, height</code></dt>
+  <dd>Size of the sprite’s bounding box (for shapes and images; for <em>TextSprite</em>, calculated from font metrics).</dd>
+
+  <dt><code>angle</code></dt>
+  <dd>Rotation depending on angleMode for DEGREES or RADIANS. Pivot point is at (<code>anchorX</code>·<code>width</code>, <code>anchorY</code>·<code>height</code>).</dd>
+
+  <dt><code>opacity</code></dt>
+  <dd>Transparency from 0.0 (invisible) to 1.0 (opaque).</dd>
+
+  <dt><code>drawMode</code></dt>
+  <dd>Anchoring mode: <code>CORNER</code> (x, y = bottom‐left) or <code>CENTER</code> (x, y = center).</dd>
+
+  <dt><code>anchorX, anchorY</code></dt>
+  <dd>Fractional pivot for rotation and transforms: 0, 0 = left/bottom, 0.5, 0.5 = center, 1, 1 = right/top, 0, 1 = left/top, 1, 0 = right/bottom.</dd>
+
+  <dt><code>draw()</code></dt>
+  <dd>Render this sprite on the canvas.</dd>
+
+  <dt><code>moveTo(x, y)</code></dt>
+  <dd>Set the sprite’s position.</dd>
+
+  <dt><code>moveBy(dx, dy)</code></dt>
+  <dd>Offset the sprite’s position.</dd>
+
+  <dt><code>setDrawMode(mode)</code></dt>
+  <dd>Change anchoring to <code>CORNER</code> or <code>CENTER</code> for drawing and collision detection.</dd>
+
+  <dt><code>setAnchor(xFrac, yFrac)</code></dt>
+  <dd>Set both <code>anchorX</code> and <code>anchorY</code>.</dd>
+
+  <dt><code>rotateBy(delta)</code></dt>
+  <dd>Add <code>delta</code> degrees or radians to <code>angle</code>.</dd>
+
+  <dt><code>rotateTo(angle)</code></dt>
+  <dd>Set <code>angle</code> absolutely.</dd>
+
+  <dt><code>contains(point)</code></dt>
+  <dd>Return <code>True</code> if point is inside the sprite’s hitbox.</dd>
+
+  <dt><code>overlaps(other)</code></dt>
+  <dd>Return <code>True</code> if this sprite’s hitbox overlaps another.</dd>
 </dl>
-<h4>Example</h4>
+
+<hr>
+
+<h3 id="Sprite">Sprite (Image)</h3>
+<p>Base class for image sprites loaded from <code>assets/</code>.</p>
+<h4>Constructor</h4>
+<pre><code>Sprite(imageFile, x, y, width, height)</code></pre>
+
+<h4>Additional Property</h4>
+<dl>
+  <dt><code>hitboxScale</code></dt>
+  <dd>Scale factor applied to the collision box (defaults to 1.0).</dd>
+</dl>
+
+<h4>Additional Method</h4>
+<dl>
+  <dt><code>setHitboxScale(scale)</code></dt>
+  <dd>Multiply the hitbox by <code>scale</code> before collision checks.</dd>
+</dl>
+
+<hr>
+
+<h3 id="TextSprite">TextSprite</h3>
+<p>Text label with font and textAlign support.</p>
+<h4>Constructor</h4>
+<pre><code>TextSprite(text, x, y, fontSize, fontName)</code></pre>
+<h4>Additional Properties</h4>
+<ul>
+  <li><code>textContent</code> &mdash; the string being drawn</li>
+  <li><code>fontSize</code> &mdash; current text size</li>
+  <li><code>fontName</code> &mdash; current font family</li>
+</ul>
+
+<hr>
+
+<h3 id="RectangleSprite">RectangleSprite</h3>
+<p>Axis-aligned rectangle.</p>
+<h4>Constructor</h4>
+<pre><code>RectangleSprite(x, y, width, height)</code></pre>
+<h4>Notes</h4>
+<ul>
+  <li>Defaults to <code>CORNER</code> anchoring.</li>
+</ul>
+
+<hr>
+
+<h3 id="CircleSprite">CircleSprite</h3>
+<p>Circle defined by center and radius.</p>
+<h4>Constructor</h4>
+<pre><code>CircleSprite(x, y, radius)</code></pre>
+<h4>Notes</h4>
+<ul>
+  <li>Defaults to <code>CENTER</code> anchoring.</li>
+</ul>
+<hr>
+
+<h3 id="EllipseSprite">EllipseSprite</h3>
+<p>Ellipse defined by X/Y radii.</p>
+<h4>Constructor</h4>
+<pre><code>EllipseSprite(x, y, radiusX, radiusY)</code></pre>
+<h4>Notes</h4>
+<ul>
+  <li>Defaults to <code>CENTER</code> anchoring.</li>
+</ul>
+<hr>
+
+<h3 id="PolygonSprite">PolygonSprite</h3>
+<p>Regular N-gon by number of sides and radius.</p>
+<h4>Constructor</h4>
+<pre><code>PolygonSprite(x, y, numSides, radius)</code></pre>
+<h4>Notes</h4>
+<ul>
+  <li>Defaults to <code>CENTER</code> anchoring.</li>
+</ul>
+<hr>
+
+<h3>Examples (Python Sketches)</h3>
+
+<h4>Setup Canvas and Import</h4>
+<h4>Rectangle & Polygon Together</h4>
 <pre><code>from sprite import *
 setCanvasSize(400, 300)
-s1 = Sprite("/samples/images/PyAngelo.png", 50, 150)
-s2 = Sprite("/samples/images/blue-alien-idle.png", 200, 150)
 
-while True:
-    background(240,240,240)
-    s1.draw();  s2.draw()
-    s1.moveBy(1, 0)
-    if s1.overlaps(s2):
-        text("Caught!", 10, 20, fontSize=24)
-    sleep(1/60)
-</code></pre>
-<hr />
+r = RectangleSprite(50, 50, 100, 60)
+p = PolygonSprite(200, 150, numSides=6, radius=40)
 
-<!-- TEXT SPRITE -->
-<h3 id="TextSprite">TextSprite(text, x=0, y=0, fontSize=20, fontName="Arial")</h3>
-<p>Renders a line of text (or emoji) as a sprite. Automatically measures its size.</p>
-<h4>Key Properties</h4>
-<ul>
-  <li><code>textContent</code> (read/write) – the string to display</li>
-  <li><code>fontSize</code> (read/write)</li>
-  <li><code>fontName</code> (read/write)</li>
-  <li>Also inherits <code>x, y, opacity, angle</code></li>
-</ul>
-<h4>Core Methods</h4>
-<dl>
-  <dt><code>draw()</code></dt><dd>Draws the text at its position.</dd>
-  <dt><code>setColour(r, g, b, a=None)</code></dt><dd>Sets fill colour and optional opacity.</dd>
-   <dt><code>setColour(...$args)</code></dt>
-+      <dd>Sets only the text‐fill colour. Accepts CSS names, hex, grey‐scale, RGB(A), array/tuple or a <code>Colour</code> object.</dd>
-</dl>
-<h4>Example</h4>
+r.draw()
+p.draw()
+
+# collision test
+print(r.overlaps(p))</code></pre>
+
+<h4>Ellipse & Circle Alignment</h4>
 <pre><code>from sprite import *
-setCanvasSize(400, 200)
-msg = TextSprite("Hello, 🌏!", 100, 100, fontSize=32)
-msg.setColour(20, 120, 200)
+setCanvasSize(400, 300)
 
-while True:
-    background(30,30,30)
-    msg.draw()
-    msg.rotateBy(1)
-    sleep(1/60)
-</code></pre>
-<hr />
+# ellipse in CORNER mode at top-left
+e = EllipseSprite(10, 10, 80, 40)
+e.setDrawMode(CORNER)
+e.draw()
 
-<!-- RECTANGLE SPRITE -->
-<h3 id="RectangleSprite">RectangleSprite(x, y, width, height)</h3>
-<p>Draws a filled (and optionally stroked) rectangle.</p>
-<h4>Key Properties</h4>
-<ul>
-  <li><code>width, height</code> (read/write)</li>
-  <li>Fill/stroke via <code>setColour</code>, <code>setStroke</code>, <code>strokeWeight</code></li>
-  <li>Also inherits <code>x, y, opacity, angle</code></li>
-</ul>
-<h4>Core Methods</h4>
-<dl>
-  <dt><code>setColour(...$args)</code></dt>
-    <dd>Sets the interior fill colour. Accepts CSS names, hex, grey-scale, RGB(A), array/tuple or a <code>Colour</code> object.</dd>
-  <dt><code>setStroke(...$args)</code></dt>
-    <dd>Sets the outline stroke colour and enables the stroke. Accepts the same overloads as above.</dd>
-  <dt><code>strokeWeight(w)</code></dt><dd>Border thickness.</dd>
-  <dt><code>noStroke()</code></dt><dd>Disable border.</dd>
-</dl>
+# circle centered
+c = CircleSprite(200, 150, 30)
+c.draw()</code></pre>
 
-<h4>Example</h4>
+<h4>Image and Text Combination</h4>
 <pre><code>from sprite import *
-setCanvasSize(300,300)
-r = RectangleSprite(50, 50, 80, 120)
-r.setColour(255,100,50)
-r.setStroke(0,0,0,0.8)
-r.strokeWeight(4)
+setCanvasSize(500, 400)
+background(40, 52, 54)
+img = Sprite('/samples/images/blue-alien-idle.png', 100, 100, 128, 128)
+img.draw()
+
+textAlign(CENTER)
+t = TextSprite('Welcome', 100, 200, 32)
+t.setColour(255, 0, 0)
+t.draw()</code></pre>
+
+<h4>Rotating Polygon</h4>
+<pre><code>from sprite import *
+setCanvasSize(500, 400)
+poly = PolygonSprite(250, 200, 8, 50)
+poly.setColour('hotpink')
+
+forever:
+    background(40)
+    poly.moveBy(1, 0)
+    if poly.left > width:
+        poly.x = -poly.radius
+    poly.rotateBy(-1)
+    poly.draw()
+    strokeWeight(4)
+    stroke('purple')
+    line(0, 150, width, 150)
+    fill('lightgrey')
+    noStroke()
+    textAlign(CENTER, TOP)
+    text("Rotating Octagon", 250, height, 50)
+    sleep(1/60)</code></pre>
+
+<h4>Collision Detection</h4>
+<pre><code>from sprite import *
+setCanvasSize(300, 200)
+alien = Sprite("/samples/images/blue-alien-idle.png", 150, 100)
+r = RectangleSprite(150,  100,  80, 40)
+r.setDrawMode(CENTER)
+r.setColour('purple')
+
 while True:
-    background(220)
+    background(40)
+    if isKeyPressed(KEY_A):
+        alien.moveBy(-1, 0)
+    if isKeyPressed(KEY_D):
+        alien.moveBy(1, 0)
+    if isKeyPressed(KEY_W):
+        alien.moveBy(0, 1)
+    if isKeyPressed(KEY_S):
+        alien.moveBy(0, -1)
+    
+    if alien.overlaps(r):
+        fill('red')
+        noStroke()
+        textAlign(CENTER, BOTTOM)
+        text('Overlaps', width/2, 0, 50)
+
+    alien.draw()
     r.draw()
-    r.moveBy(1, 1)
-    if r.x + r.width > width or r.y + r.height > height:
-        r.x = r.y = 0
-    sleep(1/60)
-</code></pre>
-<hr />
+    sleep(1/60)</code></pre>
 
-<!-- CIRCLE SPRITE -->
-<h3 id="CircleSprite">CircleSprite(x, y, radius)</h3>
-<p>Draws a circle around its center.</p>
-<h4>Key Properties</h4>
-<ul>
-  <li><code>radius</code> (read/write)</li>
-  <li>Also inherits styling and transform props</li>
-</ul>
-<h4>Example</h4>
-<pre><code>from sprite import *
-setCanvasSize(300,300)
-c = CircleSprite(150, 150, 40)
-c.setColour(100,200,150)
-c.noStroke()
-
+<h4>Collision Detection with setHitboxScale</h4>
+<pre><code>
+from sprite import *
+setCanvasSize(640, 360)
+pyangelo = Sprite("/samples/images/PyAngelo.png", 100, 75)
+pyangelo.setHitboxScale(0.8)
+alien = Sprite("/samples/images/blue-alien-idle.png", 300, 75)
+fill(253,248,126)
+noStroke()
+textAlign(CENTER, TOP)
 while True:
-    background(30)
-    c.draw()
-    c.moveBy(2, -1)
-    if c.x < 0 or c.x > width or c.y < 0 or c.y > height:
-        c.x = 150; c.y = 150
-    sleep(1/60)
-</code></pre>
-<hr />
+    background(167,29,239)
+    pyangelo.draw()
+    noFill()
+    stroke(0)
+    rect(pyangelo.left, pyangelo.bottom, pyangelo.width * pyangelo.hitboxScale, pyangelo.height * pyangelo.hitboxScale)
+    alien.draw()
+    rect(alien.left, alien.bottom, alien.width, alien.height)
+    if isKeyPressed(KEY_A):
+        alien.moveBy(-1, 0)
+    if isKeyPressed(KEY_D):
+        alien.moveBy(1, 0)
+    if isKeyPressed(KEY_W):
+        alien.moveBy(0, 1)
+    if isKeyPressed(KEY_S):
+        alien.moveBy(0, -1)
+    
+    if pyangelo.overlaps(alien):
+        fill(253,248,126)
+        noStroke()
+        text("Overlapping!", width/2, height, fontSize=50)
+    sleep(1/60)</code></pre>
 
-<!-- ELLIPSE SPRITE -->
-<h3 id="EllipseSprite">EllipseSprite(x, y, radiusX, radiusY)</h3>
-<p>Draws an ellipse around its center.</p>
-<h4>Key Properties</h4>
-<ul>
-  <li><code>radiusX, radiusY</code> (read/write)</li>
-</ul>
-<h4>Example</h4>
-<pre><code>from sprite import *
-setCanvasSize(300,200)
-e = EllipseSprite(150,100, 80,40)
-e.setColour(200,50,200)
-e.setStroke(255,255,255)
-e.strokeWeight(2)
-
-while True:
-    background(50)
-    e.draw()
-    e.rotateBy(2)
-    sleep(1/60)
-</code></pre>
-<hr />
-
-<!-- POLYGON SPRITE -->
-<h3 id="PolygonSprite">PolygonSprite(x, y, numSides=3, radius=0)</h3>
-<p>Draws a regular, convex polygon.</p>
-<h4>Key Properties</h4>
-<ul>
-  <li><code>numSides</code> (read/write, ≥ 3)</li>
-  <li><code>radius</code> (read/write)</li>
-</ul>
-<h4>Core Methods</h4>
-<dl>
-  <dt><code>getVertices()</code></dt><dd>Returns a list of corner coordinates (<code>x, y</code>).</dd>
-  <dt><code>getAxes()</code></dt><dd>Returns a list of normalized axes for SAT collision.</dd>
-  <dt><code>project(axis)</code></dt><dd>Returns a tuple (<code>min, max</code>) of projections onto <code>axis</code>.</dd>
-</dl>
-<h4>Example</h4>
-<pre><code>from sprite import *
-setCanvasSize(400,400)
-p = PolygonSprite(200,200, numSides=6, radius=80)
-p.setColour(150,200,100);  p.noStroke()
-
-# retrieve geometry for collision or custom rendering
-verts = p.getVertices()
-axes  = p.getAxes()
-# project onto a test axis
-t = p.project((1,0))  # returns (min, max)
-
-while True:
-    background(10)
-    p.draw()
-    p.rotateBy(1)
-    sleep(1/60)
-</code></pre>
 <hr />
 <!-- TWEENING -->
 <h3 id="Tweening">Tweening</h3>
