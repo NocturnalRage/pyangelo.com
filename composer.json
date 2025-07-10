@@ -1,6 +1,7 @@
 {
     "name": "nocturnalrage/pyangelo",
     "description": "Python graphics programming in your web browser",
+    "version": "0.1.0",
     "keywords": ["Python", "Skulpt", "coding", "tutorials"],
     "homepage": "https://www.PyAngelo.com",
     "license": "proprietary",
