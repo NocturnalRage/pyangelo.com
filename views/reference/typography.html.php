@@ -53,4 +53,33 @@ text("I love PyAngelo!", 20, 30, 50)
 <p>setFont(font)</p>
 <h4>Parameters</h4>
 <p>font - The default font to use. Can be a font you have loaded or a font that is available in your browser.</p>
+<h3 id="textAlign">textAlign(horizontal, vertical)</h3>
+<p>Sets the alignment for subsequent <code>text()</code> calls.</p>
+<h4>Examples</h4>
+<pre>
+setCanvasSize(500, 100)
+background(220, 220, 220)
+myFont = loadFont("/samples/fonts/arcade.ttf")
+setFont(myFont)
+textAlign(CENTER, CENTER)
+text("I love PyAngelo!", width/2, height/2, 50)
+</pre>
+<h4>Description</h4>
+<p>Aligns any subsequent text calls()</p>
+<h4>Syntax</h4>
+<p>textAlign(horizontal, vertical)</p>
+<h4>Parameters</h4>
+<p>horizontal</p>
+  <ul>
+    <li><code>LEFT</code></li>
+    <li><code>CENTER</code></li>
+    <li><code>RIGHT</code></li>
+  </ul>
+<p>vertical</p>
+  <ul>
+    <li><code>TOP</code></li>
+    <li><code>CENTER</code></li>
+    <li><code>BOTTOM</code></li>
+    <li><code>BASELINE</code></li>
+  </ul>
 <hr />
