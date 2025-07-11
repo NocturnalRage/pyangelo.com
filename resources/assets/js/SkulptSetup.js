@@ -293,82 +293,96 @@ export function runSkulpt (code, debugging, stopFunction) {
     handlers
   )
 
-  skulptRunPromise.then(function (mod) {}, function (err) {
-    let editorErrorMessage
-    let consoleErrorMessage
-    if (err.name === 'ProgramStopped') {
-      editorErrorMessage = err.message
-      consoleErrorMessage = err.message
-    } else if (err.message) {
-      editorErrorMessage = err.message
-      consoleErrorMessage = err.message + '\n' + err.stack + '\n'
-    } else if (err.nativeError) {
-      editorErrorMessage = err.nativeError.message
-      consoleErrorMessage = err.nativeError.message + '\n' + err.nativeError.stack + '\n'
-    } else {
-      editorErrorMessage = err.toString()
-      consoleErrorMessage = err.toString() + '\n' + (err.stack || '') + '\n'
-    }
-    if (err.traceback) {
-      let topMostFilename = err.traceback[0].filename
-      if (topMostFilename === '<stdin>.py') {
-        topMostFilename = 'main.py'
-      } else {
-        topMostFilename = topMostFilename.substring(topMostFilename.lastIndexOf('/') + 1)
-      }
-      editorErrorMessage += 'Error found in file ' + topMostFilename
-      consoleErrorMessage += 'Error found in file ' + topMostFilename + '\n'
-    }
-    logError(consoleErrorMessage)
+  skulptRunPromise
+    .then(function (mod) {})
+    .catch(function (err) {
+      if (err instanceof Sk.builtin.SystemExit) {
+        // Strip off the "SystemExit:" prefix
+        const raw = err.toString().replace(/^SystemExit:?\s*/, '').trim()
 
-    let reportedError = false
-    if (err.traceback) {
-      for (let i = err.traceback.length - 1; i >= 0; i--) {
-        const lineno = err.traceback[i].lineno
-        const colno = err.traceback[i].colno
-        let filename = err.traceback[i].filename
-        if (filename === '<stdin>.py') {
-          filename = 'main.py'
+        // If it's just the "on line N" part, prepend our default
+        const msg = /^on line \d+$/.test(raw)
+          ? `Program Stopped ${raw}`
+          : raw
+
+        logError(msg + '\n')
+        return
+      }
+      let editorErrorMessage
+      let consoleErrorMessage
+      if (err.name === 'ProgramStopped') {
+        editorErrorMessage = err.message
+        consoleErrorMessage = err.message
+      } else if (err.message) {
+        editorErrorMessage = err.message
+        consoleErrorMessage = err.message + '\n' + err.stack + '\n'
+      } else if (err.nativeError) {
+        editorErrorMessage = err.nativeError.message
+        consoleErrorMessage = err.nativeError.message + '\n' + err.nativeError.stack + '\n'
+      } else {
+        editorErrorMessage = err.toString()
+        consoleErrorMessage = err.toString() + '\n' + (err.stack || '') + '\n'
+      }
+      if (err.traceback) {
+        let topMostFilename = err.traceback[0].filename
+        if (topMostFilename === '<stdin>.py') {
+          topMostFilename = 'main.py'
         } else {
-          filename = filename.substring(filename.lastIndexOf('/') + 1)
+          topMostFilename = topMostFilename.substring(topMostFilename.lastIndexOf('/') + 1)
         }
-        const editSession = document.querySelector(".editorTab[data-filename='" + filename + "']")
-        if (editSession !== null) {
-          reportedError = true
-          const errorSession = editSession.getAttribute('data-editor-session')
-          Sk.PyAngelo.aceEditor.editSessions[errorSession].setAnnotations([{
+        editorErrorMessage += 'Error found in file ' + topMostFilename
+        consoleErrorMessage += 'Error found in file ' + topMostFilename + '\n'
+      }
+      logError(consoleErrorMessage)
+
+      let reportedError = false
+      if (err.traceback) {
+        for (let i = err.traceback.length - 1; i >= 0; i--) {
+          const lineno = err.traceback[i].lineno
+          const colno = err.traceback[i].colno
+          let filename = err.traceback[i].filename
+          if (filename === '<stdin>.py') {
+            filename = 'main.py'
+          } else {
+            filename = filename.substring(filename.lastIndexOf('/') + 1)
+          }
+          const editSession = document.querySelector(".editorTab[data-filename='" + filename + "']")
+          if (editSession !== null) {
+            reportedError = true
+            const errorSession = editSession.getAttribute('data-editor-session')
+            Sk.PyAngelo.aceEditor.editSessions[errorSession].setAnnotations([{
+              row: lineno - 1,
+              column: colno,
+              text: editorErrorMessage,
+              type: 'error'
+            }])
+            document.querySelector('.editorTab.current').classList.remove('current')
+            editSession.classList.add('current')
+            Sk.PyAngelo.aceEditor.currentSession = editSession.getAttribute('data-editor-session')
+            Sk.PyAngelo.aceEditor.currentFilename = editSession.getAttribute('data-filename')
+            Sk.PyAngelo.aceEditor.setSession(Sk.PyAngelo.aceEditor.currentSession)
+            Sk.PyAngelo.aceEditor.gotoLine(lineno, colno)
+          }
+        }
+        // This might happen on playground
+        // where there are no tabs
+        if (reportedError === false) {
+          const lineno = err.traceback[0].lineno
+          const colno = err.traceback[0].colno
+          Sk.PyAngelo.aceEditor.gotoLine(lineno, colno)
+          Sk.PyAngelo.aceEditor.editSessions[0].setAnnotations([{
             row: lineno - 1,
             column: colno,
             text: editorErrorMessage,
             type: 'error'
           }])
-          document.querySelector('.editorTab.current').classList.remove('current')
-          editSession.classList.add('current')
-          Sk.PyAngelo.aceEditor.currentSession = editSession.getAttribute('data-editor-session')
-          Sk.PyAngelo.aceEditor.currentFilename = editSession.getAttribute('data-filename')
-          Sk.PyAngelo.aceEditor.setSession(Sk.PyAngelo.aceEditor.currentSession)
-          Sk.PyAngelo.aceEditor.gotoLine(lineno, colno)
         }
       }
-      // This might happen on playground
-      // where there are no tabs
-      if (reportedError === false) {
-        const lineno = err.traceback[0].lineno
-        const colno = err.traceback[0].colno
-        Sk.PyAngelo.aceEditor.gotoLine(lineno, colno)
-        Sk.PyAngelo.aceEditor.editSessions[0].setAnnotations([{
-          row: lineno - 1,
-          column: colno,
-          text: editorErrorMessage,
-          type: 'error'
-        }])
-      }
-    }
-  })
-  skulptRunPromise.finally(function () {
-    hideDebuggingUI()
-    stopFunction()
-    Sk.PyAngelo.aceEditor.restoreReadOnly()
-    Sk.PyAngelo.ctx.restore()
-  })
+    })
+    .finally(function () {
+      hideDebuggingUI()
+      stopFunction()
+      Sk.PyAngelo.aceEditor.restoreReadOnly()
+      Sk.PyAngelo.ctx.restore()
+    })
 }
