@@ -52,7 +52,7 @@ while True:
 </pre>
 <h4>Description</h4>
 <p>
-Returns True if the key specified by the first parameter has been pressed and not yet released before this function is called. Otherwise, it returns False. Once the key has been pressed and the function has been called, the function will then return False until the key is either pressed again, or if it is being held down the operating system sends another keypressed event. This is different from the isKeyPressed() function which continues to return True when called until the key is released. There is a <a href="#keys">list of constants</a> that can be used in PyAngelo to represent each key for clarity.
+Returns True if the key specified by the first parameter has been pressed and not yet released before this function is called. Otherwise, it returns False. Once the key has been pressed and the function has been called, the function will then return False until the key is pressed again. This is different from the isKeyPressed() function which continues to return True when called until the key is released. There is a <a href="#keys">list of constants</a> that can be used in PyAngelo to represent each key for clarity.
 </p>
 <h4>Syntax</h4>
 <p>wasKeyPressed(code)</p>
