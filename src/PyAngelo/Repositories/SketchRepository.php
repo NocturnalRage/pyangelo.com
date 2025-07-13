@@ -19,6 +19,10 @@ interface SketchRepository {
 
   public function createNewSketch($personId, $title, $collectionId, $lessonId = NULL);
 
+  public function getSketchesToDelete();
+
+  public function deleteSketchForever($sketchId);
+
   public function deleteSketch($sketchId);
 
   public function restoreSketch($sketchId);
@@ -26,6 +30,8 @@ interface SketchRepository {
   public function addSketchFile($sketchId, $filename);
   
   public function deleteSketchFile($sketchId, $filename);
+
+  public function deleteSketchFiles($sketchId);
 
   public function forkSketch($sketchId, $personId, $title, $lessonId = NULL, $tutorialId = NULL, $layout = 'cols');
 
