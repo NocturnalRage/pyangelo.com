@@ -162,6 +162,30 @@ class MysqlSketchRepository implements SketchRepository {
     return $rowsUpdated;
   }
 
+  public function getSketchesToDelete() {
+    $sql = "SELECT *
+            FROM   sketch
+            WHERE  deleted = TRUE
+            AND    deleted_at < NOW() - INTERVAL 90 DAY";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    return $result->fetch_all(MYSQLI_ASSOC);
+  }
+
+  public function deleteSketchForever($sketchId) {
+    $sql = "DELETE
+            FROM   sketch
+            WHERE  sketch_id = ?";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->bind_param('s', $sketchId);
+    $stmt->execute();
+    $rowsDeleted = $this->dbh->affected_rows;
+    $stmt->close();
+    return $rowsDeleted;
+  }
+
   public function restoreSketch($sketchId) {
     $sql = "UPDATE sketch
             SET    deleted = FALSE,
@@ -200,6 +224,18 @@ class MysqlSketchRepository implements SketchRepository {
             AND     filename = ?";
     $stmt = $this->dbh->prepare($sql);
     $stmt->bind_param('ss', $sketchId, $filename);
+    $stmt->execute();
+    $rowsDeleted = $this->dbh->affected_rows;
+    $stmt->close();
+    return $rowsDeleted;
+  }
+
+  public function deleteSketchFiles($sketchId) {
+    $sql = "DELETE
+            FROM    sketch_files
+            WHERE   sketch_id = ?";
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->bind_param('s', $sketchId);
     $stmt->execute();
     $rowsDeleted = $this->dbh->affected_rows;
     $stmt->close();
