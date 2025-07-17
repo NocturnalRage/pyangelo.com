@@ -23,8 +23,6 @@ Loads an image into memory which can later be displayed with the draw(), drawReg
 <h4>setScale(scaleX[, scaleY])</h4>
 <p>scaleX - Horizontal scale factor.<br>
 scaleY - Vertical scale factor (optional; defaults to scaleX).</p>
-<h4>setSmoothing(flag)</h4>
-<p>flag - 0 to disable smoothing (pixel-art style), 1 to enable.</p>
 <h4>setFrameSize(frameW, frameH)</h4>
 <p>frameW - Width of each frame in a sprite sheet.<br>
 frameH - Height of each frame.</p>
@@ -62,7 +60,6 @@ oy - Y coordinate of the pivot point or "center" (optional; defaults to ox).</p>
   <li>opacity</li>
   <li>rotation</li>
   <li>scale (array of [scaleX, scaleY])</li>
-  <li>smoothing</li>
   <li>frameW</li>
   <li>frameH</li>
   <li>columns</li>
@@ -83,9 +80,9 @@ hero.dispose()
 
 # Example 2: Drawing a sprite sheet frame
 setCanvasSize(400, 400)
+setImageSmoothing(False)
 sprites = Image("/samples/images/alien-spritesheet.png")
 sprites.setFrameSize(16, 20)
-sprites.setSmoothing(False)
 sprites.drawFrame(4, 100, 200, 160, 200)
 sprites.dispose()
 
@@ -95,3 +92,14 @@ bg = Image("/samples/endless-runner/gameOverBackground.png")
 bg.drawRegion(50, 50, 100, 100, 300, 300)
 bg.dispose()
 </pre>
+<h2 id="setImageSmoothing">setImageSmoothing()</h2>
+<h3>Examples</h3>
+<pre>
+setImageSmoothing(False)
+</pre>
+<h3>Description</h3>
+<p>Enables or disables image smoothing when scaling images. Pass True to enable smoothing or False for pixelated scaling.</p>
+<h3>Syntax</h3>
+setImageSmoothing(enabled)
+<h3>Parameters</h3>
+<p>enabled - True or False. Use True if you wish to enable image smoothing, use False if you want pixel scaling with no smoothing for pixel art.</p>
