@@ -626,6 +626,17 @@ export class Autocompleter {
       } else if (val instanceof this.Sk.builtin.str) {
         datatype = 'str'
         lookup = 'str$rw$'
+      } else if (val instanceof this.Sk.builtins.Colour) {
+        const details = this.getPrototypeDetails(this.Sk.builtins.Colour)
+        this.builtinVars[name] = {
+          type: 'Builtin Variable',
+          datatype: 'Colour',
+          name,
+          methods: details.methods,
+          properties: details.properties,
+          source: 'builtin'
+        }
+        continue
       } else if (typeof val?.$meth === 'function') {
         const args = this.getFunctionArgsFromTextSig(val)
         const signature = (`(${args.join(', ')})`)
