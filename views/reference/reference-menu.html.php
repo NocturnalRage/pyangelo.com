@@ -88,6 +88,7 @@
           <div class="list-group">
             <a href="#Image" class="list-group-item">Image()</a>
             <a href="#setImageSmoothing" class="list-group-item">setImageSmoothing()</a>
+            <a href="#SubImage" class="list-group-item">SubImage()</a>
           </div><!-- list-group -->
         </div><!-- well -->
         <div class="well">
