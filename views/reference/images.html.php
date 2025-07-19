@@ -9,7 +9,7 @@ hero.dispose()
 </pre>
 <h4>Description</h4>
 <p>
-Loads an image into memory which can later be displayed with the draw(), drawRegion(), or drawFrame() methods. Use dispose() to unload the image and free its resources when no longer needed.
+Loads an image into memory which can later be displayed with the draw(), drawRegion(), drawSubImage(), or drawFrame() methods. Use dispose() to unload the image and free its resources when no longer needed.
 </p>
 <h4>Methods</h4>
 <h4>Image(file)</h4>
@@ -45,6 +45,10 @@ oy - Y coordinate of the pivot point or "center" (optional; defaults to ox).</p>
  dx, dy - Destination x and y on the canvas.<br>
  dw, dh - Optional destination width and height (defaults to sw and sh).
 </p>
+<h4>drawSubImage(subImage, x, y[, w, h])</h4>
+<p>subImage - A <code>SubImage</code> instance defining the source rectangle to draw.<br>
+x, y - Destination coordinates on the canvas.<br>
+w, h - Optional drawing width and height (defaults to the sub-region’s <code>width</code> and <code>height</code>).</p>
 <h4>drawFrame(index, x, y[, scaleW, scaleH])</h4>
 <p>index - Frame index in the sprite sheet (0-based).<br>
  x, y - Destination coordinates on the canvas.<br>
@@ -103,3 +107,40 @@ setImageSmoothing(False)
 setImageSmoothing(enabled)
 <h3>Parameters</h3>
 <p>enabled - True or False. Use True if you wish to enable image smoothing, use False if you want pixel scaling with no smoothing for pixel art.</p>
+<h2 id="SubImage">SubImage()</h2>
+<h4>Constructor</h4>
+<pre>
+SubImage(x, y, width, height)
+</pre>
+<h4>Description</h4>
+<p>
+Defines a rectangular region within an existing <code>Image</code> object.
+</p>
+<h4>Parameters</h4>
+<ul>
+  <li><strong>x</strong> (int): X-coordinate of the top-left corner (must be ≥ 0).</li>
+  <li><strong>y</strong> (int): Y-coordinate of the top-left corner (must be ≥ 0).</li>
+  <li><strong>width</strong> (int): Width of the region (must be > 0).</li>
+  <li><strong>height</strong> (int): Height of the region (must be > 0).</li>
+</ul>
+<h4>Instance Attributes</h4>
+<ul>
+  <li><code>.x</code> (int)</li>
+  <li><code>.y</code> (int)</li>
+  <li><code>.width</code> (int)</li>
+  <li><code>.height</code> (int)</li>
+</ul>
+<h4>Representation</h4>
+<pre>sub = SubImage(10, 20, 30, 40)
+print(sub)
+</pre>
+<h4>Examples</h4>
+<pre>
+# Define a sub-region and draw it using drawSubImage
+img = Image("/samples/images/alien-spritesheet.png")
+sub = SubImage(64, 0, 16, 20)
+setCanvasSize(400, 400)
+setImageSmoothing(False)
+background()
+img.drawSubImage(sub, 100, 150, 160, 200)
+</pre>
