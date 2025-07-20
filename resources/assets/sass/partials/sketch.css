@@ -208,3 +208,7 @@ input.visually-hidden:focus-within + label {
   overflow: visible;
   text-overflow: initial;
 }
+
+.ace-dracula .ace_comment {
+  color: #9E9E9E !important;
+}
