@@ -138,6 +138,7 @@
           </a>
           <div class="list-group">
             <a href="#sleep" class="list-group-item">sleep()</a>
+            <a href="#simpleTimer" class="list-group-item">SimpleTimer()</a>
             <a href="#deltaTimer" class="list-group-item">DeltaTimer()</a>
           </div><!-- list-group -->
         </div><!-- well -->
