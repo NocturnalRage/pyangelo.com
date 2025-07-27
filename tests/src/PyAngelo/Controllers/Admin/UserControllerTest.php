@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Admin\UserController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class UserControllerTest extends TestCase {
   protected $personRepository;
@@ -43,9 +44,7 @@ class UserControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\Admin\UserController');
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUserWhenNotAdmin() {
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(false);
@@ -58,9 +57,7 @@ class UserControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUserWhenAdminNoPersonId() {
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
@@ -71,9 +68,7 @@ class UserControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUserWhenAdminInvalidPersonId() {
     $personId = 100;
     session_start();
@@ -90,9 +85,7 @@ class UserControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUserWhenAdminValidPersonId() {
     $personId = 100;
     $person = [

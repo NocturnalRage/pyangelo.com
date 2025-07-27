@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Admin\UserSearchController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class UserSearchControllerTest extends TestCase {
   protected $personRepository;
@@ -37,9 +38,7 @@ class UserSearchControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\Admin\UserSearchController');
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUserSearchWhenNotAdmin() {
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(false);
@@ -52,9 +51,7 @@ class UserSearchControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUserSearchWhenAdminNoParameters() {
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
@@ -70,9 +67,7 @@ class UserSearchControllerTest extends TestCase {
     $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUserSearchWhenAdminWithSearchTerms() {
     $searchTerm = 'Jeff Plumb';
     session_start();

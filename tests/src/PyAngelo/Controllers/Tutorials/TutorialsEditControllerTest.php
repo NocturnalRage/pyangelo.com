@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Tutorials\TutorialsEditController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class TutorialsEditControllerTest extends TestCase {
   protected $request;
@@ -57,9 +58,7 @@ class TutorialsEditControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenAdminAndValidData() {
     session_start();
     $sketchOwnerId = 1;

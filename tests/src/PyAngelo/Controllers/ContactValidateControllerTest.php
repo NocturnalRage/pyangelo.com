@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\ContactValidateController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class ContactValidateControllerTest extends TestCase {
   protected $request;
@@ -119,9 +120,7 @@ class ContactValidateControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testContactUsWithErrors() {
     session_start();
     $name = 'Fast Freddy';

@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Profile\SubscriptionController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class SubscriptionControllerTest extends TestCase {
   protected $request;
@@ -37,9 +38,7 @@ class SubscriptionControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\Profile\SubscriptionController');
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testSubscriptionControllerWhenNotLoggedIn() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
@@ -52,9 +51,7 @@ class SubscriptionControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testSubscriptionControllerWhenLoggedInWithNoSubscription() {
     $personId = 99;
     session_start();
@@ -80,9 +77,7 @@ class SubscriptionControllerTest extends TestCase {
     $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testSubscriptionControllerWhenLoggedInWithMontlySubscription() {
     $testStripeId = 'TEST_STRIPE_ID';
     $personId = 99;

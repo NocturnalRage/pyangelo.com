@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\AskTheTeacher\AskTheTeacherAskController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class AskTheTeacherAskControllerTest extends TestCase {
   protected $request;
@@ -31,10 +32,7 @@ class AskTheTeacherAskControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherAskController');
   }
 
-  /**
-   * @runInSeparateProcess
-   */
-
+  #[RunInSeparateProcess]
   public function testRedirectToLoginPageWhenNotLoggedIn() {
     session_start();
     $this->request->server['REQUEST_URI'] = 'https://www.pyangelo.com';

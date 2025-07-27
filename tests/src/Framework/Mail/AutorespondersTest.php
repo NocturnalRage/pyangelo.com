@@ -44,7 +44,7 @@ class AutorespondersTest extends TestCase {
 ENDHTML;
     $expectedBodyHtml = <<<ENDHTML
 <!DOCTYPE html>
-<html>
+<!--?xml encoding="utf-8" ?--><html>
         <head>
         </head>
         <body>
@@ -367,8 +367,7 @@ ENDTEXT;
     $display = $autoresponders->prepareWebVersion('1IOAAL', '1D132Y', $personHash);
     $bodyHtml = <<<ENDHTML
 <!DOCTYPE html>
-<html>
-<body>Body HTML<img src="https://www.pyangelo.com/autoresponder/open/1IOAAL/1D132Y" width="1" height="1"  border="0" /></body></html>
+<!--?xml encoding="utf-8" ?--><html><body>Body HTML<img src="https://www.pyangelo.com/autoresponder/open/1IOAAL/1D132Y" width="1" height="1"  border="0" /></body></html>
 ENDHTML;
     $expectedDisplay = [
       'autoresponder_id' => $autoresponderId,

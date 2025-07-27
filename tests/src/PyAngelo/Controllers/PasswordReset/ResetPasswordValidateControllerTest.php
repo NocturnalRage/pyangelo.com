@@ -6,6 +6,7 @@ use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\PasswordReset\ResetPasswordValidateController;
 use PyAngelo\Auth\Auth;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class ResetPasswordValidateControllerTest extends TestCase {
   protected $request;
@@ -88,9 +89,7 @@ class ResetPasswordValidateControllerTest extends TestCase {
     $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testRedirectToResetPasswordWhenInvalidPassword() {
     session_start();
     $personId = 99;

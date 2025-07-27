@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Admin\UsersController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class UsersControllerTest extends TestCase {
   protected $request;
@@ -31,9 +32,7 @@ class UsersControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\Admin\UsersController');
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUsersWhenNotAdmin() {
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(false);
@@ -46,9 +45,7 @@ class UsersControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUsersWhenAdmin() {
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);

@@ -6,15 +6,14 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Lessons\LessonsGetSignedUrlController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class LessonsGetSignedUrlControllerTest extends TestCase {
   public function tearDown(): void {
     Mockery::close();
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testInvalidLessonId() {
     session_start();
     $auth = Mockery::mock('PyAngelo\Auth\Auth');
@@ -39,9 +38,7 @@ class LessonsGetSignedUrlControllerTest extends TestCase {
     $this->assertSame('', $responseVars['signedUrl']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testSignedUrlPremiumLessonPersonNotPremium() {
     session_start();
     $request = new Request($GLOBALS);
@@ -78,9 +75,7 @@ class LessonsGetSignedUrlControllerTest extends TestCase {
     $this->assertSame('', $responseVars['signedUrl']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testFreeMemberLessonPersonNotLoggedIn() {
     session_start();
     $request = new Request($GLOBALS);
@@ -117,9 +112,7 @@ class LessonsGetSignedUrlControllerTest extends TestCase {
     $this->assertSame('', $responseVars['signedUrl']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testSignedUrlShowAnyoneVideo() {
     session_start();
     $request = new Request($GLOBALS);

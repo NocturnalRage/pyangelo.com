@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Admin\MetricsController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class MetricsControllerTest extends TestCase {
   protected $metricRepository;
@@ -34,9 +35,7 @@ class MetricsControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\Admin\MetricsController');
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testMetricsWhenNotAdmin() {
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(false);
@@ -49,9 +48,7 @@ class MetricsControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testMetricsWhenAdmin() {
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);

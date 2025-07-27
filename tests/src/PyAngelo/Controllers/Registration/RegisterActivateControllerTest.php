@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Registration\RegisterActivateController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class RegisterActivateControllerTest extends TestCase {
   protected $request;
@@ -97,9 +98,7 @@ class RegisterActivateControllerTest extends TestCase {
     $this->assertSame('We could not activate your free membership. Please start the registration process again.', $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testRedirectsToRegisterPageWhenValidTokenNotYetSubscribed() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
@@ -144,9 +143,7 @@ class RegisterActivateControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testRedirectsToRegisterPageWhenValidTokenCurrentlyUnsubscribed() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
@@ -193,9 +190,7 @@ class RegisterActivateControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testRedirectsToRegisterPageWhenValidTokenAlreadySubscribed() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);

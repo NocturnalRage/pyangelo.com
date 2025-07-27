@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Profile\ProfileEditController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class ProfileEditControllerTest extends TestCase {
   protected $request;
@@ -36,9 +37,7 @@ class ProfileEditControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\Profile\ProfileEditController');
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenNotLoggedIn() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
@@ -51,9 +50,7 @@ class ProfileEditControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenLoggedIn() {
     $countries = [
       [

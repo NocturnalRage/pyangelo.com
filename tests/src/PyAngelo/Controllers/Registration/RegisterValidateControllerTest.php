@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Registration\RegisterValidateController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class RegisterValidateControllerTest extends TestCase {
   protected $request;
@@ -37,9 +38,7 @@ class RegisterValidateControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\Registration\RegisterValidateController');
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testRedirectsToHomePageWhenLoggedIn() {
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
 
@@ -50,9 +49,7 @@ class RegisterValidateControllerTest extends TestCase {
     $this->assertSame('You are already logged in!', $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testRedirectsToRegisterPageWhenInvalidCrsfToken() {
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(false);
@@ -63,9 +60,7 @@ class RegisterValidateControllerTest extends TestCase {
     $this->assertSame('Please register from the PyAngelo website!', $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testNoRecaptchaPostToken() {
     $recaptcha_response = 'fake response';
     $dotenv = \Dotenv\Dotenv::createMutable(__DIR__ . '/../../../../..', '.env.test');
@@ -90,9 +85,7 @@ class RegisterValidateControllerTest extends TestCase {
     $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testRecaptchaVerifiedIsFalse() {
     $recaptcha_response = 'fake response';
     $ipAddress = '127.0.0.1';
@@ -146,9 +139,7 @@ class RegisterValidateControllerTest extends TestCase {
     $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testRedirectWhenPersonCannotBeCreated() {
     session_start();
     $recaptcha_response = 'fake response';
@@ -183,9 +174,7 @@ class RegisterValidateControllerTest extends TestCase {
     $this->assertEquals($expectedFlash, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testRedirectsAfterCreatingPersonSuccessfully() {
     session_start();
     $recaptcha_response = 'fake response';

@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Registration\RegisterController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class RegisterControllerTest extends TestCase {
   protected $request;
@@ -65,9 +66,7 @@ class RegisterControllerTest extends TestCase {
     $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testErrorsIncluded() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
@@ -79,9 +78,7 @@ class RegisterControllerTest extends TestCase {
     $this->assertSame($expectedErrors, $responseVars['errors']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testFormVarsIncluded() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
@@ -93,9 +90,7 @@ class RegisterControllerTest extends TestCase {
     $this->assertSame($expectedFormVars, $responseVars['formVars']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testFlashIncluded() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);

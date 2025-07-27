@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Admin\StopImpersonatingController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class StopImpersonatingControllerTest extends TestCase {
   protected $personRepository;
@@ -34,9 +35,7 @@ class StopImpersonatingControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\Admin\StopImpersonatingController');
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenNoImpersonator() {
     session_start();
 
@@ -48,9 +47,7 @@ class StopImpersonatingControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenInvalidImpersonator() {
     session_start();
     $email = 'invalid@email.com';
@@ -68,9 +65,7 @@ class StopImpersonatingControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenValidImpersonator() {
     session_start();
     $_SESSION['loginEmail'] = "auser@email.com";

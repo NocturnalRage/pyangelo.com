@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Lessons\LessonsShowController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class LessonsShowControllerTest extends TestCase {
   protected $tutorialRepository;
@@ -59,9 +60,7 @@ class LessonsShowControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testLessonsShowPremiumLessonPersonNotPremium() {
     session_start();
     $this->request->server['REQUEST_URI'] = 'some-url';
@@ -103,9 +102,7 @@ class LessonsShowControllerTest extends TestCase {
     $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testLessonsShowFreeMemberLessonPersonNotLoggedIn() {
     session_start();
     $this->request->server['REQUEST_URI'] = 'some-url';
@@ -146,9 +143,7 @@ class LessonsShowControllerTest extends TestCase {
     $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testLessonsShowShowAnyoneVideoWithExistingSketchWithoutSingleSketch() {
     session_start();
     $personId = 2;
@@ -248,9 +243,7 @@ class LessonsShowControllerTest extends TestCase {
     $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testLessonsShowShowAnyoneVideoWithExistingSketchWithSingleSketch() {
     session_start();
     $personId = 2;
@@ -350,9 +343,7 @@ class LessonsShowControllerTest extends TestCase {
     $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testLessonsShowShowAnyoneVideoWithNoSketchNoCreateWithoutSingleSketch() {
     session_start();
     $personId = 2;
@@ -462,9 +453,7 @@ class LessonsShowControllerTest extends TestCase {
     $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testLessonsShowShowAnyoneVideoWithNoSketchWithCreateWithoutSingleSketch() {
     session_start();
     $personId = 2;
@@ -595,9 +584,7 @@ class LessonsShowControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testLessonsShowShowAnyoneVideoWithNoSketchNoCreateWithSingleSketch() {
     session_start();
     $sketchPersonId = 2;
@@ -708,9 +695,7 @@ class LessonsShowControllerTest extends TestCase {
     $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testLessonsShowShowAnyoneVideoWithNoSketchWithCreateWithSingleSketch() {
     session_start();
     $sketchPersonId = 2;

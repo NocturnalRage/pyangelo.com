@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Blog\BlogController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class BlogControllerTest extends TestCase {
   protected $blogRepository;
@@ -46,10 +47,7 @@ class BlogControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\Blog\BlogController');
   }
 
-
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testBlogIndex() {
     session_start();
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
@@ -172,9 +170,7 @@ class BlogControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testBlogCreateControllerWhenAdminWithNoFormData() {
     session_start();
     $flashMessage = 'errors';
@@ -205,9 +201,7 @@ class BlogControllerTest extends TestCase {
     $this->assertSame($errors, $_SESSION['errors']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testBlogCreateControllerWhenAdminWithValidData() {
     session_start();
     $blogSlug = 'a-test-blog';
@@ -260,9 +254,7 @@ class BlogControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testBlogEditControllerWhenAdminExistingBlog() {
     session_start();
     $slug = 'existing-slug';
@@ -312,9 +304,7 @@ class BlogControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testBlogUpdateControllerWhenAdminWithErrors() {
     session_start();
     $slug = 'no-such-slug';
@@ -346,9 +336,7 @@ class BlogControllerTest extends TestCase {
     $this->assertSame($errors, $_SESSION['errors']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testBlogUpdateControllerWhenAdminWithValidData() {
     session_start();
     $slug = 'no-such-slug';
@@ -608,9 +596,7 @@ class BlogControllerTest extends TestCase {
     $this->assertSame($expectedCommentHtml, $responseVars['commentHtml']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUnpublishBlogCommentWhenNotAdmin() {
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(false);
@@ -623,9 +609,7 @@ class BlogControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUnpublishBlogCommentInvalidCrsfToken() {
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->andReturn(true);
