@@ -76,6 +76,9 @@ class LessonsShowController extends Controller {
     }
 
     $sketch = $this->getOrCreateSketch($lesson);
+    if ($sketch && isset($this->request->get['create-sketch'])) {
+      return $this->redirectToLessonWithoutCreate();
+    }
 
     $this->response->setView('lessons/show.html.php');
     $this->response->setVars(array(
@@ -139,6 +142,11 @@ class LessonsShowController extends Controller {
     return $this->response;
   }
 
+  private function redirectToLessonWithoutCreate() {
+    $this->response->header('Location: /tutorials/' .  $this->request->get['slug'] . '/' .  $this->request->get['lesson_slug']);
+    return $this->response;
+  }
+
   private function displayBecomeAPremiumMemberPage($lesson) {
     $this->response->setView('lessons/become-a-premium-member.html.php');
     $this->response->setVars(array(
@@ -185,10 +193,12 @@ class LessonsShowController extends Controller {
         return($this->sketchRepository->getSketchById($lesson['lesson_sketch_id']));
     }
 
-    if ($lesson['single_sketch'])
+    if ($lesson['single_sketch']) {
       return $this->getOrCreateTutorialSketch($lesson);
-    else
+    }
+    else {
       return $this->getOrCreateLessonSketch($lesson);
+    }
   }
 
   private function getOrCreateTutorialSketch($lesson) {
@@ -196,7 +206,7 @@ class LessonsShowController extends Controller {
       $this->auth->personId(),
       $lesson['tutorial_id']
     );
-    if (!$sketch) {
+    if (!$sketch && isset($this->request->get['create-sketch'])) {
       $sketchId = $this->sketchRepository->forkSketch(
         $lesson['tutorial_sketch_id'],
         $this->auth->personId(),
@@ -238,7 +248,7 @@ class LessonsShowController extends Controller {
       $this->auth->personId(),
       $lesson['lesson_id']
     );
-    if (!$sketch) {
+    if (!$sketch && isset($this->request->get['create-sketch'])) {
       $sketchId = $this->sketchRepository->forkSketch(
         $lesson['lesson_sketch_id'],
         $this->auth->personId(),
