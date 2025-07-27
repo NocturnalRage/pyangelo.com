@@ -64,14 +64,14 @@ print('Test builtin variables are loaded')
       properties: []
     })
     expect(completions.functions.setCanvasSize).toMatchObject({
-      signature: '(w, h, yAxisMode)',
+      signature: '(width, height, yAxisMode)',
       doc: 'Sets the size of the canvas that all drawings are written to. The first parameter specifies the width in pixels and the second the height. The thrid parameter specifies the direction of the y axis. The constant CARTESIAN can be used to specify the y axis acts like a regular cartesian plane in maths, and JAVASCRIPT can be used to specify a traditional javascript y-axis that moves down the screen. The default value for yAxisMode is CARTESIAN.'
     })
     expect(completions.classes.Image).toMatchObject({
       methods: [
-        'setOpacity', 'setRotation', 'setScale', 'setSmoothing',
+        'setOpacity', 'setRotation', 'setScale',
         'setFrameSize', 'setFlipX', 'setFlipY', 'setPivot',
-        'draw', 'drawRegion', 'drawFrame', 'dispose'
+        'draw', 'drawRegion', 'drawSubImage', 'drawFrame', 'dispose'
       ], properties: [], isException: false
     })
   })

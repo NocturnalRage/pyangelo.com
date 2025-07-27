@@ -70,7 +70,7 @@
     <?php endif; ?>
   </div><!-- container -->
 
-    <?php if ($personInfo['loggedIn']) : ?>
+    <?php if (!is_null($sketch)) : ?>
       <div class="container-fluid">
         <?php
           include __DIR__ . '/../sketch/sketch-file-tabs.html.php';
@@ -84,11 +84,23 @@
         <script src="<?= mix('js/SkulptSketch.js'); ?>"></script>
       </div><!-- container-fluid -->
 
+    <?php elseif ($personInfo['loggedIn']) : ?>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <h1 class="text-center">Code Along as You Watch the Video</h1>
+            <p class="text-center">
+              <a href="?create-sketch=1" class="btn btn-primary">
+                <i class="fa fa-pencil-square-o"></i> Create the Starter Sketch</a>
+            </p>
+          </div>
+        </div>
+      </div><!-- container -->
     <?php else : ?>
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <h1 class="text-center">Write Code While Watching This Lesson</h1>
+            <h1 class="text-center">Code Along as Yout Watch the Video</h1>
             <p class="text-center"><a href="/Login">Login</a> or <a href="/register">create an account</a> and code along whilst you watch this lesson.</p>
           </div>
         </div>

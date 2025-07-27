@@ -353,7 +353,7 @@ class LessonsShowControllerTest extends TestCase {
   /**
    * @runInSeparateProcess
    */
-  public function testLessonsShowShowAnyoneVideoWithNoSketchWithoutSingleSketch() {
+  public function testLessonsShowShowAnyoneVideoWithNoSketchNoCreateWithoutSingleSketch() {
     session_start();
     $personId = 2;
     $sketchId = 99;
@@ -393,7 +393,7 @@ class LessonsShowControllerTest extends TestCase {
         'display_duration' => '2:15',
         'completed' => 0
       ]
-    ]; 
+    ];
     $sketch = [
       'sketch_id' => $sketchId,
       'person_id' => $personId,
@@ -413,9 +413,121 @@ class LessonsShowControllerTest extends TestCase {
     $comments = [];
     $this->request->get['slug'] = $tutorialSlug;
     $this->request->get['lesson_slug'] = $lessonSlug;
-    $this->auth->shouldReceive('personId')->times(8)->with()->andReturn($personId);
+    $this->auth->shouldReceive('personId')->times(6)->with()->andReturn($personId);
     $this->auth->shouldReceive('loggedIn')->twice()->with()->andReturn(TRUE);
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
+    $this->tutorialRepository
+      ->shouldReceive('getLessonBySlugsWithStatus')
+      ->once()
+      ->with($tutorialSlug, $lessonSlug, $personId)
+      ->andReturn($lesson);
+    $this->tutorialRepository
+      ->shouldReceive('getLessonCaptions')
+      ->once()
+      ->with($tutorialId, $lessonSlug)
+      ->andReturn($comments);
+    $this->tutorialRepository
+      ->shouldReceive('getTutorialBySlugWithStats')
+      ->once()
+      ->with($tutorialSlug, $personId)
+      ->andReturn($lesson);
+    $this->tutorialRepository
+      ->shouldReceive('getTutorialLessons')
+      ->once()
+      ->with($tutorialId, $personId)
+      ->andReturn($lessons);
+    $this->tutorialRepository
+      ->shouldReceive('getPublishedLessonComments')
+      ->once()
+      ->with($lessonId)
+      ->andReturn($comments);
+    $this->tutorialRepository
+      ->shouldReceive('shouldUserReceiveAlert')
+      ->once()
+      ->with($lessonId, $personId)
+      ->andReturn(FALSE);
+    $this->sketchRepository
+      ->shouldReceive('getSketchByPersonAndLesson')
+      ->once()
+      ->with($personId, $lessonId)
+      ->andReturn(NULL);
+
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedViewName = 'lessons/show.html.php';
+    $expectedPageTitle = $lessonTitle . ' | ' . $tutorialTitle . ' | PyAngelo';
+    $expectedMetaDescription = $lessonDescription;
+    $this->assertSame($expectedViewName, $response->getView());
+    $this->assertSame($expectedPageTitle, $responseVars['pageTitle']);
+    $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
+  }
+
+  /**
+   * @runInSeparateProcess
+   */
+  public function testLessonsShowShowAnyoneVideoWithNoSketchWithCreateWithoutSingleSketch() {
+    session_start();
+    $personId = 2;
+    $sketchId = 99;
+    $this->request->server['REQUEST_URI'] = 'some-url';
+    $tutorialSlug = 'f2l-magic';
+    $lessonSlug = 'f2l-introduction';
+    $lessonTitle = 'F2L Introduction';
+    $lessonDescription = 'Learn what the F2L is.';
+    $videoName = 'f2l-introduction.mp4';
+    $tutorialId = 10;
+    $singleSketch = 0;
+    $tutorialTitle = 'F2L Magic';
+    $anyoneSecurityId = 1;
+    $lessonId = 1;
+    $lesson = [
+      'lesson_id' => $lessonId,
+      'lesson_title' => $lessonTitle,
+      'lesson_description' => $lessonDescription,
+      'video_name' => $videoName,
+      'tutorial_id' => $tutorialId,
+      'single_sketch' => $singleSketch,
+      'lesson_sketch_id' => $sketchId,
+      'tutorial_title' => $tutorialTitle,
+      'lesson_slug' => $lessonSlug,
+      'lesson_security_level_id' => $anyoneSecurityId,
+      'youtube_url' => 'test-youtube-url',
+      'display_order' => 1
+    ];
+    $lessons = [
+      [
+        'lesson_title' => 'First Lesson',
+        'display_duration' => '1:23',
+        'completed' => 1
+      ],
+      [
+        'lesson_title' => 'Second Lesson',
+        'display_duration' => '2:15',
+        'completed' => 0
+      ]
+    ];
+    $sketch = [
+      'sketch_id' => $sketchId,
+      'person_id' => $personId,
+      'lesson_id' => $lessonId,
+      'title' => $lessonSlug
+    ];
+    $newSketchId = 2000;
+    $newSketch = [
+      'sketch_id' => $newSketchId,
+      'person_id' => $personId,
+      'lesson_id' => $lessonId,
+      'title' => $lessonSlug
+    ];
+    $files = [
+      'name' => 'main.py'
+    ];
+    $comments = [];
+    $this->request->get['slug'] = $tutorialSlug;
+    $this->request->get['lesson_slug'] = $lessonSlug;
+    $this->request->get['create-sketch'] = 1;
+    $this->auth->shouldReceive('personId')->times(8)->with()->andReturn($personId);
+    $this->auth->shouldReceive('loggedIn')->twice()->with()->andReturn(TRUE);
     $this->tutorialRepository
       ->shouldReceive('getLessonBySlugsWithStatus')
       ->once()
@@ -478,18 +590,15 @@ class LessonsShowControllerTest extends TestCase {
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
-    $expectedViewName = 'lessons/show.html.php';
-    $expectedPageTitle = $lessonTitle . ' | ' . $tutorialTitle . ' | PyAngelo';
-    $expectedMetaDescription = $lessonDescription;
-    $this->assertSame($expectedViewName, $response->getView());
-    $this->assertSame($expectedPageTitle, $responseVars['pageTitle']);
-    $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
+    $expectedLocation = 'Location: /tutorials/f2l-magic/f2l-introduction';
+    $expectedHeaders = array(array('header', $expectedLocation));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
   }
 
   /**
    * @runInSeparateProcess
    */
-  public function testLessonsShowShowAnyoneVideoWithNoSketchWithSingleSketch() {
+  public function testLessonsShowShowAnyoneVideoWithNoSketchNoCreateWithSingleSketch() {
     session_start();
     $sketchPersonId = 2;
     $sketchId = 99;
@@ -529,7 +638,7 @@ class LessonsShowControllerTest extends TestCase {
         'display_duration' => '2:15',
         'completed' => 0
       ]
-    ]; 
+    ];
     $sketch = [
       'sketch_id' => $sketchId,
       'person_id' => $sketchPersonId,
@@ -550,9 +659,122 @@ class LessonsShowControllerTest extends TestCase {
     $comments = [];
     $this->request->get['slug'] = $tutorialSlug;
     $this->request->get['lesson_slug'] = $lessonSlug;
-    $this->auth->shouldReceive('personId')->times(8)->with()->andReturn($newPersonId);
+    $this->auth->shouldReceive('personId')->times(6)->with()->andReturn($newPersonId);
     $this->auth->shouldReceive('loggedIn')->twice()->with()->andReturn(TRUE);
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
+    $this->tutorialRepository
+      ->shouldReceive('getLessonBySlugsWithStatus')
+      ->once()
+      ->with($tutorialSlug, $lessonSlug, $newPersonId)
+      ->andReturn($lesson);
+    $this->tutorialRepository
+      ->shouldReceive('getLessonCaptions')
+      ->once()
+      ->with($tutorialId, $lessonSlug)
+      ->andReturn($comments);
+    $this->tutorialRepository
+      ->shouldReceive('getTutorialBySlugWithStats')
+      ->once()
+      ->with($tutorialSlug, $newPersonId)
+      ->andReturn($lesson);
+    $this->tutorialRepository
+      ->shouldReceive('getTutorialLessons')
+      ->once()
+      ->with($tutorialId, $newPersonId)
+      ->andReturn($lessons);
+    $this->tutorialRepository
+      ->shouldReceive('getPublishedLessonComments')
+      ->once()
+      ->with($lessonId)
+      ->andReturn($comments);
+    $this->tutorialRepository
+      ->shouldReceive('shouldUserReceiveAlert')
+      ->once()
+      ->with($lessonId, $newPersonId)
+      ->andReturn(FALSE);
+    $this->sketchRepository
+      ->shouldReceive('getSketchByPersonAndTutorial')
+      ->once()
+      ->with($newPersonId, $tutorialId)
+      ->andReturn(NULL);
+
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedViewName = 'lessons/show.html.php';
+    $expectedPageTitle = $lessonTitle . ' | ' . $tutorialTitle . ' | PyAngelo';
+    $expectedMetaDescription = $lessonDescription;
+    $this->assertSame($expectedViewName, $response->getView());
+    $this->assertSame($expectedPageTitle, $responseVars['pageTitle']);
+    $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
+  }
+
+  /**
+   * @runInSeparateProcess
+   */
+  public function testLessonsShowShowAnyoneVideoWithNoSketchWithCreateWithSingleSketch() {
+    session_start();
+    $sketchPersonId = 2;
+    $sketchId = 99;
+    $this->request->server['REQUEST_URI'] = 'some-url';
+    $tutorialSlug = 'f2l-magic';
+    $lessonSlug = 'f2l-introduction';
+    $lessonTitle = 'F2L Introduction';
+    $lessonDescription = 'Learn what the F2L is.';
+    $videoName = 'f2l-introduction.mp4';
+    $tutorialId = 10;
+    $singleSketch = 1;
+    $tutorialTitle = 'F2L Magic';
+    $anyoneSecurityId = 1;
+    $lessonId = 1;
+    $lesson = [
+      'lesson_id' => $lessonId,
+      'lesson_title' => $lessonTitle,
+      'lesson_description' => $lessonDescription,
+      'video_name' => $videoName,
+      'tutorial_id' => $tutorialId,
+      'single_sketch' => $singleSketch,
+      'tutorial_title' => $tutorialTitle,
+      'lesson_slug' => $lessonSlug,
+      'lesson_security_level_id' => $anyoneSecurityId,
+      'tutorial_sketch_id' => $sketchId,
+      'youtube_url' => 'test-youtube-url',
+      'display_order' => 1
+    ];
+    $lessons = [
+      [
+        'lesson_title' => 'First Lesson',
+        'display_duration' => '1:23',
+        'completed' => 1
+      ],
+      [
+        'lesson_title' => 'Second Lesson',
+        'display_duration' => '2:15',
+        'completed' => 0
+      ]
+    ];
+    $sketch = [
+      'sketch_id' => $sketchId,
+      'person_id' => $sketchPersonId,
+      'lesson_id' => $lessonId,
+      'title' => $lessonSlug
+    ];
+    $newPersonId = 3001;
+    $newSketchId = 4001;
+    $newSketch = [
+      'sketch_id' => $newSketchId,
+      'person_id' => $newPersonId,
+      'lesson_id' => $lessonId,
+      'title' => $lessonSlug
+    ];
+    $files = [
+      'name' => 'main.py'
+    ];
+    $comments = [];
+    $this->request->get['slug'] = $tutorialSlug;
+    $this->request->get['lesson_slug'] = $lessonSlug;
+    $this->request->get['create-sketch'] = 1;
+    $this->auth->shouldReceive('personId')->times(8)->with()->andReturn($newPersonId);
+    $this->auth->shouldReceive('loggedIn')->twice()->with()->andReturn(TRUE);
     $this->tutorialRepository
       ->shouldReceive('getLessonBySlugsWithStatus')
       ->once()
@@ -615,12 +837,10 @@ class LessonsShowControllerTest extends TestCase {
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
-    $expectedViewName = 'lessons/show.html.php';
-    $expectedPageTitle = $lessonTitle . ' | ' . $tutorialTitle . ' | PyAngelo';
-    $expectedMetaDescription = $lessonDescription;
-    $this->assertSame($expectedViewName, $response->getView());
-    $this->assertSame($expectedPageTitle, $responseVars['pageTitle']);
-    $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
+    $expectedLocation = 'Location: /tutorials/f2l-magic/f2l-introduction';
+    $expectedHeaders = array(array('header', $expectedLocation));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+
   }
 }
 ?>
