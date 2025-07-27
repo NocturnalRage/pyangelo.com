@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Tutorials\TutorialsCreateController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class TutorialsCreateControllerTest extends TestCase {
   protected $request;
@@ -44,9 +45,7 @@ class TutorialsCreateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenAdminWithNoData() {
     session_start();
     $this->request->post = [];

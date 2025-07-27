@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\LogoutController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class LogoutControllerTest extends TestCase {
   protected $request;
@@ -49,9 +50,8 @@ class LogoutControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $this->assertSame('You need to logout from the PyAngelo website!', $_SESSION['flash']['message']);
   }
-  /**
-    *    * @runInSeparateProcess
-    *       */
+
+  #[RunInSeparateProcess]
   public function testWhenLoggedInWithInvalidCrsfToken() {
     session_start();
     $request = new Request($GLOBALS);
@@ -70,9 +70,7 @@ class LogoutControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $this->response->getHeaders());
   }
 
-  /**
-    ** @runInSeparateProcess
-    **/
+  #[RunInSeparateProcess]
   public function testWhenLoggedInWithValidCrsfToken() {
     $person = [
       'person_id' => 999,

@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\AskTheTeacher\AskTheTeacherShowController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class AskTheTeacherShowControllerTest extends TestCase {
   protected $questionRepository;
@@ -62,9 +63,7 @@ class AskTheTeacherShowControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenValidSlugNotLoggedIn() {
     session_start();
     $this->request->server['REQUEST_URI'] = 'https://www.pyangelo.com';
@@ -107,9 +106,7 @@ class AskTheTeacherShowControllerTest extends TestCase {
     $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenValidSlugLoggedIn() {
     session_start();
     $this->request->server['REQUEST_URI'] = 'https://www.pyangelo.com';

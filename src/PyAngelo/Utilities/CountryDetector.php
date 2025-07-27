@@ -18,10 +18,11 @@ class CountryDetector {
 
   public function getCountryFromIp() {
     try {
-      $record = $this->geoReader->country($this->request->server['REMOTE_ADDR']);
+      $ip = $this->request->server['REMOTE_ADDR'] ?? '127.0.0.1';
+      $record = $this->geoReader->country($ip);
       $detectedCountryCode = $record->country->isoCode;
     }
-    catch (\Exception $e) {
+    catch (\Exception | \TypeError $e) {
       $detectedCountryCode = 'O1';
     }
     return $detectedCountryCode;

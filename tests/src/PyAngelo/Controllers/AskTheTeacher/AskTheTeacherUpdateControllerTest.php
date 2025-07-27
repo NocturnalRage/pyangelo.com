@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\AskTheTeacher\AskTheTeacherUpdateController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class AskTheTeacherUpdateControllerTest extends TestCase {
   protected $questionRepository;
@@ -88,9 +89,7 @@ class AskTheTeacherUpdateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testAskTheTeacherUpdateControllerWhenNoFormData() {
     session_start();
     $slug = 'valid-slug';
@@ -118,9 +117,7 @@ class AskTheTeacherUpdateControllerTest extends TestCase {
     $this->assertSame($errors, $_SESSION['errors']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testAskTheTeacherUpdateControllerWithValidData() {
     session_start();
     $teacher = [

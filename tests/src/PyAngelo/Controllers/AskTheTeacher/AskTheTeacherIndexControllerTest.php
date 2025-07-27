@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\AskTheTeacher\AskTheTeacherIndexController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class AskTheTeacherIndexControllerTest extends TestCase {
   protected $questionRepository;
@@ -37,9 +38,7 @@ class AskTheTeacherIndexControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherIndexController');
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenNoPageNo() {
     session_start();
     $this->request->server['REQUEST_URI'] = 'https://www.pyangelo.com';
@@ -58,9 +57,7 @@ class AskTheTeacherIndexControllerTest extends TestCase {
     $this->assertSame($expectedPageTitle, $responseVars['pageTitle']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenPageNoEqual3() {
     session_start();
     $this->request->server['REQUEST_URI'] = 'https://www.pyangelo.com';

@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Admin\ImpersonateUserController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class ImpersonateUserControllerTest extends TestCase {
   protected $personRepository;
@@ -34,9 +35,7 @@ class ImpersonateUserControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\Admin\ImpersonateUserController');
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenNotAdmin() {
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(false);
@@ -49,9 +48,7 @@ class ImpersonateUserControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenAdminNoEmail() {
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
@@ -64,9 +61,7 @@ class ImpersonateUserControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenAdminInvalidEmail() {
     $email = 'fred@hotmail.com';
     session_start();
@@ -85,9 +80,7 @@ class ImpersonateUserControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenAdminValidEmail() {
     $personId = 100;
     $email = 'fred@hotmail.com';

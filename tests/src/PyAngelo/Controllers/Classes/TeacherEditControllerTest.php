@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Classes\TeacherEditController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class TeacherEditControllerTest extends TestCase {
   protected $classRepository;
@@ -95,9 +96,7 @@ class TeacherEditControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testTeacherEditControllerWhenOwner() {
     session_start();
     $personId = 50;

@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\AskTheTeacher\AskTheTeacherMyQuestionsController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class AskTheTeacherMyQuestionsControllerTest extends TestCase {
   protected $questionRepository;
@@ -37,9 +38,7 @@ class AskTheTeacherMyQuestionsControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\AskTheTeacher\AskTheTeacherMyQuestionsController');
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenNotLoggedIn() {
     session_start();
     $this->request->server['REQUEST_URI'] = 'https://www.pyangelo.com';
@@ -53,9 +52,7 @@ class AskTheTeacherMyQuestionsControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenLoggedIn() {
     session_start();
     $personId = 100;

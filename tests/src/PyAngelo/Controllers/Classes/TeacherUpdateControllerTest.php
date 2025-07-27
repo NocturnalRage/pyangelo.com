@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Classes\TeacherUpdateController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class TeacherUpdateControllerTest extends TestCase {
   protected $classRepository;
@@ -103,9 +104,7 @@ class TeacherUpdateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testTeacherUpdateControllerWhenNoClassName() {
     session_start();
     $classId = 99;
@@ -131,9 +130,7 @@ class TeacherUpdateControllerTest extends TestCase {
     $this->assertSame("You must supply a name for your class.", $_SESSION['errors']['class_name']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testTeacherUpdateControllerWhenClassNameTooLong() {
     session_start();
     $classId = 99;
@@ -160,9 +157,7 @@ class TeacherUpdateControllerTest extends TestCase {
     $this->assertSame("The class name must be no more than 100 characters.", $_SESSION['errors']['class_name']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testTeacherUpdateControllerUnableToUpdate() {
     session_start();
     $classId = 99;
@@ -193,9 +188,7 @@ class TeacherUpdateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testTeacherUpdateControllerSuccess() {
     session_start();
     $classId = 99;

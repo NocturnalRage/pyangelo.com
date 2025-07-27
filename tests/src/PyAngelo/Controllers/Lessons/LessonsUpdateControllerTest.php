@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Lessons\LessonsUpdateController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class LessonsUpdateControllerTest extends TestCase {
   protected $lessonFormService;
@@ -45,9 +46,7 @@ class LessonsUpdateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenAdminWithNoData() {
     session_start();
     $slug = 'a-tutorial';
@@ -81,9 +80,7 @@ class LessonsUpdateControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenAdminWithValidData() {
     session_start();
     $slug = 'a-tutorial';

@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Profile\LatestCommentsController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class LatestCommentsControllerTest extends TestCase {
   protected $request;
@@ -40,9 +41,7 @@ class LatestCommentsControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\Profile\LatestCommentsController');
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testLatestCommentsController() {
     $personId = 99;
     $latestLessonComments = [];

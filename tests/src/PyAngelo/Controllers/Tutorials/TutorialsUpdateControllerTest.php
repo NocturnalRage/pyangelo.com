@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Tutorials\TutorialsUpdateController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class TutorialsUpdateControllerTest extends TestCase {
   protected $request;
@@ -59,9 +60,7 @@ class TutorialsUpdateControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenAdminWithNoData() {
     session_start();
     $this->request->post = ['slug' => 'tutorial-1'];

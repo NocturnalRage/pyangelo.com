@@ -5,6 +5,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\PasswordReset\ForgotPasswordValidateController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class ForgotPasswordValidateControllerTest extends TestCase {
   protected $request;
@@ -56,9 +57,7 @@ class ForgotPasswordValidateControllerTest extends TestCase {
     $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testForgotPasswordWithNoFormData() {
     session_start();
     $flashMessage = 'There were errors';
@@ -85,9 +84,7 @@ class ForgotPasswordValidateControllerTest extends TestCase {
     $this->assertEquals($flashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testForgotPasswordInvalidEmail() {
     session_start();
     $flashMessage = 'There were errors';
@@ -116,9 +113,7 @@ class ForgotPasswordValidateControllerTest extends TestCase {
     $this->assertEquals($flashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testRedirectToConfirmPageOnSuccess() {
     session_start();
     $email = 'fastfreddy@hotmail.com';

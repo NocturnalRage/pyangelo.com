@@ -7,6 +7,7 @@ use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\LoginValidateController;
 use PyAngelo\Auth\Auth;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class LoginValidateControllerTest extends TestCase {
   protected $request;
@@ -57,9 +58,7 @@ class LoginValidateControllerTest extends TestCase {
     $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testRedirectToLoginPageWhenNoFormData() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
@@ -78,9 +77,7 @@ class LoginValidateControllerTest extends TestCase {
     $this->assertEquals($expectedErrors, $_SESSION['errors']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testRedirectToLoginPageWhenInvalidEmail() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
@@ -101,9 +98,7 @@ class LoginValidateControllerTest extends TestCase {
     $this->assertEquals($expectedErrors, $_SESSION['errors']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testNoRecaptcha() {
     session_start();
     $email = 'fastfreddy@hotmail.com';
@@ -122,9 +117,7 @@ class LoginValidateControllerTest extends TestCase {
     $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testInvalidRecaptcha() {
     session_start();
     $recaptchaResponse = 'Fake Response';
@@ -153,9 +146,7 @@ class LoginValidateControllerTest extends TestCase {
     $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testRedirectTOLoginWhenInvalidUsernameOrPassword() {
     session_start();
     $recaptchaResponse = 'Fake Response';
@@ -189,9 +180,7 @@ class LoginValidateControllerTest extends TestCase {
     $this->assertEquals($this->request->post, $_SESSION['formVars']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testLoginWithoutRememberMe() {
     session_start();
     $recaptchaResponse = 'Fake Response';
@@ -224,9 +213,7 @@ class LoginValidateControllerTest extends TestCase {
     $this->assertEquals($expectedFlash, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testLoginWithRedirectWithoutRememberMe() {
     session_start();
     $recaptchaResponse = 'Fake Response';
@@ -261,9 +248,7 @@ class LoginValidateControllerTest extends TestCase {
     $this->assertEquals($expectedFlash, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testLoginSuccessWithRememberMe() {
     session_start();
     $recaptchaResponse = 'Fake Response';

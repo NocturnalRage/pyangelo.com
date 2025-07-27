@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Classes\TeacherCreateController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class TeacherCreateControllerTest extends TestCase {
   protected $classRepository;
@@ -57,9 +58,7 @@ class TeacherCreateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testTeacherCreateControllerNoFormData() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
@@ -73,9 +72,8 @@ class TeacherCreateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
     $this->assertSame("You must supply a name for your class.", $_SESSION['errors']['class_name']);
   }
-  /**
-   * @runInSeparateProcess
-   */
+
+  #[RunInSeparateProcess]
   public function testTeacherCreateControllerWhenClassTooLong() {
     session_start();
     $this->request->post = [
@@ -92,9 +90,8 @@ class TeacherCreateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
     $this->assertSame("The class name must be no more than 100 characters.", $_SESSION['errors']['class_name']);
   }
-  /**
-   * @runInSeparateProcess
-   */
+
+  #[RunInSeparateProcess]
   public function testTeacherCreateControllerWhenErrorCreatingClass() {
     session_start();
     $personId = 49;
@@ -113,9 +110,8 @@ class TeacherCreateControllerTest extends TestCase {
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
-  /**
-   * @runInSeparateProcess
-   */
+
+  #[RunInSeparateProcess]
   public function testTeacherCreateControllerSuccess() {
     session_start();
     $personId = 49;

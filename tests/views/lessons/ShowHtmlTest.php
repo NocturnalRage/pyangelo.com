@@ -75,7 +75,8 @@ class ShowHtmlTest extends BasicViewHtmlTestCase {
       'alertUser' => false,
       'purifier' => $purifier,
       'avatar' => $avatar,
-      'showCommentCount' => 5
+      'showCommentCount' => 5,
+      'sketch' => NULL
     ));
     $output = $response->requireView();
     $expect = '<img src="/uploads/images/tutorials/' . $tutorial_thumbnail . '"';
@@ -178,7 +179,8 @@ class ShowHtmlTest extends BasicViewHtmlTestCase {
       'alertUser' => false,
       'purifier' => $purifier,
       'avatar' => $avatar,
-      'showCommentCount' => 5
+      'showCommentCount' => 5,
+      'sketch' => NULL
     ));
     $output = $response->requireView();
     $expect = '<img src="/uploads/images/tutorials/' . $tutorial_thumbnail . '"';

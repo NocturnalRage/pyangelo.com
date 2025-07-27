@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Profile\ProfileUpdateController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class ProfileUpdateControllerTest extends TestCase {
   protected $request;
@@ -43,9 +44,7 @@ class ProfileUpdateControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\Profile\ProfileUpdateController');
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUpdateProfileWhenNotLoggedIn() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
@@ -58,9 +57,7 @@ class ProfileUpdateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUpdateProfileWhenLoggedInWithInvalidCrsfToken() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
@@ -74,9 +71,7 @@ class ProfileUpdateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUpdateProfileWithNoFormData() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
@@ -97,9 +92,7 @@ class ProfileUpdateControllerTest extends TestCase {
     $this->assertSame($expectedErrors, $_SESSION['errors']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUpdateProfileWithDataTooLongAndInvalidEmail() {
     $countryCode = 'FK';
     session_start();
@@ -129,9 +122,7 @@ class ProfileUpdateControllerTest extends TestCase {
     $this->assertSame($expectedErrors, $_SESSION['errors']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUpdateProfileWithExistingEmail() {
     $countryCode = 'AU';
     $country = ['country_code' => 'AU', 'country_name' => 'Australia'];
@@ -175,9 +166,7 @@ class ProfileUpdateControllerTest extends TestCase {
     $this->assertSame($expectedErrors, $_SESSION['errors']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUpdateProfileWithoutUpdatingEmail() {
     $countryCode = 'AU';
     $country = ['country_code' => 'AU', 'country_name' => 'Australia'];
@@ -228,9 +217,7 @@ class ProfileUpdateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUpdateProfileWithoutUpdatingEmailAndStripeCustomer() {
     $countryCode = 'AU';
     $country = ['country_code' => 'AU', 'country_name' => 'Australia'];
@@ -281,9 +268,7 @@ class ProfileUpdateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUpdateProfileWithValidData() {
     $countryCode = 'AU';
     $country = ['country_code' => 'AU', 'country_name' => 'Australia'];

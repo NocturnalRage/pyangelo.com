@@ -6,6 +6,7 @@ use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Profile\PasswordValidateController;
 use PyAngelo\Auth\Auth;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class PasswordValidateControllerTest extends TestCase {
   protected $request;
@@ -57,9 +58,7 @@ class PasswordValidateControllerTest extends TestCase {
     $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testRedirectToPasswordPageWhenNoPassword() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
@@ -75,9 +74,7 @@ class PasswordValidateControllerTest extends TestCase {
     $this->assertEquals($expectedErrors, $_SESSION['errors']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testRedirectToPasswordPageWhenInvalidPassword() {
     session_start();
     $invalidPassword = 'abc';

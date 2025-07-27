@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\AskTheTeacher\AskTheTeacherCreateController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class AskTheTeacherCreateControllerTest extends TestCase {
   protected $questionRepository;
@@ -60,9 +61,7 @@ class AskTheTeacherCreateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testAskTheTeacherCreateControllerWhenAdminWithNoFormData() {
     session_start();
     $flashMessage = 'There were some errors. Please fix these below and then submit your question again.';
@@ -81,9 +80,7 @@ class AskTheTeacherCreateControllerTest extends TestCase {
     $this->assertSame($errors, $_SESSION['errors']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testAskTheTeacherCreateControllerWithValidData() {
     session_start();
     $this->request->server['REQUEST_SCHEME'] = "https";

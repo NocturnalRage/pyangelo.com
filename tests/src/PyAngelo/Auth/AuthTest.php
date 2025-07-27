@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use PyAngelo\Auth\Auth;
 use PyAngelo\Repositories\PersonRepository;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class AuthTest extends TestCase {
   protected $request;
@@ -54,17 +55,13 @@ class AuthTest extends TestCase {
     Mockery::close();
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUserNotLoggedIn() {
     $auth = new Auth($this->personRepository, $this->request);
     $this->assertFalse($auth->loggedIn());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUserIsLoggedInWithSessionVariable() {
     $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->personRepository->shouldReceive('getPersonByEmail');
@@ -72,9 +69,7 @@ class AuthTest extends TestCase {
     $this->assertTrue($auth->loggedIn());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUserIsLoggedInWithRememberMe() {
     $rememberMeSession = 'a-session';
     $rememberMeToken = 'a-token';
@@ -109,25 +104,19 @@ class AuthTest extends TestCase {
     $this->assertSame($this->nonAdminPerson['given_name'], $auth->person()["given_name"]);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testAnonymousUserIsNotAdmin() {
     $auth = new Auth($this->personRepository, $this->request);
     $this->assertFalse($auth->isAdmin());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testAnonymousUserIsNotPremium() {
     $auth = new Auth($this->personRepository, $this->request);
     $this->assertFalse($auth->isPremium());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testLoggedInUserIsNotAdminAndNotPremium() {
     $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->personRepository->shouldReceive('getPersonByEmail')
@@ -139,9 +128,7 @@ class AuthTest extends TestCase {
     $this->assertFalse($auth->isPremium());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUserIsAdminAndPremiumBecauseOfPremiumStatusBoolean() {
     $_SESSION['loginEmail'] = $this->adminLoginEmail;
     $this->personRepository = Mockery::mock('PyAngelo\Repositories\PersonRepository');
@@ -154,9 +141,7 @@ class AuthTest extends TestCase {
     $this->assertTrue($auth->isPremium());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testPersonWhenNotLoggedIn() {
     $auth = new Auth($this->personRepository, $this->request);
 
@@ -164,9 +149,7 @@ class AuthTest extends TestCase {
     $this->assertNull($person);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testPersonWhenLoggedIn() {
     $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->personRepository->shouldReceive('getPersonByEmail')
@@ -179,17 +162,13 @@ class AuthTest extends TestCase {
     $this->assertSame($this->nonAdminPerson, $person);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testPersonIdWhenNotLoggedIn() {
     $auth = new Auth($this->personRepository, $this->request);
     $this->assertSame(0, $auth->personId());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testPersonIdWhenLoggedIn() {
     $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->personRepository->shouldReceive('getPersonByEmail')
@@ -200,9 +179,7 @@ class AuthTest extends TestCase {
     $this->assertSame($this->nonAdminPersonId, $auth->personId());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testInsertRememberMe() {
     /* Simply test repository function is called */
     $session = 'session';
@@ -217,9 +194,7 @@ class AuthTest extends TestCase {
     $this->assertSame(1, $rowsInserted);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testDeleteRememberMe() {
     $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->personRepository->shouldReceive('getPersonByEmail')
@@ -236,9 +211,7 @@ class AuthTest extends TestCase {
     $this->assertSame(1, $rowsDeleted);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testcreateCrsfToken() {
     $auth = new Auth($this->personRepository, $this->request);
 
@@ -248,9 +221,7 @@ class AuthTest extends TestCase {
     $this->assertSame($crsfToken2, $crsfToken);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testcreateCrsfTokenIsValid() {
     $auth = new Auth($this->personRepository, $this->request);
 
@@ -260,26 +231,20 @@ class AuthTest extends TestCase {
     $this->assertTrue($auth->crsfTokenIsValid());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testSetLoginStatusNotLoggedIn() {
     $auth = new Auth($this->personRepository, $this->request);
     $this->assertFalse($auth->setLoginStatus());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testSetLoginStatusLoggedInThroughSessionVariable() {
     $auth = new Auth($this->personRepository, $this->request);
     $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->assertTrue($auth->setLoginStatus());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testAuthenticateLoginCorrectPassword() {
     $this->personRepository->shouldReceive('getPersonByEmail')
       ->times(2)
@@ -295,9 +260,7 @@ class AuthTest extends TestCase {
     $this->assertSame(true, $authenticated);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testAuthenticateLoginWrongPassword() {
     $this->personRepository->shouldReceive('getPersonByEmail')
       ->once()
@@ -310,9 +273,7 @@ class AuthTest extends TestCase {
     $this->assertFalse($authenticated);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testAuthenticateLoginNoPerson() {
     $email = 'email_does_not_exist_in_database@hotmail.com';
     $auth = new Auth($this->personRepository, $this->request);
@@ -321,9 +282,7 @@ class AuthTest extends TestCase {
     $this->assertFalse($authenticated);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testIsPasswordResetTokenValid() {
     $resetToken = 'password-reset-token';
     $resetRequest = [
@@ -340,9 +299,7 @@ class AuthTest extends TestCase {
     $this->assertTrue($auth->isPasswordResetTokenValid($resetToken));
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testIsPasswordResetTokenInvalid() {
     $resetToken = 'password-reset-token';
     $invalidResetToken = 'invalid-token';
@@ -360,26 +317,20 @@ class AuthTest extends TestCase {
     $this->assertFalse($auth->isPasswordResetTokenValid($invalidResetToken));
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testImpersonatingFalse() {
     $auth = new Auth($this->personRepository, $this->request);
     $this->assertFalse($auth->impersonating());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testImpersonatingTrue() {
     $_SESSION['impersonator'] = $this->nonAdminLoginEmail;
     $auth = new Auth($this->personRepository, $this->request);
     $this->assertTrue($auth->impersonating());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testGetPersonDetailsForViewsWhenNotLoggedIn() {
     $auth = new Auth($this->personRepository, $this->request);
     $crsfToken = $auth->createCrsfToken();
@@ -395,9 +346,7 @@ class AuthTest extends TestCase {
     $this->assertSame($expectedPersonDetails, $auth->getPersonDetailsForViews());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testGetPersonDetailsForViewsWhenLoggedIn() {
     $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->personRepository
@@ -428,9 +377,7 @@ class AuthTest extends TestCase {
     $this->assertEquals($expectedPersonDetails, $auth->getPersonDetailsForViews());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testGetPersonDetailsForViewsWhenLoggedInAsAdmin() {
     $_SESSION['loginEmail'] = $this->adminLoginEmail;
     $this->personRepository
@@ -461,9 +408,7 @@ class AuthTest extends TestCase {
     $this->assertSame($expectedPersonDetails, $auth->getPersonDetailsForViews());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testGetPersonDetailsForViewsWhenLoggedInAndImpersonating() {
     $_SESSION['loginEmail'] = $this->adminLoginEmail;
     $_SESSION['impersonator'] = $this->nonAdminLoginEmail;
@@ -495,17 +440,13 @@ class AuthTest extends TestCase {
     $this->assertSame($expectedPersonDetails, $auth->getPersonDetailsForViews());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUnreadNotificationCountWhenNotLoggedIn() {
     $auth = new Auth($this->personRepository, $this->request);
     $this->assertSame(0, $auth->unreadNotificationCount());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUnreadNotificationCountWhenLoggedIn() {
     $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;
     $this->personRepository->shouldReceive('getPersonByEmail')
@@ -526,9 +467,7 @@ class AuthTest extends TestCase {
     $this->assertSame($unreadNotificationCount, $auth->unreadNotificationCount());
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testCreateNotification() {
     /* Ensure createNotification method is called on personRepository */
     $_SESSION['loginEmail'] = $this->nonAdminLoginEmail;

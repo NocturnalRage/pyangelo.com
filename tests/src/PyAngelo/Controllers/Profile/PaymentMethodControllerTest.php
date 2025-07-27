@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Profile\PaymentMethodController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class PaymentMethodControllerTest extends TestCase {
   protected $request;
@@ -31,9 +32,7 @@ class PaymentMethodControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\Profile\PaymentMethodController');
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testPaymentMethodControllerWhenNotLoggedIn() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
@@ -46,9 +45,7 @@ class PaymentMethodControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testPaymentMethodControllerWhenLoggedInWithNoSubscription() {
     $personId = 99;
     $person = [
@@ -73,9 +70,7 @@ class PaymentMethodControllerTest extends TestCase {
     $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testPaymentMethodControllerWhenLoggedInWithSubscription() {
     $personId = 99;
     $person = [

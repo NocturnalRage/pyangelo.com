@@ -6,6 +6,7 @@ use Mockery;
 use Framework\Request;
 use Framework\Response;
 use PyAngelo\Controllers\Admin\UpdateEndDateController;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class UpdateEndDateControllerTest extends TestCase {
   protected $personRepository;
@@ -34,9 +35,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\Admin\UpdateEndDateController');
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUpdateEndDateWhenNotAdmin() {
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(false);
@@ -49,9 +48,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUpdateEndDateWhenAdminNoPersonId() {
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
@@ -64,9 +61,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUpdateEndDateWhenAdminInvalidPersonId() {
     $personId = 100;
     session_start();
@@ -85,9 +80,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUpdateEndDateWhenAdminNoMonth() {
     $personId = 100;
     $person = [
@@ -110,9 +103,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUpdateEndDateWhenAdminInvalidMonth() {
     $personId = 100;
     $months = 4;
@@ -136,9 +127,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUpdateEndDateWhenAdminValidDataNotSubscribed() {
     $premiumListId = 2;
     $personId = 100;
@@ -173,9 +162,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testUpdateEndDateWhenAdminValidDataSubscribed() {
     $premiumListId = 2;
     $personId = 100;
@@ -216,9 +203,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  /**
-   * @runInSeparateProcess
-   */
+  #[RunInSeparateProcess]
   public function testWhenAdminRevokingAccess() {
     $premiumListId = 2;
     $personId = 100;
