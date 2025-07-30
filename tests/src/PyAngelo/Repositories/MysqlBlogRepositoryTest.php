@@ -27,7 +27,7 @@ class MysqlBlogRepositoryTest extends TestCase {
     $this->personId = 1;
     $this->blogCategoryId = 1;
     $this->testData->createCountry('US', 'United States', 'USD');
-    $this->testData->createPerson($this->personId, 'admin@nocturnalrage.com');
+    $this->testData->createPerson($this->personId, 'admin@pyangelo.com');
     $this->testData->createBlogCategory($this->blogCategoryId);
   }
 

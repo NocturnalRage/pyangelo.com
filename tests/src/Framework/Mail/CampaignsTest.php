@@ -24,7 +24,7 @@ class CampaignsTest extends TestCase {
     $segmentName = 'All members';
     $listId = 1;
     $autoresponderWhereCondition = '1=1';
-    $fromEmail = 'admin@nocturnalrage.com';
+    $fromEmail = 'admin@pyangelo.com';
     $subject = 'Hello [givenname]';
     $expectedSubject = 'Hello Fast';
     $bodyHtml = <<<ENDHTML
@@ -176,7 +176,7 @@ ENDTEXT;
 
   public function testSendTestValidCampaign() {
     $campaignId = 100;
-    $fromEmail = 'admin@nocturnalrage.com';
+    $fromEmail = 'admin@pyangelo.com';
     $subject = 'Subject';
     $bodyHtml = 'Body HTML';
     $bodyText = 'Body Text';
@@ -327,7 +327,7 @@ ENDTEXT;
 
   public function testPrepareWebVersion() {
     $campaignId = 1;
-    $fromEmail = 'admin@nocturnalrage.com';
+    $fromEmail = 'admin@pyangelo.com';
     $subject = 'Subject';
     $bodyHtml = 'Body HTML';
     $bodyText = 'Body Text';

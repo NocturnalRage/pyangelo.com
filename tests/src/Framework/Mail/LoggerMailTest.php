@@ -16,8 +16,8 @@ class LoggerMailTest extends TestCase {
       'aws_message_id' => 0
     ];
     $result = $loggerMail->send(
-      'admin@nocturnalrage.com',
-      'admin@nocturnalrage.com',
+      'admin@pyangelo.com',
+      'admin@pyangelo.com',
       'anyuser@hotmail.com',
       'Testing Subject',
       'Testing Body Text',

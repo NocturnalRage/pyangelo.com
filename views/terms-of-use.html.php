@@ -8,13 +8,13 @@ include __DIR__ . DIRECTORY_SEPARATOR . 'layout/navbar.html.php';
       <div class="col-md-8 col-md-offset-2">
         <h1>PyAngelo Terms of Use</h1>
         <p>
-        Thank you for using the PyAngelo website and its contents and services “Services”. The PyAngelo website is made available by <a href="https://www.nocturnalrage.com">Nocturnal Rage</a> to which the laws of Australia are applicable. By using this website, you agree to the following terms and the applicability of Australian law.
+        Thank you for using the PyAngelo website and its contents and services “Services”. The PyAngelo website is made available by PyAngelo to which the laws of Australia are applicable. By using this website, you agree to the following terms and the applicability of Australian law.
         </p>
         <p>
         Any personal information made available by users of this website will be treated and protected with due care and in accordance with applicable laws and regulations. See our <a href="/privacy-policy">privacy policy</a> for more information.
         </p>
         <p>
-        All copyright and other intellectual property rights in all text, video, software and other materials on this site are owned by Nocturnal Rage and affiliated companies or are included with permission of the relevant owner. By entering this site you acknowledge that any name, logo, trademark or service mark contained on this site is owned or licensed by Nocturnal Rage or its subsidiaries and may not be used without prior written approval. Any reproduction, distribution or storage of part or all of the contents on this site is only permitted with our prior written approval.
+        All copyright and other intellectual property rights in all text, video, software and other materials on this site are owned by PyAngelo and affiliated companies or are included with permission of the relevant owner. By entering this site you acknowledge that any name, logo, trademark or service mark contained on this site is owned or licensed by PyAngelo or its subsidiaries and may not be used without prior written approval. Any reproduction, distribution or storage of part or all of the contents on this site is only permitted with our prior written approval.
         </p>
         <hr />
         <h3>Your PyAngelo Account</h3>

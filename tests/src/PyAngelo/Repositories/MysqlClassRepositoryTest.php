@@ -25,7 +25,7 @@ class MysqlClassRepositoryTest extends TestCase {
     $this->testData = new TestData($this->dbh);
     $this->personId = 101;
     $this->testData->createCountry('US', 'United States', 'USD');
-    $this->testData->createPerson($this->personId, 'admin@nocturnalrage.com');
+    $this->testData->createPerson($this->personId, 'admin@pyangelo.com');
   }
 
   public function tearDown(): void {
