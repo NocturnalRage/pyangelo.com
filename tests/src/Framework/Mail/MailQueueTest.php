@@ -14,7 +14,7 @@ class MailQueueTest extends TestCase {
   public function testProcessTransactionalQueue() {
     $mail_queue_transactional_id_1 = 1;
     $mail_queue_transactional_id_2 = 2;
-    $fromEmail = 'admin@nocturnalrage.com';
+    $fromEmail = 'admin@pyangelo.com';
     $emails = [
       [
         'mail_queue_transactional_id' => $mail_queue_transactional_id_1,

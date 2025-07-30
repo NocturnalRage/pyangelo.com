@@ -39,7 +39,7 @@ class AuthTest extends TestCase {
     ];
 
     $this->adminPersonId = 1;
-    $this->adminLoginEmail = 'admin@nocturnalrage.com';
+    $this->adminLoginEmail = 'admin@pyangelo.com';
     $this->adminPerson = [
       'person_id' => $this->adminPersonId,
       'email' => $this->adminLoginEmail,

@@ -9,12 +9,12 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
         <p>
         You've just joined an awesome community learning the art of
         programming! Whether you don't yet know how to code,
-        or you're an experienced code, PyAngelo has something
+        or you're an experienced coder, PyAngelo has something
         for you. You should receive a welcome email explaining how to get
         the most out of this site. We usually send out email
         newsletters every week or two. To make sure you receive it,
         please add the email address
-        <a href="mailto:jeff@nocturnalrage.com">jeff@nocturnalrage.com</a>
+        <a href="mailto:jeff@pyangelo.com">jeff@pyangelo.com</a>
         to your address book.
         </p>
         <p>

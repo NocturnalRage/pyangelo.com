@@ -8,7 +8,7 @@ use Tests\views\BasicViewHtmlTestCase;
 class ForgotPasswordConfirmHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicForgotPasswordConfirmView() {
-    $email = 'any_email@nocturnalrage.com';
+    $email = 'any_email@pyangelo.com';
     $response = new Response('views');
     $response->setView('password-reset/forgot-password-confirm.html.php');
     $response->setVars(array(

@@ -25,7 +25,7 @@ class AutorespondersTest extends TestCase {
     $listId = 1;
     $autoresponderWhereCondition = '1=1';
     $delayInMinutes = 5;
-    $fromEmail = 'admin@nocturnalrage.com';
+    $fromEmail = 'admin@pyangelo.com';
     $subject = 'Hello [givenname]';
     $expectedSubject = 'Hello Fast';
     $bodyHtml = <<<ENDHTML
@@ -176,7 +176,7 @@ ENDTEXT;
 
   public function testSendTestValidAutoresponder() {
     $autoresponderId = 100;
-    $fromEmail = 'admin@nocturnalrage.com';
+    $fromEmail = 'admin@pyangelo.com';
     $subject = 'Subject';
     $bodyHtml = 'Body HTML';
     $bodyText = 'Body Text';
@@ -327,7 +327,7 @@ ENDTEXT;
 
   public function testPrepareWebVersionAutoresponder() {
     $autoresponderId = 1;
-    $fromEmail = 'anyone@nocturnalrage.com';
+    $fromEmail = 'anyone@pyangelo.com';
     $subject = 'Subject';
     $bodyHtml = 'Body HTML';
     $bodyText = 'Body Text';

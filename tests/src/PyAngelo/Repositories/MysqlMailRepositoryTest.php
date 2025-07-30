@@ -27,8 +27,8 @@ class MysqlMailRepositoryTest extends TestCase {
   }
 
   public function testMailRepositoryFunctions() {
-    $fromEmail = 'admin@nocturnalrage.com';
-    $replyEmail = 'admin@nocturnalrage.com';
+    $fromEmail = 'admin@pyangelo.com';
+    $replyEmail = 'admin@pyangelo.com';
     $toEmail = 'fred@hotmail.com';
     $subject = 'PyAngelo Website';
     $bodyText = 'It looks good';
