@@ -67,9 +67,11 @@ export class Autocompleter {
       const ast = this.Sk.astFromParse(parse.cst, 'autocompleter', parse.flags)
       const nodes = ast.body
       // this.resetState()
-      this.vars = { ...this.builtinVars }
-      this.classes = { ...this.builtinClasses }
-      this.functions = { ...this.builtinFunctions }
+      if (level === 1) {
+        this.vars = { ...this.builtinVars }
+        this.classes = { ...this.builtinClasses }
+        this.functions = { ...this.builtinFunctions }
+      }
       this.processNodes(nodes, level, lineNo)
     } catch (err) {
       // console.error('Autocompleter parse error:', err)
@@ -129,9 +131,11 @@ export class Autocompleter {
 
     for (const path of paths) {
       if (path in this.Sk.builtinFiles.files) {
+        const prevCode = this.code
         this.setCode(this.Sk.builtinFiles.files[path])
         this.imports.push(node.module.v)
         this.getCompletions(level + 1)
+        this.setCode(prevCode)
         return
       }
     }
