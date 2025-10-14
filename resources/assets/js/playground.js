@@ -64,25 +64,26 @@ eatSound = loadSound("/samples/sounds/powerup.wav")
 gameOverSound = loadSound("/samples/sounds/collision.wav")
 
 setCanvasSize(600, 600, JAVASCRIPT)
+textAlign(CENTER, CENTER)
 background(20, 20, 20)
 welcome = TextSprite("Snake!", width/2, 150, fontSize=72)
+welcome.setDrawMode(CENTER)
 welcome.setColour(255, 255, 0)
-welcome.center()
 startText = TextSprite("Press SPACE to start!", width/2, 450, fontSize=36)
+startText.setDrawMode(CENTER)
 startText.setColour(0, 255, 0)
-startText.center()
 keysText = TextSprite("Use WASD keys to move", width/2, 500, fontSize=14)
+keysText.setDrawMode(CENTER)
 keysText.setColour(0, 255, 0)
-keysText.center()
 gameOverText = TextSprite("Game Over!", width/2, 150, fontSize=72)
+gameOverText.setDrawMode(CENTER)
 gameOverText.setColour(255, 255, 0)
-gameOverText.center()
 scoreText = TextSprite("Score: 0000", width/2, 375, fontSize=72)
+scoreText.setDrawMode(CENTER)
 scoreText.setColour(0, 255, 0)
-scoreText.center()
 startAgainText = TextSprite("Press ENTER to try again!", width/2, 475, fontSize=36)
+startAgainText.setDrawMode(CENTER)
 startAgainText.setColour(0, 255, 0)
-startAgainText.center()
 pyangelo = Sprite("/samples/images/PyAngelo.png", width/2 - 48, height/2 - 64)
 
 # Set up the screen
@@ -167,7 +168,7 @@ while playing:
         background(50, 50, 50)
         gameOverText.draw()
         pyangelo.draw()
-        scoreText.text = "Score: " + str(score)
+        scoreText.textContent = "Score: " + str(score)
         scoreText.draw()
         startAgainText.draw()
         if isKeyPressed(KEY_ENTER):
@@ -182,6 +183,7 @@ from random import *
 import time
 
 setCanvasSize(960, 540, JAVASCRIPT)
+textAlign(CENTER, CENTER)
 
 ORIG_PADDLE_WIDTH = 240
 PADDLE_SPEED = 500
@@ -245,29 +247,32 @@ class Brick(RectangleSprite):
             g = 255
             b = 0
             self.score = 1
-        super().__init__(x, y, BRICK_WIDTH - SPACING * 2, BRICK_HEIGHT - SPACING * 2, r, g, b)
+        super().__init__(x, y, BRICK_WIDTH - SPACING * 2, BRICK_HEIGHT - SPACING * 2)
+        self.setColour(r, g, b)
         self.visible = True
 
-paddle = RectangleSprite(width/2 - ORIG_PADDLE_WIDTH/2, 510, ORIG_PADDLE_WIDTH, 20, 0, 0, 255)
-ball = CircleSprite(width/2 - 5, 300, 10, 255, 255, 255)
+paddle = RectangleSprite(width/2 - ORIG_PADDLE_WIDTH/2, 510, ORIG_PADDLE_WIDTH, 20)
+paddle.setColour(0, 0, 255)
+ball = CircleSprite(width/2 - 5, 300, 10)
+ball.setColour(255, 255, 255)
 ball.dx = uniform(-100, 100)
 ball.dy = BALL_START_SPEED_Y
 
 breakoutText = TextSprite("Breakout!", width/2, height/2, fontSize = 72)
-breakoutText.center()
+breakoutText.setDrawMode(CENTER)
 breakoutText.setColour(220, 220, 220)
 startText = TextSprite("Press SPACE to start", width/2, height/2 + 100, fontSize = 24)
-startText.center()
+startText.setDrawMode(CENTER)
 startText.setColour(0, 255, 0)
 hiScoreText = TextSprite("Hi Score: 0", width/2, height/2 + 200, fontSize = 24)
-hiScoreText.center()
+hiScoreText.setDrawMode(CENTER)
 hiScoreText.setColour(255, 255, 0)
 
 gameOverText = TextSprite("Game Over!", width/2, height/2 + 100, fontSize = 72)
-gameOverText.center()
+gameOverText.setDrawMode(CENTER)
 gameOverText.setColour(220, 220, 220)
 restartText = TextSprite("Press ENTER to restart", width/2, height/2 + 200, fontSize = 24)
-restartText.center()
+restartText.setDrawMode(CENTER)
 restartText.setColour(0, 255, 0)
 
 while True:
@@ -328,7 +333,7 @@ while True:
                     brick.draw()
                     if brick.overlaps(ball):
                         for i in range(30):
-                            particles.append(Particle(brick.x + brick.width/2, brick.y + brick.height/2, brick.r, brick.g, brick.b))
+                            particles.append(Particle(brick.x + brick.width/2, brick.y + brick.height/2, brick.fillColour.red, brick.fillColour.green, brick.fillColour.blue))
                         playSound(hitBrick)
                         score += brick.score
                         brick.visible = False
@@ -390,7 +395,7 @@ while True:
     restartText.draw()
     if score > hiScore:
         hiScore = score
-        hiScoreText.text = "Hi Score: " + str(hiScore)
+        hiScoreText.textContent = "Hi Score: " + str(hiScore)
     gameOver = True
     while gameOver:
         if isKeyPressed(KEY_ENTER):
