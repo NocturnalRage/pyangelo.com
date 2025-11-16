@@ -31,12 +31,6 @@ class LoginHtmlTest extends BasicViewHtmlTestCase {
     $this->assertStringContainsString($expect, $output);
     $expect = '<a href="/forgot-password">Forgot your password?</a>';
     $this->assertStringContainsString($expect, $output);
-    $expect = 'class="g-recaptcha btn btn-primary"';
-    $this->assertStringContainsString($expect, $output);
-    $expect = 'data-sitekey="' . $recaptchaKey . '"';
-    $this->assertStringContainsString($expect, $output);
-    $expect = '<script src="https://www.google.com/recaptcha/api.js"></script>';
-    $this->assertStringContainsString($expect, $output);
   }
 }
 ?>

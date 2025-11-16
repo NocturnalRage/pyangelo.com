@@ -377,8 +377,7 @@ $di->set('RegisterController', function () use ($di) {
   return new PyAngelo\Controllers\Registration\RegisterController (
     $di->get('request'),
     $di->get('response'),
-    $di->get('auth'),
-    $_ENV['RECAPTCHA_KEY']
+    $di->get('auth')
   );
 });
 
@@ -387,8 +386,7 @@ $di->set('RegisterValidateController', function () use ($di) {
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),
-    $di->get('registerFormService'),
-    $di->get('recaptcha')
+    $di->get('registerFormService')
   );
 });
 
@@ -429,8 +427,7 @@ $di->set('LoginController', function () use ($di) {
   return new PyAngelo\Controllers\LoginController (
     $di->get('request'),
     $di->get('response'),
-    $di->get('auth'),
-    $_ENV['RECAPTCHA_KEY']
+    $di->get('auth')
   );
 });
 
@@ -438,8 +435,7 @@ $di->set('LoginValidateController', function () use ($di) {
   return new PyAngelo\Controllers\LoginValidateController (
     $di->get('request'),
     $di->get('response'),
-    $di->get('auth'),
-    $di->get('recaptcha')
+    $di->get('auth')
   );
 });
 

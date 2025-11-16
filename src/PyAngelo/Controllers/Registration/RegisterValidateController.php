@@ -5,22 +5,18 @@ use Framework\{Request, Response};
 use PyAngelo\Auth\Auth;
 use PyAngelo\Controllers\Controller;
 use PyAngelo\FormServices\RegisterFormService;
-use Framework\Recaptcha\RecaptchaClient;
 
 class RegisterValidateController extends Controller {
   protected $registerFormService;
-  protected $recaptcha;
 
   public function __construct(
     Request $request,
     Response $response,
     Auth $auth,
-    RegisterFormService $registerFormService,
-    RecaptchaClient $recaptcha
+    RegisterFormService $registerFormService
   ) {
     parent::__construct($request, $response, $auth);
     $this->registerFormService = $registerFormService;
-    $this->recaptcha = $recaptcha;
   }
 
   public function exec() {
@@ -32,9 +28,6 @@ class RegisterValidateController extends Controller {
 
     if ($this->formFilledInTooQuickly())
       return $this->logAttemptAndRedirectToRegisterPage();
-
-    if ($this->recaptchaInvalid())
-      return $this->redirectToRegisterPage();
 
     if (! $this->registerFormService->createPerson($this->request->post))
       return $this->redirectToRegisterPageAndShowErrors();
