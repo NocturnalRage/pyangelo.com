@@ -78,13 +78,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
           </div>
           <div class="form-group">
             <div class="col-md-6 col-md-offset-4">
-              <button
-                type="submit"
-                class="g-recaptcha btn btn-primary"
-                data-sitekey="<?= $this->esc($recaptchaKey); ?>"
-                data-callback='onSubmit'
-                data-action='registerwithversion3'
-              >
+              <button type="submit" class="btn btn-primary">
                 <i class="fa fa-user-plus" aria-hidden="true"></i> Create My Free Account
               </button>
             </div>
@@ -97,11 +91,5 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
 include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';
 ?>
   </div><!-- container -->
-  <script src="https://www.google.com/recaptcha/api.js"></script>
-  <script>
-    function onSubmit(token) {
-      document.getElementById("registerForm").submit();
-    }
-  </script>
 </body>
 </html>

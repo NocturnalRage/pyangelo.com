@@ -6,18 +6,6 @@ use PyAngelo\Auth\Auth;
 use PyAngelo\Controllers\Controller;
 
 class LoginController extends Controller {
-  protected $recaptchaKey;
-
-  public function __construct(
-    Request $request,
-    Response $response,
-    Auth $auth,
-    $recaptchaKey
-  ) {
-    parent::__construct($request, $response, $auth);
-    $this->recaptchaKey = $recaptchaKey;
-  }
-
   public function exec() {
     if ($this->auth->loggedIn())
       return $this->redirectToHomePage();
