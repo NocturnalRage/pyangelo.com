@@ -250,15 +250,16 @@ $di->set('cloudFront', function () use ($di) {
   );
 });
 
-$di->set('googleRecaptcha', function () use ($di) {
-  return new \ReCaptcha\ReCaptcha(
-    $_ENV['RECAPTCHA_SECRET'],
-    new \ReCaptcha\RequestMethod\CurlPost()
-  );
+$di->set('guzzleClient', function () use ($di) {
+  return new GuzzleHttp\Client();
 });
 
-$di->set('recaptcha', function () use ($di) {
-  return new Framework\Recaptcha\RecaptchaClient($di->get('googleRecaptcha'));
+$di->set('turnstileGuzzle', function () use ($di) {
+  return new Framework\Turnstile\TurnstileGuzzle($di->get('guzzleClient'));
+});
+
+$di->set('turnstileVerifier', function () use ($di) {
+  return new Framework\Turnstile\TurnstileVerifier($di->get('turnstileGuzzle'), $_ENV['TURNSTILE_SECRET_KEY']);
 });
 
 $di->set('countryDetector', function () use ($di) {
@@ -336,7 +337,7 @@ $di->set('ContactValidateController', function () use ($di) {
     $di->get('response'),
     $di->get('auth'),
     $di->get('contactUsEmail'),
-    $di->get('recaptcha')
+    $di->get('turnstileVerifier')
   );
 });
 
@@ -386,7 +387,8 @@ $di->set('RegisterValidateController', function () use ($di) {
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),
-    $di->get('registerFormService')
+    $di->get('registerFormService'),
+    $di->get('turnstileVerifier')
   );
 });
 

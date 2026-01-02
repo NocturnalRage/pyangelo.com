@@ -15,8 +15,7 @@ class LoginController extends Controller {
       'pageTitle' => 'PyAngelo Login',
       'metaDescription' => "Login to the PyAngelo website.",
       'activeLink' => 'Home',
-      'personInfo' => $this->auth->getPersonDetailsForViews(),
-      'recaptchaKey' => $this->recaptchaKey
+      'personInfo' => $this->auth->getPersonDetailsForViews()
     ));
     $this->addVar('errors');
     $this->addVar('formVars');
