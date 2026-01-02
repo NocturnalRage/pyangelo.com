@@ -13,7 +13,7 @@ class ContactValidateControllerTest extends TestCase {
   protected $response;
   protected $auth;
   protected $contactUsEmail;
-  protected $recaptcha;
+  protected $turnstileVerifier;
   protected $controller;
 
   public function setUp(): void {
@@ -21,14 +21,14 @@ class ContactValidateControllerTest extends TestCase {
     $this->response = new Response('views');
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
     $this->contactUsEmail = Mockery::mock('PyAngelo\Email\ContactUsEmail');
-    $this->recaptcha = Mockery::mock('Framework\Recaptcha\RecaptchaClient');
+    $this->turnstileVerifier = Mockery::mock('Framework\Turnstile\TurnstileVerifier');
 
     $this->controller = new ContactValidateController (
       $this->request,
       $this->response,
       $this->auth,
       $this->contactUsEmail,
-      $this->recaptcha
+      $this->turnstileVerifier
     );
   }
   public function tearDown(): void {
@@ -48,20 +48,20 @@ class ContactValidateControllerTest extends TestCase {
     $this->assertSame('Please contact us from the PyAngelo website!', $_SESSION['flash']['message']);
   }
 
-  public function testNoRecaptcha() {
+  public function testNoTurnstile() {
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /contact'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('Recaptcha could not verify you were a human. Please try again.', $_SESSION['flash']['message']);
+    $this->assertSame('Cloudflare turnstile could not verify you were a human. Please try again.', $_SESSION['flash']['message']);
   }
 
-  public function testRecaptchaRejected() {
+  public function testTurnstileRejected() {
     $name = 'Fast Freddy';
     $email = 'fastfreddy@hotmail.com';
     $inquiry = 'How to I become faster?';
-    $recaptcha_response = 'fake response';
+    $turnstileResponse = 'fake response';
     $ipAddress = '127.0.0.1';
     $this->request->server['REMOTE_ADDR'] = $ipAddress;
     $this->request->server['SERVER_NAME'] = "pyangelo.com";
@@ -69,26 +69,26 @@ class ContactValidateControllerTest extends TestCase {
       'name' => $name,
       'email' => $email,
       'inquiry' => $inquiry,
-      'g-recaptcha-response' => $recaptcha_response
+      'cf-turnstile-response' => $turnstileResponse
     ];
 
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
-    $this->recaptcha->shouldReceive('verified')
+    $this->turnstileVerifier->shouldReceive('verify')
       ->once()
-      ->with('pyangelo.com', 'contactuswithversion3', $recaptcha_response, $ipAddress)
-      ->andReturn(false);
+      ->with($turnstileResponse, $ipAddress)
+      ->andReturn(['failed']);
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /contact'));
     $this->assertSame($expectedHeaders, $response->getHeaders());
-    $this->assertSame('Recaptcha could not verify you were a human. Please try again.', $_SESSION['flash']['message']);
+    $this->assertSame('Cloudflare turnstile could not verify you were a human. Please try again.', $_SESSION['flash']['message']);
   }
 
   public function testContactUsSuccessfully() {
     $name = 'Fast Freddy';
     $email = 'fastfreddy@hotmail.com';
     $inquiry = 'How to I become faster?';
-    $recaptcha_response = 'fake response';
+    $turnstileResponse = 'fake response';
     $ipAddress = '127.0.0.1';
     $this->request->server['REMOTE_ADDR'] = $ipAddress;
     $this->request->server['SERVER_NAME'] = "pyangelo.com";
@@ -96,7 +96,7 @@ class ContactValidateControllerTest extends TestCase {
       'name' => $name,
       'email' => $email,
       'inquiry' => $inquiry,
-      'g-recaptcha-response' => $recaptcha_response
+      'cf-turnstile-response' => $turnstileResponse
     ];
     $mailInfo = [
       'name' => $name,
@@ -105,10 +105,10 @@ class ContactValidateControllerTest extends TestCase {
     ];
 
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
-    $this->recaptcha->shouldReceive('verified')
+    $this->turnstileVerifier->shouldReceive('verify')
       ->once()
-      ->with('pyangelo.com', 'contactuswithversion3', $recaptcha_response, $ipAddress)
-      ->andReturn(true);
+      ->with($turnstileResponse, $ipAddress)
+      ->andReturn(['ok' => 'true']);
     $this->contactUsEmail->shouldReceive('sendEmail')
       ->once()
       ->with($mailInfo)
@@ -126,14 +126,14 @@ class ContactValidateControllerTest extends TestCase {
     $name = 'Fast Freddy';
     $email = 'fastfreddy@hotmail.com';
     $inquiry = 'How to I become faster?';
-    $recaptcha_response = 'fake response';
+    $turnstileResponse = 'fake response';
     $ipAddress = '127.0.0.1';
     $this->request->server['REMOTE_ADDR'] = $ipAddress;
     $this->request->server['SERVER_NAME'] = "pyangelo.com";
     $this->request->post = [
       'email' => $email,
       'inquiry' => $inquiry,
-      'g-recaptcha-response' => $recaptcha_response
+      'cf-turnstile-response' => $turnstileResponse
     ];
     $mailInfo = [
       'name' => $name,
@@ -142,10 +142,10 @@ class ContactValidateControllerTest extends TestCase {
     ];
 
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
-    $this->recaptcha->shouldReceive('verified')
+    $this->turnstileVerifier->shouldReceive('verify')
       ->once()
-      ->with('pyangelo.com', 'contactuswithversion3', $recaptcha_response, $ipAddress)
-      ->andReturn(true);
+      ->with($turnstileResponse, $ipAddress)
+      ->andReturn(['ok' => true]);
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedLocation = 'Location: /contact';

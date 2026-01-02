@@ -13,7 +13,7 @@ class RegisterValidateControllerTest extends TestCase {
   protected $response;
   protected $auth;
   protected $registerFormService;
-  protected $recaptcha;
+  protected $turnstileVerifier;
   protected $controller;
 
   public function setUp(): void {
@@ -21,13 +21,13 @@ class RegisterValidateControllerTest extends TestCase {
     $this->response = new Response('views');
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
     $this->registerFormService = Mockery::mock('PyAngelo\FormServices\RegisterFormService');
-    $this->recaptcha = Mockery::mock('Framework\Recaptcha\RecaptchaClient');
+    $this->turnstileVerifier = Mockery::mock('Framework\Turnstile\TurnstileVerifier');
     $this->controller = new RegisterValidateController (
       $this->request,
       $this->response,
       $this->auth,
       $this->registerFormService,
-      $this->recaptcha
+      $this->turnstileVerifier
     );
   }
   public function tearDown(): void {
@@ -61,7 +61,7 @@ class RegisterValidateControllerTest extends TestCase {
   }
 
   #[RunInSeparateProcess]
-  public function testNoRecaptchaPostToken() {
+  public function testNoCloudflarePostToken() {
     $recaptcha_response = 'fake response';
     $dotenv = \Dotenv\Dotenv::createMutable(__DIR__ . '/../../../../..', '.env.test');
     $dotenv->load();
@@ -80,24 +80,24 @@ class RegisterValidateControllerTest extends TestCase {
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /register'));
     $expectedErrors = ['foo' => 'bar'];
-    $expectedFlashMessage = 'Please register from the PyAngelo website!';
+    $expectedFlashMessage = 'Cloudflare turnstile could not verify you were a human. Please try again.';
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
   #[RunInSeparateProcess]
-  public function testRecaptchaVerifiedIsFalse() {
-    $recaptcha_response = 'fake response';
+  public function testCloudflareFailed() {
+    $cloudflare_response = 'fake response';
     $ipAddress = '127.0.0.1';
     $dotenv = \Dotenv\Dotenv::createMutable(__DIR__ . '/../../../../..', '.env.test');
     $dotenv->load();
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
-    $this->recaptcha->shouldReceive('verified')
+    $this->turnstileVerifier->shouldReceive('verify')
       ->once()
-      ->with('pyangelo.com', 'registerwithversion3', $recaptcha_response, $ipAddress)
-      ->andReturn(false);
+      ->with($cloudflare_response, $ipAddress)
+      ->andReturn(['failed']);
     $email = 'fastfreddy@hotmail.com';
     $this->request->server['REMOTE_ADDR'] = $ipAddress;
     $this->request->server['SERVER_NAME'] = "pyangelo.com";
@@ -107,13 +107,13 @@ class RegisterValidateControllerTest extends TestCase {
       'givenName' => 'Fast',
       'familyName' => 'Freddy',
       'email' => 'fast@hotmail.com',
-      'g-recaptcha-response' => $recaptcha_response
+      'cf-turnstile-response' => $cloudflare_response
     ];
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedHeaders = array(array('header', 'Location: /register'));
     $expectedErrors = ['foo' => 'bar'];
-    $expectedFlashMessage = 'Please register from the PyAngelo website!';
+    $expectedFlashMessage = 'Cloudflare turnstile could not verify you were a human. Please try again.';
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
   }
@@ -142,12 +142,12 @@ class RegisterValidateControllerTest extends TestCase {
   #[RunInSeparateProcess]
   public function testRedirectWhenPersonCannotBeCreated() {
     session_start();
-    $recaptcha_response = 'fake response';
+    $cloudflare_response = 'fake response';
     $ipAddress = '127.0.0.1';
-    $this->recaptcha->shouldReceive('verified')
+    $this->turnstileVerifier->shouldReceive('verify')
       ->once()
-      ->with('pyangelo.com', 'registerwithversion3', $recaptcha_response, $ipAddress)
-      ->andReturn(true);
+      ->with($cloudflare_response, $ipAddress)
+      ->andReturn(['ok' => 'true']);
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->registerFormService->shouldReceive('createPerson')->once()->andReturn(false);
@@ -164,7 +164,7 @@ class RegisterValidateControllerTest extends TestCase {
       'givenName' => 'Fast',
       'familyName' => 'Freddy',
       'email' => 'fast@hotmail.com',
-      'g-recaptcha-response' => $recaptcha_response
+      'cf-turnstile-response' => $cloudflare_response
     ];
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
@@ -177,12 +177,12 @@ class RegisterValidateControllerTest extends TestCase {
   #[RunInSeparateProcess]
   public function testRedirectsAfterCreatingPersonSuccessfully() {
     session_start();
-    $recaptcha_response = 'fake response';
+    $cloudflare_response = 'fake response';
     $ipAddress = '127.0.0.1';
-    $this->recaptcha->shouldReceive('verified')
+    $this->turnstileVerifier->shouldReceive('verify')
       ->once()
-      ->with('pyangelo.com', 'registerwithversion3', $recaptcha_response, $ipAddress)
-      ->andReturn(true);
+      ->with($cloudflare_response, $ipAddress)
+      ->andReturn(['ok' => 'true']);
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->registerFormService->shouldReceive('createPerson')->once()->andReturn(true);
@@ -195,7 +195,7 @@ class RegisterValidateControllerTest extends TestCase {
       'givenName' => 'Fast',
       'familyName' => 'Freddy',
       'email' => $email,
-      'g-recaptcha-response' => $recaptcha_response
+      'cf-turnstile-response' => $cloudflare_response
     ];
     $response = $this->controller->exec();
     $responseVars = $response->getVars();

@@ -5,22 +5,23 @@ use PyAngelo\Auth\Auth;
 use PyAngelo\Email\ContactUsEmail;
 use PyAngelo\Controllers\Controller;
 use Framework\Recaptcha\RecaptchaClient;
+use Framework\Turnstile\TurnstileVerifier;
 use Framework\{Request, Response};
 
 class ContactValidateController extends Controller {
   protected $contactUsEmail;
-  protected $recaptcha;
+  protected $turnstileVerifier;
 
   public function __construct(
     Request $request,
     Response $response,
     Auth $auth,
     ContactUsEmail $contactUsEmail,
-    RecaptchaClient $recaptcha
+    TurnstileVerifier $turnstileVerifier
   ) {
     parent::__construct($request, $response, $auth);
     $this->contactUsEmail = $contactUsEmail;
-    $this->recaptcha = $recaptcha;
+    $this->turnstileVerifier = $turnstileVerifier;
   }
 
   public function exec() {
@@ -31,20 +32,24 @@ class ContactValidateController extends Controller {
       return $this->response;
     }
 
-    if (empty($this->request->post['g-recaptcha-response'])) {
-      $this->flash('Recaptcha could not verify you were a human. Please try again.', 'warning');
+    if (empty($this->request->post['cf-turnstile-response'])) {
+      $this->flash('Cloudflare turnstile could not verify you were a human. Please try again.', 'warning');
       $_SESSION['formVars'] = $this->request->post;
       $this->response->header('Location: /contact');
       return $this->response;
     }
-    $expectedRecaptchaAction = "contactuswithversion3";
-    if (!$this->recaptcha->verified(
-      $this->request->server['SERVER_NAME'],
-      $expectedRecaptchaAction,
-      $this->request->post['g-recaptcha-response'],
-      $this->request->server['REMOTE_ADDR']
-    )) {
-      $this->flash('Recaptcha could not verify you were a human. Please try again.', 'warning');
+
+    $token = $this->request->post['cf-turnstile-response'];
+    $ip = $this->request->server['REMOTE_ADDR'];
+    $result = $this->turnstileVerifier->verify($token, $ip);
+
+    $isOk = $result['ok'] ?? false;
+    if (!$isOk) {
+      $this->logMessage('Turnstile failed: ' . json_encode([
+        'errors' => $result['errors'] ?? [],
+        'host'   => $result['host'] ?? null,
+      ]), 'INFO');
+      $this->flash('Cloudflare turnstile could not verify you were a human. Please try again.', 'warning');
       $_SESSION['formVars'] = $this->request->post;
       $this->response->header('Location: /contact');
       return $this->response;

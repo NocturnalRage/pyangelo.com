@@ -5,18 +5,22 @@ use Framework\{Request, Response};
 use PyAngelo\Auth\Auth;
 use PyAngelo\Controllers\Controller;
 use PyAngelo\FormServices\RegisterFormService;
+use Framework\Turnstile\TurnstileVerifier;
 
 class RegisterValidateController extends Controller {
   protected $registerFormService;
+  protected $turnstileVerifier;
 
   public function __construct(
     Request $request,
     Response $response,
     Auth $auth,
-    RegisterFormService $registerFormService
+    RegisterFormService $registerFormService,
+    TurnstileVerifier $turnstileVerifier
   ) {
     parent::__construct($request, $response, $auth);
     $this->registerFormService = $registerFormService;
+    $this->turnstileVerifier = $turnstileVerifier;
   }
 
   public function exec() {
@@ -28,6 +32,29 @@ class RegisterValidateController extends Controller {
 
     if ($this->formFilledInTooQuickly())
       return $this->logAttemptAndRedirectToRegisterPage();
+
+    if (empty($this->request->post['cf-turnstile-response'])) {
+      $this->flash('Cloudflare turnstile could not verify you were a human. Please try again.', 'warning');
+      $_SESSION['formVars'] = $this->request->post;
+      $this->response->header('Location: /register');
+      return $this->response;
+    }
+
+    $token = $this->request->post['cf-turnstile-response'];
+    $ip = $this->request->server['REMOTE_ADDR'];
+    $result = $this->turnstileVerifier->verify($token, $ip);
+
+    $isOk = $result['ok'] ?? false;
+    if (!$isOk) {
+      $this->logMessage('Turnstile failed: ' . json_encode([
+        'errors' => $result['errors'] ?? [],
+        'host'   => $result['host'] ?? null,
+      ]), 'INFO');
+      $this->flash('Cloudflare turnstile could not verify you were a human. Please try again.', 'warning');
+      $_SESSION['formVars'] = $this->request->post;
+      $this->response->header('Location: /register');
+      return $this->response;
+    }
 
     if (! $this->registerFormService->createPerson($this->request->post))
       return $this->redirectToRegisterPageAndShowErrors();

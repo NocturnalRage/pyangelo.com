@@ -31,7 +31,7 @@ class ContactPageControllerTest extends TestCase {
     Mockery::close();
   }
 
-  public function testClassCanBeInstantiated() {
+  public function testContactPageControllerClassCanBeInstantiated() {
     $this->assertSame(get_class($this->controller), 'PyAngelo\Controllers\ContactPageController');
   }
   public function testViewHasBeenSet() {
@@ -46,9 +46,9 @@ class ContactPageControllerTest extends TestCase {
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
-    $expectedPageTitle = "PyAngelo - Learn To Program";
+    $expectedPageTitle = "Contact Us";
     $this->assertSame($expectedPageTitle, $responseVars['pageTitle']);
-    $expectedMetaDescription = "Python Graphics Programming in the Browser";
+    $expectedMetaDescription = "Contact us if you want to know something about PyAngelo.";
     $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
   }
   public function testPersonDetailsForViewHasBeenSet() {

@@ -7,19 +7,17 @@ use Tests\views\BasicViewHtmlTestCase;
 
 class RegisterHtmlTest extends BasicViewHtmlTestCase {
 
-  public function testPageTitleMetaDescription() {
+  public function testRegisterPage() {
     $pageTitle = 'PyAngelo - Learn to Program';
     $metaDescription = 'Python Graphics Programming in the Browser';
     $activeLink = 'Home';
-    $recaptchaKey = 'recaptcha';
     $response = new Response('views');
     $response->setView('registration/register.html.php');
     $response->setVars(array(
       'pageTitle' => $pageTitle,
       'metaDescription' => $metaDescription,
       'activeLink' => $activeLink,
-      'personInfo' => $this->setPersonInfoLoggedOut(),
-      'recaptchaKey' => $recaptchaKey
+      'personInfo' => $this->setPersonInfoLoggedOut()
     ));
     $output = $response->requireView();
 
@@ -39,13 +37,11 @@ class RegisterHtmlTest extends BasicViewHtmlTestCase {
     $this->assertStringContainsString($expect, $output);
     $expect = '<button';
     $this->assertStringContainsString($expect, $output);
-    $expect = 'class="g-recaptcha btn btn-primary"';
-    $this->assertStringContainsString($expect, $output);
-    $expect = 'data-sitekey="' . $recaptchaKey . '"';
+    $expect = 'class="btn btn-primary"';
     $this->assertStringContainsString($expect, $output);
     $expect = '<i class="fa fa-user-plus" aria-hidden="true"></i> Create My Free Account';
     $this->assertStringContainsString($expect, $output);
-    $expect = '<script src="https://www.google.com/recaptcha/api.js"></script>';
+    $expect = '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer ></script>';
     $this->assertStringContainsString($expect, $output);
   }
 }
