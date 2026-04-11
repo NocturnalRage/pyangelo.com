@@ -137,6 +137,9 @@ class UploadAssetController extends Controller {
   }
 
   private function isAssetValidType($assetInfo) {
+    if (empty($assetInfo['tmp_name'])) {
+      return false;
+    }
     $finfo = new \finfo(FILEINFO_MIME_TYPE);
     $mimeType = $finfo->file($assetInfo['tmp_name']);
     $allowed = ['image/jpeg', 'image/png', 'image/gif', 'audio/mpeg', 'audio/wav', 'audio/x-wav', 'font/sfnt', 'font/ttf', 'font/otf', 'application/x-font-ttf', 'application/x-font-otf'];

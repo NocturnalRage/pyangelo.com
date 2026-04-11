@@ -96,6 +96,25 @@ class SketchSaveControllerTest extends TestCase {
     $this->assertSame($expectedMessage, $responseVars['message']);
   }
 
+  public function testWhenFilenameIsNotPython() {
+    $sketchId = bin2hex(random_bytes(16));
+    $this->request->post = [
+      'sketchId' => $sketchId,
+      'filename' => 'shell.php'
+    ];
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedViewName = 'sketch/saved.json.php';
+    $expectedStatus = 'error';
+    $expectedMessage = 'Only Python (.py) files can be saved.';
+    $this->assertSame($expectedViewName, $response->getView());
+    $this->assertSame($expectedStatus, $responseVars['status']);
+    $this->assertSame($expectedMessage, $responseVars['message']);
+  }
+
   public function testWhenNoProgram() {
     $sketchId = bin2hex(random_bytes(16));
     $filename = 'main.py';

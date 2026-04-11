@@ -3,6 +3,34 @@ import ace from 'ace'
 import { PyAngeloWordCompleter } from './PyAngeloWordCompleter'
 import { Autocompleter } from './Autocompleter'
 
+export function buildImagePreview (filename) {
+  const container = document.createElement('div')
+  const img = document.createElement('img')
+  img.setAttribute('src', filename)
+  container.appendChild(img)
+  return container
+}
+
+export function buildAudioPreview (filename) {
+  const figure = document.createElement('figure')
+  const figcaption = document.createElement('figcaption')
+  figcaption.textContent = filename
+  const audio = document.createElement('audio')
+  audio.setAttribute('controls', '')
+  audio.setAttribute('preload', 'none')
+  audio.setAttribute('src', filename)
+  const fallback = document.createTextNode('Your browser does not support the ')
+  const code = document.createElement('code')
+  code.textContent = 'audio'
+  const fallback2 = document.createTextNode(' element.')
+  audio.appendChild(fallback)
+  audio.appendChild(code)
+  audio.appendChild(fallback2)
+  figure.appendChild(figcaption)
+  figure.appendChild(audio)
+  return figure
+}
+
 export class Editor {
   constructor (sketchId, crsfToken, Sk, fileTabs, isReadOnly) {
     this.sketchId = sketchId
@@ -264,7 +292,8 @@ export class Editor {
         editor.style.display = 'none'
         editorAudioPreview.style.display = 'none'
         editorImagePreview.style.display = 'block'
-        document.getElementById('editorImagePreview').innerHTML = '<img src="' + ev.target.getAttribute('data-filename') + '" />'
+        const previewEl = document.getElementById('editorImagePreview')
+        previewEl.replaceChildren(buildImagePreview(ev.target.getAttribute('data-filename')))
         document.querySelector('.editorTab.current').classList.remove('current')
         ev.target.classList.add('current')
         closureEditor.currentFilename = ev.target.getAttribute('data-filename')
@@ -278,7 +307,8 @@ export class Editor {
         editor.style.display = 'none'
         editorImagePreview.style.display = 'none'
         editorAudioPreview.style.display = 'block'
-        document.getElementById('editorAudioPreview').innerHTML = '<figure><figcaption>' + ev.target.getAttribute('data-filename') + '</figcaption><audio controls preload="none" src="' + ev.target.getAttribute('data-filename') + '">Your browser does not support the <code>audio</code> element.</audio></figure>'
+        const audioPreviewEl = document.getElementById('editorAudioPreview')
+        audioPreviewEl.replaceChildren(buildAudioPreview(ev.target.getAttribute('data-filename')))
         document.querySelector('.editorTab.current').classList.remove('current')
         ev.target.classList.add('current')
         closureEditor.currentFilename = ev.target.getAttribute('data-filename')

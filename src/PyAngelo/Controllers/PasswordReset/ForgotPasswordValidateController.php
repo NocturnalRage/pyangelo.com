@@ -2,21 +2,25 @@
 namespace PyAngelo\Controllers\PasswordReset;
 
 use Framework\{Request, Response};
+use Framework\Turnstile\TurnstileVerifier;
 use PyAngelo\Auth\Auth;
 use PyAngelo\Controllers\Controller;
 use PyAngelo\FormServices\ForgotPasswordFormService;
 
 class ForgotPasswordValidateController extends Controller {
   protected $forgotPasswordFormService;
+  protected $turnstileVerifier;
 
   public function __construct(
     Request $request,
     Response $response,
     Auth $auth,
-    ForgotPasswordFormService $forgotPasswordFormService
+    ForgotPasswordFormService $forgotPasswordFormService,
+    TurnstileVerifier $turnstileVerifier
   ) {
     parent::__construct($request, $response, $auth);
     $this->forgotPasswordFormService = $forgotPasswordFormService;
+    $this->turnstileVerifier = $turnstileVerifier;
   }
 
   public function exec() {
@@ -25,6 +29,9 @@ class ForgotPasswordValidateController extends Controller {
 
     if (!$this->auth->crsfTokenIsValid())
       return $this->redirectToForgotPasswordPage();
+
+    if ($this->turnstileInvalid())
+      return $this->redirectToForgotPasswordPageWithTurnstileWarning();
 
     if (! $this->forgotPasswordFormService->saveRequestAndSendEmail($this->request->post))
       return $this->redirectToForgotPasswordWithErrors();
@@ -38,8 +45,25 @@ class ForgotPasswordValidateController extends Controller {
       return $this->response;
   }
 
+  private function turnstileInvalid() {
+    if (empty($this->request->post['cf-turnstile-response'])) {
+      return true;
+    }
+    $token = $this->request->post['cf-turnstile-response'];
+    $ip = $this->request->server['REMOTE_ADDR'] ?? null;
+    $result = $this->turnstileVerifier->verify($token, $ip);
+    return !($result['ok'] ?? false);
+  }
+
   private function redirectToForgotPasswordPage() {
     $this->flash('Please request a password reset from the PyAngelo website.', 'danger');
+    $this->response->header('Location: /forgot-password');
+    return $this->response;
+  }
+
+  private function redirectToForgotPasswordPageWithTurnstileWarning() {
+    $this->flash('Cloudflare turnstile could not verify you were a human. Please try again.', 'warning');
+    $_SESSION['formVars'] = $this->request->post;
     $this->response->header('Location: /forgot-password');
     return $this->response;
   }
@@ -53,8 +77,8 @@ class ForgotPasswordValidateController extends Controller {
   }
 
   private function redirectToForgotPasswordConfirmPage() {
-    $location = 'Location: /forgot-password-confirm?email=' . urlencode($this->request->post['email']);
-    $this->response->header($location);
+    $_SESSION['forgotPasswordRequestSent'] = true;
+    $this->response->header('Location: /forgot-password-confirm');
     return $this->response;
   }
 }

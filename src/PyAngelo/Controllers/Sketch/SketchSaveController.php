@@ -60,6 +60,14 @@ class SketchSaveController extends Controller {
       return $this->response;
     }
 
+    if (!str_ends_with($this->request->post['filename'], '.py')) {
+      $this->response->setVars(array(
+        'status' => 'error',
+        'message' => 'Only Python (.py) files can be saved.'
+      ));
+      return $this->response;
+    }
+
     if (!isset($this->request->post['program'])) {
       $this->response->setVars(array(
         'status' => 'error',

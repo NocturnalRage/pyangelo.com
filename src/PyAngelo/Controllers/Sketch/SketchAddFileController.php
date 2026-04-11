@@ -64,6 +64,15 @@ class SketchAddFileController extends Controller {
       return $this->response;
     }
 
+    if (!str_ends_with($this->request->post['filename'], '.py')) {
+      $this->response->setVars(array(
+        'status' => 'error',
+        'message' => 'Only Python (.py) files can be added.',
+        'filename' => 'File not created'
+      ));
+      return $this->response;
+    }
+
     if (! $sketch = $this->sketchRepository->getSketchById($this->request->post['sketchId'])) {
       $this->response->setVars(array(
         'status' => 'error',

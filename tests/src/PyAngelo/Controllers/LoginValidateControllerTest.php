@@ -13,19 +13,19 @@ class LoginValidateControllerTest extends TestCase {
   protected $request;
   protected $response;
   protected $auth;
-  protected $recaptcha;
+  protected $turnstileVerifier;
   protected $controller;
 
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
-    $this->recaptcha = Mockery::mock('Framework\Recaptcha\RecaptchaClient');
+    $this->turnstileVerifier = Mockery::mock('Framework\Turnstile\TurnstileVerifier');
     $this->controller = new LoginValidateController (
       $this->request,
       $this->response,
       $this->auth,
-      $this->recaptcha
+      $this->turnstileVerifier
     );
   }
   public function tearDown(): void {
@@ -59,11 +59,47 @@ class LoginValidateControllerTest extends TestCase {
   }
 
   #[RunInSeparateProcess]
-  public function testRedirectToLoginPageWhenNoFormData() {
+  public function testRedirectToLoginPageWhenTurnstileFails() {
     session_start();
+    $this->request->post = ['cf-turnstile-response' => 'bad-token'];
+    $this->request->server['REMOTE_ADDR'] = '127.0.0.1';
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->turnstileVerifier->shouldReceive('verify')
+      ->once()
+      ->with('bad-token', '127.0.0.1')
+      ->andReturn(['ok' => false, 'errors' => ['invalid-input-response']]);
+    $response = $this->controller->exec();
+    $expectedHeaders = array(array('header', 'Location: /login'));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+    $expectedFlashMessage = 'Cloudflare turnstile could not verify you were a human. Please try again.';
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
+  }
+
+  #[RunInSeparateProcess]
+  public function testRedirectToLoginPageWhenTurnstileTokenMissing() {
+    session_start();
     $this->request->post = [];
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $response = $this->controller->exec();
+    $expectedHeaders = array(array('header', 'Location: /login'));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+    $expectedFlashMessage = 'Cloudflare turnstile could not verify you were a human. Please try again.';
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
+  }
+
+  #[RunInSeparateProcess]
+  public function testRedirectToLoginPageWhenNoFormData() {
+    session_start();
+    $this->request->post = ['cf-turnstile-response' => 'valid-token'];
+    $this->request->server['REMOTE_ADDR'] = '127.0.0.1';
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->turnstileVerifier->shouldReceive('verify')
+      ->once()
+      ->with('valid-token', '127.0.0.1')
+      ->andReturn(['ok' => true]);
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedLocation = 'Location: /login';
@@ -80,11 +116,17 @@ class LoginValidateControllerTest extends TestCase {
   #[RunInSeparateProcess]
   public function testRedirectToLoginPageWhenInvalidEmail() {
     session_start();
-    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
-    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->request->post = [
+      'cf-turnstile-response' => 'valid-token',
       'email' => 'fredhotmail.com'
     ];
+    $this->request->server['REMOTE_ADDR'] = '127.0.0.1';
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->turnstileVerifier->shouldReceive('verify')
+      ->once()
+      ->with('valid-token', '127.0.0.1')
+      ->andReturn(['ok' => true]);
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedLocation = 'Location: /login';
@@ -108,11 +150,16 @@ class LoginValidateControllerTest extends TestCase {
     $email = 'fastfreddy@hotmail.com';
     $password = 'secret';
     $this->request->post = [
+      'cf-turnstile-response' => 'valid-token',
       'email' => $email,
       'loginPassword' => $password
     ];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->turnstileVerifier->shouldReceive('verify')
+      ->once()
+      ->with('valid-token', $ipAddress)
+      ->andReturn(['ok' => true]);
     $this->auth->shouldReceive('authenticateLogin')
       ->once()
       ->with($email, $password)
@@ -136,11 +183,16 @@ class LoginValidateControllerTest extends TestCase {
     $email = 'fastfreddy@hotmail.com';
     $password = 'secret';
     $this->request->post = [
+      'cf-turnstile-response' => 'valid-token',
       'email' => $email,
       'loginPassword' => $password
     ];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->turnstileVerifier->shouldReceive('verify')
+      ->once()
+      ->with('valid-token', $ipAddress)
+      ->andReturn(['ok' => true]);
     $this->auth->shouldReceive('authenticateLogin')
       ->once()
       ->with($email, $password)
@@ -165,11 +217,16 @@ class LoginValidateControllerTest extends TestCase {
     $email = 'fastfreddy@hotmail.com';
     $password = 'secret';
     $this->request->post = [
+      'cf-turnstile-response' => 'valid-token',
       'email' => $email,
       'loginPassword' => $password
     ];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->turnstileVerifier->shouldReceive('verify')
+      ->once()
+      ->with('valid-token', $ipAddress)
+      ->andReturn(['ok' => true]);
     $this->auth->shouldReceive('authenticateLogin')
       ->once()
       ->with($email, $password)
@@ -183,6 +240,35 @@ class LoginValidateControllerTest extends TestCase {
   }
 
   #[RunInSeparateProcess]
+  public function testLoginWithUnsafeRedirectGoesToHome() {
+    session_start();
+    $_SESSION['redirect'] = 'https://evil.com/phish';
+    $ipAddress = '127.0.0.1';
+    $this->request->server['REMOTE_ADDR'] = $ipAddress;
+    $email = 'fastfreddy@hotmail.com';
+    $password = 'secret';
+    $this->request->post = [
+      'cf-turnstile-response' => 'valid-token',
+      'email' => $email,
+      'loginPassword' => $password
+    ];
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->turnstileVerifier->shouldReceive('verify')
+      ->once()
+      ->with('valid-token', $ipAddress)
+      ->andReturn(['ok' => true]);
+    $this->auth->shouldReceive('authenticateLogin')
+      ->once()
+      ->with($email, $password)
+      ->andReturn(true);
+    $response = $this->controller->exec();
+    $expectedHeaders = array(array('header', 'Location: /'));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+    $this->assertEquals("You are now logged in", $_SESSION['flash']['message']);
+  }
+
+  #[RunInSeparateProcess]
   public function testLoginSuccessWithRememberMe() {
     session_start();
     $ipAddress = '127.0.0.1';
@@ -193,6 +279,7 @@ class LoginValidateControllerTest extends TestCase {
     $email = 'fastfreddy@hotmail.com';
     $password = 'secret';
     $this->request->post = [
+      'cf-turnstile-response' => 'valid-token',
       'person_id' => $personId,
       'email' => $email,
       'loginPassword' => $password,
@@ -200,6 +287,10 @@ class LoginValidateControllerTest extends TestCase {
     ];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->turnstileVerifier->shouldReceive('verify')
+      ->once()
+      ->with('valid-token', $ipAddress)
+      ->andReturn(['ok' => true]);
     $this->auth->shouldReceive('authenticateLogin')
       ->once()
       ->with($email, $password)
@@ -216,10 +307,17 @@ class LoginValidateControllerTest extends TestCase {
     $expectedRedirectHeader = array('header', 'Location: /');
     $headers = $response->getHeaders();
     // Cookies should be set in header
-    $expectedPersonId = $headers[0][2];
-    $this->assertSame($expectedPersonId, $personId);
+    $this->assertSame($personId, $headers[0][2]);
     $sessionId = $headers[1][2];
     $token = $headers[2][2];
+    // Verify security flags on all three cookies
+    foreach ([0, 1, 2] as $i) {
+      $opts = $headers[$i][3];
+      $this->assertTrue($opts['secure'],            "Cookie $i must have Secure flag");
+      $this->assertTrue($opts['httponly'],           "Cookie $i must have HttpOnly flag");
+      $this->assertSame('Lax', $opts['samesite'],   "Cookie $i must have SameSite=Lax");
+      $this->assertSame('/', $opts['path'],          "Cookie $i must have path=/");
+    }
     $redirectHeader = $headers[3];
     $this->assertSame($expectedRedirectHeader, $redirectHeader);
     $expectedFlash = "You are now logged in";
