@@ -137,10 +137,13 @@ class UploadAssetController extends Controller {
   }
 
   private function isAssetValidType($assetInfo) {
-    if ($assetInfo['type'] != 'image/jpeg' && $assetInfo['type'] != 'image/png' && $assetInfo['type'] != 'image/gif' && $assetInfo['type'] != 'audio/mpeg' && $assetInfo['type'] != 'audio/wav' && $assetInfo['type'] != 'font/ttf' && $assetInfo['type'] != 'font/otf') {
+    if (empty($assetInfo['tmp_name'])) {
       return false;
     }
-    return true;
+    $finfo = new \finfo(FILEINFO_MIME_TYPE);
+    $mimeType = $finfo->file($assetInfo['tmp_name']);
+    $allowed = ['image/jpeg', 'image/png', 'image/gif', 'audio/mpeg', 'audio/wav', 'audio/x-wav', 'font/sfnt', 'font/ttf', 'font/otf', 'application/x-font-ttf', 'application/x-font-otf'];
+    return in_array($mimeType, $allowed, true);
   }
 
   private function moveFile($fileInfo, $sketch) {

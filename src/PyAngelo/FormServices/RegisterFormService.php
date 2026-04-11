@@ -147,8 +147,8 @@ class RegisterFormService {
     }
     else {
       $passwordLength = strlen($formData['loginPassword']);
-      if ($passwordLength < 4 || $passwordLength > 30) {
-        $this->errors['loginPassword'] = "The password must be between 4 and 30 characters in length.";
+      if ($passwordLength < 8 || $passwordLength > 30) {
+        $this->errors['loginPassword'] = "The password must be between 8 and 30 characters in length.";
         return false;
       }
       return true;

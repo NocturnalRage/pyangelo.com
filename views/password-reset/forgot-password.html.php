@@ -27,6 +27,10 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
           </div>
 
           <div class="form-group">
+            <div class="col-md-6 col-md-offset-4 cf-turnstile" data-sitekey="<?= $_ENV['TURNSTILE_SITE_KEY'] ?>"></div>
+          </div>
+
+          <div class="form-group">
             <div class="col-md-6 col-md-offset-4">
               <input type="submit" class="btn btn-primary" value="Send me a password reset link" />
             </div>
@@ -41,5 +45,6 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
 include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';
 ?>
   </div><!-- container -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </body>
 </html>

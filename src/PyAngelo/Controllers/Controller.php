@@ -47,6 +47,7 @@ abstract class Controller {
 
     $message = '[' . $logDate . '] ' . $logLevel . ': ' . $message . PHP_EOL;
 
-    file_put_contents($_ENV['APPLICATION_LOG_FILE'], $message, FILE_APPEND);
+    if (!empty($_ENV['APPLICATION_LOG_FILE']))
+      file_put_contents($_ENV['APPLICATION_LOG_FILE'], $message, FILE_APPEND);
   }
 }

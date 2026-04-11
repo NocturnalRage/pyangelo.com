@@ -437,7 +437,8 @@ $di->set('LoginValidateController', function () use ($di) {
   return new PyAngelo\Controllers\LoginValidateController (
     $di->get('request'),
     $di->get('response'),
-    $di->get('auth')
+    $di->get('auth'),
+    $di->get('turnstileVerifier')
   );
 });
 
@@ -454,7 +455,8 @@ $di->set('ForgotPasswordValidateController', function () use ($di) {
     $di->get('request'),
     $di->get('response'),
     $di->get('auth'),
-    $di->get('forgotPasswordFormService')
+    $di->get('forgotPasswordFormService'),
+    $di->get('turnstileVerifier')
   );
 });
 

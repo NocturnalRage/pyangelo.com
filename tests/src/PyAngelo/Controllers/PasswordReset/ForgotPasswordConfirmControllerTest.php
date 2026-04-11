@@ -2,6 +2,7 @@
 namespace Tests\src\PyAngelo\Controllers\PasswordReset;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Mockery;
 use Framework\Request;
 use Framework\Response;
@@ -42,7 +43,7 @@ class ForgotPasswordConfirmControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  public function testRedirectWhenNoEmailPassedAsGetVariable() {
+  public function testRedirectWhenNoSessionFlagPresent() {
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
@@ -52,9 +53,10 @@ class ForgotPasswordConfirmControllerTest extends TestCase {
     $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
   }
 
-  public function testWhenEmailPassedAsGetVariable() {
-    $email = 'any_email@hotmail.com';
-    $this->request->get['email'] = $email;
+  #[RunInSeparateProcess]
+  public function testWhenSessionFlagIsPresent() {
+    session_start();
+    $_SESSION['forgotPasswordRequestSent'] = true;
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('getPersonDetailsForViews')->once()->with();
     $response = $this->controller->exec();
@@ -65,6 +67,8 @@ class ForgotPasswordConfirmControllerTest extends TestCase {
     $this->assertSame($expectedViewName, $response->getView());
     $this->assertSame($expectedPageTitle, $responseVars['pageTitle']);
     $this->assertSame($expectedMetaDescription, $responseVars['metaDescription']);
+    $this->assertArrayNotHasKey('email', $responseVars);
+    $this->assertArrayNotHasKey('forgotPasswordRequestSent', $_SESSION);
   }
 }
 ?>

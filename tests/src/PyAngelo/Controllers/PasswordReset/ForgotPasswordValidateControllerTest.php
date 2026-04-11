@@ -12,6 +12,7 @@ class ForgotPasswordValidateControllerTest extends TestCase {
   protected $response;
   protected $auth;
   protected $forgotPasswordFormService;
+  protected $turnstileVerifier;
   protected $controller;
 
   public function setUp(): void {
@@ -19,11 +20,13 @@ class ForgotPasswordValidateControllerTest extends TestCase {
     $this->response = new Response('views');
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
     $this->forgotPasswordFormService = Mockery::mock('PyAngelo\FormServices\ForgotPasswordFormService');
+    $this->turnstileVerifier = Mockery::mock('Framework\Turnstile\TurnstileVerifier');
     $this->controller = new ForgotPasswordValidateController (
       $this->request,
       $this->response,
       $this->auth,
-      $this->forgotPasswordFormService
+      $this->forgotPasswordFormService,
+      $this->turnstileVerifier
     );
   }
   public function tearDown(): void {
@@ -58,14 +61,38 @@ class ForgotPasswordValidateControllerTest extends TestCase {
   }
 
   #[RunInSeparateProcess]
+  public function testRedirectToForgotPasswordWhenTurnstileFails() {
+    session_start();
+    $this->request->post = ['cf-turnstile-response' => 'bad-token'];
+    $this->request->server['REMOTE_ADDR'] = '127.0.0.1';
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->turnstileVerifier->shouldReceive('verify')
+      ->once()
+      ->with('bad-token', '127.0.0.1')
+      ->andReturn(['ok' => false, 'errors' => ['invalid-input-response']]);
+    $response = $this->controller->exec();
+    $expectedHeaders = array(array('header', 'Location: /forgot-password'));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+    $expectedFlashMessage = 'Cloudflare turnstile could not verify you were a human. Please try again.';
+    $this->assertEquals($expectedFlashMessage, $_SESSION['flash']['message']);
+  }
+
+  #[RunInSeparateProcess]
   public function testForgotPasswordWithNoFormData() {
     session_start();
     $flashMessage = 'There were errors';
+    $this->request->post = ['cf-turnstile-response' => 'valid-token'];
+    $this->request->server['REMOTE_ADDR'] = '127.0.0.1';
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->turnstileVerifier->shouldReceive('verify')
+      ->once()
+      ->with('valid-token', '127.0.0.1')
+      ->andReturn(['ok' => true]);
     $this->forgotPasswordFormService->shouldReceive('saveRequestAndSendEmail')
       ->once()
-      ->with([])
+      ->with($this->request->post)
       ->andReturn(false);
     $this->forgotPasswordFormService->shouldReceive('getErrors')
       ->once()
@@ -75,7 +102,6 @@ class ForgotPasswordValidateControllerTest extends TestCase {
       ->once()
       ->with()
       ->andReturn($flashMessage);
-    $this->request->post = [];
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedLocation = 'Location: /forgot-password';
@@ -90,9 +116,17 @@ class ForgotPasswordValidateControllerTest extends TestCase {
     $flashMessage = 'There were errors';
     $errors = ['foo' => 'bar'];
     $email = 'fastfreddy.com';
-    $this->request->post = ['email' => $email];
+    $this->request->post = [
+      'cf-turnstile-response' => 'valid-token',
+      'email' => $email
+    ];
+    $this->request->server['REMOTE_ADDR'] = '127.0.0.1';
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->turnstileVerifier->shouldReceive('verify')
+      ->once()
+      ->with('valid-token', '127.0.0.1')
+      ->andReturn(['ok' => true]);
     $this->forgotPasswordFormService->shouldReceive('saveRequestAndSendEmail')
       ->once()
       ->with($this->request->post)
@@ -117,18 +151,27 @@ class ForgotPasswordValidateControllerTest extends TestCase {
   public function testRedirectToConfirmPageOnSuccess() {
     session_start();
     $email = 'fastfreddy@hotmail.com';
-    $this->request->post = ['email' => $email];
+    $this->request->post = [
+      'cf-turnstile-response' => 'valid-token',
+      'email' => $email
+    ];
+    $this->request->server['REMOTE_ADDR'] = '127.0.0.1';
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(false);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->turnstileVerifier->shouldReceive('verify')
+      ->once()
+      ->with('valid-token', '127.0.0.1')
+      ->andReturn(['ok' => true]);
     $this->forgotPasswordFormService->shouldReceive('saveRequestAndSendEmail')
       ->once()
       ->with($this->request->post)
       ->andReturn(true);
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
-    $expectedLocation = 'Location: /forgot-password-confirm?email=' . urlencode($email);
+    $expectedLocation = 'Location: /forgot-password-confirm';
     $expectedHeaders = array(array('header', $expectedLocation));
     $this->assertSame($expectedHeaders, $response->getHeaders());
+    $this->assertTrue($_SESSION['forgotPasswordRequestSent']);
   }
 }
 ?>

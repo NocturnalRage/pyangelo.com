@@ -206,11 +206,14 @@ class UploadAssetControllerTest extends TestCase {
       'sketch_id' => $sketchId,
       'person_id' => $personId
     ];
+    // Create a real temp file with JPEG magic bytes so finfo_file() identifies it correctly
+    $tmpFile = tempnam(sys_get_temp_dir(), 'test_upload_');
+    file_put_contents($tmpFile, "\xFF\xD8\xFF\xE0" . str_repeat("\x00", 100));
     $fileAsset = [
       'size' => 1048576,
       'type' => 'image/jpeg',
       'name' => 'test.jpg',
-      'tmp_name' => 'tmp.jpg'
+      'tmp_name' => $tmpFile
     ];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
@@ -220,6 +223,7 @@ class UploadAssetControllerTest extends TestCase {
     $this->request->files['file'] = $fileAsset;
 
     $response = $this->controller->exec();
+    unlink($tmpFile);
     $responseVars = $response->getVars();
     $expectedHeaders = array(
       array('header', 'Content-Type: application/json'),

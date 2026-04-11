@@ -26,6 +26,12 @@ class ImpersonateUserController extends Controller {
       return $this->response;
     }
 
+    if (!$this->auth->crsfTokenIsValid()) {
+      $this->flash('You must impersonate a user from the PyAngelo website.', 'danger');
+      $this->response->header('Location: /admin/users');
+      return $this->response;
+    }
+
     if (! isset($this->request->post['email'])) {
       $this->flash('You must select a person to impersonate!', 'danger');
       $this->response->header('Location: /admin/users');

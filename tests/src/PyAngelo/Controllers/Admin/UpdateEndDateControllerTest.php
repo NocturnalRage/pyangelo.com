@@ -49,9 +49,24 @@ class UpdateEndDateControllerTest extends TestCase {
   }
 
   #[RunInSeparateProcess]
+  public function testUpdateEndDateWhenAdminInvalidCsrfToken() {
+    session_start();
+    $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(false);
+
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedHeaders = array(array('header', 'Location: /admin/users'));
+    $expectedFlashMessage = "You must update a premium end date from the PyAngelo website.";
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
+  }
+
+  #[RunInSeparateProcess]
   public function testUpdateEndDateWhenAdminNoPersonId() {
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
@@ -66,6 +81,7 @@ class UpdateEndDateControllerTest extends TestCase {
     $personId = 100;
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->personRepository->shouldReceive('getPersonByIdForAdmin')
       ->once()
       ->with($personId)
@@ -88,6 +104,7 @@ class UpdateEndDateControllerTest extends TestCase {
     ];
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->personRepository->shouldReceive('getPersonByIdForAdmin')
       ->once()
       ->with($personId)
@@ -112,6 +129,7 @@ class UpdateEndDateControllerTest extends TestCase {
     ];
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->personRepository->shouldReceive('getPersonByIdForAdmin')
       ->once()
       ->with($personId)
@@ -137,6 +155,7 @@ class UpdateEndDateControllerTest extends TestCase {
     ];
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->personRepository->shouldReceive('getPersonByIdForAdmin')
       ->once()
       ->with($personId)
@@ -178,6 +197,7 @@ class UpdateEndDateControllerTest extends TestCase {
     ];
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->personRepository->shouldReceive('getPersonByIdForAdmin')
       ->once()
       ->with($personId)
@@ -214,6 +234,7 @@ class UpdateEndDateControllerTest extends TestCase {
     ];
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->personRepository->shouldReceive('getPersonByIdForAdmin')
       ->once()
       ->with($personId)

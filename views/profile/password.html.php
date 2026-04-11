@@ -14,6 +14,13 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
         ?>
         <form method="post" action="/password-validate" class="form-horizontal">
           <input type="hidden" name="crsfToken" value="<?= $personInfo['crsfToken'] ?>" />
+          <div class="<?= isset($errors['currentPassword']) ? ' has-error' : ''; ?>">
+            <label for="currentPassword" class="control-label">Current password:</label>
+              <input type="password" name="currentPassword" id="currentPassword" class="form-control" placeholder="Current password" maxlength="30" required />
+              <?php if (isset($errors['currentPassword'])) :?>
+                <div class="alert alert-danger"><?= $this->esc($errors['currentPassword']); ?></div>
+              <?php endif; ?>
+          </div>
           <div class="<?= isset($errors['loginPassword']) ? ' has-error' : ''; ?>">
             <label for="loginPassword" class="control-label">New password:</label>
               <input type="password" name="loginPassword" id="loginPassword" class="form-control" placeholder="New password" value="<?php if (isset($formVars['loginPassword'])) echo $this->esc($formVars['loginPassword']); ?>" maxlength="30" required autofocus />

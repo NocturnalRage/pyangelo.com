@@ -243,6 +243,9 @@ class Response
      */
     public function send()
     {
+        $this->header('X-Frame-Options: SAMEORIGIN');
+        $this->header('X-Content-Type-Options: nosniff');
+        $this->header('Referrer-Policy: strict-origin-when-cross-origin');
         $buffered_output = $this->requireView();
         $this->sendHeaders();
         echo $buffered_output;

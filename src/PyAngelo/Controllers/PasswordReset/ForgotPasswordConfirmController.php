@@ -10,15 +10,16 @@ class ForgotPasswordConfirmController extends Controller {
     if ($this->auth->loggedIn())
       return $this->redirectToPasswordPage();
 
-    if (empty($this->request->get['email']))
+    if (empty($_SESSION['forgotPasswordRequestSent']))
       return $this->redirectToForgotPasswordPageWithErrorMessage();
+
+    unset($_SESSION['forgotPasswordRequestSent']);
 
     $this->response->setView('password-reset/forgot-password-confirm.html.php');
     $this->response->setVars(array(
       'pageTitle' => 'Request Link Sent',
       'metaDescription' => "If we have the email you entered in our system then a message has been sent with a password reset link.",
       'activeLink' => 'Home',
-      'email' => $this->request->get['email'],
       'personInfo' => $this->auth->getPersonDetailsForViews()
     ));
     return $this->response;

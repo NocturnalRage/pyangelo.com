@@ -49,9 +49,24 @@ class ImpersonateUserControllerTest extends TestCase {
   }
 
   #[RunInSeparateProcess]
+  public function testWhenAdminInvalidCsrfToken() {
+    session_start();
+    $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(false);
+
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedHeaders = array(array('header', 'Location: /admin/users'));
+    $expectedFlashMessage = "You must impersonate a user from the PyAngelo website.";
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+    $this->assertSame($expectedFlashMessage, $_SESSION['flash']['message']);
+  }
+
+  #[RunInSeparateProcess]
   public function testWhenAdminNoEmail() {
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
 
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
@@ -67,6 +82,7 @@ class ImpersonateUserControllerTest extends TestCase {
     session_start();
     $this->request->post['email'] = $email;
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->personRepository->shouldReceive('getPersonByEmail')
       ->once()
       ->with($email)
@@ -97,6 +113,7 @@ class ImpersonateUserControllerTest extends TestCase {
     $this->request->post['email'] = $email;
     session_start();
     $this->auth->shouldReceive('isAdmin')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->personRepository->shouldReceive('getPersonByEmail')
       ->once()
       ->with($email)

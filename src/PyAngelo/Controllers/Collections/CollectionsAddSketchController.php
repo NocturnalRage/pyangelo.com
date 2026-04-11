@@ -72,6 +72,23 @@ class CollectionsAddSketchController extends Controller {
       return $this->response;
     }
 
+    if ($this->request->post['collectionId'] != 0) {
+      if (! $collection = $this->sketchRepository->getCollectionById($this->request->post['collectionId'])) {
+        $this->response->setVars(array(
+          'status' => 'error',
+          'message' => 'You must select a valid collection.'
+        ));
+        return $this->response;
+      }
+      if ($collection['person_id'] != $this->auth->personId()) {
+        $this->response->setVars(array(
+          'status' => 'error',
+          'message' => 'You must be the owner of the collection to add a sketch to it.'
+        ));
+        return $this->response;
+      }
+    }
+
     if ($this->request->post['collectionId'] == 0) {
       $rowsUpdated = $this->sketchRepository->removeSketchFromAllCollections(
         $this->request->post['sketchId']
