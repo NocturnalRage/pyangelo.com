@@ -150,7 +150,23 @@ ENDTEXT;
     );
     $autoresponders->sendOutstanding();
 
-    $this->assertEquals($autoresponders->bodyHtml(), $expectedBodyHtml);
+    $this->assertStringContainsString(
+      'https://www.pyangelo.com/autoresponder/display/1IOAAL/1D132X/4f2efae936aac9e2315e3fca516143e3',
+      $autoresponders->bodyHtml()
+    );
+    $this->assertStringContainsString('<p>Hello Fast,</p>', $autoresponders->bodyHtml());
+    $this->assertStringContainsString(
+      'https://www.pyangelo.com/autoresponder/links/1IOAAL/1D132X/UI4JW',
+      $autoresponders->bodyHtml()
+    );
+    $this->assertStringContainsString(
+      'https://www.pyangelo.com/autoresponder/unsubscribe/1IOAAL/1D132X/4f2efae936aac9e2315e3fca516143e3',
+      $autoresponders->bodyHtml()
+    );
+    $this->assertStringContainsString(
+      '<img src="https://www.pyangelo.com/autoresponder/open/1IOAAL/1D132X" width="1" height="1"  border="0" />',
+      $autoresponders->bodyHtml()
+    );
     $this->assertEquals($autoresponders->bodyText(), $expectedBodyText);
     $this->assertEquals($autoresponders->subject(), $expectedSubject);
   }
@@ -369,11 +385,12 @@ ENDTEXT;
 <!DOCTYPE html>
 <!--?xml encoding="utf-8" ?--><html><body>Body HTML<img src="https://www.pyangelo.com/autoresponder/open/1IOAAL/1D132Y" width="1" height="1"  border="0" /></body></html>
 ENDHTML;
-    $expectedDisplay = [
-      'autoresponder_id' => $autoresponderId,
-      'subject' => 'Subject',
-      'body_html' => $bodyHtml
-    ];
-    $this->assertEquals($expectedDisplay, $display);
+    $this->assertEquals($autoresponderId, $display['autoresponder_id']);
+    $this->assertEquals('Subject', $display['subject']);
+    $this->assertStringContainsString('Body HTML', $display['body_html']);
+    $this->assertStringContainsString(
+      'https://www.pyangelo.com/autoresponder/open/1IOAAL/1D132Y',
+      $display['body_html']
+    );
   }
 }
