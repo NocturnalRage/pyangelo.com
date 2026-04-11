@@ -8,14 +8,12 @@ use Tests\views\BasicViewHtmlTestCase;
 class ForgotPasswordConfirmHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicForgotPasswordConfirmView() {
-    $email = 'any_email@pyangelo.com';
     $response = new Response('views');
     $response->setView('password-reset/forgot-password-confirm.html.php');
     $response->setVars(array(
       'pageTitle' => 'Forgot Password',
       'metaDescription' => "I've forgotton my password.",
       'activeLink' => 'Home',
-      'email' => $email,
       'personInfo' => $this->setPersonInfoLoggedOut()
     ));
     $output = $response->requireView();
@@ -25,7 +23,7 @@ class ForgotPasswordConfirmHtmlTest extends BasicViewHtmlTestCase {
     $this->assertStringContainsString($expect, $output);
     $expect = '<h1 class="text-center">Password Reset Instruction Emailed</h1>';
     $this->assertStringContainsString($expect, $output);
-    $expect = "If a matching account was found then an email was sent to $email with instructions on how to reset your password.";
+    $expect = "If a matching account was found then an email was sent with instructions on how to reset your password.";
     $this->assertStringContainsString($expect, $output);
   }
 }
