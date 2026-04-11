@@ -21,18 +21,22 @@ ENDDEFAULTMAINCODE;
   }
 
   public function createFile($sketch, $filename) {
+    $filename = basename($filename);
     touch($this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'] . '/' . $filename);
   }
-  
+
   public function doesFileExist($sketch, $filename) {
+    $filename = basename($filename);
     return file_exists($this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'] . '/' . $filename);
   }
-  
+
   public function deleteFile($sketch, $filename) {
+    $filename = basename($filename);
     unlink($this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'] . '/' . $filename);
   }
 
   public function saveCode($sketch, $filename, $code) {
+    $filename = basename($filename);
     $basePath = $this->appDir . '/public/sketches/' . $sketch['person_id'] . '/' . $sketch['sketch_id'];
     if (! file_exists($basePath)) {
       mkdir($basePath, 0750, true);
@@ -46,8 +50,9 @@ ENDDEFAULTMAINCODE;
     $dest = $this->appDir . '/public/sketches/' . $personId . '/' . $newSketchId;
     mkdir($dest, 0750, true);
     foreach ($sketchFiles as $file) {
-      $srcFile = $src . '/' . $file['filename'];
-      $destFile = $dest . '/' . $file['filename'];
+      $safeFilename = basename($file['filename']);
+      $srcFile = $src . '/' . $safeFilename;
+      $destFile = $dest . '/' . $safeFilename;
       copy($srcFile, $destFile);
     }
   }

@@ -208,14 +208,19 @@ class CollectionsAddSketchControllerTest extends TestCase {
       'sketch_id' => $sketchId,
       'person_id' => $ownerId
     ];
+    $collection = [
+      'collection_id' => $collectionId,
+      'person_id' => $personId
+    ];
     $this->request->post = [
       'sketchId' => $sketchId,
       'collectionId' => $collectionId
     ];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
-    $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
+    $this->auth->shouldReceive('personId')->twice()->with()->andReturn($personId);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->sketchRepository->shouldReceive('getSketchById')->once()->with($sketchId)->andReturn($sketch);
+    $this->sketchRepository->shouldReceive('getCollectionById')->once()->with($collectionId)->andReturn($collection);
     $this->sketchRepository->shouldReceive('addSketchToCollection')->once()->with($sketchId, $collectionId)->andReturn(0);
 
     $response = $this->controller->exec();
@@ -237,14 +242,19 @@ class CollectionsAddSketchControllerTest extends TestCase {
       'sketch_id' => $sketchId,
       'person_id' => $ownerId
     ];
+    $collection = [
+      'collection_id' => $collectionId,
+      'person_id' => $personId
+    ];
     $this->request->post = [
       'sketchId' => $sketchId,
       'collectionId' => $collectionId
     ];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
-    $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
+    $this->auth->shouldReceive('personId')->twice()->with()->andReturn($personId);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
     $this->sketchRepository->shouldReceive('getSketchById')->once()->with($sketchId)->andReturn($sketch);
+    $this->sketchRepository->shouldReceive('getCollectionById')->once()->with($collectionId)->andReturn($collection);
     $this->sketchRepository->shouldReceive('addSketchToCollection')->once()->with($sketchId, $collectionId)->andReturn(1);
 
     $response = $this->controller->exec();

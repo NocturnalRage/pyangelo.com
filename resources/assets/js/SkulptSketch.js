@@ -366,7 +366,7 @@ function submitRename (event) {
 
 function updateTitle (data) {
   document.getElementById('rename-form').style.display = 'none'
-  document.getElementById('title').innerHTML = data.title
+  document.getElementById('title').textContent = data.title
   document.getElementById('titleWithEdit').style.display = 'block'
   document.title = data.title
 }

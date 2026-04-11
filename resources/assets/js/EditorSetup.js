@@ -228,7 +228,7 @@ export class Editor {
     }
 
     if (file.filename.endsWith('.py')) {
-      if (!file.sourceCode) {
+      if (file.sourceCode === undefined || file.sourceCode === false) {
         file.sourceCode = ''
       }
       if (file.filename !== 'main.py') {

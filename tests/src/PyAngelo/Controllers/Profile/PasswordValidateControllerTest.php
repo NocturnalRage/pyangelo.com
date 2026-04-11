@@ -59,10 +59,51 @@ class PasswordValidateControllerTest extends TestCase {
   }
 
   #[RunInSeparateProcess]
-  public function testRedirectToPasswordPageWhenNoPassword() {
+  public function testRedirectToPasswordPageWhenNoCurrentPassword() {
     session_start();
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedLocation = 'Location: /password';
+    $expectedHeaders = array(array('header', $expectedLocation));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+    $expectedErrors = [
+      'currentPassword' => 'You must enter your current password.'
+    ];
+    $this->assertEquals($expectedErrors, $_SESSION['errors']);
+  }
+
+  #[RunInSeparateProcess]
+  public function testRedirectToPasswordPageWhenWrongCurrentPassword() {
+    session_start();
+    $this->request->post = ['currentPassword' => 'wrongpassword'];
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('personId')->once()->with()->andReturn(99);
+    $person = ['person_id' => 99, 'password' => password_hash('oldpassword', PASSWORD_DEFAULT)];
+    $this->personRepository->shouldReceive('getPersonById')->once()->with(99)->andReturn($person);
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $expectedLocation = 'Location: /password';
+    $expectedHeaders = array(array('header', $expectedLocation));
+    $this->assertSame($expectedHeaders, $response->getHeaders());
+    $expectedErrors = [
+      'currentPassword' => 'Your current password is incorrect.'
+    ];
+    $this->assertEquals($expectedErrors, $_SESSION['errors']);
+  }
+
+  #[RunInSeparateProcess]
+  public function testRedirectToPasswordPageWhenNoPassword() {
+    session_start();
+    $currentPassword = 'oldpassword';
+    $this->request->post = ['currentPassword' => $currentPassword];
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('personId')->once()->with()->andReturn(99);
+    $person = ['person_id' => 99, 'password' => password_hash($currentPassword, PASSWORD_DEFAULT)];
+    $this->personRepository->shouldReceive('getPersonById')->once()->with(99)->andReturn($person);
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedLocation = 'Location: /password';
@@ -77,28 +118,35 @@ class PasswordValidateControllerTest extends TestCase {
   #[RunInSeparateProcess]
   public function testRedirectToPasswordPageWhenInvalidPassword() {
     session_start();
+    $currentPassword = 'oldpassword';
     $invalidPassword = 'abc';
-    $this->request->post = ['loginPassword' => $invalidPassword];
+    $this->request->post = ['currentPassword' => $currentPassword, 'loginPassword' => $invalidPassword];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('personId')->once()->with()->andReturn(99);
+    $person = ['person_id' => 99, 'password' => password_hash($currentPassword, PASSWORD_DEFAULT)];
+    $this->personRepository->shouldReceive('getPersonById')->once()->with(99)->andReturn($person);
     $response = $this->controller->exec();
     $responseVars = $response->getVars();
     $expectedLocation = 'Location: /password';
     $expectedHeaders = array(array('header', $expectedLocation));
     $this->assertSame($expectedHeaders, $response->getHeaders());
     $expectedErrors = [
-      'loginPassword' => 'The password must be between 4 characters and 30 characters long.'
+      'loginPassword' => 'The password must be between 8 characters and 30 characters long.'
     ];
     $this->assertEquals($expectedErrors, $_SESSION['errors']);
   }
 
   public function testUpdatePasswordSuccess() {
     $personId = 99;
-    $validPassword = 'secret';
-    $this->request->post = ['loginPassword' => $validPassword];
+    $currentPassword = 'oldpassword';
+    $validPassword = 'newsecretpassword';
+    $this->request->post = ['currentPassword' => $currentPassword, 'loginPassword' => $validPassword];
     $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
     $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
-    $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
+    $this->auth->shouldReceive('personId')->twice()->with()->andReturn($personId);
+    $person = ['person_id' => $personId, 'password' => password_hash($currentPassword, PASSWORD_DEFAULT)];
+    $this->personRepository->shouldReceive('getPersonById')->once()->with($personId)->andReturn($person);
     $this->personRepository->shouldReceive('updatePassword')
       ->once()
       ->with($personId, $validPassword);

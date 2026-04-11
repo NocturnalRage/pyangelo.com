@@ -27,6 +27,12 @@ class UpdateEndDateController extends Controller {
       return $this->response;
     }
 
+    if (!$this->auth->crsfTokenIsValid()) {
+      $this->flash('You must update a premium end date from the PyAngelo website.', 'danger');
+      $this->response->header('Location: /admin/users');
+      return $this->response;
+    }
+
     if (! isset($this->request->post['person_id'])) {
       $this->flash('You must select a person in order to grant them premium member access!', 'danger');
       $this->response->header('Location: /admin/users');

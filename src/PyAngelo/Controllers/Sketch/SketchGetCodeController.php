@@ -64,7 +64,8 @@ class SketchGetCodeController extends Controller {
   function readCodeFromFile($personId, $sketchId, $programName) {
     $basePath = $this->appDir . '/public/sketches/' . $personId . '/' . $sketchId;
     $filename = $basePath . '/' . $programName;
-    return @file_get_contents($filename);
+    $content = file_get_contents($filename);
+    return $content !== false ? $content : '';
   }
 
   function endsWith($haystack, $needle) {

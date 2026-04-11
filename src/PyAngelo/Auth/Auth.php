@@ -82,7 +82,7 @@ class Auth {
     if (
       empty($this->request->post['crsfToken']) ||
       empty($_SESSION['crsfToken']) ||
-      $this->request->post['crsfToken'] != $_SESSION['crsfToken']
+      !hash_equals($_SESSION['crsfToken'], $this->request->post['crsfToken'])
     ) {
       return FALSE;
     }
@@ -109,6 +109,7 @@ class Auth {
   private function setSessionLoginEmail($personId) {
     $this->person = $this->personRepository->getPersonById($personId);
     $_SESSION['loginEmail'] = $this->person['email'];
+    session_regenerate_id(true);
   }
 
   private function loggedInThroughSession() {
@@ -150,6 +151,7 @@ class Auth {
     }
     else if (password_verify($loginPassword, $person['password'])) {
       // Log the user in
+      session_regenerate_id(true);
       $_SESSION['loginEmail'] = $person['email'];
       $personId = $person['person_id'];
       $this->personRepository->updateLastLogin($personId);

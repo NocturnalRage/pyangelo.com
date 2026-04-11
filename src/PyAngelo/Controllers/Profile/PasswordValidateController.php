@@ -26,6 +26,9 @@ class PasswordValidateController extends Controller {
     if (! $this->auth->crsfTokenIsValid())
       return $this->redirectToPasswordPage();
 
+    if ($this->currentPasswordIsWrong())
+      return $this->redirectToPasswordPageWithErrorMessage();
+
     if ($this->passwordDoesNotMeetRules())
       return $this->redirectToPasswordPageWithErrorMessage();
 
@@ -51,14 +54,27 @@ class PasswordValidateController extends Controller {
     return $this->response;
   }
 
+  private function currentPasswordIsWrong() {
+    if (empty($this->request->post['currentPassword'])) {
+      $_SESSION['errors']['currentPassword'] = "You must enter your current password.";
+      return true;
+    }
+    $person = $this->personRepository->getPersonById($this->auth->personId());
+    if (!password_verify($this->request->post['currentPassword'], $person['password'])) {
+      $_SESSION['errors']['currentPassword'] = "Your current password is incorrect.";
+      return true;
+    }
+    return false;
+  }
+
   private function passwordDoesNotMeetRules() {
     if (empty($this->request->post['loginPassword'])) {
       $_SESSION['errors']['loginPassword'] = "You must supply a password in order to change it.";
       return true;
     }
     $loginPassword = $this->request->post['loginPassword'];
-    if (strlen($loginPassword) < 4 || strlen($loginPassword) > 30) {
-      $_SESSION['errors']['loginPassword'] = "The password must be between 4 characters and 30 characters long.";
+    if (strlen($loginPassword) < 8 || strlen($loginPassword) > 30) {
+      $_SESSION['errors']['loginPassword'] = "The password must be between 8 characters and 30 characters long.";
       return true;
     }
     return false;

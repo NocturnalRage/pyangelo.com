@@ -63,7 +63,7 @@ class RegisterFormServiceTest extends TestCase {
       'givenName' => 'The given name can be no longer than 100 characters.',
       'familyName' => 'The family name can be no longer than 100 characters.',
       'email' => 'The email address can be no longer than 100 characters.',
-      'loginPassword' => 'The password must be between 4 and 30 characters in length.'
+      'loginPassword' => 'The password must be between 8 and 30 characters in length.'
 
     ];
     $this->assertFalse($success);
@@ -86,7 +86,7 @@ class RegisterFormServiceTest extends TestCase {
     $expectedFlashMessage = 'There were some errors. Please fix these and then we will create your free account.';
     $expectedErrors = [
       'email' => 'The email address is not valid.',
-      'loginPassword' => 'The password must be between 4 and 30 characters in length.'
+      'loginPassword' => 'The password must be between 8 and 30 characters in length.'
 
     ];
     $this->assertFalse($success);
@@ -98,7 +98,7 @@ class RegisterFormServiceTest extends TestCase {
     $givenName = 'Fred';
     $familyName = 'Fast';
     $email = 'fred@fastcubing.com';
-    $loginPassword = 'secret';
+    $loginPassword = 'secretpassword';
     $person = [
       'person_id' => 999,
       'active' => 1
@@ -131,7 +131,7 @@ class RegisterFormServiceTest extends TestCase {
     $givenName = 'Fred';
     $familyName = 'Fast';
     $email = 'fred@fastcubing.com';
-    $loginPassword = 'secret';
+    $loginPassword = 'secretpassword';
     $countryCode = 'AU';
     $emailStatusId = 1;
     $personId = 999;
@@ -179,7 +179,7 @@ class RegisterFormServiceTest extends TestCase {
     $givenName = 'Fred';
     $familyName = 'Fast';
     $email = 'fred@fastcubing.com';
-    $loginPassword = 'secret';
+    $loginPassword = 'secretpassword';
     $countryCode = 'AU';
     $emailStatusId = 2;
     $personId = 999;
@@ -216,7 +216,7 @@ class RegisterFormServiceTest extends TestCase {
     $givenName = 'Fred';
     $familyName = 'Fast';
     $email = 'fred@fastcubing.com';
-    $loginPassword = 'secret';
+    $loginPassword = 'secretpassword';
     $countryCode = 'AU';
     $personId = 999;
     $this->personRepository->shouldReceive('getPersonActiveOrNotByEmail')
