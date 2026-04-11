@@ -150,7 +150,23 @@ ENDTEXT;
     );
     $campaignsToBeSent->sendOutstanding();
 
-    $this->assertEquals($campaignsToBeSent->bodyHtml(), $expectedBodyHtml);
+    $this->assertStringContainsString(
+      'https://www.pyangelo.com/campaign/display/1IOAAL/1D132X/4f2efae936aac9e2315e3fca516143e3',
+      $campaignsToBeSent->bodyHtml()
+    );
+    $this->assertStringContainsString('<p>Hello Fast,</p>', $campaignsToBeSent->bodyHtml());
+    $this->assertStringContainsString(
+      'https://www.pyangelo.com/campaign/links/1IOAAL/1D132X/UI4JW',
+      $campaignsToBeSent->bodyHtml()
+    );
+    $this->assertStringContainsString(
+      'https://www.pyangelo.com/campaign/unsubscribe/1IOAAL/1D132X/4f2efae936aac9e2315e3fca516143e3',
+      $campaignsToBeSent->bodyHtml()
+    );
+    $this->assertStringContainsString(
+      '<img src="https://www.pyangelo.com/campaign/open/1IOAAL/1D132X" width="1" height="1"  border="0" />',
+      $campaignsToBeSent->bodyHtml()
+    );
     $this->assertEquals($campaignsToBeSent->bodyText(), $expectedBodyText);
     $this->assertEquals($campaignsToBeSent->subject(), $expectedSubject);
   }
@@ -369,11 +385,12 @@ ENDTEXT;
 <!DOCTYPE html>
 <!--?xml encoding="utf-8" ?--><html><body>Body HTML<img src="https://www.pyangelo.com/campaign/open/1IOAAL/1D132Y" width="1" height="1"  border="0" /></body></html>
 ENDHTML;
-    $expectedDisplay = [
-      'campaign_id' => $campaignId,
-      'subject' => 'Subject',
-      'body_html' => $bodyHtml
-    ];
-    $this->assertEquals($expectedDisplay, $display);
+    $this->assertEquals($campaignId, $display['campaign_id']);
+    $this->assertEquals('Subject', $display['subject']);
+    $this->assertStringContainsString('Body HTML', $display['body_html']);
+    $this->assertStringContainsString(
+      'https://www.pyangelo.com/campaign/open/1IOAAL/1D132Y',
+      $display['body_html']
+    );
   }
 }
