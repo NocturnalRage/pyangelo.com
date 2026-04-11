@@ -64,7 +64,8 @@ class SketchAddFileController extends Controller {
       return $this->response;
     }
 
-    if (!str_ends_with($this->request->post['filename'], '.py')) {
+    $filename = basename($this->request->post['filename']);
+    if (!str_ends_with($filename, '.py')) {
       $this->response->setVars(array(
         'status' => 'error',
         'message' => 'Only Python (.py) files can be added.',
@@ -92,18 +93,18 @@ class SketchAddFileController extends Controller {
 
     $this->sketchRepository->addSketchFile(
       $sketch['sketch_id'],
-      $this->request->post['filename']
+      $filename
     );
 
     $this->sketchFiles->createFile(
       $sketch,
-      $this->request->post['filename'],
+      $filename,
     );
 
     $this->response->setVars(array(
         'status' => 'success',
         'message' => 'File saved.',
-        'filename' => $this->request->post['filename']
+        'filename' => $filename
       ));
     return $this->response;
   }
