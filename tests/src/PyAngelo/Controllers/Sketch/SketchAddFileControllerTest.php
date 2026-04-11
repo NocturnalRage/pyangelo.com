@@ -160,6 +160,34 @@ class SketchAddFileControllerTest extends TestCase {
     $this->assertSame($expectedMessage, $responseVars['message']);
   }
 
+  public function testPathTraversalFilenameIsSanitised() {
+    $ownerId = 101;
+    $personId = $ownerId;
+    $sketchId = bin2hex(random_bytes(16));
+    $traversalFilename = '../../config/services.py';
+    $safeFilename = 'services.py';
+    $sketch = [
+        'sketch_id' => $sketchId,
+        'person_id' => $personId,
+        'title' => 'random-title'
+    ];
+    $this->request->post = [
+      'sketchId' => $sketchId,
+      'filename' => $traversalFilename
+    ];
+    $this->auth->shouldReceive('loggedIn')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('crsfTokenIsValid')->once()->with()->andReturn(true);
+    $this->auth->shouldReceive('personId')->once()->with()->andReturn($personId);
+    $this->sketchRepository->shouldReceive('getSketchById')->once()->with($sketchId)->andReturn($sketch);
+    $this->sketchRepository->shouldReceive('addSketchFile')->once()->with($sketchId, $safeFilename)->andReturn();
+    $this->sketchFiles->shouldReceive('createFile')->once()->with($sketch, $safeFilename)->andReturn();
+
+    $response = $this->controller->exec();
+    $responseVars = $response->getVars();
+    $this->assertSame('success', $responseVars['status']);
+    $this->assertSame($safeFilename, $responseVars['filename']);
+  }
+
   public function testSuccess() {
     $ownerId = 101;
     $personId = $ownerId;
