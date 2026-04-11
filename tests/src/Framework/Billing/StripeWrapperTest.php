@@ -28,7 +28,7 @@ class StripeWrapperTest extends TestCase {
     $this->stripeWrapper = new StripeWrapper(
       $_ENV['STRIPE_SECRET_KEY']
     );
-    $this->stripePriceId = 'price_1JEUrpAkvBrl8hmb6AaEIRZN';
+    $this->stripePriceId = $_ENV['STRIPE_TEST_PRICE_ID'];
     $this->stripePriceInCents = 995;
   }
 

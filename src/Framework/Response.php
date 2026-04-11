@@ -243,10 +243,10 @@ class Response
      */
     public function send()
     {
+        $this->header('X-Frame-Options: SAMEORIGIN');
+        $this->header('X-Content-Type-Options: nosniff');
+        $this->header('Referrer-Policy: strict-origin-when-cross-origin');
         $buffered_output = $this->requireView();
-        header('X-Frame-Options: SAMEORIGIN');
-        header('X-Content-Type-Options: nosniff');
-        header('Referrer-Policy: strict-origin-when-cross-origin');
         $this->sendHeaders();
         echo $buffered_output;
         $this->invokeLastCall();

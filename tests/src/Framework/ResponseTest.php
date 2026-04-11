@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Framework;
 use Framework\FakeResponse;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 class ResponseTest extends \PHPUnit\Framework\TestCase
 {
@@ -98,6 +99,7 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
         $this->response->sendHeaders();
         $this->assertSame('Foo: Bar', $this->response->fake_headers);
     }
+    #[RunInSeparateProcess]
     public function testSend()
     {
         // prep
