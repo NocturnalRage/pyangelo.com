@@ -61,3 +61,5 @@ Dual-mode: `Framework\Mail\LoggerMail` writes to log file (dev), `Framework\Mail
 
 ### Database
 MySQL accessed directly via `mysqli`. Plain SQL migration files in `database/migrations/` (numbered, e.g. `0001_create_users.sql`). No ORM.
+
+A fresh database is built from `database/migrations/pyangelo-schema.sql` (the current schema; replaying the numbered migrations no longer reproduces it) plus lookup rows: `database/test-reference-data.sql` for the test database, and that followed by `database/reference-data.sql` for a dev database.
