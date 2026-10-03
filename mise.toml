@@ -1,0 +1,4 @@
+# laravel-mix 6 can't load yargs on Node 26 ("require is not defined in ES
+# module scope"), so build with Node 24 until the asset build moves off mix.
+[tools]
+node = "24"

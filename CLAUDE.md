@@ -61,3 +61,7 @@ Dual-mode: `Framework\Mail\LoggerMail` writes to log file (dev), `Framework\Mail
 
 ### Database
 MySQL accessed directly via `mysqli`. Plain SQL migration files in `database/migrations/` (numbered, e.g. `0001_create_users.sql`). No ORM.
+
+A fresh database is built from `database/migrations/pyangelo-schema.sql` (replaying the numbered migrations no longer reproduces it), then `database/migrations/pyangelo-schema-changes.sql` (the `db_change` rows for the migrations the dump includes), then lookup rows: `database/test-reference-data.sql` for the test database, and that followed by `database/reference-data.sql` for a dev database.
+
+`bin/migrate` lists migrations newer than the database's highest `db_change` row; `bin/migrate apply` applies them (`--env=.env.test` for the test database, `--prod` to pick `_prod.sql` over `_dev.sql` variants). A new migration is `NNNN_description.sql` with the next number and must end with its own `insert into db_change` row, or the runner stops. When regenerating `pyangelo-schema.sql`, add `pyangelo-schema-changes.sql` rows for the migrations it now includes.
