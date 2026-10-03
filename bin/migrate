@@ -1,0 +1,120 @@
+#!/usr/bin/php
+<?php
+// Lists or applies the numbered migrations in database/migrations that are
+// newer than the database's highest db_change row.
+//
+//   bin/migrate                     List pending migrations (exits 1 if any).
+//   bin/migrate apply               Apply them in order.
+//   bin/migrate --env=.env.test     Use another env file's database.
+//   bin/migrate --prod              Pick NNNN_*_prod.sql over NNNN_*_dev.sql.
+//
+// Each migration records itself with an insert into db_change, as they always
+// have; the runner stops if one doesn't. _undo_ files are never applied.
+// A database built from pyangelo-schema.sql needs pyangelo-schema-changes.sql
+// loaded too, so the runner knows which migrations the dump already includes.
+
+require(dirname(__FILE__) . '/../vendor/autoload.php');
+
+$appDir = dirname(__DIR__);
+$migrationDir = $appDir . '/database/migrations';
+$envFile = '.env';
+$variant = 'dev';
+$apply = false;
+
+foreach (array_slice($argv, 1) as $arg) {
+  if (str_starts_with($arg, '--env=')) {
+    $envFile = substr($arg, strlen('--env='));
+  }
+  else if ($arg == '--prod') {
+    $variant = 'prod';
+  }
+  else if ($arg == 'apply') {
+    $apply = true;
+  }
+  else {
+    fwrite(STDERR, "Unknown argument '$arg'. Usage: bin/migrate [apply] [--env=FILE] [--prod]\n");
+    exit(2);
+  }
+}
+
+$dotenv = Dotenv\Dotenv::createImmutable($appDir, $envFile);
+$dotenv->load();
+$dbh = new Mysqli(
+  $_ENV['DB_HOST'],
+  $_ENV['DB_USERNAME'],
+  $_ENV['DB_PASSWORD'],
+  $_ENV['DB_DATABASE']
+);
+$dbh->set_charset('utf8mb4');
+$database = $_ENV['DB_DATABASE'];
+
+function currentChange($dbh) {
+  return $dbh->query('SELECT MAX(change_id) FROM db_change')->fetch_row()[0];
+}
+
+function changeRecorded($dbh, $changeId) {
+  $stmt = $dbh->prepare('SELECT COUNT(*) FROM db_change WHERE change_id = ?');
+  $stmt->bind_param('i', $changeId);
+  $stmt->execute();
+  $count = $stmt->get_result()->fetch_row()[0];
+  $stmt->close();
+  return $count > 0;
+}
+
+// Migration number => filename, for this variant.
+$migrations = [];
+foreach (scandir($migrationDir) as $file) {
+  if (!preg_match('/^(\d{4})_.*\.sql$/', $file, $matches)) continue;
+  if (str_contains($file, '_undo_')) continue;
+  if (preg_match('/_(dev|prod)\.sql$/', $file, $variantMatch) && $variantMatch[1] != $variant) continue;
+  $number = (int) $matches[1];
+  if (isset($migrations[$number])) {
+    fwrite(STDERR, "Two migrations numbered $matches[1]: {$migrations[$number]} and $file\n");
+    exit(2);
+  }
+  $migrations[$number] = $file;
+}
+ksort($migrations);
+
+$current = currentChange($dbh);
+if ($current === null) {
+  fwrite(STDERR, "$database has no db_change rows. If it was built from pyangelo-schema.sql, load\n");
+  fwrite(STDERR, "database/migrations/pyangelo-schema-changes.sql into it first.\n");
+  exit(2);
+}
+$pending = array_filter($migrations, fn ($number) => $number > $current, ARRAY_FILTER_USE_KEY);
+
+if (!$pending) {
+  echo "$database is up to date (migration $current).\n";
+  exit(0);
+}
+
+if (!$apply) {
+  echo "$database is at migration $current. Pending:\n";
+  foreach ($pending as $file) echo "  $file\n";
+  echo "Run bin/migrate apply" . ($envFile == '.env' ? '' : " --env=$envFile") . " to apply them.\n";
+  exit(1);
+}
+
+foreach ($pending as $number => $file) {
+  echo "Applying $file to $database\n";
+  try {
+    $dbh->multi_query(file_get_contents("$migrationDir/$file"));
+    // Errors in later statements surface while stepping through the results.
+    do {
+      if ($result = $dbh->store_result()) $result->free();
+    } while ($dbh->more_results() && $dbh->next_result());
+  }
+  catch (mysqli_sql_exception $e) {
+    fwrite(STDERR, "$file failed: {$e->getMessage()}\n");
+    fwrite(STDERR, "The statements before the failing one have been applied. Finish or undo it by hand.\n");
+    exit(2);
+  }
+
+  if (!changeRecorded($dbh, $number)) {
+    fwrite(STDERR, "$file ran but didn't insert db_change row $number, so it would run again next time.\n");
+    fwrite(STDERR, "Add that insert to the migration, then insert the row into $database by hand.\n");
+    exit(2);
+  }
+}
+echo "$database is up to date (migration " . currentChange($dbh) . ").\n";
