@@ -62,7 +62,6 @@ class RegisterValidateControllerTest extends TestCase {
 
   #[RunInSeparateProcess]
   public function testNoCloudflarePostToken() {
-    $recaptcha_response = 'fake response';
     $dotenv = \Dotenv\Dotenv::createMutable(__DIR__ . '/../../../../..', '.env.test');
     $dotenv->load();
     session_start();

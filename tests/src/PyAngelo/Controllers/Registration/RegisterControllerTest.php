@@ -12,19 +12,16 @@ class RegisterControllerTest extends TestCase {
   protected $request;
   protected $response;
   protected $auth;
-  protected $recaptchaKey;
   protected $controller;
 
   public function setUp(): void {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
-    $this->recaptchaKey = "recaptcha";
     $this->controller = new RegisterController (
       $this->request,
       $this->response,
-      $this->auth,
-      $this->recaptchaKey
+      $this->auth
     );
   }
   public function tearDown(): void {

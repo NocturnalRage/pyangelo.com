@@ -7,7 +7,6 @@ use Framework\Response;
 class LoginHtmlTest extends BasicViewHtmlTestCase {
 
   public function testBasicLoginViewWhenLoggedOut() {
-    $recaptchaKey = 'recaptcha';
     $response = new Response('views');
     $response->setView('login.html.php');
     $response->setVars(array(
@@ -15,8 +14,7 @@ class LoginHtmlTest extends BasicViewHtmlTestCase {
       'pageTitle' => 'Login to the PyAngelo Website',
       'metaDescription' => "Login to the PyAngelo website to start coding.",
       'activeLink' => 'Home',
-      'personInfo' => $this->setPersonInfoLoggedOut(),
-      'recaptchaKey' => $recaptchaKey
+      'personInfo' => $this->setPersonInfoLoggedOut()
     ));
     $output = $response->requireView();
     $expect = '<li><a href="/login">Login</a></li>';

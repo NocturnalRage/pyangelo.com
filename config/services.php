@@ -326,8 +326,7 @@ $di->set('ContactPageController', function () use ($di) {
   return new PyAngelo\Controllers\ContactPageController (
     $di->get('request'),
     $di->get('response'),
-    $di->get('auth'),
-    $_ENV['RECAPTCHA_KEY']
+    $di->get('auth')
   );
 });
 

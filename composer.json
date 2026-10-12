@@ -26,7 +26,6 @@
         "altorouter/altorouter": "^2.0",
         "nesbot/carbon": "^3.8",
         "vlucas/phpdotenv": "^5.0",
-        "google/recaptcha": "^1.1",
         "geoip2/geoip2": "^3.0.0",
         "aws/aws-sdk-php": "^3.145",
         "ezyang/htmlpurifier": "^4.13",
