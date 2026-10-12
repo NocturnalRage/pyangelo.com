@@ -81,24 +81,6 @@ class RegisterValidateController extends Controller {
       return false;
   }
 
-  private function recaptchaInvalid() {
-    if (empty($this->request->post['g-recaptcha-response'])) {
-      $_SESSION['formVars'] = $this->request->post;
-      return true;
-    }
-    $expectedRecaptchaAction = "registerwithversion3";
-    if (!$this->recaptcha->verified(
-      $this->request->server['SERVER_NAME'],
-      $expectedRecaptchaAction,
-      $this->request->post['g-recaptcha-response'],
-      $this->request->server['REMOTE_ADDR']
-    )) {
-      $_SESSION['formVars'] = $this->request->post;
-      return true;
-    }
-    return false;
-  }
-
   private function logAttemptAndRedirectToRegisterPage() {
       $message = "User " . $this->request->post['givenName'] . " " . $this->request->post['familyName'] . " (" . $this->request->post['email'] . ") tried to register in less than 2 seconds\n";
       $this->logMessage($message, 'WARNING');

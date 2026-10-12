@@ -11,7 +11,6 @@ class LoginControllerTest extends TestCase {
   protected $request;
   protected $response;
   protected $auth;
-  protected $recaptchaKey;
   protected $controller;
 
 
@@ -19,12 +18,10 @@ class LoginControllerTest extends TestCase {
     $this->request = new Request($GLOBALS);
     $this->response = new Response('views');
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
-    $this->recaptchaKey = "recaptcha";
     $this->controller = new LoginController (
       $this->request,
       $this->response,
-      $this->auth,
-      $this->recaptchaKey
+      $this->auth
     );
   }
   public function tearDown(): void {
