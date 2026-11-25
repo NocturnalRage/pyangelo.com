@@ -199,7 +199,7 @@
             <a href="#radians" class="list-group-item">RADIANS</a>
             <a href="#cartesian" class="list-group-item">CARTESIAN</a>
             <a href="#javascript" class="list-group-item">JAVASCRIPT</a>
-            <a href="#keys" class="list-group-item">KEY_A to KEY_Z</a>
+            <a href="#keys" class="list-group-item">KEY_A to KEY_Z, KEY_0 to KEY_9</a>
           </div><!-- list-group -->
         </div><!-- well -->
       </div><!-- col-md-3 -->
