@@ -7,7 +7,7 @@ $( document ).ready(function() {
       e.preventDefault();
       $('#waiting').remove();
       $('#submitSearch').prop("disabled", true);
-      searchTerms = $('#search').val();
+      var searchTerms = $('#search').val();
       $('<div id="waiting"><img src="/images/icons/ajax-loader.gif" /> Searching...</div>').insertBefore( "#search-results");
       $('#search-results').load("/admin/user-search?search=" + encodeURIComponent(searchTerms) + " #searchResults");
       $('#waiting').remove();

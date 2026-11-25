@@ -56,7 +56,9 @@ class CanvasOnlyHtmlTest extends BasicViewHtmlTestCase {
     $expect = '<pre id="console">';
     $this->assertStringContainsString($expect, $output);
 
-    $expect = '<script src="/js/SkulptSketchCanvasOnly.js';
+    $expect = '<script type="module" src="/build/assets/js/SkulptSketchCanvasOnly.js-';
+    $this->assertStringContainsString($expect, $output);
+    $expect = '<link rel="stylesheet" href="/build/assets/pyangelo-notify-';
     $this->assertStringContainsString($expect, $output);
   }
 
@@ -106,7 +108,9 @@ class CanvasOnlyHtmlTest extends BasicViewHtmlTestCase {
     $expect = '<pre id="console">';
     $this->assertStringContainsString($expect, $output);
 
-    $expect = '<script src="/js/SkulptSketchCanvasOnly.js';
+    $expect = '<script type="module" src="/build/assets/js/SkulptSketchCanvasOnly.js-';
+    $this->assertStringContainsString($expect, $output);
+    $expect = '<link rel="stylesheet" href="/build/assets/pyangelo-notify-';
     $this->assertStringContainsString($expect, $output);
   }
 }

@@ -18,9 +18,9 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
     <?php include __DIR__ . '/blog-comments.html.php'; ?>
     <?php include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php'; ?>
   </div><!-- container -->
-  <script src="<?= mix('js/notify.min.js'); ?>"></script>
-  <script src="<?= mix('js/blogAlert.js'); ?>"></script>
-  <script src="<?= mix('js/blogComments.js'); ?>"></script>
-  <script src="<?= mix('js/tinymce-comments.js'); ?>"></script>
+  <?= viteScript('resources/assets/js/notify.js'); ?>
+  <?= viteScript('resources/assets/js/blogAlert.js'); ?>
+  <?= viteScript('resources/assets/js/blogComments.js'); ?>
+  <?= viteScript('resources/assets/js/tinymce-comments.js'); ?>
 </body>
 </html>

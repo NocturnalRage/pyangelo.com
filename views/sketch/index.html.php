@@ -74,7 +74,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
     <?php endif; ?>
   </div><!-- container -->
 
-<script src="<?= mix('js/collection.js'); ?>"></script>
+<?= viteScript('resources/assets/js/collection.js'); ?>
 
 <?php
 include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';

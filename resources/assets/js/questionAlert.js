@@ -39,8 +39,8 @@ $( document ).ready(function() {
 
     var toggleAlert = function(e) {
       e.preventDefault();
-      question_id = jQuery(this).data('question-id');
-      crsf_token = jQuery(this).data('crsf-token');
+      var question_id = jQuery(this).data('question-id');
+      var crsf_token = jQuery(this).data('crsf-token');
       toggleQuestionAlert(question_id, crsf_token);
     };
 

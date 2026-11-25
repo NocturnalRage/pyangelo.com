@@ -98,10 +98,10 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
       include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';
     ?>
   </div><!-- container -->
-  <script src="<?= mix('js/notify.min.js'); ?>"></script>
-  <script src="<?= mix('js/questionAlert.js'); ?>"></script>
-  <script src="<?= mix('js/questionFavourite.js'); ?>"></script>
-  <script src="<?= mix('js/questionComments.js'); ?>"></script>
-  <script src="<?= mix('js/tinymce-comments.js'); ?>"></script>
+  <?= viteScript('resources/assets/js/notify.js'); ?>
+  <?= viteScript('resources/assets/js/questionAlert.js'); ?>
+  <?= viteScript('resources/assets/js/questionFavourite.js'); ?>
+  <?= viteScript('resources/assets/js/questionComments.js'); ?>
+  <?= viteScript('resources/assets/js/tinymce-comments.js'); ?>
 </body>
 </html>

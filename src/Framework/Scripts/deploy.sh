@@ -22,39 +22,8 @@ rm -rf "$GITDIR/node_modules/skulpt"
 npm install --allow-git=root
 npm run production
 
-echo "Copying config directory"
-cp -R $GITDIR/config $APPHOME/
-
-echo "Replacing public fonts directory"
-rm -r $APPHOME/public/fonts
-cp -r $GITDIR/public/fonts $APPHOME/public/
-
-echo "Replacing mix-manifest.json file"
-cp -r $GITDIR/public/mix-manifest.json $APPHOME/public/
-
-echo "Replacing public css directory"
-rm -r $APPHOME/public/css
-cp -r $GITDIR/public/css $APPHOME/public/
-
-echo "Replacing public js directory"
-rm -r $APPHOME/public/js
-cp -r $GITDIR/public/js $APPHOME/public/
-
-echo "Replacing public images directory"
-rm -r $APPHOME/public/images
-cp -r $GITDIR/public/images $APPHOME/public/
-
-echo "Replacing public samples directory"
-rm -r $APPHOME/public/samples
-cp -r $GITDIR/public/samples $APPHOME/public/
-
-echo "Upgrade front controller script"
-cp $GITDIR/public/index.php $APPHOME/public/
-
-echo "Replacing src directory"
-rm -r $APPHOME/src
-cp -r $GITDIR/src $APPHOME/
-
-echo "Replacing views directory"
-rm -r $APPHOME/views
-cp -r $GITDIR/views $APPHOME/
+# Copy the release to the live site without a moment where files are missing.
+# The old laravel-mix files (public/js, public/css, public/fonts and
+# mix-manifest.json) stay in place for the first Vite deploy, because the old
+# views use them until views/ is swapped. Delete them after that deploy.
+bash "$GITDIR/src/Framework/Scripts/publish.sh" "$GITDIR" "$APPHOME"

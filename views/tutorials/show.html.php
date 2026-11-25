@@ -49,7 +49,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../lessons/skills-table.html.php';
 include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';
 ?>
   </div><!-- container -->
-  <script src="<?= mix('js/notify.min.js'); ?>"></script>
-  <script src="<?= mix('js/lessonToggleTutorialPage.js'); ?>"></script>
+  <?= viteScript('resources/assets/js/notify.js'); ?>
+  <?= viteScript('resources/assets/js/lessonToggleTutorialPage.js'); ?>
 </body>
 </html>

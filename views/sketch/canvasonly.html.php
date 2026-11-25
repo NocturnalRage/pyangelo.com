@@ -12,6 +12,6 @@ include 'sketch-buttons.html.php';
 
   </div><!-- container-fluid -->
 
-<script src="<?= mix('js/SkulptSketchCanvasOnly.js'); ?>"></script>
+<?= viteScript('resources/assets/js/SkulptSketchCanvasOnly.js'); ?>
 </body>
 </html>

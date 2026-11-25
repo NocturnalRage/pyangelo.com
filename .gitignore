@@ -7,9 +7,12 @@ public/css
 public/fonts
 public/js
 public/mix-manifest.json
+public/build
 public/sketches
 public/uploads
 logs
 tags
 TODO
 .phpunit.result.cache
+test-results
+playwright-report

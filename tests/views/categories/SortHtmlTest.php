@@ -55,7 +55,7 @@ class SortHtmlTest extends BasicViewHtmlTestCase {
     $this->assertStringContainsString($expect, $output);
     $expect = '<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>';
     $this->assertStringContainsString($expect, $output);
-    $expect = '<script src="/js/notify';
+    $expect = '<script type="module" src="/build/assets/js/notify.js-';
     $this->assertStringContainsString($expect, $output);
   }
 }

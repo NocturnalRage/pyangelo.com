@@ -81,7 +81,7 @@
           include __DIR__ . '/../sketch/sketch-upload.html.php';
         ?>
 
-        <script src="<?= mix('js/SkulptSketch.js'); ?>"></script>
+        <?= viteScript('resources/assets/js/SkulptSketch.js'); ?>
       </div><!-- container-fluid -->
 
     <?php elseif ($personInfo['loggedIn']) : ?>
@@ -160,9 +160,9 @@
     <script src="//vjs.zencdn.net/5.8.8/video.js"></script>
     <script src="//cdn.sc.gl/videojs-hotkeys/0.2/videojs.hotkeys.min.js"></script>
   <?php endif; ?>
-  <script src="<?= mix('js/notify.min.js'); ?>"></script>
-  <script src="<?= mix('js/lessonToggle.js'); ?>"></script>
-  <script src="<?= mix('js/lessonComments.js'); ?>"></script>
-  <script src="<?= mix('js/tinymce-comments.js'); ?>"></script>
+  <?= viteScript('resources/assets/js/notify.js'); ?>
+  <?= viteScript('resources/assets/js/lessonToggle.js'); ?>
+  <?= viteScript('resources/assets/js/lessonComments.js'); ?>
+  <?= viteScript('resources/assets/js/tinymce-comments.js'); ?>
 </body>
 </html>

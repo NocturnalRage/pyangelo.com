@@ -42,6 +42,6 @@
     <?php include __DIR__ . '/premium-membership-faq.html.php'; ?>
     <?php include __DIR__ . '/../layout/footer.html.php'; ?>
   </div><!-- container -->
-  <script src="<?= mix('js/subscription.js'); ?>"></script>
+  <?= viteScript('resources/assets/js/subscription.js'); ?>
 </body>
 </html>

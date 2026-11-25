@@ -1,7 +1,7 @@
 $( document ).ready(function() {
   var notifications = (function() {
-    crsf_token = jQuery('#notifications-table').data('crsf-token');
-    selection = jQuery('#notifications-table').data('selection');
+    var crsf_token = jQuery('#notifications-table').data('crsf-token');
+    var selection = jQuery('#notifications-table').data('selection');
 
     var markAsReadAjax = function(notification_id, crsf_token) {
       $.ajax({
@@ -89,19 +89,19 @@ $( document ).ready(function() {
 
     var markAsReadPreventDefault = function(e) {
       e.preventDefault();
-      notification_id = jQuery(this).data('notification-id');
+      var notification_id = jQuery(this).data('notification-id');
       markAsReadAjax(notification_id, crsf_token);
     };
 
     var markAsRead = function(e) {
-      notification_id = jQuery(this).data('notification-id');
+      var notification_id = jQuery(this).data('notification-id');
       markAsReadAjax(notification_id, crsf_token);
     };
 
     var unsubscribeFromThread = function(e) {
       e.preventDefault();
-      notification_type_id = jQuery(this).data('notification-type-id');
-      notification_type = jQuery(this).data('notification-type');
+      var notification_type_id = jQuery(this).data('notification-type-id');
+      var notification_type = jQuery(this).data('notification-type');
       
       unsubscribeThreadAjax(notification_type_id, notification_type, crsf_token);
     };
