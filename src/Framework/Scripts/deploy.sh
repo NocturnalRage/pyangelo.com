@@ -23,7 +23,4 @@ npm install --allow-git=root
 npm run production
 
 # Copy the release to the live site without a moment where files are missing.
-# The old laravel-mix files (public/js, public/css, public/fonts and
-# mix-manifest.json) stay in place for the first Vite deploy, because the old
-# views use them until views/ is swapped. Delete them after that deploy.
 bash "$GITDIR/src/Framework/Scripts/publish.sh" "$GITDIR" "$APPHOME"
