@@ -43,8 +43,8 @@
     "sass-loader": "^16.0.1",
     "skulpt": "github:pingskills/skulpt#pyangelo",
     "split-grid": "^1.0.11",
-    "tinymce": "^7.0.1",
+    "tinymce": "^8.11.0",
     "toastify-js": "^1.11.2",
-    "webpack": "^5.104.1"
+    "webpack": "~5.104.1"
   }
 }
