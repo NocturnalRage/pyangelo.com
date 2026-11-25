@@ -12,6 +12,9 @@ composer install --no-dev
 
 echo "Running Webpack"
 cd $GITDIR
+# npm install doesn't reliably replace a GitHub dependency when the lock file
+# points at a newer commit, so remove skulpt to get the locked commit.
+rm -rf "$GITDIR/node_modules/skulpt"
 npm install
 npm run production
 
