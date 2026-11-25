@@ -44,8 +44,14 @@ CARTESIAN is a constant that is used with the <a href="#setCanvasSize">setCanvas
 <p>
 JAVASCRIPT is a constant that is used with the <a href="#setCanvasSize">setCanvasSize()</a> function to inform PyAngelo to use a JavaScript based y-axis where the y value increases as you move down the canvas.
 </p>
-<h3 id="keys">KEY_A to KEY_Z</h3>
+<h3 id="keys">KEY_A to KEY_Z and KEY_0 to KEY_9</h3>
 <h4>Description</h4>
 <p>
-KEY_A through to KEY_Z are constants that can be used with the isKeyPressed function to check if the A through to the Z key has been pressed. In addition there is also KEY_SPACE, KEY_ENTER, KEY_ESCAPE, KEY_DEL, KEY_BACKSPACE, KEY_TAB, KEY_LEFT, KEY_RIGHT, KEY_UP and KEY_DOWN.
+KEY_A through to KEY_Z are constants that can be used with the isKeyPressed and wasKeyPressed functions to check if the A through to the Z key has been pressed.
+</p>
+<p>
+KEY_0 through to KEY_9 are constants for the number keys. They work with both the number keys along the top of the keyboard and the number keys on the number pad, so KEY_1 is pressed when either 1 key is pressed.
+</p>
+<p>
+In addition there is also KEY_SPACE, KEY_ENTER, KEY_ESC, KEY_DEL, KEY_BACKSPACE, KEY_TAB, KEY_LEFT, KEY_RIGHT, KEY_UP and KEY_DOWN.
 </p>
