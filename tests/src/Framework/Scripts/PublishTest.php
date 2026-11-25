@@ -188,9 +188,124 @@ class PublishTest extends TestCase {
     $this->assertStringEqualsFile($this->app . '/public/build/.vite/manifest.json', '{"release":"new"}');
   }
 
+  public function testNeverRewritesABuildFileThatIsAlreadyLive() {
+    // The same content-hashed name in both builds means the same contents,
+    // and the site may be serving the live copy while publish runs.
+    // In real builds the contents match; here they differ only so a rewrite
+    // shows. cp overwrites in place on the same inode, so the inode would not.
+    $this->write($this->git, ['public/build/assets/jquery-SAME.js' => 'jquery from the new build']);
+    $this->write($this->app, ['public/build/assets/jquery-SAME.js' => 'jquery being served']);
+    $live = $this->app . '/public/build/assets/jquery-SAME.js';
+    // It was copied by a release long ago and is not in the live manifest.
+    touch($live, strtotime('-10 days'));
+
+    [$status, $output] = $this->publish();
+    $this->assertSame(0, $status, $output);
+
+    clearstatcache();
+    $this->assertStringEqualsFile($live, 'jquery being served', 'the live file was rewritten');
+    // It is part of this build, so it is not deleted as old.
+    $this->assertGreaterThan(strtotime('-1 minute'), filemtime($live));
+  }
+
+  public function testLeavesNoTemporaryBuildFiles() {
+    $this->write($this->git, ['public/build/assets/fonts/icon-NEW.woff2' => 'font']);
+    [$status, $output] = $this->publish();
+    $this->assertSame(0, $status, $output);
+    $this->assertStringEqualsFile($this->app . '/public/build/assets/fonts/icon-NEW.woff2', 'font');
+    exec('find ' . escapeshellarg($this->app . '/public/build') . ' -name "*.tmp"', $temporary);
+    $this->assertSame([], $temporary);
+  }
+
+  public function testAFailureWhileCopyingLeavesTheLiveReleaseUnchanged() {
+    // The manifest must not go live unless the templates and code that use
+    // it can go live with it.
+    exec('rm -rf ' . escapeshellarg($this->git . '/views'));
+    [$status] = $this->publish();
+    $this->assertNotSame(0, $status);
+    $this->assertStringEqualsFile($this->app . '/public/build/.vite/manifest.json', '{"release":"old"}');
+    $this->assertFileExists($this->app . '/src/Old.php');
+    $this->assertFileExists($this->app . '/views/old.html.php');
+    $this->assertStringEqualsFile($this->app . '/public/index.php', 'old front controller');
+    $this->assertFileExists($this->app . '/public/images/old.png');
+  }
+
+  private function assertLiveReleaseUnchanged(): void {
+    $this->assertStringEqualsFile($this->app . '/public/build/.vite/manifest.json', '{"release":"old"}');
+    $this->assertFileExists($this->app . '/src/Old.php');
+    $this->assertFileExists($this->app . '/views/old.html.php');
+    $this->assertStringEqualsFile($this->app . '/public/index.php', 'old front controller');
+    $this->assertFileDoesNotExist($this->app . '/public/build/.vite/manifest.json.new');
+  }
+
+  public function testStopsWhenTheBuildHasNoAssetsDirectory() {
+    exec('rm -rf ' . escapeshellarg($this->git . '/public/build/assets'));
+    [$status, $output] = $this->publish();
+    $this->assertNotSame(0, $status, $output);
+    $this->assertLiveReleaseUnchanged();
+  }
+
+  public function testStopsWhenTheNewManifestListsAFileTheBuildLacks() {
+    $this->write($this->git, ['public/build/.vite/manifest.json' => json_encode([
+      'resources/assets/js/app.js' => ['file' => 'assets/js/app.js-NEW.js', 'isEntry' => true],
+      'resources/assets/js/quiz.js' => ['file' => 'assets/js/quiz.js-MISSING.js', 'isEntry' => true]
+    ])]);
+    [$status, $output] = $this->publish();
+    $this->assertNotSame(0, $status);
+    $this->assertStringContainsString('assets/js/quiz.js-MISSING.js', $output);
+    $this->assertLiveReleaseUnchanged();
+  }
+
+  public function testStopsWhenTheNewManifestCannotBeRead() {
+    $this->write($this->git, ['public/build/.vite/manifest.json' => 'not json']);
+    [$status, $output] = $this->publish();
+    $this->assertNotSame(0, $status, $output);
+    $this->assertLiveReleaseUnchanged();
+  }
+
+  public function testPublishesWhenEveryFileTheNewManifestListsIsPresent() {
+    $this->write($this->git, ['public/build/.vite/manifest.json' => json_encode([
+      'resources/assets/js/app.js' => ['file' => 'assets/js/app.js-NEW.js', 'isEntry' => true]
+    ])]);
+    [$status, $output] = $this->publish();
+    $this->assertSame(0, $status, $output);
+    $this->assertFileExists($this->app . '/src/New.php');
+  }
+
+  /** Puts an mv on PATH that refuses to move the live NAME directory. */
+  private function failingMv(string $name): string {
+    $bin = $this->root . '/bin';
+    mkdir($bin);
+    $realMv = trim(shell_exec('command -v mv'));
+    $target = $this->app . '/' . $name;
+    file_put_contents($bin . '/mv', "#!/usr/bin/env bash\n" .
+      "for arg in \"\$@\"; do [ \"\$arg\" = " . escapeshellarg($target) . " ] && { echo 'mv: refused' >&2; exit 1; }; done\n" .
+      "exec " . escapeshellarg($realMv) . " \"\$@\"\n");
+    chmod($bin . '/mv', 0755);
+    return 'PATH=' . escapeshellarg($bin . ':' . getenv('PATH')) . ' ';
+  }
+
+  public function testPutsThePreviousManifestBackIfViewsCannotBeSwapped() {
+    [$status, $output] = $this->publish(null, null, $this->failingMv('views'));
+    $this->assertNotSame(0, $status, $output);
+    $this->assertStringContainsString('previous manifest is back in place', $output);
+    // The old templates are still live, so the old manifest must be too.
+    $this->assertFileExists($this->app . '/views/old.html.php');
+    $this->assertStringEqualsFile($this->app . '/public/build/.vite/manifest.json', '{"release":"old"}');
+    $this->assertFileDoesNotExist($this->app . '/public/build/.vite/manifest.json.previous');
+  }
+
+  public function testPutsThePreviousManifestBackIfSrcCannotBeSwapped() {
+    [$status, $output] = $this->publish(null, null, $this->failingMv('src'));
+    $this->assertNotSame(0, $status, $output);
+    $this->assertFileExists($this->app . '/src/Old.php');
+    $this->assertFileExists($this->app . '/views/old.html.php');
+    $this->assertStringEqualsFile($this->app . '/public/build/.vite/manifest.json', '{"release":"old"}');
+  }
+
   public function testNeverRemovesFilesFromTheBuildBeingPublished() {
-    // A file in this build can be old on disk if nothing changed it; cp gives
-    // it the current time on the live site, so pruning keeps it.
+    // A file in this build can be old on disk if nothing changed it; it gets
+    // the current time on the live site, so pruning keeps it.
     touch($this->git . '/public/build/assets/js/app.js-NEW.js', strtotime('-30 days'));
     [$status, $output] = $this->publish();
     $this->assertSame(0, $status, $output);
