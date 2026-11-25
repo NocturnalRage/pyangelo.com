@@ -35,8 +35,7 @@ class PublishTest extends TestCase {
       'public/images/old.png' => 'old image',
       'public/samples/old.wav' => 'old sample',
       'public/index.php' => 'old front controller',
-      'public/mix-manifest.json' => '{}',
-      'public/js/app.js' => 'laravel-mix app',
+      'public/uploads/images/blog_thumbnail/post.png' => 'an uploaded image',
       'src/Old.php' => 'old src',
       'views/old.html.php' => 'old view'
     ]);
@@ -198,11 +197,11 @@ class PublishTest extends TestCase {
     $this->assertFileExists($this->app . '/public/build/assets/js/app.js-NEW.js');
   }
 
-  public function testLeavesTheLaravelMixFilesForTheFirstViteDeploy() {
+  public function testLeavesOtherPublicFilesAlone() {
+    // public/uploads holds files people uploaded; it is not part of a release.
     [$status, $output] = $this->publish();
     $this->assertSame(0, $status, $output);
-    $this->assertFileExists($this->app . '/public/mix-manifest.json');
-    $this->assertFileExists($this->app . '/public/js/app.js');
+    $this->assertStringEqualsFile($this->app . '/public/uploads/images/blog_thumbnail/post.png', 'an uploaded image');
   }
 
   public function testFirstViteDeployWhenThereIsNoBuildDirectoryYet() {
