@@ -46,11 +46,36 @@ echo "Adding the new build to public/build"
 mkdir -p "$APPHOME/public/build/.vite"
 cp -r "$GITDIR/public/build/assets" "$APPHOME/public/build/"
 cp "$GITDIR/public/build/.vite/manifest.json" "$APPHOME/public/build/.vite/manifest.json.new"
+
+# The files the live manifest lists are retired by this release, but pages
+# opened moments ago still need them. Give them the current time, so the week
+# before they are deleted starts now, not when an earlier release copied them.
+echo "Retiring the files the live build uses"
+if [ -f "$APPHOME/public/build/.vite/manifest.json" ]; then
+  php -r '
+    $chunks = json_decode((string) file_get_contents($argv[1]), true);
+    foreach (is_array($chunks) ? $chunks : [] as $chunk) {
+      if (! is_array($chunk)) continue;
+      $files = array_merge([$chunk["file"] ?? null], $chunk["css"] ?? [], $chunk["assets"] ?? []);
+      foreach ($files as $file) {
+        if (is_string($file) && $file !== "" && $file[0] !== "/" && ! str_contains($file, "..")) {
+          echo $file, "\n";
+        }
+      }
+    }' "$APPHOME/public/build/.vite/manifest.json" |
+  while IFS= read -r file; do
+    if [ -f "$APPHOME/public/build/$file" ]; then
+      touch "$APPHOME/public/build/$file"
+    fi
+  done
+fi
+
 mv "$APPHOME/public/build/.vite/manifest.json.new" "$APPHOME/public/build/.vite/manifest.json"
 
-# cp gives every file it copies the current time, so only files that no build
-# has included for a week are removed.
-echo "Removing build files older than a week"
+# cp gives every file it copies the current time, and the step above gives the
+# retired files the current time, so only files that were retired over a week
+# ago are removed.
+echo "Removing build files retired over a week ago"
 find "$APPHOME/public/build/assets" -type f -mtime +7 -delete
 find "$APPHOME/public/build/assets" -mindepth 1 -type d -empty -delete
 

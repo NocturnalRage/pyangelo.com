@@ -108,6 +108,87 @@ class PublishTest extends TestCase {
     $this->assertFileDoesNotExist($this->app . '/public/build/assets/js/stale-OLD.js');
   }
 
+  public function testKeepsTheFilesTheRetiredBuildUsesEvenWhenTheyAreOld() {
+    // The live build was deployed two weeks ago, so its files are old on disk,
+    // but a page opened just before this deploy still needs them.
+    $this->write($this->app, [
+      'public/build/.vite/manifest.json' => json_encode([
+        'resources/assets/js/app.js' => [
+          'file' => 'assets/js/app.js-LIVE.js',
+          'isEntry' => true,
+          'imports' => ['_jquery-LIVE.js'],
+          'css' => ['assets/app-LIVE.css']
+        ],
+        '_jquery-LIVE.js' => ['file' => 'assets/jquery-LIVE.js'],
+        'resources/assets/sass/app.scss' => [
+          'file' => 'assets/sass/app-LIVE.css',
+          'isEntry' => true,
+          'assets' => ['assets/fontawesome-webfont-LIVE.woff2']
+        ],
+        // Paths outside public/build are never touched.
+        'outside' => ['file' => '../../outside.txt']
+      ]),
+      'public/build/assets/js/app.js-LIVE.js' => 'live app',
+      'public/build/assets/jquery-LIVE.js' => 'live jquery',
+      'public/build/assets/app-LIVE.css' => 'live css',
+      'public/build/assets/sass/app-LIVE.css' => 'live stylesheet',
+      'public/build/assets/fontawesome-webfont-LIVE.woff2' => 'live font',
+      'outside.txt' => 'not part of the build'
+    ]);
+    $live = [
+      'assets/js/app.js-LIVE.js', 'assets/jquery-LIVE.js', 'assets/app-LIVE.css',
+      'assets/sass/app-LIVE.css', 'assets/fontawesome-webfont-LIVE.woff2'
+    ];
+    foreach ($live as $file) {
+      touch($this->app . '/public/build/' . $file, strtotime('-14 days'));
+    }
+    $outsideTime = strtotime('-20 days');
+    touch($this->app . '/outside.txt', $outsideTime);
+
+    [$status, $output] = $this->publish();
+    $this->assertSame(0, $status, $output);
+
+    foreach ($live as $file) {
+      $this->assertFileExists($this->app . '/public/build/' . $file);
+    }
+    clearstatcache();
+    $this->assertSame($outsideTime, filemtime($this->app . '/outside.txt'));
+    // A file no build has listed for over a week is still removed.
+    $this->assertFileDoesNotExist($this->app . '/public/build/assets/js/stale-OLD.js');
+    $this->assertStringEqualsFile($this->app . '/public/build/.vite/manifest.json', '{"release":"new"}');
+  }
+
+  public function testRetiredFilesAreRemovedOnceTheyHaveBeenRetiredForAWeek() {
+    $this->write($this->app, [
+      'public/build/.vite/manifest.json' => json_encode([
+        'resources/assets/js/app.js' => ['file' => 'assets/js/app.js-LIVE.js', 'isEntry' => true]
+      ]),
+      'public/build/assets/js/app.js-LIVE.js' => 'live app'
+    ]);
+    touch($this->app . '/public/build/assets/js/app.js-LIVE.js', strtotime('-14 days'));
+
+    // This publish retires app.js-LIVE.js and starts its week.
+    [$status, $output] = $this->publish();
+    $this->assertSame(0, $status, $output);
+    $retired = $this->app . '/public/build/assets/js/app.js-LIVE.js';
+    $this->assertFileExists($retired);
+    clearstatcache();
+    $this->assertGreaterThan(strtotime('-1 minute'), filemtime($retired));
+
+    // Eight days later the next publish removes it.
+    touch($retired, strtotime('-8 days'));
+    [$status, $output] = $this->publish();
+    $this->assertSame(0, $status, $output);
+    $this->assertFileDoesNotExist($retired);
+  }
+
+  public function testAnUnreadableLiveManifestDoesNotStopThePublish() {
+    $this->write($this->app, ['public/build/.vite/manifest.json' => 'not json']);
+    [$status, $output] = $this->publish();
+    $this->assertSame(0, $status, $output);
+    $this->assertStringEqualsFile($this->app . '/public/build/.vite/manifest.json', '{"release":"new"}');
+  }
+
   public function testNeverRemovesFilesFromTheBuildBeingPublished() {
     // A file in this build can be old on disk if nothing changed it; cp gives
     // it the current time on the live site, so pruning keeps it.
