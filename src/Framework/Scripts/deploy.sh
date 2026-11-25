@@ -1,3 +1,6 @@
+# Stop at the first failure so a failed build is never copied to the live site.
+set -e
+
 GITDIR="/home/jeff/pyangelo.com"
 APPHOME="/srv/http/pyangelo.com"
 
@@ -12,10 +15,11 @@ composer install --no-dev
 
 echo "Running Webpack"
 cd $GITDIR
-# npm install doesn't reliably replace a GitHub dependency when the lock file
-# points at a newer commit, so remove skulpt to get the locked commit.
+# Remove skulpt so npm installs the commit pinned in package-lock.json.
+# The server has npm's allow-git turned off, which stops npm fetching git
+# dependencies; root allows only the ones listed in package.json (skulpt).
 rm -rf "$GITDIR/node_modules/skulpt"
-npm install
+npm install --allow-git=root
 npm run production
 
 echo "Copying config directory"
