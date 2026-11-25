@@ -94,7 +94,7 @@ include __DIR__ . '/../layout/navbar.html.php';
       include __DIR__ . '/../layout/footer.html.php';
     ?>
   </div><!-- container -->
-  <script src="<?= mix('js/notify.min.js'); ?>"></script>
-  <script src="<?= mix('js/notifications.js'); ?>"></script>
+  <?= viteScript('resources/assets/js/notify.js'); ?>
+  <?= viteScript('resources/assets/js/notifications.js'); ?>
 </body>
 </html>

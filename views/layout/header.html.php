@@ -8,7 +8,7 @@
   <meta name="description" content="<?= $this->esc($metaDescription) ?>">
   <meta name="author" content="PyAngelo">
   <title><?= $this->esc($pageTitle); ?></title>
-  <link rel="stylesheet" href="<?= mix('css/pyangelo.css'); ?>">
+  <link rel="stylesheet" href="<?= vite('resources/assets/sass/app.scss'); ?>">
   <link href="//vjs.zencdn.net/5.8.8/video-js.css" rel="stylesheet">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png">
@@ -31,7 +31,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.min.js"></script>
   <?php endif; ?>
 
-  <script src="<?= mix('js/app.js'); ?>"></script>
+  <?= viteScript('resources/assets/js/app.js'); ?>
   <?php if (isset($_ENV['GA4_MEASUREMENT_ID'])) :?>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=<?= $_ENV['GA4_MEASUREMENT_ID']; ?>"></script>

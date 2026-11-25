@@ -27,7 +27,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';
   </div><!-- container -->
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script src="<?= mix('js/notify.min.js'); ?>"></script>
+  <?= viteScript('resources/assets/js/notify.js'); ?>
   <script>
   $(function() {
     $("#sortable").sortable({

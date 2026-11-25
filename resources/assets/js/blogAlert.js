@@ -39,8 +39,8 @@ $( document ).ready(function() {
 
     var toggleAlert = function(e) {
       e.preventDefault();
-      blog_id = jQuery(this).data('blog-id');
-      crsf_token = jQuery(this).data('crsf-token');
+      var blog_id = jQuery(this).data('blog-id');
+      var crsf_token = jQuery(this).data('crsf-token');
       toggleBlogAlert(blog_id, crsf_token);
     };
 

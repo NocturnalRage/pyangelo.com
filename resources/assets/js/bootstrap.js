@@ -4,5 +4,6 @@
  * code may be modified to fit the specific needs of your application.
  */
 
-window.$ = window.jQuery = require('jquery')
-require('bootstrap-sass')
+// jqueryGlobal must run before bootstrap-sass, which reads the global jQuery.
+import './jqueryGlobal'
+import 'bootstrap-sass'

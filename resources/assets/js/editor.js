@@ -1,7 +1,7 @@
 import { runSkulpt, stopSkulpt, debugSkulpt } from './SkulptSetup'
 import { Editor } from './EditorSetup'
 import './editorLayout'
-const Sk = require('skulpt')
+import Sk from 'skulpt'
 
 // Only one session in standalone editor
 const session = 0

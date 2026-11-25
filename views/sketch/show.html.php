@@ -16,7 +16,7 @@ include 'sketch-upload.html.php';
 ?>
   </div><!-- container-fluid -->
 
-<script src="<?= mix('js/SkulptSketch.js'); ?>"></script>
+<?= viteScript('resources/assets/js/SkulptSketch.js'); ?>
 
 <?php
 include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';

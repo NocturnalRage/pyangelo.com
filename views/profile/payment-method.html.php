@@ -47,7 +47,7 @@ include __DIR__ . '/../layout/footer.html.php';
 ?>
   </div><!-- container -->
   <?php if ($personInfo['loggedIn'] && $hasActiveSubscription) : ?>
-    <script src="<?= mix('js/new-payment-method.js'); ?>"></script>
+    <?= viteScript('resources/assets/js/new-payment-method.js'); ?>
   <?php endif ?>
 </body>
 </html>

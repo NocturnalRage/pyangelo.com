@@ -1,5 +1,5 @@
 import { populateTable } from './makeTable'
-const Sk = require('skulpt')
+import Sk from 'skulpt'
 
 let receivingInput = false
 Sk.PyAngelo.preparePage()

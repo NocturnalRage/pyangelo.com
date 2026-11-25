@@ -1,6 +1,6 @@
 import { runSkulpt } from './SkulptSetup'
 import { Editor } from './EditorSetup'
-const Sk = require('skulpt')
+import Sk from 'skulpt'
 
 const editorWindow = document.getElementById('editor')
 const crsfToken = editorWindow.getAttribute('data-crsf-token')

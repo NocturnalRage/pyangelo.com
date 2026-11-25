@@ -33,6 +33,6 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
       include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';
     ?>
   </div><!-- container -->
-  <script src="<?= mix('js/backToTop.js'); ?>"></script>
+  <?= viteScript('resources/assets/js/backToTop.js'); ?>
 </body>
 </html>

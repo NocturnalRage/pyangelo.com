@@ -26,6 +26,6 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
       include __DIR__ . DIRECTORY_SEPARATOR . '../layout/footer.html.php';
     ?>
   </div><!-- container -->
-  <script src="<?= mix('js/tinymce-default-config.js'); ?>"></script>
+  <?= viteScript('resources/assets/js/tinymce-default-config.js'); ?>
 </body>
 </html>

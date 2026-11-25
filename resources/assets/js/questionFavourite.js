@@ -39,8 +39,8 @@ $( document ).ready(function() {
 
     var toggleFavourite = function(e) {
       e.preventDefault();
-      question_id = jQuery(this).data('question-id');
-      crsf_token = jQuery(this).data('crsf-token');
+      var question_id = jQuery(this).data('question-id');
+      var crsf_token = jQuery(this).data('crsf-token');
       toggleQuestionFavourite(question_id, crsf_token);
     };
 

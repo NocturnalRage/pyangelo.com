@@ -40,6 +40,6 @@
 
     <?php include __DIR__ . '/../layout/footer.html.php'; ?>
   </div><!-- container -->
-  <script src="<?= mix('js/quiz.js'); ?>"></script>
+  <?= viteScript('resources/assets/js/quiz.js'); ?>
 </body>
 </html>

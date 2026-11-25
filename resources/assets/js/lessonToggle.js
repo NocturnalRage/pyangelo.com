@@ -126,13 +126,13 @@ $( document ).ready(function() {
 
     var toggleCompleted = function(e) {
       e.preventDefault();
-      lesson_id = jQuery(this).data('lesson-id');
+      var lesson_id = jQuery(this).data('lesson-id');
       toggleLessonCompleted(lesson_id, 'toggle');
     };
 
     var toggleFavourited = function(e) {
       e.preventDefault();
-      lesson_id = jQuery(this).data('lesson-id');
+      var lesson_id = jQuery(this).data('lesson-id');
       toggleLessonFavourited(lesson_id);
     };
 
@@ -150,8 +150,8 @@ $( document ).ready(function() {
 
     var toggleAlert = function(e) {
       e.preventDefault();
-      lesson_id = jQuery(this).data('lesson-id');
-      crsf_token = jQuery(this).data('crsf-token');
+      var lesson_id = jQuery(this).data('lesson-id');
+      var crsf_token = jQuery(this).data('crsf-token');
       toggleBlogAlert(lesson_id, crsf_token);
     };
 

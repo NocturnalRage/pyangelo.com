@@ -41,7 +41,7 @@ include __DIR__ . DIRECTORY_SEPARATOR . '../layout/navbar.html.php';
       include 'sketch-turtle.html.php';
       include 'sketch-buttons.html.php';
     ?>
-    <script src="<?= mix('js/playground.js'); ?>"></script>
+    <?= viteScript('resources/assets/js/playground.js'); ?>
   </div><!-- container-fluid -->
 
   <div class="container">
