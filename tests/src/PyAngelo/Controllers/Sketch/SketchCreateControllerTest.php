@@ -22,7 +22,7 @@ class SketchCreateControllerTest extends TestCase {
     $this->response = new Response('views');
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
     $this->sketchRepository = Mockery::mock('PyAngelo\Repositories\SketchRepository');
-    $this->sketchFiles = Mockery::mock('PyAngelo\Utilities\sketchFiles');
+    $this->sketchFiles = Mockery::mock('PyAngelo\Utilities\SketchFiles');
     $this->controller = new SketchCreateController (
       $this->request,
       $this->response,

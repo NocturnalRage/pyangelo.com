@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  vendor/bin/phpunit runs the PyAngelo suite. The Integration suite calls
+  Stripe's test mode for real and needs a Stripe test key and price in
+  .env.test: run it with vendor/bin/phpunit (two dashes)testsuite Integration
+-->
 <phpunit bootstrap="vendor/autoload.php"
          displayDetailsOnPhpunitDeprecations="true"
+         defaultTestSuite="PyAngelo"
          colors="true">
     <testsuites>
         <testsuite name="PyAngelo">
@@ -8,6 +14,10 @@
             <directory>./tests/src/Framework</directory>
             <directory>./tests/views</directory>
             <directory>./tests/di</directory>
+            <exclude>./tests/src/Framework/Billing/StripeWrapperTest.php</exclude>
+        </testsuite>
+        <testsuite name="Integration">
+            <file>./tests/src/Framework/Billing/StripeWrapperTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

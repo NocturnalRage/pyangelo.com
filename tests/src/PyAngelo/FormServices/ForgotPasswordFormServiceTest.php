@@ -12,7 +12,7 @@ class ForgotPasswordFormServiceTest extends TestCase {
 
   public function setUp(): void {
     $this->personRepository = Mockery::mock('PyAngelo\Repositories\PersonRepository');
-    $this->forgotPasswordEmail = Mockery::mock('PyAngelo\Email\forgotPasswordEmail');
+    $this->forgotPasswordEmail = Mockery::mock('PyAngelo\Email\ForgotPasswordEmail');
     $this->forgotPasswordFormService = new ForgotPasswordFormService(
       $this->personRepository,
       $this->forgotPasswordEmail,

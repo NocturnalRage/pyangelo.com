@@ -23,7 +23,7 @@ class LatestCommentsControllerTest extends TestCase {
     $this->auth = Mockery::mock('PyAngelo\Auth\Auth');
     $this->tutorialRepository = Mockery::mock('PyAngelo\Repositories\TutorialRepository');
     $this->questionRepository = Mockery::mock('PyAngelo\Repositories\QuestionRepository');
-    $this->blogRepository = Mockery::mock('PyAngelo\Repositories\blogRepository');
+    $this->blogRepository = Mockery::mock('PyAngelo\Repositories\BlogRepository');
     $this->controller = new LatestCommentsController (
       $this->request,
       $this->response,

@@ -15,9 +15,21 @@ class StripeWrapperTest extends TestCase {
   protected $stripePriceId;
   protected $stripePriceInCents;
    
+  /**
+   * These tests create customers, subscriptions and payments in Stripe's test
+   * mode, so they run only in the Integration suite and only with a real
+   * Stripe test key and a monthly AUD 9.95 test price in .env.test.
+   */
   public function setUp(): void {
     $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../../', '.env.test');
     $dotenv->load();
+    $key = $_ENV['STRIPE_SECRET_KEY'] ?? '';
+    if (str_starts_with($key, 'sk_live_') || str_starts_with($key, 'rk_live_')) {
+      $this->fail('.env.test has a live Stripe key. These tests must only run against Stripe test mode.');
+    }
+    if (! preg_match('/^sk_test_[A-Za-z0-9]{20,}$/', $key) || ! str_starts_with($_ENV['STRIPE_TEST_PRICE_ID'] ?? '', 'price_1')) {
+      $this->markTestSkipped('Set STRIPE_SECRET_KEY to a Stripe test-mode secret key and STRIPE_TEST_PRICE_ID to a monthly AUD 9.95 price in that account, in .env.test.');
+    }
     $this->dbh = new \Mysqli(
       $_ENV['DB_HOST'],
       $_ENV['DB_USERNAME'],
@@ -33,7 +45,7 @@ class StripeWrapperTest extends TestCase {
   }
 
   public function tearDown(): void {
-    $this->dbh->close();
+    $this->dbh?->close();
   }
 
   public function testClassCanBeInstantiated() {

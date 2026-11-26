@@ -6,14 +6,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Testing
 ```bash
-vendor/bin/phpunit                                    # All PHP tests
+vendor/bin/phpunit                                    # All PHP tests except the Stripe Integration suite
 vendor/bin/phpunit tests/src/PyAngelo/Controllers/   # Single directory
 vendor/bin/phpunit tests/di/ServicesTest.php          # Single file
 npm run testjs                                        # All JavaScript tests
 npm run testjs -- Autocompleter.test.js               # Single JS test file
 npm test                                              # Both PHP and JS tests
+vendor/bin/phpunit --testsuite Integration           # Stripe tests against Stripe test mode (see below)
 npm run test:e2e                                      # Vite build, then Playwright smoke tests in Chromium
 ```
+
+`vendor/bin/phpunit` runs the PyAngelo suite. The Integration suite (`StripeWrapperTest`) creates customers, subscriptions and payments in Stripe's test mode; it is skipped unless `.env.test` has a real `sk_test_` key and `STRIPE_TEST_PRICE_ID` is a monthly AUD 9.95 price in that account, and it refuses to run with a live key. Mock classes by their exact case (`'PyAngelo\Repositories\BlogRepository'`): Mockery invents a class for a name the autoloader cannot find, which breaks later tests in some orders. Check with `vendor/bin/phpunit --order-by=random`.
 
 The Playwright tests (`tests/e2e/`) render real templates with fixture data through `tests/e2e/router.php`, so they need no database, but the sort and playground pages load jQuery 1.12 and Ace from CDNs, so they need internet access. On a new machine run `npx playwright install chromium` first.
 
@@ -61,7 +64,7 @@ Dual-mode: `Framework\Mail\LoggerMail` writes to log file (dev), `Framework\Mail
 - **Vite** — source in `resources/assets/js/` and `resources/assets/sass/`, built to `public/build/`. Each entry point is listed in `vite.entries.js`. Templates load a script with `<?= viteScript('resources/assets/js/app.js'); ?>`, which also links any CSS it imports, and the stylesheet with `vite('resources/assets/sass/app.scss')`. Scripts are ES modules, so they run after the page is parsed, after any classic `<script>` tags. PHPUnit's view tests read `public/build/.vite/manifest.json`, so build before running them. Vite's `strictExecutionOrder` must stay on: TinyMCE's skin imports call the global `tinymce`, which only exists once `tinymce/tinymce` has run.
 
 ### Deploying
-`src/Framework/Scripts/deploy.sh` (run on the server from `~/pyangelo.com` after `git pull`) installs Composer and npm packages, runs `npm run production`, then `publish.sh` copies the release to `/srv/http/pyangelo.com` while the site keeps serving, in two phases. Prepare: new build files are copied in under a temporary name and renamed (files already live under the same content-hashed name are left alone, only re-dated), and the new manifest, `src/`, `views/`, `public/images`, `public/samples` and `index.php` are staged beside the live ones; the new build is checked to contain every file its manifest lists. If anything fails here the live release is untouched. Switch: the manifest, `src/`, `views/` and the rest are renamed into place one straight after another (directories with `mv --exchange`); if `src/` or `views/` cannot be swapped, the previous manifest is put back. Files the outgoing manifest lists are re-dated as they are retired, and build files retired over a week ago are deleted.
+`src/Framework/Scripts/deploy.sh` (run on the server from `~/pyangelo.com` after `git pull`) installs Composer and npm packages, runs `npm run production`, then `publish.sh` copies the release to `/srv/http/pyangelo.com` while the site keeps serving, in two phases. Prepare: new build files are copied in under a temporary name and renamed (files already live under the same content-hashed name are left alone, only re-dated), and the new manifest, `config/` (a copy of the live one with the release's files over it, so server-only files such as the CloudFront key stay), `src/`, `views/`, `public/images`, `public/samples` and `index.php` are staged beside the live ones; the new build is checked to contain every file its manifest lists. If anything fails here the live release is untouched. Switch: the manifest, `config/`, `src/` and `views/` are renamed into place one straight after another (directories with `mv --exchange`), keeping the old copies until all four succeed; if any step fails, the ones already switched are swapped back. Files the outgoing manifest lists are re-dated as they are retired, and build files retired over a week ago are deleted.
 - **Bootstrap 3**, **jQuery**, **TinyMCE** (rich text), **Howler.js** (audio)
 
 ### Testing Patterns
