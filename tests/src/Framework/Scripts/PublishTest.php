@@ -29,6 +29,8 @@ class PublishTest extends TestCase {
     ]);
     $this->write($this->app, [
       'config/app.php' => 'old config',
+      // Not in git: only the server has it.
+      'config/CloudFront/pk-cloudfront.pem' => 'server key',
       'public/build/assets/js/app.js-OLD.js' => 'previous app',
       'public/build/assets/js/stale-OLD.js' => 'app from an old release',
       'public/build/.vite/manifest.json' => '{"release":"old"}',
@@ -224,6 +226,7 @@ class PublishTest extends TestCase {
     [$status] = $this->publish();
     $this->assertNotSame(0, $status);
     $this->assertStringEqualsFile($this->app . '/public/build/.vite/manifest.json', '{"release":"old"}');
+    $this->assertStringEqualsFile($this->app . '/config/app.php', 'old config');
     $this->assertFileExists($this->app . '/src/Old.php');
     $this->assertFileExists($this->app . '/views/old.html.php');
     $this->assertStringEqualsFile($this->app . '/public/index.php', 'old front controller');
@@ -232,6 +235,8 @@ class PublishTest extends TestCase {
 
   private function assertLiveReleaseUnchanged(): void {
     $this->assertStringEqualsFile($this->app . '/public/build/.vite/manifest.json', '{"release":"old"}');
+    $this->assertStringEqualsFile($this->app . '/config/app.php', 'old config');
+    $this->assertStringEqualsFile($this->app . '/config/CloudFront/pk-cloudfront.pem', 'server key');
     $this->assertFileExists($this->app . '/src/Old.php');
     $this->assertFileExists($this->app . '/views/old.html.php');
     $this->assertStringEqualsFile($this->app . '/public/index.php', 'old front controller');
@@ -272,35 +277,60 @@ class PublishTest extends TestCase {
     $this->assertFileExists($this->app . '/src/New.php');
   }
 
-  /** Puts an mv on PATH that refuses to move the live NAME directory. */
-  private function failingMv(string $name): string {
+  /**
+   * Puts an mv on PATH that refuses to move the live NAME directory, and
+   * optionally rejects --exchange like coreutils before 9.5.
+   */
+  private function failingMv(string $name, bool $withoutExchange = false): string {
     $bin = $this->root . '/bin';
     mkdir($bin);
     $realMv = trim(shell_exec('command -v mv'));
     $target = $this->app . '/' . $name;
+    $exchange = $withoutExchange ? " || [ \"\$arg\" = --exchange ]" : '';
     file_put_contents($bin . '/mv', "#!/usr/bin/env bash\n" .
-      "for arg in \"\$@\"; do [ \"\$arg\" = " . escapeshellarg($target) . " ] && { echo 'mv: refused' >&2; exit 1; }; done\n" .
+      "for arg in \"\$@\"; do { [ \"\$arg\" = " . escapeshellarg($target) . " ]$exchange; } && { echo 'mv: refused' >&2; exit 1; }; done\n" .
       "exec " . escapeshellarg($realMv) . " \"\$@\"\n");
     chmod($bin . '/mv', 0755);
     return 'PATH=' . escapeshellarg($bin . ':' . getenv('PATH')) . ' ';
   }
 
-  public function testPutsThePreviousManifestBackIfViewsCannotBeSwapped() {
-    [$status, $output] = $this->publish(null, null, $this->failingMv('views'));
-    $this->assertNotSame(0, $status, $output);
-    $this->assertStringContainsString('previous manifest is back in place', $output);
-    // The old templates are still live, so the old manifest must be too.
-    $this->assertFileExists($this->app . '/views/old.html.php');
+  /** After a failed switch, the whole old release is live again. */
+  private function assertSwitchedBack(string $output): void {
+    $this->assertStringContainsString('the previous manifest, config/, src/ and views/ are back in place', $output);
     $this->assertStringEqualsFile($this->app . '/public/build/.vite/manifest.json', '{"release":"old"}');
+    $this->assertStringEqualsFile($this->app . '/config/app.php', 'old config');
+    $this->assertStringEqualsFile($this->app . '/config/CloudFront/pk-cloudfront.pem', 'server key');
+    $this->assertFileExists($this->app . '/src/Old.php');
+    $this->assertFileDoesNotExist($this->app . '/src/New.php');
+    $this->assertFileExists($this->app . '/views/old.html.php');
     $this->assertFileDoesNotExist($this->app . '/public/build/.vite/manifest.json.previous');
   }
 
-  public function testPutsThePreviousManifestBackIfSrcCannotBeSwapped() {
+  public function testSwitchesEverythingBackIfViewsCannotBeSwapped() {
+    // config/ and src/ were already switched when views/ failed.
+    [$status, $output] = $this->publish(null, null, $this->failingMv('views'));
+    $this->assertNotSame(0, $status, $output);
+    $this->assertSwitchedBack($output);
+  }
+
+  public function testSwitchesEverythingBackWithoutMvExchange() {
+    [$status, $output] = $this->publish(null, null, $this->failingMv('views', true));
+    $this->assertNotSame(0, $status, $output);
+    $this->assertSwitchedBack($output);
+  }
+
+  public function testKeepsServerOnlyConfigFiles() {
+    [$status, $output] = $this->publish();
+    $this->assertSame(0, $status, $output);
+    $this->assertStringEqualsFile($this->app . '/config/app.php', 'new config');
+    $this->assertStringEqualsFile($this->app . '/config/CloudFront/pk-cloudfront.pem', 'server key');
+    $this->assertSame([], $this->leftovers());
+  }
+
+  public function testSwitchesEverythingBackIfSrcCannotBeSwapped() {
     [$status, $output] = $this->publish(null, null, $this->failingMv('src'));
     $this->assertNotSame(0, $status, $output);
-    $this->assertFileExists($this->app . '/src/Old.php');
-    $this->assertFileExists($this->app . '/views/old.html.php');
-    $this->assertStringEqualsFile($this->app . '/public/build/.vite/manifest.json', '{"release":"old"}');
+    $this->assertSwitchedBack($output);
   }
 
   public function testNeverRemovesFilesFromTheBuildBeingPublished() {

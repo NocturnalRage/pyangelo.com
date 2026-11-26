@@ -6,11 +6,11 @@
 #   1. Prepare: copy everything beside the live files and check the new build
 #      is complete. Nothing the site uses changes, so if a step fails the old
 #      release is still intact.
-#   2. Switch: rename the manifest, src/, views/ and the rest into place, one
-#      straight after another, so the new code, templates and build go live
-#      together. If the manifest is in place but src/ or views/ cannot be
-#      swapped, the previous manifest is put back, so the live templates
-#      never meet a manifest that lacks their entries.
+#   2. Switch: rename the manifest, config/, src/ and views/ into place, one
+#      straight after another, so the new build, routes, code and templates go
+#      live together. The old copies are kept until all four are in place; if
+#      any step fails, the ones already switched are swapped back, so the old
+#      release is live again as a whole.
 # A file is never rewritten while it is live: new files are copied under a
 # temporary name and renamed, and directories are swapped with mv --exchange.
 set -eo pipefail
@@ -30,23 +30,62 @@ stage_dir () {
   cp -r "$GITDIR/$1" "$APPHOME/$1.new"
 }
 
-# Put NAME.new in place of NAME. mv --exchange (GNU coreutils 9.5+) swaps the
-# two in one step, so NAME is never missing. Without it, fall back to two
-# renames, which leave NAME missing for a moment between them. Returns
-# non-zero if NAME was not replaced; it is called where set -e does not apply.
+# Put NAME.new in place of NAME and remove the old copy straight away. Used
+# for images and samples, which nothing else depends on.
 swap_dir () {
   if [ ! -e "$APPHOME/$1" ]; then
-    mv "$APPHOME/$1.new" "$APPHOME/$1" || return 1
+    mv "$APPHOME/$1.new" "$APPHOME/$1"
   elif mv --exchange -T "$APPHOME/$1.new" "$APPHOME/$1" 2>/dev/null; then
     rm -rf "$APPHOME/$1.new"
+  else
+    mv "$APPHOME/$1" "$APPHOME/$1.old"
+    mv "$APPHOME/$1.new" "$APPHOME/$1"
+    rm -rf "$APPHOME/$1.old"
+  fi
+}
+
+# Put NAME.new in place of NAME, keeping the old copy so swap_back can
+# restore it. mv --exchange (GNU coreutils 9.5+) swaps the two in one step,
+# leaving the old copy at NAME.new. Without it, two renames leave the old
+# copy at NAME.old, and NAME missing for a moment between them. Records what
+# it did in SWAPPED. Returns non-zero, with NAME unchanged, if it fails.
+SWAPPED=()
+swap_in () {
+  if [ ! -e "$APPHOME/$1" ]; then
+    mv "$APPHOME/$1.new" "$APPHOME/$1" || return 1
+    SWAPPED+=("$1:fresh")
+  elif mv --exchange -T "$APPHOME/$1.new" "$APPHOME/$1" 2>/dev/null; then
+    SWAPPED+=("$1:exchange")
   else
     mv "$APPHOME/$1" "$APPHOME/$1.old" || return 1
     if ! mv "$APPHOME/$1.new" "$APPHOME/$1"; then
       mv "$APPHOME/$1.old" "$APPHOME/$1"
       return 1
     fi
-    rm -rf "$APPHOME/$1.old"
+    SWAPPED+=("$1:rename")
   fi
+}
+
+# Undo every swap_in, newest first, putting the old copies back.
+swap_back () {
+  local i name how
+  for ((i = ${#SWAPPED[@]} - 1; i >= 0; i--)); do
+    name="${SWAPPED[i]%%:*}"
+    how="${SWAPPED[i]##*:}"
+    case "$how" in
+      exchange) mv --exchange -T "$APPHOME/$name.new" "$APPHOME/$name" ;;
+      rename) mv "$APPHOME/$name" "$APPHOME/$name.new" && mv "$APPHOME/$name.old" "$APPHOME/$name" ;;
+      fresh) mv "$APPHOME/$name" "$APPHOME/$name.new" ;;
+    esac
+  done
+}
+
+# After a successful switch, delete the old copies swap_in kept.
+remove_old_copies () {
+  local entry
+  for entry in "${SWAPPED[@]}"; do
+    rm -rf "$APPHOME/${entry%%:*}.new" "$APPHOME/${entry%%:*}.old"
+  done
 }
 
 # Print every file a Vite manifest lists (scripts, CSS and assets such as
@@ -69,9 +108,6 @@ manifest_files () {
       }
     }' "$1"
 }
-
-echo "Copying config directory"
-cp -R "$GITDIR/config" "$APPHOME/"
 
 # --- Prepare ---------------------------------------------------------------
 
@@ -116,6 +152,17 @@ if [ -n "$missing" ]; then
 fi
 
 echo "Copying the new release beside the live one"
+# config/ holds routes and services, so it goes live with src/. The live
+# config/ also holds files that are not in git, such as the CloudFront key,
+# so the new copy starts from the live one and the release's files are copied
+# over it.
+rm -rf "$APPHOME/config.new" "$APPHOME/config.old"
+if [ -d "$APPHOME/config" ]; then
+  cp -a "$APPHOME/config" "$APPHOME/config.new"
+else
+  mkdir "$APPHOME/config.new"
+fi
+cp -R "$GITDIR/config/." "$APPHOME/config.new/"
 stage_dir src
 stage_dir views
 stage_dir public/images
@@ -138,26 +185,27 @@ fi
 
 # --- Switch ----------------------------------------------------------------
 
-# The manifest, code and templates go live within moments of each other.
-# Keep the previous manifest until src/ and views/ are in place, and put it
-# back if either cannot be swapped.
 echo "Switching to the new release"
 rm -f "$MANIFEST.previous"
 if [ -f "$MANIFEST" ]; then
   cp "$MANIFEST" "$MANIFEST.previous"
 fi
-switch_release () {
-  mv "$MANIFEST.new" "$MANIFEST" || return 1
-  swap_dir src || return 1
-  swap_dir views || return 1
-}
-if ! switch_release; then
+switched=true
+mv "$MANIFEST.new" "$MANIFEST" || switched=false
+for name in config src views; do
+  if [ "$switched" = true ] && ! swap_in "$name"; then
+    switched=false
+  fi
+done
+if [ "$switched" != true ]; then
+  swap_back
   if [ -f "$MANIFEST.previous" ]; then
     mv "$MANIFEST.previous" "$MANIFEST"
-    echo "Could not switch src/ and views/; the previous manifest is back in place" >&2
   fi
+  echo "Could not switch to the new release; the previous manifest, config/, src/ and views/ are back in place" >&2
   exit 1
 fi
+remove_old_copies
 rm -f "$MANIFEST.previous"
 mv "$APPHOME/public/index.php.new" "$APPHOME/public/index.php"
 swap_dir public/images
